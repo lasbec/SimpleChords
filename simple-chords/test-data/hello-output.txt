@@ -1,1 +1,9 @@
-ChordToken { str: "a", start_line_index: 0, start_char_index: 0 }ChordToken { str: "b", start_line_index: 0, start_char_index: 2 }ChordToken { str: "c", start_line_index: 0, start_char_index: 4 }ChordToken { str: "b", start_line_index: 1, start_char_index: 0 }ChordToken { str: "c", start_line_index: 1, start_char_index: 2 }ChordToken { str: "cd", start_line_index: 2, start_char_index: 0 }ChordToken { str: "e", start_line_index: 2, start_char_index: 3 }ChordToken { str: "f", start_line_index: 2, start_char_index: 5 }
+ChordToken { str: "a", start_line_index: 0, start_char_index: 0 }
+ChordToken { str: "b", start_line_index: 0, start_char_index: 2 }
+ChordToken { str: "c", start_line_index: 0, start_char_index: 4 }
+ChordToken { str: "b", start_line_index: 1, start_char_index: 0 }
+ChordToken { str: "c", start_line_index: 1, start_char_index: 2 }
+ChordToken { str: "cd", start_line_index: 2, start_char_index: 0 }
+ChordToken { str: "e", start_line_index: 2, start_char_index: 3 }
+ChordToken { str: "f", start_line_index: 2, start_char_index: 5 }
+

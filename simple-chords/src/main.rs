@@ -58,9 +58,8 @@ fn parse_line_of_chords(state: &mut ParsingState) {
     while let Some(c) = char_opt {
         if c == '\n' { break }
         match (current_chord.clone(), c) {
-            (None, ' ') | (None, '\n') => println!("Nothing"),
+            (None, ' ') | (None, '\n') => {},
             (None, c) => {
-                println!("N, c: {}", c);
                 current_chord = Some(ChordToken{
                     str: c.to_string(),
                     start_line_index: state.cursor.line_index,
@@ -68,12 +67,10 @@ fn parse_line_of_chords(state: &mut ParsingState) {
                 })
             }
             (Some(chord), ' ') | (Some(chord), '\n') => {
-                println!("chord: {:?}, c", chord);
                 state.result.push(chord);
                 current_chord = None;
             },
             (Some(chord), c) => {
-                println!("chord: {:?}, c :{}", chord, c);
                 let mut new_chord_str  = chord.str.clone();
                 new_chord_str.push(c);
                 current_chord = Some(ChordToken{
@@ -123,7 +120,7 @@ fn main() -> io::Result<()> {
         parse_line_of_chords(state);
     }
 
-    let output = state.result.iter().map(|chord| {format!("{:?}", chord)}).collect::<Vec<_>>().join("");
+    let output = state.result.iter().map(|chord| {format!("{:?}\n", chord)}).collect::<Vec<_>>().join("");
 
 
     // Open the output file
@@ -133,7 +130,7 @@ fn main() -> io::Result<()> {
     // Write the line count to the output file
     writeln!(output_file, "{}", output)?;
 
-    println!("Line count written to {} successfully.", output_path);
+    println!("Output written to {} successfully.", output_path);
 
     Ok(())
 }
