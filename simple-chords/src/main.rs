@@ -1,6 +1,6 @@
 use std::env;
 use std::fs::File;
-use std::io::{self, BufRead, BufReader, Write};
+use std::io::{self, BufRead, BufReader, Write };
 
 #[derive(Clone, Debug)]  
 struct ChordToken {
@@ -9,28 +9,67 @@ struct ChordToken {
     start_char_index: usize
 }
 
-fn parse_chord_tokens(input: impl Iterator<Item =char>) -> String {
-    let mut output: String = String::new();
+struct Cursor {
+    line_index: usize,
+    char_index: usize,
+    total_index: usize
+}
 
+struct ParsingState {
+    cursor: Cursor,
+    remaining: Box<dyn Iterator<Item=char>>,
+    peek: Option<char>,
+    result: Vec<ChordToken>
+    
+}
+
+fn is_done(state: &mut ParsingState)-> bool {
+    let next_char = state.peek;
+    match next_char {
+        None => true,
+        _ => false
+    }
+}
+
+
+fn step_one_forward(state: &mut ParsingState) -> Option<char> {
+    let result = state.peek;
+    state.peek = state.remaining.next();
+    match result {
+        Some('\n') => {
+            state.cursor.total_index += 1;
+            state.cursor.line_index += 1;
+            state.cursor.char_index = 0;
+        },
+        Some(c) =>  {
+            state.cursor.total_index += 1;
+            state.cursor.char_index += 1;
+        },
+        None => {},
+    }
+    return result;
+}
+
+
+fn parse_line_of_chords(state: &mut ParsingState) {
     let mut current_chord:Option<ChordToken> = None;
 
-    let mut line_index = 0;
-    let mut c_index = 0;
-
-    for c in input {
+    let mut char_opt = step_one_forward(state);
+    while let Some(c) = char_opt {
+        if c == '\n' { break }
         match (current_chord.clone(), c) {
             (None, ' ') | (None, '\n') => println!("Nothing"),
             (None, c) => {
                 println!("N, c: {}", c);
                 current_chord = Some(ChordToken{
                     str: c.to_string(),
-                    start_line_index: line_index,
-                    start_char_index: c_index
+                    start_line_index: state.cursor.line_index,
+                    start_char_index: state.cursor.char_index -1
                 })
             }
             (Some(chord), ' ') | (Some(chord), '\n') => {
                 println!("chord: {:?}, c", chord);
-                output.push_str(format!("{:?}",chord).as_str());
+                state.result.push(chord);
                 current_chord = None;
             },
             (Some(chord), c) => {
@@ -39,16 +78,17 @@ fn parse_chord_tokens(input: impl Iterator<Item =char>) -> String {
                 new_chord_str.push(c);
                 current_chord = Some(ChordToken{
                     str: new_chord_str,
-                    start_line_index: line_index,
-                    start_char_index: c_index
+                    start_line_index: chord.start_line_index,
+                    start_char_index: chord.start_char_index
                 })
             }
         }
-        line_index += 1;
-        c_index += 1;
-    }
-    return output;
+        char_opt = step_one_forward(state)
+    };
 }
+
+
+
 
 fn main() -> io::Result<()> {
     let args: Vec<String> = env::args().collect();
@@ -64,13 +104,26 @@ fn main() -> io::Result<()> {
     let input_reader = BufReader::new(input_file);
 
 
-    let char_iter = input_reader.lines().flat_map(|line_res| {
+    let mut char_iter = Box::new(input_reader.lines().flat_map(|line_res| {
         let line = line_res.unwrap_or(String::new());
         let mut char_iter = line.chars();
         return char_iter.chain("\n".chars()).collect::<Vec<_>>();
-    });
+    }));
+    let peek = char_iter.next();
     
-    let output = parse_chord_tokens(char_iter);
+
+    let state = &mut ParsingState {
+        cursor: Cursor { line_index: 0, char_index: 0, total_index: 0 },
+        remaining: char_iter,
+        peek: peek,
+        result: vec![]
+    };
+
+    while(! is_done(state)){
+        parse_line_of_chords(state);
+    }
+
+    let output = state.result.iter().map(|chord| {format!("{:?}", chord)}).collect::<Vec<_>>().join("");
 
 
     // Open the output file
