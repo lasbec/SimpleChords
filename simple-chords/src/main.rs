@@ -21,6 +21,7 @@ fn parse_chord_tokens(input: impl Iterator<Item =char>) -> String {
         match (current_chord.clone(), c) {
             (None, ' ') | (None, '\n') => println!("Nothing"),
             (None, c) => {
+                println!("N, c: {}", c);
                 current_chord = Some(ChordToken{
                     str: c.to_string(),
                     start_line_index: line_index,
@@ -28,10 +29,12 @@ fn parse_chord_tokens(input: impl Iterator<Item =char>) -> String {
                 })
             }
             (Some(chord), ' ') | (Some(chord), '\n') => {
+                println!("chord: {:?}, c", chord);
                 output.push_str(format!("{:?}",chord).as_str());
                 current_chord = None;
             },
             (Some(chord), c) => {
+                println!("chord: {:?}, c :{}", chord, c);
                 let mut new_chord_str  = chord.str.clone();
                 new_chord_str.push(c);
                 current_chord = Some(ChordToken{
@@ -63,7 +66,8 @@ fn main() -> io::Result<()> {
 
     let char_iter = input_reader.lines().flat_map(|line_res| {
         let line = line_res.unwrap_or(String::new());
-        line.chars().collect::<Vec<_>>()
+        let mut char_iter = line.chars();
+        return char_iter.chain("\n".chars()).collect::<Vec<_>>();
     });
     
     let output = parse_chord_tokens(char_iter);
