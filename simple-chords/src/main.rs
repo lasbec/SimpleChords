@@ -126,18 +126,7 @@ fn parse_line_of_chords(state: &mut ParsingState) {
 }
 
 
-
-
-fn main() -> io::Result<()> {
-    let args: Vec<String> = env::args().collect();
-
-    if args.len() != 3 {
-        eprintln!("Usage: {} <input_file> <output_file>", args[0]);
-        return Ok(());
-    }
-
-    // Open the input file
-    let input_path = &args[1];
+fn init_parsing(input_path: &String) -> io::Result<ParsingState> {
     let input_file = File::open(input_path)?;
     let input_reader = BufReader::new(input_file);
 
@@ -150,12 +139,25 @@ fn main() -> io::Result<()> {
     let peek = char_iter.next();
     
 
-    let state = &mut ParsingState {
+    return Ok(ParsingState {
         cursor: Cursor { line_index: 0, char_index: 0, total_index: 0 },
         remaining: char_iter,
         peek: peek,
         result: vec![]
-    };
+    });   
+}
+
+fn main() -> io::Result<()> {
+    let args: Vec<String> = env::args().collect();
+
+    if args.len() != 3 {
+        eprintln!("Usage: {} <input_file> <output_file>", args[0]);
+        return Ok(());
+    }
+    let input_path = &args[1];
+
+    let state = &mut init_parsing(input_path)?;
+    
 
     let heading = parse_heading(state);
 
@@ -165,6 +167,7 @@ fn main() -> io::Result<()> {
 
     let song_output = state.result.iter().map(|chord| {format!("{:?}\n", chord)}).collect::<Vec<_>>().join("");
     let mut output = format!("{:?}",heading);
+    output.push('\n');
     output.push_str(&song_output);
 
 
