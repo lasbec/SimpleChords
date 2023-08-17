@@ -1,6 +1,10 @@
 use std::env;
 use std::fs::File;
-use std::io::{self, BufRead, BufReader, Write };
+use std::io::{self, Write };
+mod parsingstate;
+
+
+type ParsingState = parsingstate::ParsingState<ChordToken>;
 
 #[derive(Clone, Debug)]  
 struct ChordToken {
@@ -14,49 +18,18 @@ struct HeadingToken {
     str: String
 }
 
-struct Cursor {
-    line_index: usize,
-    char_index: usize,
-    total_index: usize
-}
 
-struct ParsingState {
-    cursor: Cursor,
-    remaining: Box<dyn Iterator<Item=char>>,
-    peek: Option<char>,
-    result: Vec<ChordToken>
-    
-}
 
 fn is_done(state: &mut ParsingState)-> bool {
-    let next_char = state.peek;
+    let next_char = parsingstate::peek(state);
     match next_char {
         None => true,
         _ => false
     }
 }
 
-
-fn step_one_forward(state: &mut ParsingState) -> Option<char> {
-    let result = state.peek;
-    state.peek = state.remaining.next();
-    match result {
-        Some('\n') => {
-            state.cursor.total_index += 1;
-            state.cursor.line_index += 1;
-            state.cursor.char_index = 0;
-        },
-        Some(_) =>  {
-            state.cursor.total_index += 1;
-            state.cursor.char_index += 1;
-        },
-        None => {},
-    }
-    return result;
-}
-
 fn skip_whitespace(state: &mut ParsingState) {
-    if let Some(peek_char) = state.peek {
+    if let Some(peek_char) = parsingstate::peek(state) {
         if !peek_char.is_whitespace() {
             return;
         }
@@ -65,7 +38,7 @@ fn skip_whitespace(state: &mut ParsingState) {
 }
 
 fn read_line(state: &mut ParsingState) -> Option<String> {
-    let mut c_opt = step_one_forward(state);
+    let mut c_opt = parsingstate::step_one_forward(state);
     if c_opt == None {
         return None;
     }
@@ -74,14 +47,14 @@ fn read_line(state: &mut ParsingState) -> Option<String> {
     while let Some(c) = c_opt {
         if c == '\n' { break };
         result_str.push(c);
-        c_opt = step_one_forward(state);
+        c_opt = parsingstate::step_one_forward(state);
     }
     return Some(result_str.clone());
 }
 
 fn parse_heading(state: &mut ParsingState) -> HeadingToken {
     skip_whitespace(state);
-    let c = step_one_forward(state);
+    let c = parsingstate::step_one_forward(state);
     if c != Some('#') {
         panic!("Syntax Error: Expected the first non whitespace character to be '#' ")
     }
@@ -95,7 +68,7 @@ fn parse_heading(state: &mut ParsingState) -> HeadingToken {
 fn parse_line_of_chords(state: &mut ParsingState) {
     let mut current_chord:Option<ChordToken> = None;
 
-    let mut char_opt = step_one_forward(state);
+    let mut char_opt = parsingstate::step_one_forward(state);
     while let Some(c) = char_opt {
         if c == '\n' { break }
         match (current_chord.clone(), c) {
@@ -103,12 +76,12 @@ fn parse_line_of_chords(state: &mut ParsingState) {
             (None, c) => {
                 current_chord = Some(ChordToken{
                     str: c.to_string(),
-                    start_line_index: state.cursor.line_index,
-                    start_char_index: state.cursor.char_index -1
+                    start_line_index: parsingstate::line_index(state),
+                    start_char_index: parsingstate::char_index(state) -1
                 })
             }
             (Some(chord), ' ') | (Some(chord), '\n') => {
-                state.result.push(chord);
+                parsingstate::push(state, chord);
                 current_chord = None;
             },
             (Some(chord), c) => {
@@ -121,30 +94,8 @@ fn parse_line_of_chords(state: &mut ParsingState) {
                 })
             }
         }
-        char_opt = step_one_forward(state)
+        char_opt = parsingstate::step_one_forward(state)
     };
-}
-
-
-fn init_parsing(input_path: &String) -> io::Result<ParsingState> {
-    let input_file = File::open(input_path)?;
-    let input_reader = BufReader::new(input_file);
-
-
-    let mut char_iter = Box::new(input_reader.lines().flat_map(|line_res| {
-        let line = line_res.unwrap_or(String::new());
-        let char_iter = line.chars();
-        return char_iter.chain("\n".chars()).collect::<Vec<_>>();
-    }));
-    let peek = char_iter.next();
-    
-
-    return Ok(ParsingState {
-        cursor: Cursor { line_index: 0, char_index: 0, total_index: 0 },
-        remaining: char_iter,
-        peek: peek,
-        result: vec![]
-    });   
 }
 
 fn main() -> io::Result<()> {
@@ -156,7 +107,7 @@ fn main() -> io::Result<()> {
     }
     let input_path = &args[1];
 
-    let state = &mut init_parsing(input_path)?;
+    let state = &mut parsingstate::init_parsing_for_file(input_path)?;
     
 
     let heading = parse_heading(state);
