@@ -9,6 +9,11 @@ struct ChordToken {
     start_char_index: usize
 }
 
+#[derive(Clone,Debug)]
+struct HeadingToken {
+    str: String
+}
+
 struct Cursor {
     line_index: usize,
     char_index: usize,
@@ -41,13 +46,49 @@ fn step_one_forward(state: &mut ParsingState) -> Option<char> {
             state.cursor.line_index += 1;
             state.cursor.char_index = 0;
         },
-        Some(c) =>  {
+        Some(_) =>  {
             state.cursor.total_index += 1;
             state.cursor.char_index += 1;
         },
         None => {},
     }
     return result;
+}
+
+fn skip_whitespace(state: &mut ParsingState) {
+    if let Some(peek_char) = state.peek {
+        if !peek_char.is_whitespace() {
+            return;
+        }
+        return skip_whitespace(state)
+    }
+}
+
+fn read_line(state: &mut ParsingState) -> Option<String> {
+    let mut c_opt = step_one_forward(state);
+    if c_opt == None {
+        return None;
+    }
+    
+    let result_str = &mut String::new();
+    while let Some(c) = c_opt {
+        if c == '\n' { break };
+        result_str.push(c);
+        c_opt = step_one_forward(state);
+    }
+    return Some(result_str.clone());
+}
+
+fn parse_heading(state: &mut ParsingState) -> HeadingToken {
+    skip_whitespace(state);
+    let c = step_one_forward(state);
+    if c != Some('#') {
+        panic!("Syntax Error: Expected the first non whitespace character to be '#' ")
+    }
+    let title = read_line(state);
+    return HeadingToken {
+        str: title.unwrap_or(String::new()).trim().to_string()
+    }
 }
 
 
@@ -103,7 +144,7 @@ fn main() -> io::Result<()> {
 
     let mut char_iter = Box::new(input_reader.lines().flat_map(|line_res| {
         let line = line_res.unwrap_or(String::new());
-        let mut char_iter = line.chars();
+        let char_iter = line.chars();
         return char_iter.chain("\n".chars()).collect::<Vec<_>>();
     }));
     let peek = char_iter.next();
@@ -116,11 +157,15 @@ fn main() -> io::Result<()> {
         result: vec![]
     };
 
-    while(! is_done(state)){
+    let heading = parse_heading(state);
+
+    while !is_done(state) {
         parse_line_of_chords(state);
     }
 
-    let output = state.result.iter().map(|chord| {format!("{:?}\n", chord)}).collect::<Vec<_>>().join("");
+    let song_output = state.result.iter().map(|chord| {format!("{:?}\n", chord)}).collect::<Vec<_>>().join("");
+    let mut output = format!("{:?}",heading);
+    output.push_str(&song_output);
 
 
     // Open the output file
