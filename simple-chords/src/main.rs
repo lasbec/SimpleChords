@@ -47,42 +47,58 @@ fn parse_till_song_start(state: &mut ParsingState){
 }
 
 
-fn parse_line_of_chords(state: &mut ParsingState) {
-    state.read_whitespace_but_not_linebreak();
-
-    while !state.is_done() {
-        let last_read_chord = read_chord(state);
-        state.read_whitespace_but_not_linebreak();
-        let peek = state.peek(); 
-        let next_char_is_linebreak = peek == Some('\n'); 
-
-
-        if next_char_is_linebreak {
-            state.read_next();
-        }
-
-        if let Some(chord) = last_read_chord {
-            state.push_to_result(AstElement::Chord(chord));
-            if next_char_is_linebreak { break; }
+fn parse_line(state: &mut ParsingState) {
+    let chords_result = parse_line_of_chords(state);
+    match chords_result {
+        ChordsLineParsingResult::Consumed(s) => {
+            let mut rest_line = state.read_line();
+            rest_line.push_str(&s);
+            state.push_to_result(AstElement::LyricLine(rest_line));
+        },
+        ChordsLineParsingResult::Success(v) =>{
+            for r in v {
+                state.push_to_result(r);
+            }
         }
     }
+    state.read_next(); // consuming the lineending
 }
 
-fn read_chord(state: &mut ParsingState) -> Option<ChordToken> {
-    let start_line_index = state.line_index();
-    let start_char_index = state.char_index();
-
-    let read_str = state.read_till_whitespace();
-    if read_str.is_empty() { return None }
-    let chord_opt = Chord::from_string(&read_str);
-    let chord = chord_opt.expect(format!("Syntax Error: Expected a chord but got '{}'", read_str).as_str());
- 
-    return Some(ChordToken { str: chord, start_line_index, start_char_index })
+#[derive(Clone, Debug)]
+enum ChordsLineParsingResult {
+    Success(Vec<AstElement>),
+    Consumed(String)
 }
 
-fn parse_lyrics_line(state: &mut ParsingState){
-    let lyric = state.read_line();
-    state.push_to_result(AstElement::LyricLine(lyric))
+fn parse_line_of_chords(state: &mut ParsingState) -> ChordsLineParsingResult {
+    let mut result = Vec::new();
+    let mut consumed = String::new();
+
+
+    
+     while state.peek() != Some('\n') && !state.peek().is_none() { 
+        let pre_whitespace = state.read_whitespace_but_not_linebreak(); 
+        consumed.push_str(&pre_whitespace);
+
+        let start_line_index = state.line_index();
+        let start_char_index = state.char_index();
+
+        let candidate = state.read_till_whitespace();
+        consumed.push_str(&candidate);
+
+        let chord_opt = Chord::from_string(&candidate);
+        if let Some(chord) = chord_opt {
+            result.push(AstElement::Chord(ChordToken {
+                str:chord,
+                start_char_index,
+                start_line_index,
+            }));
+        } else {
+            return ChordsLineParsingResult::Consumed(consumed);
+        }
+    }
+    return ChordsLineParsingResult::Success(result);
+
 }
 
 
@@ -102,8 +118,7 @@ fn main() -> io::Result<()> {
     parse_till_song_start(state);
  
     while !state.is_done() {
-        parse_line_of_chords(state);
-        parse_lyrics_line(state);
+        parse_line(state);
     }
 
     let song_output = state.result.iter().map(
