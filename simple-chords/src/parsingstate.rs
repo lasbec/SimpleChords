@@ -92,6 +92,30 @@ impl<T> ParsingState<T> {
             return self.skip_whitespace()
         }
     }
+
+    pub fn skip_whitespace_but_not_linebreak(&mut self) {
+        if let Some(peek_char) = self.peek() {
+            if (!peek_char.is_whitespace()) || peek_char == '\n' {
+                return;
+            }
+            self.step_one_forward();
+            return self.skip_whitespace()
+        }
+    }
+
+    pub fn read_till_whitespace(&mut self) -> String {
+        let mut result = String::new();
+
+        let mut char_opt = self.peek();
+        while let Some(c) = char_opt {
+            if c.is_whitespace() { break }
+            result.push(c);
+            self.step_one_forward();
+            char_opt = self.peek();
+        }
+
+        return result;
+    }
     
     
     pub fn read_line(&mut self) -> Option<String> {
