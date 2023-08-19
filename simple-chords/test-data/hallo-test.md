@@ -30,3 +30,5 @@ Auf Staubigen Straßen und Sand.
 Ein Lustiges Lied das ist immer dabei,
 Es soll allen zeigen wir sind Frei.
 ```
+
+Einige Anmerkungen

@@ -48,17 +48,27 @@ fn parse_till_song_start(state: &mut ParsingState){
 }
 
 
+fn parse_song(state: &mut ParsingState) {
+    parse_till_song_start(state);
+    while !state.is_done() {
+        // check for end of block
+        if state.peek() == Some('`') {
+            let c0 = state.read_next();
+            let c1 = state.read_next();
+            let c2 = state.read_next();
+            let c3 = state.read_next();
+            if c0 != Some('`')  { panic!("Syntax Error: expected ``` (three tics) to end the song.")};
+            if c1 != Some('`')  { panic!("Syntax Error: expected ``` (three tics) to end the song.")};
+            if c2 != Some('`')  { panic!("Syntax Error: expected ``` (three tics) to end the song.")};
+            if c3 != Some('\n') { panic!("Syntax Error: new line expected after ``` (three tics).")};
+            return;
+        } 
+        parse_line(state);
+    }
+}
+
 fn parse_line(state: &mut ParsingState) {
-    if state.peek() == Some('`') {
-        let c0 = state.read_next();
-        let c1 = state.read_next();
-        let c2 = state.read_next();
-        let c3 = state.read_next();
-        if c0 != Some('`')  { panic!("Syntax Error: expected ``` (three tics) to end the song.")};
-        if c1 != Some('`')  { panic!("Syntax Error: expected ``` (three tics) to end the song.")};
-        if c2 != Some('`')  { panic!("Syntax Error: expected ``` (three tics) to end the song.")};
-        if c3 != Some('\n') { panic!("Syntax Error: new line expected after ``` (three tics).")};
-    } else if state.peek() == Some('[') {
+    if state.peek() == Some('[') {
          parse_markup_line(state); 
     } else {
         let chords_result = parse_line_of_chords(state);
@@ -292,13 +302,8 @@ fn main() -> io::Result<()> {
     let state = &mut parsingstate::ParsingState::from_file(input_path)?;
     
 
-    let heading = parse_heading(state);
-
-    parse_till_song_start(state);
- 
-    while !state.is_done() {
-        parse_line(state);
-    }
+    parse_heading(state); 
+    parse_song(state);
 
     let ast = build_ast(state.result.clone());
     let html = ast_to_html(ast);
