@@ -51,9 +51,10 @@ fn parse_line(state: &mut ParsingState) {
     let chords_result = parse_line_of_chords(state);
     match chords_result {
         ChordsLineParsingResult::Consumed(s) => {
-            let mut rest_line = state.read_line();
-            rest_line.push_str(&s);
-            state.push_to_result(AstElement::LyricLine(rest_line));
+            let rest_line = state.read_line();
+            let mut res = s.clone();
+            res.push_str(&rest_line);
+            state.push_to_result(AstElement::LyricLine(res));
         },
         ChordsLineParsingResult::Success(v) =>{
             for r in v {
@@ -84,6 +85,7 @@ fn parse_line_of_chords(state: &mut ParsingState) -> ChordsLineParsingResult {
         let start_char_index = state.char_index();
 
         let candidate = state.read_till_whitespace();
+        if candidate.is_empty() {break};
         consumed.push_str(&candidate);
 
         let chord_opt = Chord::from_string(&candidate);
