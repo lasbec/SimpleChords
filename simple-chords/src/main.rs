@@ -225,6 +225,53 @@ fn build_ast(tokens: Vec<Token>) -> AST {
 
 }
 
+
+fn song_line_to_html(line: SongLine) -> String {
+    println!("L {:?}",line);
+    let mut result = String::new();
+    for c in line {
+        result.push(c.char);
+        if let Some(chord) = c.chord {
+            let chord_tag = format!("<chord>{}</chord>",chord.render());
+            result.push_str(&chord_tag);
+        }
+    }
+    result.push_str("<br>\n");
+    return result;
+}
+
+
+fn section_to_html(sec: SongSection) -> String {
+    let mut lines_str = String::new();
+    for line in sec.lines {
+        lines_str.push_str(&song_line_to_html(line))
+    }
+    let mut result =format!("<h2>{}</h2>
+    <p class='verse show-chords'>
+        {} 
+    </p>", sec.markup, lines_str); 
+    return result;
+}
+
+fn ast_to_html(ast: AST) -> String{
+    let mut sections_str = String::new();
+    for sec in ast.song {
+        sections_str.push_str(&section_to_html(sec))
+    }
+
+    return format!("<!DOCTYPE html>
+<html>
+<head>
+    <link rel='stylesheet' href='SimpleChords.css'>
+</head>
+<body>
+    <h1>{}</h1>
+    {}
+</body>",
+    ast.heading,
+    sections_str)
+}
+
 fn main() -> io::Result<()> {
     let args: Vec<String> = env::args().collect();
 
@@ -245,7 +292,8 @@ fn main() -> io::Result<()> {
     }
 
     let ast = build_ast(state.result.clone());
-    let mut output = format!("{:?}",ast);
+    let html = ast_to_html(ast);
+    let mut output = html;
 
     // Open the output file
     let output_path = &args[2];
