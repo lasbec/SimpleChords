@@ -50,7 +50,7 @@ impl<T> ParsingState<T> {
         return self.cursor.char_index
     }
 
-    pub fn push(&mut self, element: T) {
+    pub fn push_to_result(&mut self, element: T) {
         self.result.push(element);
     }
 
@@ -70,5 +70,41 @@ impl<T> ParsingState<T> {
             None => {},
         }
         return result;
+    }
+    // --------------------------------------------------------
+    // Second level methods
+    // --------------------------------------------------------
+
+    pub fn is_done(&mut self)-> bool {
+        let next_char = self.peek();
+        match next_char {
+            None => true,
+            _ => false
+        }
+    }
+    
+    pub fn skip_whitespace(&mut self) {
+        if let Some(peek_char) = self.peek() {
+            if !peek_char.is_whitespace() {
+                return;
+            }
+            return self.skip_whitespace()
+        }
+    }
+    
+    
+    pub fn read_line(&mut self) -> Option<String> {
+        let mut c_opt = self.step_one_forward();
+        if c_opt == None {
+            return None;
+        }
+        
+        let result_str = &mut String::new();
+        while let Some(c) = c_opt {
+            if c == '\n' { break };
+            result_str.push(c);
+            c_opt = self.step_one_forward();
+        }
+        return Some(result_str.clone());
     }
 }

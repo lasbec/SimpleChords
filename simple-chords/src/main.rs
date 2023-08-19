@@ -19,47 +19,13 @@ struct HeadingToken {
 }
 
 
-
-fn is_done(state: &mut ParsingState)-> bool {
-    let next_char = state.peek();
-    match next_char {
-        None => true,
-        _ => false
-    }
-}
-
-fn skip_whitespace(state: &mut ParsingState) {
-    if let Some(peek_char) = state.peek() {
-        if !peek_char.is_whitespace() {
-            return;
-        }
-        return skip_whitespace(state)
-    }
-}
-
-
-fn read_line(state: &mut ParsingState) -> Option<String> {
-    let mut c_opt = state.step_one_forward();
-    if c_opt == None {
-        return None;
-    }
-    
-    let result_str = &mut String::new();
-    while let Some(c) = c_opt {
-        if c == '\n' { break };
-        result_str.push(c);
-        c_opt = state.step_one_forward();
-    }
-    return Some(result_str.clone());
-}
-
 fn parse_heading(state: &mut ParsingState) -> HeadingToken {
-    skip_whitespace(state);
+    state.skip_whitespace();
     let c = state.step_one_forward();
     if c != Some('#') {
         panic!("Syntax Error: Expected the first non whitespace character to be '#' ")
     }
-    let title = read_line(state);
+    let title = state.read_line();
     return HeadingToken {
         str: title.unwrap_or(String::new()).trim().to_string()
     }
@@ -82,7 +48,7 @@ fn parse_line_of_chords(state: &mut ParsingState) {
                 })
             }
             (Some(chord), ' ') | (Some(chord), '\n') => {
-                state.push(chord);
+                state.push_to_result(chord);
                 current_chord = None;
             },
             (Some(chord), c) => {
@@ -100,7 +66,7 @@ fn parse_line_of_chords(state: &mut ParsingState) {
 }
 
 fn parse_till_song_start(state: &mut ParsingState){
-    skip_whitespace(state);
+    state.skip_whitespace();
     let c0 = state.step_one_forward();
     let c1 = state.step_one_forward();
     let c2 = state.step_one_forward();
@@ -127,7 +93,7 @@ fn main() -> io::Result<()> {
 
     parse_till_song_start(state);
 
-    while !is_done(state) {
+    while !state.is_done() {
         parse_line_of_chords(state);
     }
 
