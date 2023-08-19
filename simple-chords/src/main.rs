@@ -52,15 +52,16 @@ fn parse_line_of_chords(state: &mut ParsingState) {
     let mut reached_end_of_line = false;
 
     while !state.is_done() {
-        if peek == Some('\n') {
+        let next_char_is_linebreak = peek == Some('\n');
+        if next_char_is_linebreak {
             state.step_one_forward();
-            reached_end_of_line = true;
         }
+        
         if let Some(chord) = last_read_chord {
             state.push_to_result(AstElement::Chord(chord));
-            if reached_end_of_line { break; }
+            if next_char_is_linebreak { break; }
         }
-        reached_end_of_line = false;
+
         state.skip_whitespace_but_not_linebreak();
         last_read_chord = read_chord(state);
         peek = state.peek();
