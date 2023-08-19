@@ -22,7 +22,7 @@ struct ChordToken {
 
 
 fn parse_heading(state: &mut ParsingState) {
-    state.skip_whitespace();
+    state.skip_whitespace(); 
     let c = state.step_one_forward();
     if c != Some('#') {
         panic!("Syntax Error: Expected the first non whitespace character to be '#' ")
@@ -101,7 +101,6 @@ fn main() -> io::Result<()> {
     parse_till_song_start(state);
  
     while !state.is_done() {
-        state.skip_whitespace();
         parse_line_of_chords(state);
         parse_lyrics_line(state);
     }
