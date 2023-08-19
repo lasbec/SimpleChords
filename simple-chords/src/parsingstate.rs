@@ -15,7 +15,7 @@ pub struct ParsingState<T> {
 }
 
 impl<T> ParsingState<T> {
-    pub fn init_parsing_for_file(input_path: &String) -> io::Result<ParsingState<T>> {
+    pub fn from_file(input_path: &String) -> io::Result<ParsingState<T>> {
         let input_file = File::open(input_path)?;
         let input_reader = BufReader::new(input_file);
 
@@ -53,7 +53,7 @@ impl<T> ParsingState<T> {
         self.result.push(element);
     }
 
-    pub fn step_one_forward(& mut self) -> Option<char> {
+    pub fn read_next(& mut self) -> Option<char> {
         let result = self.peek;
         self.peek = self.remaining.next();
         match result {
@@ -87,7 +87,7 @@ impl<T> ParsingState<T> {
             if !peek.is_whitespace() {
                 break;
             }
-            self.step_one_forward();
+            self.read_next();
         }
     }
 
@@ -96,7 +96,7 @@ impl<T> ParsingState<T> {
             if !peek.is_whitespace() || peek == '\n' {
                 break;
             }
-            self.step_one_forward();
+            self.read_next();
         }
     }
 
@@ -107,7 +107,7 @@ impl<T> ParsingState<T> {
         while let Some(c) = char_opt {
             if c.is_whitespace() { break }
             result.push(c);
-            self.step_one_forward();
+            self.read_next();
             char_opt = self.peek();
         }
 
@@ -116,7 +116,7 @@ impl<T> ParsingState<T> {
     
     
     pub fn read_line(&mut self) -> Option<String> {
-        let mut c_opt = self.step_one_forward();
+        let mut c_opt = self.read_next();
         if c_opt == None {
             return None;
         }
@@ -125,7 +125,7 @@ impl<T> ParsingState<T> {
         while let Some(c) = c_opt {
             if c == '\n' { break };
             result_str.push(c);
-            c_opt = self.step_one_forward();
+            c_opt = self.read_next();
         }
         return Some(result_str.clone());
     }

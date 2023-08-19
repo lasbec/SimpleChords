@@ -6,7 +6,7 @@
 
 
 
-C             e         a        e   
+C             e         a        e  
 Wir sind Kameraden wir halten zusammen
   a         C        d      G7
 egal ob bei Tag oder Nacht

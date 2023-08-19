@@ -26,7 +26,7 @@ struct ChordToken {
 
 fn parse_heading(state: &mut ParsingState) {
     state.skip_whitespace(); 
-    let c = state.step_one_forward();
+    let c = state.read_next();
     if c != Some('#') {
         panic!("Syntax Error: Expected the first non whitespace character to be '#' ")
     }
@@ -36,10 +36,10 @@ fn parse_heading(state: &mut ParsingState) {
 
 fn parse_till_song_start(state: &mut ParsingState){
     state.skip_whitespace();
-    let c0 = state.step_one_forward();
-    let c1 = state.step_one_forward();
-    let c2 = state.step_one_forward();
-    let c3 = state.step_one_forward();
+    let c0 = state.read_next();
+    let c1 = state.read_next();
+    let c2 = state.read_next();
+    let c3 = state.read_next();
     if c0 != Some('`')  { panic!("Syntax Error: expected ``` (three tics) after heading.")};
     if c1 != Some('`')  { panic!("Syntax Error: expected ``` (three tics) after heading.")};
     if c2 != Some('`')  { panic!("Syntax Error: expected ``` (three tics) after heading.")};
@@ -58,7 +58,7 @@ fn parse_line_of_chords(state: &mut ParsingState) {
 
 
         if next_char_is_linebreak {
-            state.step_one_forward();
+            state.read_next();
         }
 
         if let Some(chord) = last_read_chord {
@@ -94,7 +94,7 @@ fn main() -> io::Result<()> {
     }
     let input_path = &args[1];
 
-    let state = &mut parsingstate::ParsingState::init_parsing_for_file(input_path)?;
+    let state = &mut parsingstate::ParsingState::from_file(input_path)?;
     
 
     let heading = parse_heading(state);
