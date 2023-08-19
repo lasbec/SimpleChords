@@ -9,6 +9,7 @@ mod music;
 #[derive(Clone, Debug)]  
 enum AstElement {
     Heading(String),
+    Markup(String),
     Chord(ChordToken),
     LyricLine(String)
 }   
@@ -48,21 +49,31 @@ fn parse_till_song_start(state: &mut ParsingState){
 
 
 fn parse_line(state: &mut ParsingState) {
-    let chords_result = parse_line_of_chords(state);
-    match chords_result {
-        ChordsLineParsingResult::Consumed(s) => {
-            let rest_line = state.read_line();
-            let mut res = s.clone();
-            res.push_str(&rest_line);
-            state.push_to_result(AstElement::LyricLine(res));
-        },
-        ChordsLineParsingResult::Success(v) =>{
-            for r in v {
-                state.push_to_result(r);
+    if state.peek() == Some('[') {
+         parse_markup_line(state); 
+    } else {
+        let chords_result = parse_line_of_chords(state);
+        match chords_result {
+            ChordsLineParsingResult::Consumed(s) => {
+                let rest_line = state.read_line();
+                let mut res = s.clone();
+                res.push_str(&rest_line);
+                state.push_to_result(AstElement::LyricLine(res));
+            },
+            ChordsLineParsingResult::Success(v) =>{
+                for r in v {
+                    state.push_to_result(r);
+                }
             }
         }
     }
     state.read_next(); // consuming the lineending
+}
+
+fn parse_markup_line(state: &mut ParsingState) {
+    state.read_next(); // shoud be '['
+    let result = state.read_till(|c| c == ']');
+    state.push_to_result(AstElement::Markup(result));
 }
 
 #[derive(Clone, Debug)]
