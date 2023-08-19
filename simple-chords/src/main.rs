@@ -47,24 +47,22 @@ fn parse_till_song_start(state: &mut ParsingState){
 
 fn parse_line_of_chords(state: &mut ParsingState) {
     state.skip_whitespace_but_not_linebreak();
-    let mut last_read_chord = read_chord(state);
-    let mut peek = state.peek();
-    let mut reached_end_of_line = false;
 
     while !state.is_done() {
-        let next_char_is_linebreak = peek == Some('\n');
+        let last_read_chord = read_chord(state);
+        state.skip_whitespace_but_not_linebreak();
+        let peek = state.peek(); 
+        let next_char_is_linebreak = peek == Some('\n'); 
+
+
         if next_char_is_linebreak {
             state.step_one_forward();
         }
-        
+
         if let Some(chord) = last_read_chord {
             state.push_to_result(AstElement::Chord(chord));
             if next_char_is_linebreak { break; }
         }
-
-        state.skip_whitespace_but_not_linebreak();
-        last_read_chord = read_chord(state);
-        peek = state.peek();
     }
 }
 
@@ -88,7 +86,6 @@ fn main() -> io::Result<()> {
     let args: Vec<String> = env::args().collect();
 
     if args.len() != 3 {
-        eprintln!("Usage: {} <input_file> <output_file>", args[0]);
         return Ok(());
     }
     let input_path = &args[1];

@@ -7,7 +7,6 @@ struct Cursor {
     total_index: usize
 }
 
-
 pub struct ParsingState<T> {
     cursor: Cursor,
     remaining: Box<dyn Iterator<Item=char>>,
@@ -84,22 +83,20 @@ impl<T> ParsingState<T> {
     }
     
     pub fn skip_whitespace(&mut self) {
-        if let Some(peek_char) = self.peek() {
-            if !peek_char.is_whitespace() {
-                return;
+        while let Some(peek) = self.peek() {
+            if !peek.is_whitespace() {
+                break;
             }
             self.step_one_forward();
-            return self.skip_whitespace()
         }
     }
 
     pub fn skip_whitespace_but_not_linebreak(&mut self) {
-        if let Some(peek_char) = self.peek() {
-            if (!peek_char.is_whitespace()) || peek_char == '\n' {
-                return;
+        while let Some(peek) = self.peek() {
+            if !peek.is_whitespace() || peek == '\n' {
+                break;
             }
             self.step_one_forward();
-            return self.skip_whitespace()
         }
     }
 
