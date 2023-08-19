@@ -292,15 +292,8 @@ fn ast_to_html(ast: AST) -> String{
     sections_str)
 }
 
-fn main() -> io::Result<()> {
-    let args: Vec<String> = env::args().collect();
 
-    if args.len() != 2 {
-        println!("Takes only one argument");
-        return Ok(());
-    }
-    let input_path = &args[1];
-
+fn translate_file(input_path: &String) -> io::Result<()> {
     let state = &mut parsingstate::ParsingState::from_file(input_path)?;
     
 
@@ -322,6 +315,34 @@ fn main() -> io::Result<()> {
     writeln!(output_file, "{}", output)?;
 
     println!("Output written to {} successfully.", output_path);
+
+    Ok(())
+}
+
+fn main() -> io::Result<()> {
+    let args: Vec<String> = env::args().collect();
+
+    if args.len() != 2 {
+        println!("Takes only one argument");
+        return Ok(());
+    }
+
+    let input_path = &args[1];
+
+    if input_path.ends_with(".chords.md") {
+        return translate_file(input_path);
+    }
+
+    let paths = std::fs::read_dir(input_path)?;
+
+    for path_res in paths {
+        let _path = &path_res.unwrap().path();
+        let path = _path.as_os_str().to_str().unwrap();
+        if path.ends_with(".chords.md") {
+            println!("Start processing {}.", path);
+            translate_file(&path.to_string())?;
+        }
+    }
 
     Ok(())
 }
