@@ -44,38 +44,31 @@ fn parse_till_song_start(state: &mut ParsingState){
 }
 
 
-
 fn parse_line_of_chords(state: &mut ParsingState) {
-    let mut current_chord:Option<ChordToken> = None;
+    let mut peeked_char = state.peek();
+    while peeked_char != Some('\n') {
+        parse_chord(state);
+        peeked_char = state.peek();
+    }
+}
 
-    let mut char_opt = state.step_one_forward();
+fn parse_chord(state: &mut ParsingState){
+    state.skip_whitespace();
+    let start_line_index = state.line_index();
+    let start_char_index = state.char_index();
+
+    let mut result_str = String::new();
+
+    let mut char_opt = state.peek();
     while let Some(c) = char_opt {
-        if c == '\n' { break }
-        match (current_chord.clone(), c) {
-            (None, ' ') | (None, '\n') => {},
-            (None, c) => {
-                current_chord = Some(ChordToken{
-                    str: c.to_string(),
-                    start_line_index: state.line_index(),
-                    start_char_index: state.char_index() -1
-                })
-            }
-            (Some(chord), ' ') | (Some(chord), '\n') => {
-                state.push_to_result(AstElement::Chord(chord));
-                current_chord = None;
-            },
-            (Some(chord), c) => {
-                let mut new_chord_str  = chord.str.clone();
-                new_chord_str.push(c);
-                current_chord = Some(ChordToken{
-                    str: new_chord_str,
-                    start_line_index: chord.start_line_index,
-                    start_char_index: chord.start_char_index
-                })
-            }
-        }
-        char_opt = state.step_one_forward();
-    };
+        if c.is_whitespace() { break }
+        result_str.push(c);
+        state.step_one_forward();
+        char_opt = state.peek();
+
+    }
+
+    state.push_to_result(AstElement::Chord(ChordToken { str: result_str, start_line_index, start_char_index }))
 }
 
 fn parse_lyrics_line(state: &mut ParsingState){
