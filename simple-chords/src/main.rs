@@ -37,6 +37,7 @@ fn skip_whitespace(state: &mut ParsingState) {
     }
 }
 
+
 fn read_line(state: &mut ParsingState) -> Option<String> {
     let mut c_opt = parsingstate::step_one_forward(state);
     if c_opt == None {
@@ -98,6 +99,18 @@ fn parse_line_of_chords(state: &mut ParsingState) {
     };
 }
 
+fn parse_till_song_start(state: &mut ParsingState){
+    skip_whitespace(state);
+    let c0 = parsingstate::step_one_forward(state);
+    let c1 = parsingstate::step_one_forward(state);
+    let c2 = parsingstate::step_one_forward(state);
+    let c3 = parsingstate::step_one_forward(state);
+    if c0 != Some('`')  { panic!("Syntax Error: expected ``` (three tics) after heading.")};
+    if c1 != Some('`')  { panic!("Syntax Error: expected ``` (three tics) after heading.")};
+    if c2 != Some('`')  { panic!("Syntax Error: expected ``` (three tics) after heading.")};
+    if c3 != Some('\n') { panic!("Syntax Error: new line after ``` (three tics).")};
+}
+
 fn main() -> io::Result<()> {
     let args: Vec<String> = env::args().collect();
 
@@ -111,6 +124,8 @@ fn main() -> io::Result<()> {
     
 
     let heading = parse_heading(state);
+
+    parse_till_song_start(state);
 
     while !is_done(state) {
         parse_line_of_chords(state);

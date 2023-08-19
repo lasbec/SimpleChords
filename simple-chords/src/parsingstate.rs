@@ -1,5 +1,5 @@
 use std::fs::File;
-use std::io::{self, BufRead, BufReader, Write };
+use std::io::{self, BufRead, BufReader };
 
 struct Cursor {
     line_index: usize,
