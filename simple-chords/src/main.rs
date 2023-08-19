@@ -47,22 +47,34 @@ fn parse_till_song_start(state: &mut ParsingState){
 
 fn parse_line_of_chords(state: &mut ParsingState) {
     state.skip_whitespace_but_not_linebreak();
-    let mut peeked_char = state.peek();
-    
-    while peeked_char != Some('\n') && peeked_char != None {   
-        parse_chord(state);
+    let mut last_read_chord = read_chord(state);
+    let mut peek = state.peek();
+    let mut reached_end_of_line = false;
+
+    while !state.is_done() {
+        if peek == Some('\n') {
+            state.step_one_forward();
+            reached_end_of_line = true;
+        }
+        if let Some(chord) = last_read_chord {
+            state.push_to_result(AstElement::Chord(chord));
+            if reached_end_of_line { break; }
+        }
+        reached_end_of_line = false;
         state.skip_whitespace_but_not_linebreak();
-        peeked_char = state.peek();
+        last_read_chord = read_chord(state);
+        peek = state.peek();
     }
 }
 
-fn parse_chord(state: &mut ParsingState){
+fn read_chord(state: &mut ParsingState) -> Option<ChordToken> {
     let start_line_index = state.line_index();
     let start_char_index = state.char_index();
 
     let result_str = state.read_till_whitespace();
 
-    state.push_to_result(AstElement::Chord(ChordToken { str: result_str, start_line_index, start_char_index }))
+    if result_str.is_empty() { return None }
+    return Some(ChordToken { str: result_str, start_line_index, start_char_index })
 }
 
 fn parse_lyrics_line(state: &mut ParsingState){
