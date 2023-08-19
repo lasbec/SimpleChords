@@ -18,7 +18,7 @@ type ParsingState = parsingstate::ParsingState<Token>;
 
 #[derive(Clone, Debug)]  
 struct ChordToken {
-    str: Chord,
+    chord: Chord,
     start_line_index: usize,
     start_char_index: usize
 }
@@ -70,7 +70,9 @@ fn parse_line(state: &mut ParsingState) {
                 state.push_to_result(Token::LyricLine(res));
             },
             ChordsLineParsingResult::Success(v) =>{
-                state.push_to_result(Token::ChordLine(v));
+                if !v.is_empty() {
+                    state.push_to_result(Token::ChordLine(v));
+                }
             }
         }
     }
@@ -109,7 +111,7 @@ fn parse_line_of_chords(state: &mut ParsingState) -> ChordsLineParsingResult {
         let chord_opt = Chord::from_string(&candidate);
         if let Some(chord) = chord_opt {
             result.push(ChordToken {
-                str:chord,
+                chord,
                 start_char_index,
                 start_line_index,
             });
@@ -148,7 +150,7 @@ fn chords_to_song_line(chords: &Vec<ChordToken>) -> SongLine {
     for chord in chords {
         result.push(SongLineChar{
             char: ' ',
-            chord: Some(chord.str.clone())
+            chord: Some(chord.chord.clone())
         })
     }
     return result;
@@ -165,11 +167,12 @@ fn lyric_to_songline(lyrics:&String)->SongLine {
 fn make_song_line(lyrics: &String, chords:&Vec<ChordToken>) -> SongLine {
     let mut result = Vec::new();
     let mut chords_iter = chords.iter();
-    let next_chord = chords_iter.next();
+    let mut next_chord = chords_iter.next();
     for (i,c) in lyrics.chars().enumerate() {
         if let Some(nc) = next_chord {
             if nc.start_char_index == i {
-                result.push(SongLineChar { char: c, chord: Some(nc.str.clone()) });
+                result.push(SongLineChar { char: c, chord: Some(nc.chord.clone()) });
+                next_chord = chords_iter.next();
                 continue;
             }
         }
@@ -203,7 +206,14 @@ fn build_ast(tokens: Vec<Token>) -> AST {
                 current_chords = Some(chords);
             },
             Token::LyricLine(lyrics) => {
-                current_section.lines.push(lyric_to_songline(lyrics))
+                if let Some(cc) = current_chords {
+                    let value = make_song_line(lyrics, cc);
+                    current_section.lines.push(value);
+                    current_chords = None;
+                } else {
+                    let value = lyric_to_songline(lyrics);
+                    current_section.lines.push(value)
+                }
             },
             Token::Markup(section_name) => {
                 sections.push(current_section);
@@ -227,7 +237,6 @@ fn build_ast(tokens: Vec<Token>) -> AST {
 
 
 fn song_line_to_html(line: SongLine) -> String {
-    println!("L {:?}",line);
     let mut result = String::new();
     for c in line {
         result.push(c.char);
