@@ -21,7 +21,7 @@ struct HeadingToken {
 
 
 fn is_done(state: &mut ParsingState)-> bool {
-    let next_char = parsingstate::peek(state);
+    let next_char = state.peek();
     match next_char {
         None => true,
         _ => false
@@ -29,7 +29,7 @@ fn is_done(state: &mut ParsingState)-> bool {
 }
 
 fn skip_whitespace(state: &mut ParsingState) {
-    if let Some(peek_char) = parsingstate::peek(state) {
+    if let Some(peek_char) = state.peek() {
         if !peek_char.is_whitespace() {
             return;
         }
@@ -39,7 +39,7 @@ fn skip_whitespace(state: &mut ParsingState) {
 
 
 fn read_line(state: &mut ParsingState) -> Option<String> {
-    let mut c_opt = parsingstate::step_one_forward(state);
+    let mut c_opt = state.step_one_forward();
     if c_opt == None {
         return None;
     }
@@ -48,14 +48,14 @@ fn read_line(state: &mut ParsingState) -> Option<String> {
     while let Some(c) = c_opt {
         if c == '\n' { break };
         result_str.push(c);
-        c_opt = parsingstate::step_one_forward(state);
+        c_opt = state.step_one_forward();
     }
     return Some(result_str.clone());
 }
 
 fn parse_heading(state: &mut ParsingState) -> HeadingToken {
     skip_whitespace(state);
-    let c = parsingstate::step_one_forward(state);
+    let c = state.step_one_forward();
     if c != Some('#') {
         panic!("Syntax Error: Expected the first non whitespace character to be '#' ")
     }
@@ -69,7 +69,7 @@ fn parse_heading(state: &mut ParsingState) -> HeadingToken {
 fn parse_line_of_chords(state: &mut ParsingState) {
     let mut current_chord:Option<ChordToken> = None;
 
-    let mut char_opt = parsingstate::step_one_forward(state);
+    let mut char_opt = state.step_one_forward();
     while let Some(c) = char_opt {
         if c == '\n' { break }
         match (current_chord.clone(), c) {
@@ -77,12 +77,12 @@ fn parse_line_of_chords(state: &mut ParsingState) {
             (None, c) => {
                 current_chord = Some(ChordToken{
                     str: c.to_string(),
-                    start_line_index: parsingstate::line_index(state),
-                    start_char_index: parsingstate::char_index(state) -1
+                    start_line_index: state.line_index(),
+                    start_char_index: state.char_index() -1
                 })
             }
             (Some(chord), ' ') | (Some(chord), '\n') => {
-                parsingstate::push(state, chord);
+                state.push(chord);
                 current_chord = None;
             },
             (Some(chord), c) => {
@@ -95,16 +95,16 @@ fn parse_line_of_chords(state: &mut ParsingState) {
                 })
             }
         }
-        char_opt = parsingstate::step_one_forward(state)
+        char_opt = state.step_one_forward();
     };
 }
 
 fn parse_till_song_start(state: &mut ParsingState){
     skip_whitespace(state);
-    let c0 = parsingstate::step_one_forward(state);
-    let c1 = parsingstate::step_one_forward(state);
-    let c2 = parsingstate::step_one_forward(state);
-    let c3 = parsingstate::step_one_forward(state);
+    let c0 = state.step_one_forward();
+    let c1 = state.step_one_forward();
+    let c2 = state.step_one_forward();
+    let c3 = state.step_one_forward();
     if c0 != Some('`')  { panic!("Syntax Error: expected ``` (three tics) after heading.")};
     if c1 != Some('`')  { panic!("Syntax Error: expected ``` (three tics) after heading.")};
     if c2 != Some('`')  { panic!("Syntax Error: expected ``` (three tics) after heading.")};
@@ -120,7 +120,7 @@ fn main() -> io::Result<()> {
     }
     let input_path = &args[1];
 
-    let state = &mut parsingstate::init_parsing_for_file(input_path)?;
+    let state = &mut parsingstate::ParsingState::init_parsing_for_file(input_path)?;
     
 
     let heading = parse_heading(state);
