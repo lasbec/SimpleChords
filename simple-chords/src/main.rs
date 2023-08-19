@@ -1,6 +1,7 @@
 use std::env;
 use std::fs::File;
 use std::io::{self, Write };
+use std::path::PathBuf;
 
 use music::Chord;
 mod parsingstate;
@@ -294,7 +295,8 @@ fn ast_to_html(ast: AST) -> String{
 fn main() -> io::Result<()> {
     let args: Vec<String> = env::args().collect();
 
-    if args.len() != 3 {
+    if args.len() != 2 {
+        println!("Takes only one argument");
         return Ok(());
     }
     let input_path = &args[1];
@@ -310,8 +312,11 @@ fn main() -> io::Result<()> {
     let mut output = html;
 
     // Open the output file
-    let output_path = &args[2];
-    let mut output_file = File::create(output_path)?;
+    let mut path = PathBuf::from(input_path);
+    path.set_extension("html");
+    let output_path = path.to_string_lossy().to_string();
+    
+    let mut output_file = File::create(output_path.clone())?;
 
     // Write the line count to the output file
     writeln!(output_file, "{}", output)?;
