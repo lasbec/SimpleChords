@@ -88,6 +88,18 @@ impl<T> ParsingState<T> {
             if !peek_char.is_whitespace() {
                 return;
             }
+            self.step_one_forward();
+            return self.skip_whitespace()
+        }
+    }
+
+    pub fn skip_whitespace_lines(&mut self) {
+        if let Some(peek_char) = self.peek() {
+            if !peek_char.is_whitespace() {
+                return;
+            }
+            self.step_one_forward();
+            if peek_char == '\n' { return; }
             return self.skip_whitespace()
         }
     }

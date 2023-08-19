@@ -101,6 +101,7 @@ fn main() -> io::Result<()> {
     parse_till_song_start(state);
  
     while !state.is_done() {
+        state.skip_whitespace();
         parse_line_of_chords(state);
         parse_lyrics_line(state);
     }
@@ -122,4 +123,3 @@ fn main() -> io::Result<()> {
 
     Ok(())
 }
-    
