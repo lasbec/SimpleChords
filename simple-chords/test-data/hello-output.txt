@@ -20,4 +20,5 @@ Chord(ChordToken { str: Chord { base_note: C, third_interval: Major, change: Non
 Chord(ChordToken { str: Chord { base_note: D, third_interval: Minor, change: None }, start_line_index: 15, start_char_index: 25 })
 Chord(ChordToken { str: Chord { base_note: G, third_interval: Major, change: Some(Seven) }, start_line_index: 15, start_char_index: 32 })
 LyricLine("und ziehn immer   munter unsere Bahn  ")
+LyricLine("")
 

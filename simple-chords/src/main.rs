@@ -25,17 +25,17 @@ struct ChordToken {
 
 
 fn parse_heading(state: &mut ParsingState) {
-    state.skip_whitespace(); 
+    state.read_whitespace(); 
     let c = state.read_next();
     if c != Some('#') {
         panic!("Syntax Error: Expected the first non whitespace character to be '#' ")
     }
-    let title = state.read_line().unwrap_or(String::new()).trim().to_string();
+    let title = state.read_line().trim().to_string();
     state.push_to_result(AstElement::Heading(title))
 }
 
 fn parse_till_song_start(state: &mut ParsingState){
-    state.skip_whitespace();
+    state.read_whitespace();
     let c0 = state.read_next();
     let c1 = state.read_next();
     let c2 = state.read_next();
@@ -48,11 +48,11 @@ fn parse_till_song_start(state: &mut ParsingState){
 
 
 fn parse_line_of_chords(state: &mut ParsingState) {
-    state.skip_whitespace_but_not_linebreak();
+    state.read_whitespace_but_not_linebreak();
 
     while !state.is_done() {
         let last_read_chord = read_chord(state);
-        state.skip_whitespace_but_not_linebreak();
+        state.read_whitespace_but_not_linebreak();
         let peek = state.peek(); 
         let next_char_is_linebreak = peek == Some('\n'); 
 
@@ -81,7 +81,7 @@ fn read_chord(state: &mut ParsingState) -> Option<ChordToken> {
 }
 
 fn parse_lyrics_line(state: &mut ParsingState){
-    let lyric = state.read_line().unwrap_or(String::new());
+    let lyric = state.read_line();
     state.push_to_result(AstElement::LyricLine(lyric))
 }
 
@@ -106,7 +106,9 @@ fn main() -> io::Result<()> {
         parse_lyrics_line(state);
     }
 
-    let song_output = state.result.iter().map(|el| {format!("{:?}\n", el)}).collect::<Vec<_>>().join("");
+    let song_output = state.result.iter().map(
+        |el| {format!("{:?}\n", el)}).collect::<Vec<_>>().join(""
+    );
     let mut output = format!("{:?}",heading);
     output.push('\n');
     output.push_str(&song_output);

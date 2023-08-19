@@ -70,6 +70,8 @@ impl<T> ParsingState<T> {
         }
         return result;
     }
+
+
     // --------------------------------------------------------
     // Second level methods
     // --------------------------------------------------------
@@ -81,31 +83,12 @@ impl<T> ParsingState<T> {
             _ => false
         }
     }
-    
-    pub fn skip_whitespace(&mut self) {
-        while let Some(peek) = self.peek() {
-            if !peek.is_whitespace() {
-                break;
-            }
-            self.read_next();
-        }
-    }
-
-    pub fn skip_whitespace_but_not_linebreak(&mut self) {
-        while let Some(peek) = self.peek() {
-            if !peek.is_whitespace() || peek == '\n' {
-                break;
-            }
-            self.read_next();
-        }
-    }
-
-    pub fn read_till_whitespace(&mut self) -> String {
+    pub fn read_till(&mut self, cond: impl Fn(char)->bool) -> String {
         let mut result = String::new();
 
         let mut char_opt = self.peek();
         while let Some(c) = char_opt {
-            if c.is_whitespace() { break }
+            if cond(c) { break }
             result.push(c);
             self.read_next();
             char_opt = self.peek();
@@ -113,20 +96,23 @@ impl<T> ParsingState<T> {
 
         return result;
     }
+
+
+    
+    pub fn read_whitespace(&mut self) -> String {
+        self.read_till(|peek:char| !peek.is_whitespace())
+    }
+
+    pub fn read_whitespace_but_not_linebreak(&mut self) -> String {
+        return self.read_till(|peek| !peek.is_whitespace() || peek == '\n' );
+    }
+
+    pub fn read_till_whitespace(&mut self) -> String {
+        return self.read_till(|c:char| c.is_whitespace());
+    }
     
     
-    pub fn read_line(&mut self) -> Option<String> {
-        let mut c_opt = self.read_next();
-        if c_opt == None {
-            return None;
-        }
-        
-        let result_str = &mut String::new();
-        while let Some(c) = c_opt {
-            if c == '\n' { break };
-            result_str.push(c);
-            c_opt = self.read_next();
-        }
-        return Some(result_str.clone());
+    pub fn read_line(&mut self) -> String {
+        return self.read_till(|c| c == '\n');
     }
 }
