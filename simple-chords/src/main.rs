@@ -1,8 +1,10 @@
 use std::env;
 use std::fs::File;
 use std::io::{self, Write };
-use std::time::Duration;
+
+use music::Chord;
 mod parsingstate;
+mod music;
 
 #[derive(Clone, Debug)]  
 enum AstElement {
@@ -15,7 +17,7 @@ type ParsingState = parsingstate::ParsingState<AstElement>;
 
 #[derive(Clone, Debug)]  
 struct ChordToken {
-    str: String,
+    str: Chord,
     start_line_index: usize,
     start_char_index: usize
 }
@@ -41,7 +43,7 @@ fn parse_till_song_start(state: &mut ParsingState){
     if c0 != Some('`')  { panic!("Syntax Error: expected ``` (three tics) after heading.")};
     if c1 != Some('`')  { panic!("Syntax Error: expected ``` (three tics) after heading.")};
     if c2 != Some('`')  { panic!("Syntax Error: expected ``` (three tics) after heading.")};
-    if c3 != Some('\n') { panic!("Syntax Error: new line after ``` (three tics).")};
+    if c3 != Some('\n') { panic!("Syntax Error: new line expected after ``` (three tics).")};
 }
 
 
@@ -70,10 +72,12 @@ fn read_chord(state: &mut ParsingState) -> Option<ChordToken> {
     let start_line_index = state.line_index();
     let start_char_index = state.char_index();
 
-    let result_str = state.read_till_whitespace();
-
-    if result_str.is_empty() { return None }
-    return Some(ChordToken { str: result_str, start_line_index, start_char_index })
+    let read_str = state.read_till_whitespace();
+    if read_str.is_empty() { return None }
+    let chord_opt = Chord::from_string(&read_str);
+    let chord = chord_opt.expect(format!("Syntax Error: Expected a chord but got '{}'", read_str).as_str());
+ 
+    return Some(ChordToken { str: chord, start_line_index, start_char_index })
 }
 
 fn parse_lyrics_line(state: &mut ParsingState){
