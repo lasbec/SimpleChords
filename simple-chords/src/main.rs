@@ -260,6 +260,9 @@ fn song_line_to_html(line: SongLine) -> String {
     return result;
 }
 
+fn make_string_html_class_conform(string: &String) -> String {
+    return string.replace(' ', "_").to_ascii_lowercase();
+}
 
 fn section_to_html(sec: SongSection) -> String {
     let mut lines_str = String::new();
@@ -273,10 +276,10 @@ fn section_to_html(sec: SongSection) -> String {
         lines_str.push_str(&song_line_to_html(line));
     }
 
-    return format!("<h2>{}</h2>
-        <p  class='verse'>
+    return format!("
+        <p  class='{}'>
             {} 
-        </p>", sec.markup, lines_str);
+        </p>", make_string_html_class_conform(&sec.markup), lines_str);
 }
 
 fn ast_to_html(ast: AST) -> String{
