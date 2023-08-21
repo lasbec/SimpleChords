@@ -263,14 +263,20 @@ fn song_line_to_html(line: SongLine) -> String {
 
 fn section_to_html(sec: SongSection) -> String {
     let mut lines_str = String::new();
+    let mut chords_are_given = false;
     for line in sec.lines {
-        lines_str.push_str(&song_line_to_html(line))
+        for c in line.clone() {
+            if c.chord.is_some() {
+                chords_are_given = true;
+            }
+        }
+        lines_str.push_str(&song_line_to_html(line));
     }
-    let mut result =format!("<h2>{}</h2>
-    <p class='verse show-chords'>
-        {} 
-    </p>", sec.markup, lines_str); 
-    return result;
+
+    return format!("<h2>{}</h2>
+        <p  class='verse'>
+            {} 
+        </p>", sec.markup, lines_str);
 }
 
 fn ast_to_html(ast: AST) -> String{
