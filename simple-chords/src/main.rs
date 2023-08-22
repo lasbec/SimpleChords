@@ -256,7 +256,7 @@ fn song_bar_to_html(line: SongBar) -> String {
             result.push_str(&chord_tag);
         }
     }
-    return format!("<span class='bar'>{}</span>",result);
+    return format!("<span class='bar'>{}</span> ",result);
 }
 
 fn make_string_html_class_conform(string: &String) -> String {
