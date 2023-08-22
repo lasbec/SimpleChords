@@ -249,12 +249,19 @@ fn build_ast(tokens: Vec<Token>) -> AST {
 
 fn song_bar_to_html(line: SongBar) -> String {
     let mut result = String::new();
+    let mut previos_char = None;
     for c in line {
         result.push(c.char);
         if let Some(chord) = c.chord {
-            let chord_tag = format!("<chord>{}</chord>",chord.render());
+            let above_space_class = if c.char.is_whitespace() && previos_char.unwrap_or('a').is_whitespace() {
+                " class='above-whitespace'"
+            } else {
+                " class='above-visible'"
+            };
+            let chord_tag = format!("<chord{}>{}</chord>",above_space_class,chord.render());
             result.push_str(&chord_tag);
         }
+        previos_char = Some(c.char);
     }
     return format!("<span class='bar'>{}</span> ",result);
 }
