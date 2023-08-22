@@ -144,10 +144,10 @@ struct AST {
 #[derive(Clone, Debug)]
 struct SongSection {
     markup: String,
-    lines: Vec<SongLine>
+    lines: Vec<SongBar>
 }
 
-type SongLine = Vec<SongLineChar>;
+type SongBar = Vec<SongLineChar>;
 
 
 #[derive(Clone, Debug)]
@@ -156,7 +156,7 @@ struct SongLineChar {
     chord: Option<Chord>
 }
 
-fn chords_to_song_line(chords: &Vec<ChordToken>) -> SongLine {
+fn chords_to_song_line(chords: &Vec<ChordToken>) -> SongBar {
     let mut result = Vec::new();
     for chord in chords {
         result.push(SongLineChar{
@@ -167,7 +167,7 @@ fn chords_to_song_line(chords: &Vec<ChordToken>) -> SongLine {
     return result;
 }
 
-fn lyric_to_songline(lyrics:&String)->SongLine {
+fn lyric_to_songline(lyrics:&String)->SongBar {
     let mut result = Vec::new();
     for c in lyrics.chars() {
         result.push(SongLineChar { char: c, chord: None })
@@ -175,7 +175,7 @@ fn lyric_to_songline(lyrics:&String)->SongLine {
     return result;
 }
 
-fn make_song_line(lyrics: &String, chords:&Vec<ChordToken>) -> SongLine {
+fn make_song_line(lyrics: &String, chords:&Vec<ChordToken>) -> SongBar {
     let mut result = Vec::new();
     let mut chords_iter = chords.iter();
     let mut next_chord = chords_iter.next();
@@ -211,7 +211,7 @@ fn build_ast(tokens: Vec<Token>) -> AST {
         match token {
             Token::ChordLine(chords) => {
                 if let Some(cc) = current_chords {
-                    let value:SongLine = chords_to_song_line(cc);
+                    let value:SongBar = chords_to_song_line(cc);
                     current_section.lines.push(value);
                 } 
                 current_chords = Some(chords);
@@ -247,7 +247,7 @@ fn build_ast(tokens: Vec<Token>) -> AST {
 }
 
 
-fn song_line_to_html(line: SongLine) -> String {
+fn song_bar_to_html(line: SongBar) -> String {
     let mut result = String::new();
     for c in line {
         result.push(c.char);
@@ -256,8 +256,7 @@ fn song_line_to_html(line: SongLine) -> String {
             result.push_str(&chord_tag);
         }
     }
-    result.push_str("<br>\n");
-    return result;
+    return format!("<span class='bar'>{}</span>",result);
 }
 
 fn make_string_html_class_conform(string: &String) -> String {
@@ -266,14 +265,8 @@ fn make_string_html_class_conform(string: &String) -> String {
 
 fn section_to_html(sec: SongSection) -> String {
     let mut lines_str = String::new();
-    let mut chords_are_given = false;
     for line in sec.lines {
-        for c in line.clone() {
-            if c.chord.is_some() {
-                chords_are_given = true;
-            }
-        }
-        lines_str.push_str(&song_line_to_html(line));
+        lines_str.push_str(&song_bar_to_html(line));
     }
 
     return format!("
