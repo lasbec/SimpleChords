@@ -18,8 +18,14 @@ enum Token {
 type ParsingState = parsingstate::ParsingState<Token>;
 
 #[derive(Clone, Debug)]  
+enum ChordOrBar {
+    Chord(Chord),
+    Bar
+} 
+
+#[derive(Clone, Debug)]  
 struct ChordToken {
-    chord: Chord,
+    chord: ChordOrBar,
     start_line_index: usize,
     start_char_index: usize
 }
@@ -115,6 +121,17 @@ fn parse_line_of_chords(state: &mut ParsingState) -> ChordsLineParsingResult {
         let start_line_index = state.line_index();
         let start_char_index = state.char_index();
 
+        if let Some('|') = state.peek() {
+            result.push(ChordToken {
+                chord: ChordOrBar::Bar,
+                start_char_index,
+                start_line_index,
+            });
+            state.read_next();
+            consumed.push('|');
+            continue;
+        }
+
         let candidate = state.read_till_whitespace();
         if candidate.is_empty() {break};
         consumed.push_str(&candidate);
@@ -122,7 +139,7 @@ fn parse_line_of_chords(state: &mut ParsingState) -> ChordsLineParsingResult {
         let chord_opt = Chord::from_string(&candidate);
         if let Some(chord) = chord_opt {
             result.push(ChordToken {
-                chord,
+                chord: ChordOrBar::Chord(chord),
                 start_char_index,
                 start_line_index,
             });
@@ -144,7 +161,7 @@ struct AST {
 #[derive(Clone, Debug)]
 struct SongSection {
     markup: String,
-    lines: Vec<SongBar>
+    bars: Vec<SongBar>
 }
 
 type SongBar = Vec<SongLineChar>;
@@ -156,38 +173,64 @@ struct SongLineChar {
     chord: Option<Chord>
 }
 
-fn chords_to_song_line(chords: &Vec<ChordToken>) -> SongBar {
+fn chords_to_song_bars(chords: &Vec<ChordToken>) -> Vec<SongBar> {
     let mut result = Vec::new();
+    let mut current_bar = Vec::new();
     for chord in chords {
-        result.push(SongLineChar{
-            char: ' ',
-            chord: Some(chord.chord.clone())
-        })
+        match chord.chord.clone() {
+            ChordOrBar::Bar => {
+                result.push(current_bar);
+                current_bar = Vec::new();
+            },
+            ChordOrBar::Chord(chord) => {
+                current_bar.push(SongLineChar{
+                    char: ' ',
+                    chord: Some(chord.clone())
+                })
+            }
+        }
+    }
+    if !current_bar.is_empty() {
+        result.push(current_bar);
     }
     return result;
 }
 
-fn lyric_to_songline(lyrics:&String)->SongBar {
+fn lyric_to_song_bars(lyrics:&String)-> Vec<SongBar> {
     let mut result = Vec::new();
     for c in lyrics.chars() {
         result.push(SongLineChar { char: c, chord: None })
     }
-    return result;
+    return vec![result];
 }
 
-fn make_song_line(lyrics: &String, chords:&Vec<ChordToken>) -> SongBar {
+fn make_song_bars(lyrics: &String, chords:&Vec<ChordToken>) -> Vec<SongBar> {
     let mut result = Vec::new();
+    let mut current_bar = Vec::new();
     let mut chords_iter = chords.iter();
     let mut next_chord = chords_iter.next();
     for (i,c) in lyrics.chars().enumerate() {
         if let Some(nc) = next_chord {
-            if nc.start_char_index == i {
-                result.push(SongLineChar { char: c, chord: Some(nc.chord.clone()) });
-                next_chord = chords_iter.next();
-                continue;
+            match nc.chord.clone() {
+                ChordOrBar::Bar => {
+                    result.push(current_bar);
+                    current_bar = Vec::new();
+                    current_bar.push(SongLineChar { char: c, chord: None });
+                    continue;
+                },
+                ChordOrBar::Chord(chord) => {
+                    if nc.start_char_index == i {
+                        current_bar.push(SongLineChar { char: c, chord: Some(chord.clone()) });
+                        next_chord = chords_iter.next();
+                        continue;
+                    }
+                }
             }
         }
-        result.push(SongLineChar { char: c, chord: None })
+        current_bar.push(SongLineChar { char: c, chord: None });
+    }
+    if !current_bar.is_empty() {
+        result.push(current_bar);
     }
     return result;
 }
@@ -202,7 +245,7 @@ fn build_ast(tokens: Vec<Token>) -> AST {
     let mut sections: Vec<SongSection> = Vec::new();
     let mut current_section = SongSection {
         markup: String::new(),
-        lines: Vec::new()
+        bars: Vec::new()
     };
 
     let mut current_chords = None;
@@ -211,26 +254,26 @@ fn build_ast(tokens: Vec<Token>) -> AST {
         match token {
             Token::ChordLine(chords) => {
                 if let Some(cc) = current_chords {
-                    let value:SongBar = chords_to_song_line(cc);
-                    current_section.lines.push(value);
+                    let mut value = chords_to_song_bars(cc);
+                    current_section.bars.append(&mut value);
                 } 
                 current_chords = Some(chords);
             },
             Token::LyricLine(lyrics) => {
                 if let Some(cc) = current_chords {
-                    let value = make_song_line(lyrics, cc);
-                    current_section.lines.push(value);
+                    let mut value = make_song_bars(lyrics, cc);
+                    current_section.bars.append(&mut value);
                     current_chords = None;
                 } else {
-                    let value = lyric_to_songline(lyrics);
-                    current_section.lines.push(value)
+                    let mut value = lyric_to_song_bars(lyrics);
+                    current_section.bars.append(&mut value)
                 }
             },
             Token::Markup(section_name) => {
                 sections.push(current_section);
                 current_section = SongSection {
                     markup: section_name.clone(),
-                    lines: Vec::new()
+                    bars: Vec::new()
                 }
             },
             Token::Heading(h) => {
@@ -272,7 +315,7 @@ fn make_string_html_class_conform(string: &String) -> String {
 
 fn section_to_html(sec: SongSection) -> String {
     let mut lines_str = String::new();
-    for line in sec.lines {
+    for line in sec.bars {
         lines_str.push_str(&song_bar_to_html(line));
     }
 
