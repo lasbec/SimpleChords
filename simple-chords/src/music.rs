@@ -86,7 +86,8 @@ pub enum NoteChange {
 pub struct Chord {
     base_note: Note,
     third_interval: ThirdInterval,
-    change: Option<NoteChange>
+    change: Option<NoteChange>,
+    optional: bool
 }
 
 
@@ -94,10 +95,18 @@ impl Chord {
     pub fn from_string(string: &String) -> Option<Chord> {
         let mut string_clone =  string.clone();
         
-        let change = if string.ends_with('7') {
+        let optional = if string_clone.starts_with("(") && string_clone.ends_with(")") {
+            string_clone.pop();
+            string_clone.remove(0);
+            true
+        } else {
+            false
+        };
+
+        let change = if string_clone.ends_with('7') {
             string_clone.pop();
             Some(NoteChange::Seven)
-        } else if string.ends_with("_dim"){
+        } else if string_clone.ends_with("_dim"){
             string_clone.pop();
             string_clone.pop();
             string_clone.pop();
@@ -106,6 +115,7 @@ impl Chord {
         } else {
             None
         };
+
         let first_char = string_clone.chars().nth(0)?;
         let third_interval = if first_char.is_lowercase() {
             ThirdInterval::Minor
@@ -116,6 +126,7 @@ impl Chord {
         let base_note = Note::from_string(&string_clone)?;
 
         return Some(Chord {
+            optional,
             base_note,
             third_interval,
             change
@@ -134,6 +145,13 @@ impl Chord {
             Some(NoteChange::Dimished) => String::from("Dim")
         };
         result.push_str(&postfix);
+
+
+
+        if self.optional {
+            result.insert(0,'(');
+            result.push(')');
+        }
         return result;
     }
 
