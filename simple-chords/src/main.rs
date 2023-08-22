@@ -294,8 +294,10 @@ fn ast_to_html(ast: AST) -> String{
     <link rel='stylesheet' href='SimpleChords.css'>
 </head>
 <body>
-    <h1>{}</h1>
-    {}
+    <div class='song'>
+        <h1>{}</h1>
+        {}
+    </div>
 </body>",
     ast.heading,
     sections_str)
