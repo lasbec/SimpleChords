@@ -50,4 +50,37 @@ export class Lenght {
     }
     throw new Error(`Invalid lenght unit '${unit}'.`);
   }
+
+  /**
+   *
+   * @param {Lenght} other
+   * @return {Lenght}
+   */
+  sub(other) {
+    if (this.unit === other.unit) {
+      return LEN(this.value - other.value, this.unit);
+    }
+    return LEN(this.in("mm") - other.in("mm"), "mm");
+  }
+
+  /**
+   * @param {Lenght} other
+   * @return {Lenght}
+   */
+  add(other) {
+    if (this.unit === other.unit) {
+      return LEN(this.value + other.value, this.unit);
+    }
+    return LEN(this.in("mm") + other.in("mm"), "mm");
+  }
+
+  /** @param {Lenght} other */
+  lt(other) {
+    return this.in("mm") < other.in("mm");
+  }
+
+  /** @param {Lenght} other */
+  gt(other) {
+    return this.in("mm") > other.in("mm");
+  }
 }
