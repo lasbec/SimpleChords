@@ -1,0 +1,15 @@
+{
+	"type": "module",
+	"scripts": {
+		"check": "tsc --project jsconfig.json",
+		"check:watch": "tsc --watch --project jsconfig.json",
+
+		"sandbox": "node ./src/Sandbox.js"
+	},
+	"dependencies": {
+		"pdf-lib": "^1.17.1"
+	},
+	"devDependencies": {
+		"typescript": "^5.1.6"
+	}
+}
