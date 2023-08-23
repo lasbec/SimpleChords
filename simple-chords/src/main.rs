@@ -121,15 +121,17 @@ fn parse_line_of_chords(state: &mut ParsingState) -> ChordsLineParsingResult {
         let start_line_index = state.line_index();
         let start_char_index = state.char_index();
 
-        if let Some('|') = state.peek() {
-            result.push(ChordToken {
-                chord: ChordOrBar::Bar,
-                start_char_index,
-                start_line_index,
-            });
-            state.read_next();
-            consumed.push('|');
-            continue;
+        if let Some(c) = state.peek() {
+            if c == '|' {
+                result.push(ChordToken {
+                    chord: ChordOrBar::Bar,
+                    start_char_index,
+                    start_line_index,
+                });
+                state.read_next();
+                consumed.push('|');
+                continue;
+            }
         }
 
         let candidate = state.read_till_whitespace();
@@ -199,8 +201,9 @@ fn chords_to_song_bars(chords: &Vec<ChordToken>) -> Vec<SongBar> {
 fn lyric_to_song_bars(lyrics:&String)-> Vec<SongBar> {
     let mut result = Vec::new();
     for c in lyrics.chars() {
-        result.push(SongLineChar { char: c, chord: None })
+        result.push(SongLineChar { char: c, chord: None });
     }
+    result.push(SongLineChar { char: ' ', chord: None });
     return vec![result];
 }
 
@@ -216,6 +219,7 @@ fn make_song_bars(lyrics: &String, chords:&Vec<ChordToken>) -> Vec<SongBar> {
                     result.push(current_bar);
                     current_bar = Vec::new();
                     current_bar.push(SongLineChar { char: c, chord: None });
+                    next_chord = chords_iter.next();
                     continue;
                 },
                 ChordOrBar::Chord(chord) => {
@@ -229,9 +233,8 @@ fn make_song_bars(lyrics: &String, chords:&Vec<ChordToken>) -> Vec<SongBar> {
         }
         current_bar.push(SongLineChar { char: c, chord: None });
     }
-    if !current_bar.is_empty() {
-        result.push(current_bar);
-    }
+    current_bar.push(SongLineChar { char: ' ', chord: None });
+    result.push(current_bar);
     return result;
 }
 
@@ -306,7 +309,7 @@ fn song_bar_to_html(line: SongBar) -> String {
         }
         previos_char = Some(c.char);
     }
-    return format!("<span class='bar'>{}</span> ",result);
+    return format!("<span class='bar'>{}</span>",result);
 }
 
 fn make_string_html_class_conform(string: &String) -> String {
