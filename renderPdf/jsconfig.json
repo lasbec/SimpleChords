@@ -3,6 +3,6 @@
       "checkJs": true,
       "maxNodeModuleJsDepth": 5
     },
-    "input": [""]
+    "input": ["src"]
   }  
   
