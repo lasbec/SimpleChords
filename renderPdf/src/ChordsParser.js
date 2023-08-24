@@ -1,103 +1,45 @@
-/**
- * @typedef {object} Cursor
- * @property {number} lineIndex
- * @property {number} charIndex
- */
+import { Chord } from "./Chord.js";
+import { ParsingError } from "./ParsingError.js";
 
 /**
- * @typedef {object} ParsingErrorArgs
- * @property {Cursor} cursor
- * @property {string=} expected
- * @property {string=} actual
- * @property {string=} hint
+ *
+ * @param {string} input
  */
+export function parseSongAST(input) {
+  try {
+    return new ChordsParsingProcedure(input).parse();
+  } catch (error) {
+    if (error instanceof ParsingError) {
+      console.error(error.toString());
+      return null;
+    }
+    throw error;
+  }
+}
 
-/**
- * @typedef {object} ChordsLineElement
- * @property {number} startIndex
- * @property {Chord} chord
- */
-
-class Chord {
+class ChordsParsingProcedure {
   /** @type {string} */
-  str;
-
-  /** @param {string} str*/
-  constructor(str) {
-    this.str;
-  }
-
-  toString() {
-    return this.str;
-  }
-
-  /**@param {string} str */
-  static fromString(str) {
-    return new Chord(str);
-  }
-
-  /** @param {string} str*/
-  static getSimilarWrittenChord(str) {
-    return new Chord("Gm");
-  }
-}
-
-/**
- * S -> Heading Body
- * Body -> ```\n InnerBody
- * InnerBody -> ChordLine TextLine InnerBody | \n```\n
- * ChordLine -> Chord Whitespace ChordLine | \n
- */
-class ParsingError extends Error {
-  /** @type {Cursor} */
-  cursor;
-  /** @type {string=} */
-  expected;
-  /** @type {string=} */
-  actual;
-  /** @type {string=} */
-  hint;
-
-  /**
-   * @param {string} msg
-   * @param {ParsingErrorArgs} args
-   */
-  constructor(msg, args) {
-    super(msg);
-    this.cursor = args.cursor;
-    this.expected = args.expected;
-    this.actual = args.actual;
-    this.hint = args.hint;
-  }
-
-  toString() {
-    let result = `${this.message} at line ${this.cursor.lineIndex}:${this.cursor.charIndex}`;
-    if (this.expected || this.actual) {
-      result += "\n";
-    }
-    if (this.expected) {
-      result += ` expected '${this.expected}'`;
-    }
-    if (this.actual) {
-      result += ` got '${this.actual}'`;
-    }
-    if (this.hint) {
-      result += "\n" + this.hint;
-    }
-    return result;
-  }
-}
-
-export class ChordsParsingProcedure {
-  /**@type {string} */
   input;
 
-  /**@type {number} */
+  /** @type {number} */
   totalIndex;
-  /**@type {number} */
+  /** @type {number} */
   lineIndex;
-  /**@type {number} */
+  /** @type {number} */
   charIndex;
+
+  debug = false;
+  /**@param {*[]} msg*/
+  log(...msg) {
+    if (this.debug) {
+      console.log(
+        msg,
+        `(current char: '${this.currentChar()}', line: ${this.lineIndex}:${
+          this.charIndex
+        })`
+      );
+    }
+  }
 
   /** @param {string} input */
   constructor(input) {
@@ -112,6 +54,7 @@ export class ChordsParsingProcedure {
   }
 
   stepOn() {
+    // const caller = new Error().stack.split("\n")[3].split(".")[1].split(" ")[0];
     const oldChar = this.currentChar();
     if (!oldChar) this.throwUnexpectedEndOfFile();
     this.totalIndex += 1;
@@ -123,11 +66,15 @@ export class ChordsParsingProcedure {
     return oldChar;
   }
 
-  start() {
+  /**
+   * @returns {SongAst}
+   */
+  parse() {
     const heading = this.readHeading();
-    const body = this.readBody();
+    this.log("Parsed heading:", heading);
     this.readBodyBeg();
-    return { heading, body };
+    const sections = this.readBody();
+    return { heading, sections };
   }
 
   readHeading() {
@@ -138,21 +85,80 @@ export class ChordsParsingProcedure {
       });
     }
     this.stepOn();
-    return this.readTextLine();
+    return this.readLine().trim();
   }
 
   readBody() {
-    if (this.currentChar() === "`") {
-      this.readBodyEnd();
-    } else {
-      this.readChordsLine();
-      this.readTextLine();
-      this.readBody();
+    /** @type {SongSection[]} */
+    let result = [];
+    while (this.currentChar() !== "`") {
+      const section = this.readSection();
+      this.log("Section parsed", section.sectionHeading);
+      result.push(section);
     }
+    this.readBodyEnd();
+    return result;
+  }
+
+  readSectionHeading() {
+    if (this.currentChar() != "[") {
+      this.throwUnexpectedToken({
+        actual: this.currentChar(),
+        expected: "[",
+      });
+    }
+    this.stepOn();
+    const line = this.readLine().trim();
+    if (line[line.length - 1] !== "]") {
+      this.throwUnexpectedToken({
+        actual: this.currentChar(),
+        expected: "]",
+      });
+    }
+    return line.slice(0, -1);
+  }
+
+  readSection() {
+    let sectionHeading = "";
+    if (this.currentChar() === "[") {
+      sectionHeading = this.readSectionHeading();
+      this.log("section heading parsed", sectionHeading);
+    } else {
+      this.log("no section heading");
+    }
+
+    /** @type {SongLine[]} */
+    const lines = [];
+    while (!["`", "["].includes(this.currentChar())) {
+      const chords = this.readChordsLine();
+      this.log("parsed chords line", chords);
+      const lyric = this.readLine();
+      this.log("parsed lyric line", lyric);
+      lines.push({
+        chords,
+        lyric,
+      });
+    }
+    return {
+      sectionHeading,
+      lines,
+    };
   }
 
   readBodyBeg() {
+    this.readWhiteSpace();
+    this.readThreeTick();
+  }
+
+  readWhiteSpace() {
+    while ([" ", "\n", "\t", "\r"].includes(this.currentChar())) {
+      this.stepOn();
+    }
+  }
+
+  readThreeTick() {
     const line = this.readLine();
+    this.log("Read three ticks", line);
     if (line.trim() !== "```") {
       this.throwUnexpectedToken({
         expected: "```",
@@ -162,7 +168,7 @@ export class ChordsParsingProcedure {
   }
 
   readBodyEnd() {
-    this.readBodyBeg();
+    this.readThreeTick();
   }
 
   readChordsLine() {
@@ -184,19 +190,16 @@ export class ChordsParsingProcedure {
 
   chord() {
     const chordString = this.readNoneWithespace();
-    const chord = Chord.fromString(chordString);
-    if (!chord) {
-      const similar = Chord.getSimilarWrittenChord(chordString);
-      this.throwInvalidChord({
-        actual: chordString,
-        hint: similar ? `Did you mean '${similar}'?` : "",
-      });
-    }
-    return chord;
-  }
-
-  readTextLine() {
-    return this.readLine();
+    return chordString;
+    // const chord = Chord.fromString(chordString);
+    // if (!chord) {
+    //   const similar = Chord.getSimilarWrittenChord(chordString);
+    //   this.throwInvalidChord({
+    //     actual: chordString,
+    //     hint: similar ? `Did you mean '${similar}'?` : "",
+    //   });
+    // }
+    // return chord;
   }
 
   readWhiteSpaceExceptLineBreak() {
@@ -253,3 +256,27 @@ export class ChordsParsingProcedure {
     });
   }
 }
+
+/**
+ * @typedef {object} ChordsLineElement
+ * @property {number} startIndex
+ * @property {string} chord
+ */
+
+/**
+ * @typedef {object} SongAst
+ * @property {string} heading
+ * @property {SongSection[]} sections
+ */
+
+/**
+ * @typedef {object} SongSection
+ * @property {string} sectionHeading
+ * @property {SongLine[]} lines
+ */
+
+/**
+ * @typedef {object} SongLine
+ * @property {string} lyric
+ * @property {ChordsLineElement[]} chords
+ */

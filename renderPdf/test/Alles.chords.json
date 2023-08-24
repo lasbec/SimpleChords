@@ -1,0 +1,23 @@
+{
+  "heading": "Alles",
+  "sections": [
+    {
+      "sectionHeading": "",
+      "lines": [
+        {
+          "chords": [
+            {
+              "chord": "E7",
+              "startIndex": 11
+            },
+            {
+              "chord": "G",
+              "startIndex": 33
+            }
+          ],
+          "lyric": "Verhornte Kuppen hämmern übers Brett"
+        }
+      ]
+    }
+  ]
+}
