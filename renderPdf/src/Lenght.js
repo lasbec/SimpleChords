@@ -74,6 +74,14 @@ export class Lenght {
     return LEN(this.in("mm") + other.in("mm"), "mm");
   }
 
+  /**
+   * @param {number} scalar
+   * @return {Lenght}
+   */
+  mul(scalar) {
+    return LEN(this.value * scalar, this.unit);
+  }
+
   /** @param {Lenght} other */
   lt(other) {
     return this.in("mm") < other.in("mm");

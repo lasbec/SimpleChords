@@ -2,6 +2,7 @@ import * as fs from "fs/promises";
 import { parseSongAST } from "./SongParser.js";
 import { PDFDocument } from "pdf-lib";
 import { SongPrinter } from "./SongPrinter.js";
+import { Page } from "./SongPrinter.js";
 import { StandardFonts } from "pdf-lib";
 
 const [nodePath, scriptPath, inputPath] = process.argv;
@@ -24,7 +25,7 @@ async function main() {
 
   const pdfDoc = await PDFDocument.create();
   const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
-  const page = pdfDoc.addPage();
+  const page = new Page(pdfDoc.addPage());
 
   const printer = new SongPrinter(ast, timesRomanFont);
   printer.printToPage(page);
