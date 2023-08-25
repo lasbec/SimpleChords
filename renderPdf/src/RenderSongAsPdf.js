@@ -1,8 +1,8 @@
 /**
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("pdf-lib").PDFFont} PDFFont
- * @typedef {import("./SongParser").SongAst} SongAst
- * @typedef {import("./SongParser").ChordsLineElement} ChordsLineElement
+ * @typedef {import("./SongParser.js").SongAst} SongAst
+ * @typedef {import("./SongParser.js").ChordsLineElement} ChordsLineElement
  */
 import { PDFDocument } from "pdf-lib";
 import { LEN, Lenght } from "./Lenght.js";
@@ -13,7 +13,11 @@ import { StandardFonts } from "pdf-lib";
 export async function renderSongAsPdf(song) {
   const pdfDoc = await PDFDocument.create();
   const font = await pdfDoc.embedFont(StandardFonts.TimesRoman);
-  const page = new Page(pdfDoc.addPage());
+  const pageWidth = LEN(148.5, "mm");
+  const pageHeight = LEN(210, "mm");
+  const page = new Page(
+    pdfDoc.addPage([pageWidth.in("pt"), pageHeight.in("pt")])
+  );
   await printToPage();
   return await pdfDoc.save();
 
@@ -43,6 +47,7 @@ export async function renderSongAsPdf(song) {
     pointer.drawText("center", "bottom", song.heading, titleFontSize, font);
 
     pointer.moveDown(titleLineHeight);
+    pointer.moveDown(lyricLineHeight);
     pointer.moveToLeftBorder().moveRight(leftMargin);
     lyricLines.forEach((line) => {
       // Chords

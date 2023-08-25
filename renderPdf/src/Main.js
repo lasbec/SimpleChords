@@ -1,11 +1,10 @@
 import * as fs from "fs/promises";
 import { parseSongAST } from "./SongParser.js";
-import { renderSongAsPdf } from "./SongPrinter.js";
+import { renderSongAsPdf } from "./RenderSongAsPdf.js";
 
 const [nodePath, scriptPath, inputPath] = process.argv;
 
 async function main() {
-  console.log("Directory", await fs.readdir("./"));
   const contentToParse = await fs.readFile(inputPath, "utf8");
   const ast = parseSongAST(contentToParse);
 
