@@ -29,7 +29,14 @@ export class Page {
    * @param {YStartPosition} y
    */
   getPointerAt(x, y) {
-    return PagePointer.atPage(x, y, this);
+    return PagePointer.atBox(x, y, this);
+  }
+
+  /**
+   * @returns {Page}
+   */
+  rootPage() {
+    return this;
   }
 }
 
@@ -38,8 +45,8 @@ class PagePointer {
   x;
   /** @type {Lenght}*/
   y;
-  /** @type {Page} */
-  page;
+  /** @type {Page | Box} */
+  box;
 
   debug = false;
   log(...args) {
@@ -52,25 +59,25 @@ class PagePointer {
    *
    * @param {Lenght} x
    * @param {Lenght} y
-   * @param {Page} page
+   * @param {Page | Box} page
    * @private
    */
   constructor(x, y, page) {
     this.x = x;
     this.y = y;
-    this.page = page;
+    this.box = page;
   }
 
   /**
    * @param {XStartPosition} x
    * @param {YStartPosition} y
-   * @param {Page} page
+   * @param {Page | Box} box
    */
-  static atPage(x, y, page) {
+  static atBox(x, y, box) {
     return new PagePointer(
-      PagePointer.xPositionOnPage(x, page.width),
-      PagePointer.yPositionOnPage(y, page.height),
-      page
+      PagePointer.xPositionOnPage(x, box.width),
+      PagePointer.yPositionOnPage(y, box.height),
+      box
     );
   }
 
@@ -123,7 +130,7 @@ class PagePointer {
   }
 
   clone() {
-    return new PagePointer(this.x, this.y, this.page);
+    return new PagePointer(this.x, this.y, this.box);
   }
 
   /** @param {Lenght} offset  */
@@ -151,32 +158,32 @@ class PagePointer {
   }
 
   moveToRightBorder() {
-    this.x = PagePointer.xPositionOnPage("right", this.page.width);
+    this.x = PagePointer.xPositionOnPage("right", this.box.width);
     return this;
   }
 
   moveToLeftBorder() {
-    this.x = PagePointer.xPositionOnPage("left", this.page.width);
+    this.x = PagePointer.xPositionOnPage("left", this.box.width);
     return this;
   }
 
   moveToTopBorder() {
-    this.y = PagePointer.yPositionOnPage("top", this.page.height);
+    this.y = PagePointer.yPositionOnPage("top", this.box.height);
     return this;
   }
 
   moveToBottomBorder() {
-    this.y = PagePointer.yPositionOnPage("bottom", this.page.height);
+    this.y = PagePointer.yPositionOnPage("bottom", this.box.height);
     return this;
   }
 
   moveHorizontalCenter() {
-    this.x = PagePointer.xPositionOnPage("center", this.page.width);
+    this.x = PagePointer.xPositionOnPage("center", this.box.width);
     return this;
   }
 
   moveVerticalCenter() {
-    this.y = PagePointer.yPositionOnPage("center", this.page.height);
+    this.y = PagePointer.yPositionOnPage("center", this.box.height);
     return this;
   }
 
@@ -217,14 +224,14 @@ class PagePointer {
       font: font,
       size: fontSize.in("pt"),
     };
-    this.log({ x: drawArgs.x, y: drawArgs.y, text }, "\n");
-    this.page.page.drawText(text, drawArgs);
+    this.log("Draw Text at:", { x: drawArgs.x, y: drawArgs.y, text }, "\n");
+    this.box.rootPage().page.drawText(text, drawArgs);
+    return new Box(
+      { width, height },
+      { x: drawArgs.x, y: drawArgs.y },
+      this.box
+    );
   }
-
-  /**
-   * @param {XStartPosition}
-   * @private
-   */
 }
 
 class Box {
@@ -232,11 +239,29 @@ class Box {
   width;
   /**@type {Lenght}*/
   height;
+
+  /** @param {Point} */
+  bottomLeftCorner;
+  /** @param {Box | Page} */
+  parent;
+
   /**
    * @param {Dimesions} dims
+   * @param {Point} bottomLeftCorner
+   * @param {Box | Page} parent
    */
-  constructor(dims) {
-    (this.width = dims.width), (this.height = dims.height);
+  constructor(dims, bottomLeftCorner, parent) {
+    this.width = dims.width;
+    this.height = dims.height;
+    this.bottomLeftCorner = bottomLeftCorner;
+    this.parent = parent;
+  }
+
+  /**
+   * @returns {Page}
+   */
+  rootPage() {
+    return this.parent.rootPage();
   }
 }
 
