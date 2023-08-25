@@ -126,62 +126,76 @@ class PagePointer {
     return new PagePointer(this.x, this.y, this.page);
   }
 
-  /**
-   * @param {Lenght} offset
-   */
+  /** @param {Lenght} offset  */
   moveRight(offset) {
     this.x = this.x.add(offset);
     return this;
   }
 
-  /**
-   * @param {Lenght} offset
-   */
+  /** @param {Lenght} offset  */
   moveLeft(offset) {
     this.x = this.x.sub(offset);
     return this;
   }
 
-  /**
-   * @param {Lenght} offset
-   */
+  /** @param {Lenght} offset  */
   moveUp(offset) {
     this.y = this.y.add(offset);
     return this;
   }
 
-  /**
-   * @param {Lenght} offset
-   */
+  /** @param {Lenght} offset  */
   moveDown(offset) {
     this.y = this.y.sub(offset);
     return this;
   }
 
-  /**
-   * @param {Lenght} offset
-   */
+  moveToRightBorder() {
+    this.x = PagePointer.xPositionOnPage("right", this.page.width);
+    return this;
+  }
+
+  moveToLeftBorder() {
+    this.x = PagePointer.xPositionOnPage("left", this.page.width);
+    return this;
+  }
+
+  moveToTopBorder() {
+    this.y = PagePointer.yPositionOnPage("top", this.page.height);
+    return this;
+  }
+
+  moveToBottomBorder() {
+    this.y = PagePointer.yPositionOnPage("bottom", this.page.height);
+    return this;
+  }
+
+  moveHorizontalCenter() {
+    this.x = PagePointer.xPositionOnPage("center", this.page.width);
+    return this;
+  }
+
+  moveVerticalCenter() {
+    this.y = PagePointer.yPositionOnPage("center", this.page.height);
+    return this;
+  }
+
+  /** @param {Lenght} offset  */
   pointerRight(offset) {
     return this.clone().moveRight(offset);
   }
 
-  /**
-   * @param {Lenght} offset
-   */
+  /** @param {Lenght} offset  */
   pointerLeft(offset) {
     return this.clone().moveLeft(offset);
   }
 
-  /**
-   * @param {Lenght} offset
-   */
+  /** @param {Lenght} offset  */
   pointerUp(offset) {
     return this.clone().moveUp(offset);
   }
 
-  /**
-   * @param {Lenght} offset
-   */
+  /** @param {Lenght} offset  */
   pointerDown(offset) {
     return this.clone().moveDown(offset);
   }

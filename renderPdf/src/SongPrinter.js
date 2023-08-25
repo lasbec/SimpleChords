@@ -22,8 +22,18 @@ export class SongPrinter {
 
   /** @param {Page} page */
   async printToPage(page) {
-    const fontSize = LEN(12, "pt");
-    const lineHeight = LEN(this.font.heightAtSize(fontSize.in("pt")), "pt");
+    const lyricFontSize = LEN(12, "pt");
+    const lyricLineHeight = LEN(
+      this.font.heightAtSize(lyricFontSize.in("pt")),
+      "pt"
+    );
+
+    const titleFontSize = lyricFontSize.mul(1.3);
+    const titleLineHeight = LEN(
+      this.font.heightAtSize(titleFontSize.in("pt")),
+      "pt"
+    );
+
     const leftMargin = LEN(20, "mm");
     const rightMargin = LEN(20, "mm");
     const topMargin = LEN(20, "mm");
@@ -31,24 +41,37 @@ export class SongPrinter {
 
     const lyricLines = this.song.sections.flatMap((s) => s.lines);
 
-    const pointer = page
-      .getPointerAt("left", "top")
-      .moveDown(topMargin)
-      .moveRight(leftMargin);
+    const pointer = page.getPointerAt("center", "top").moveDown(topMargin);
+
+    // Title
+    pointer.drawText(
+      "center",
+      "bottom",
+      this.song.heading,
+      titleFontSize,
+      this.font
+    );
+
+    pointer.moveDown(titleLineHeight);
+    pointer.moveToLeftBorder().moveRight(leftMargin);
     lyricLines.forEach((line) => {
       // Chords
-      const partialWidths = getPartialWidths(line.lyric, this.font, fontSize);
+      const partialWidths = getPartialWidths(
+        line.lyric,
+        this.font,
+        lyricFontSize
+      );
       for (const chord of line.chords) {
         const yOffset = partialWidths[chord.startIndex];
         if (!yOffset) continue;
         pointer
           .pointerRight(yOffset)
-          .drawText("right", "bottom", chord.chord, fontSize, this.font);
+          .drawText("right", "bottom", chord.chord, lyricFontSize, this.font);
       }
       // Lyrics
-      pointer.moveDown(lineHeight);
-      pointer.drawText("right", "bottom", line.lyric, fontSize, this.font);
-      pointer.moveDown(lineHeight);
+      pointer.moveDown(lyricLineHeight);
+      pointer.drawText("right", "bottom", line.lyric, lyricFontSize, this.font);
+      pointer.moveDown(lyricLineHeight);
     });
   }
 }
