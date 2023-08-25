@@ -4,7 +4,7 @@
  * @typedef {import("pdf-lib").PDFFont} PDFFont
  */
 
-import { LEN } from "./Lenght";
+import { LEN } from "./Lenght.js";
 
 export class Page {
   /** @type {PDFPage} */
@@ -40,6 +40,13 @@ class PagePointer {
   y;
   /** @type {Page} */
   page;
+
+  debug = false;
+  log(...args) {
+    if (this.debug) {
+      console.log(...args);
+    }
+  }
 
   /**
    *
@@ -196,7 +203,7 @@ class PagePointer {
       font: font,
       size: fontSize.in("pt"),
     };
-    console.log({ x: drawArgs.x, y: drawArgs.y, text }, "\n");
+    this.log({ x: drawArgs.x, y: drawArgs.y, text }, "\n");
     this.page.page.drawText(text, drawArgs);
   }
 

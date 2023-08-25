@@ -2,7 +2,7 @@ import * as fs from "fs/promises";
 import { parseSongAST } from "./SongParser.js";
 import { PDFDocument } from "pdf-lib";
 import { SongPrinter } from "./SongPrinter.js";
-import { Page } from "./SongPrinter.js";
+import { Page } from "./Page.js";
 import { StandardFonts } from "pdf-lib";
 
 const [nodePath, scriptPath, inputPath] = process.argv;
