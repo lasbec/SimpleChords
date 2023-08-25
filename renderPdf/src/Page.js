@@ -77,6 +77,14 @@ class Box {
   rootPage() {
     return this.parent.rootPage();
   }
+
+  /**
+   * @param {XStartPosition} x
+   * @param {YStartPosition} y
+   */
+  getPointerAt(x, y) {
+    return PagePointer.atBox(x, y, this);
+  }
 }
 
 class PagePointer {
@@ -87,7 +95,7 @@ class PagePointer {
   /** @type {Page | Box} */
   box;
 
-  debug = false;
+  debug = true;
   log(...args) {
     if (this.debug) {
       console.log(...args);
@@ -248,6 +256,21 @@ class PagePointer {
   /** @param {Lenght} offset  */
   pointerDown(offset) {
     return this.clone().moveDown(offset);
+  }
+
+  onPage() {
+    return new PagePointer(this.x, this.y, this.box.rootPage());
+  }
+
+  isOutsideOfBox() {
+    const { x: leftBorder, y: bottomBorder } = this.box._leftBottomCorner;
+    if (this.x.lt(leftBorder)) return true;
+    if (this.y.lt(bottomBorder)) return true;
+    const rightBorder = this.x.add(this.box.width);
+    if (this.x.gt(rightBorder)) return true;
+    const topBorder = this.y.add(this.box.height);
+    if (this.y.gt(topBorder)) return true;
+    return true;
   }
 
   /**
