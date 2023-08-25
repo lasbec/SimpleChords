@@ -15,6 +15,9 @@ export class Page {
   /** @type {Lenght}*/
   height;
 
+  /** @type {Point} */
+  _leftBottomCorner;
+
   /**
    * @param {PDFPage} page
    */
@@ -23,6 +26,10 @@ export class Page {
     this.width = LEN(width, "pt");
     this.height = LEN(height, "pt");
     this.page = page;
+    this._leftBottomCorner = {
+      x: LEN(0, "pt"),
+      y: LEN(0, "pt"),
+    };
   }
 
   /**
@@ -38,6 +45,37 @@ export class Page {
    */
   rootPage() {
     return this;
+  }
+}
+
+class Box {
+  /**@type {Lenght}*/
+  width;
+  /**@type {Lenght}*/
+  height;
+
+  /** @param {Point} */
+  _leftBottomCorner;
+  /** @param {Box | Page} */
+  parent;
+
+  /**
+   * @param {Dimesions} dims
+   * @param {Point} leftBottomCorner
+   * @param {Box | Page} parent
+   */
+  constructor(dims, leftBottomCorner, parent) {
+    this.width = dims.width;
+    this.height = dims.height;
+    this._leftBottomCorner = leftBottomCorner;
+    this.parent = parent;
+  }
+
+  /**
+   * @returns {Page}
+   */
+  rootPage() {
+    return this.parent.rootPage();
   }
 }
 
@@ -76,33 +114,37 @@ class PagePointer {
    */
   static atBox(x, y, box) {
     return new PagePointer(
-      PagePointer.xPositionOnPage(x, box.width),
-      PagePointer.yPositionOnPage(y, box.height),
+      PagePointer.xPositionOnPage(x, box),
+      PagePointer.yPositionOnPage(y, box),
       box
     );
   }
 
   /**
-   * @param {XStartPosition} x
-   * @param {Lenght} width
+   * @param {XStartPosition} xRelative
+   * @param {Box | Page} box
    * @private
    */
-  static xPositionOnPage(x, width) {
-    if (x === "left") return LEN(0, "pt");
-    if (x === "center") return width.mul(1 / 2);
-    if (x === "right") return width;
+  static xPositionOnPage(xRelative, box) {
+    const width = box.width;
+    const { x } = box._leftBottomCorner;
+    if (xRelative === "left") return x;
+    if (xRelative === "center") return x.add(width.mul(1 / 2));
+    if (xRelative === "right") return x.add(width);
     throw Error("Invalid x start position.");
   }
 
   /**
-   * @param {YStartPosition} y
-   * @param {Lenght} height
+   * @param {YStartPosition} yRelative
+   * @param {Box | Page} box
    * @private
    */
-  static yPositionOnPage(y, height) {
-    if (y === "top") return height;
-    if (y === "center") return height.mul(1 / 2);
-    if (y === "bottom") return LEN(0, "pt");
+  static yPositionOnPage(yRelative, box) {
+    const height = box.height;
+    const { y } = box._leftBottomCorner;
+    if (yRelative === "top") return y.add(height);
+    if (yRelative === "center") return y.add(height.mul(1 / 2));
+    if (yRelative === "bottom") return y;
     throw Error("Invalid y start position.");
   }
 
@@ -159,32 +201,32 @@ class PagePointer {
   }
 
   moveToRightBorder() {
-    this.x = PagePointer.xPositionOnPage("right", this.box.width);
+    this.x = PagePointer.xPositionOnPage("right", this.box);
     return this;
   }
 
   moveToLeftBorder() {
-    this.x = PagePointer.xPositionOnPage("left", this.box.width);
+    this.x = PagePointer.xPositionOnPage("left", this.box);
     return this;
   }
 
   moveToTopBorder() {
-    this.y = PagePointer.yPositionOnPage("top", this.box.height);
+    this.y = PagePointer.yPositionOnPage("top", this.box);
     return this;
   }
 
   moveToBottomBorder() {
-    this.y = PagePointer.yPositionOnPage("bottom", this.box.height);
+    this.y = PagePointer.yPositionOnPage("bottom", this.box);
     return this;
   }
 
   moveHorizontalCenter() {
-    this.x = PagePointer.xPositionOnPage("center", this.box.width);
+    this.x = PagePointer.xPositionOnPage("center", this.box);
     return this;
   }
 
   moveVerticalCenter() {
-    this.y = PagePointer.yPositionOnPage("center", this.box.height);
+    this.y = PagePointer.yPositionOnPage("center", this.box);
     return this;
   }
 
@@ -245,37 +287,6 @@ class PagePointer {
       { x: drawArgs.x, y: drawArgs.y },
       this.box
     );
-  }
-}
-
-class Box {
-  /**@type {Lenght}*/
-  width;
-  /**@type {Lenght}*/
-  height;
-
-  /** @param {Point} */
-  bottomLeftCorner;
-  /** @param {Box | Page} */
-  parent;
-
-  /**
-   * @param {Dimesions} dims
-   * @param {Point} bottomLeftCorner
-   * @param {Box | Page} parent
-   */
-  constructor(dims, bottomLeftCorner, parent) {
-    this.width = dims.width;
-    this.height = dims.height;
-    this.bottomLeftCorner = bottomLeftCorner;
-    this.parent = parent;
-  }
-
-  /**
-   * @returns {Page}
-   */
-  rootPage() {
-    return this.parent.rootPage();
   }
 }
 
