@@ -1,7 +1,8 @@
 {
     "compilerOptions": {
       "checkJs": true,
-      "maxNodeModuleJsDepth": 5
+      "maxNodeModuleJsDepth": 5,
+      "lib": ["es2020"]
     },
     "input": ["src"]
   }  

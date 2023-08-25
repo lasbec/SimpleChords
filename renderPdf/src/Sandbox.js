@@ -24,10 +24,10 @@ const song = {
 
 async function createPdf() {
   const pdfDoc = await PDFDocument.create();
-  const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
 
   const page = pdfDoc.addPage();
   const { width, height } = page.getSize();
+  const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
   const fontSize = 20;
 
   const layouting = layoutMultilineText(song.sections[0].text, {

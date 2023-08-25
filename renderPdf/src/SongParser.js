@@ -1,4 +1,3 @@
-import { Chord } from "./Chord.js";
 import { ParsingError } from "./ParsingError.js";
 
 /**
@@ -7,7 +6,7 @@ import { ParsingError } from "./ParsingError.js";
  */
 export function parseSongAST(input) {
   try {
-    return new ChordsParsingProcedure(input).parse();
+    return new SongParser(input).parse();
   } catch (error) {
     if (error instanceof ParsingError) {
       console.error(error.toString());
@@ -17,7 +16,7 @@ export function parseSongAST(input) {
   }
 }
 
-class ChordsParsingProcedure {
+class SongParser {
   /** @type {string} */
   input;
 
