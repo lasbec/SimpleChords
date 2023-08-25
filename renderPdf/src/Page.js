@@ -4,6 +4,7 @@
  * @typedef {import("pdf-lib").PDFFont} PDFFont
  */
 
+import { rgb } from "pdf-lib";
 import { LEN } from "./Lenght.js";
 
 export class Page {
@@ -225,7 +226,20 @@ class PagePointer {
       size: fontSize.in("pt"),
     };
     this.log("Draw Text at:", { x: drawArgs.x, y: drawArgs.y, text }, "\n");
-    this.box.rootPage().page.drawText(text, drawArgs);
+    const pdfPage = this.box.rootPage().page;
+    pdfPage.drawText(text, drawArgs);
+    if (this.debug) {
+      pdfPage.drawRectangle({
+        x: drawArgs.x,
+        y: drawArgs.y,
+        width: width.in("pt"),
+        height: height.in("pt"),
+        borderWidth: 1,
+        borderColor: rgb(0.75, 0.2, 0.2),
+        borderOpacity: 0.75,
+        opacity: 1,
+      });
+    }
     return new Box(
       { width, height },
       { x: drawArgs.x, y: drawArgs.y },
