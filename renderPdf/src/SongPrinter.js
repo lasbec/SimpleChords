@@ -24,10 +24,17 @@ export class SongPrinter {
   async printToPage(page) {
     const fontSize = LEN(12, "pt");
     const lineHeight = LEN(this.font.heightAtSize(fontSize.in("pt")), "pt");
+    const leftMargin = LEN(20, "mm");
+    const rightMargin = LEN(20, "mm");
+    const topMargin = LEN(20, "mm");
+    const bottomMargin = LEN(20, "mm");
 
     const lyricLines = this.song.sections.flatMap((s) => s.lines);
 
-    const pointer = page.getPointerAt("left", "top");
+    const pointer = page
+      .getPointerAt("left", "top")
+      .moveDown(topMargin)
+      .moveRight(leftMargin);
     lyricLines.forEach((line) => {
       // Chords
       const partialWidths = getPartialWidths(line.lyric, this.font, fontSize);
