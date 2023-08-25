@@ -8,7 +8,7 @@ import {
 import * as fs from "fs/promises";
 
 const song = {
-  title: "Die Lunge",
+  title: "Der Wagen",
   chords: {
     verse: ["a", "F", "G", "a", "F", "G", "a", "F", "G", "d", "a", "E", "a"],
     interlude: ["F", "G", "a", "a"],
