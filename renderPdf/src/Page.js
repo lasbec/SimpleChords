@@ -48,7 +48,7 @@ export class Page {
   }
 }
 
-class Box {
+export class Box {
   /**@type {Lenght}*/
   width;
   /**@type {Lenght}*/
@@ -67,6 +67,87 @@ class Box {
   constructor(leftBottomCorner, dims, parent) {
     this.width = dims.width;
     this.height = dims.height;
+    this._leftBottomCorner = leftBottomCorner;
+    this.parent = parent;
+  }
+
+  /**
+   * @returns {Page}
+   */
+  rootPage() {
+    return this.parent.rootPage();
+  }
+
+  /**
+   * @param {XStartPosition} x
+   * @param {YStartPosition} y
+   */
+  getPointerAt(x, y) {
+    return PagePointer.atBox(x, y, this);
+  }
+}
+
+export class DetachedTextBox {
+  /**@type {string}*/
+  text;
+  /**@type {TextStyle}*/
+  style;
+  /**@type {Lenght}*/
+  width;
+  /**@type {Lenght}*/
+  height;
+
+  /**
+   * @param {string} text
+   * @param {TextStyle} style
+   */
+  constructor(text, style) {
+    this.text = text;
+    this.style = style;
+    this.width = LEN(
+      style.font.widthOfTextAtSize(text, style.fontSize.in("pt")),
+      "pt"
+    );
+    this.height = LEN(style.font.heightAtSize(style.fontSize.in("pt")), "pt");
+  }
+
+  partialWidths() {
+    const result = [];
+    let partial = "";
+    for (const char of this.text) {
+      const widthPt = this.style.font.widthOfTextAtSize(
+        partial,
+        this.style.fontSize.in("pt")
+      );
+      result.push(LEN(widthPt, "pt"));
+      partial += char;
+    }
+    return result;
+  }
+}
+
+export class TextBox {
+  /**@type {Lenght}*/
+  width;
+  /**@type {Lenght}*/
+  height;
+  /** @type {Point} */
+  _leftBottomCorner;
+  /** @type {IBox} */
+  parent;
+
+  /**
+   * @param {Point} leftBottomCorner
+   * @param {string} text
+   * @param {TextStyle} style
+   * @param {IBox} parent
+   */
+  constructor(leftBottomCorner, text, style, parent) {
+    this.width = LEN(
+      style.font.widthOfTextAtSize(text, style.fontSize.in("pt")),
+      "pt"
+    );
+    this.height = LEN(style.font.heightAtSize(style.fontSize.in("pt")), "pt");
     this._leftBottomCorner = leftBottomCorner;
     this.parent = parent;
   }
@@ -298,10 +379,10 @@ export class PagePointer {
    * @param {XStartPosition} x
    * @param {YStartPosition} y
    * @param {string} text
-   * @param {Lenght} fontSize
-   * @param {PDFFont} font
+   * @param {TextStyle} style
    */
-  drawText(x, y, text, fontSize, font) {
+  drawText(x, y, text, style) {
+    const { font, fontSize } = style;
     const height = LEN(font.heightAtSize(fontSize.in("pt")), "pt");
     const width = LEN(font.widthOfTextAtSize(text, fontSize.in("pt")), "pt");
     const xToDraw = this.xPositionRelativeToThis(x, width);
@@ -316,6 +397,14 @@ export class PagePointer {
       size: fontSize.in("pt"),
     });
     return this.drawBox(x, y, { width, height });
+  }
+  /**
+   * @param {XStartPosition} x
+   * @param {YStartPosition} y
+   * @param {DetachedTextBox} textBox
+   */
+  attachTextBox(x, y, textBox) {
+    this.drawText(x, y, textBox.text, textBox.style);
   }
 
   /**
@@ -355,4 +444,14 @@ export class PagePointer {
  * @typedef {object} Point
  * @property {Lenght} x
  * @property {Lenght} y
+ */
+
+/**
+ * @typedef {Box | Page | TextBox} IBox
+ */
+
+/**
+ * @typedef {object} TextStyle
+ * @property {PDFFont} font
+ * @property {Lenght} fontSize
  */

@@ -2,10 +2,11 @@
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("./SongParser.js").SongAst} SongAst
  * @typedef {import("./SongParser.js").ChordsLineElement} ChordsLineElement
+ * @typedef {import("./SongParser.js").SongLine} SongLine
  */
 import { FontLoader } from "./FontLoader.js";
 import { LEN, Lenght } from "./Lenght.js";
-import { Page, PagePointer } from "./Page.js";
+import { Box, DetachedTextBox, Page, PagePointer } from "./Page.js";
 
 import { PDFDocument, PDFForm, StandardFonts, PDFFont } from "pdf-lib";
 
@@ -24,6 +25,10 @@ export async function renderSongAsPdf(song, fontLoader) {
     lyricFont.heightAtSize(lyricFontSize.in("pt")),
     "pt"
   );
+  const lyricTextStyle = {
+    font: lyricFont,
+    fontSize: lyricFontSize,
+  };
 
   const titleFont = lyricFont;
   const titleFontSize = lyricFontSize.mul(1.3);
@@ -31,6 +36,10 @@ export async function renderSongAsPdf(song, fontLoader) {
     lyricFont.heightAtSize(titleFontSize.in("pt")),
     "pt"
   );
+  const titleTextStyle = {
+    fontSize: titleFontSize,
+    font: titleFont,
+  };
 
   const chordFont = await fontLoader.loadFontIntoDoc(
     pdfDoc,
@@ -41,6 +50,10 @@ export async function renderSongAsPdf(song, fontLoader) {
     chordFont.heightAtSize(chordFontSize.in("pt")),
     "pt"
   );
+  const chordTextStyle = {
+    font: chordFont,
+    fontSize: chordFontSize,
+  };
 
   const leftMargin = pageWidth.mul(0.07);
   const rightMargin = pageWidth.mul(0.07);
@@ -66,19 +79,19 @@ export async function renderSongAsPdf(song, fontLoader) {
       pointer = lyricLineBox.getPointerAt("left", "bottom");
     }
   }
+  /**
+   *
+   * @param {Box} chordLineBox
+   * @param {SongLine} line
+   * @returns
+   */
   function drawLyricLine(chordLineBox, line) {
     const pointer = chordLineBox.getPointerAt("left", "bottom");
-    return pointer.drawText(
-      "right",
-      "bottom",
-      line.lyric,
-      lyricFontSize,
-      lyricFont
-    );
+    return pointer.drawText("right", "bottom", line.lyric, lyricTextStyle);
   }
   /**
    *
-   * @param {import("./SongParser.js").SongLine} line
+   * @param {SongLine} line
    * @param {PagePointer} pointer
    */
   function drawChordLine(line, pointer) {
@@ -91,17 +104,14 @@ export async function renderSongAsPdf(song, fontLoader) {
       width: lineWidth,
     });
     pointer = box.getPointerAt("left", "top");
-    const partialWidths = getPartialWidths(
-      line.lyric,
-      lyricFont,
-      lyricFontSize
-    );
+    const lyricLine = new DetachedTextBox(line.lyric, lyricTextStyle);
+    const partialWidths = lyricLine.partialWidths();
     for (const chord of line.chords) {
       const yOffset = partialWidths[chord.startIndex];
       if (!yOffset) continue;
       pointer
         .pointerRight(yOffset)
-        .drawText("right", "bottom", chord.chord, chordFontSize, chordFont);
+        .drawText("right", "bottom", chord.chord, chordTextStyle);
     }
 
     return box;
@@ -110,30 +120,6 @@ export async function renderSongAsPdf(song, fontLoader) {
     const pointer = page.getPointerAt("center", "top").moveDown(topMargin);
 
     // Title
-    return pointer.drawText(
-      "center",
-      "bottom",
-      song.heading,
-      titleFontSize,
-      lyricFont
-    );
+    return pointer.drawText("center", "bottom", song.heading, titleTextStyle);
   }
-}
-
-/**
- *
- * @param {string} text
- * @param {PDFFont} font
- * @param {Lenght} fontSize
- * @returns
- */
-function getPartialWidths(text, font, fontSize) {
-  const result = [];
-  let partial = "";
-  for (const char of text) {
-    const widthPt = font.widthOfTextAtSize(partial, fontSize.in("pt"));
-    result.push(LEN(widthPt, "pt"));
-    partial += char;
-  }
-  return result;
 }
