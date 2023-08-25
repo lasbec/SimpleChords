@@ -54,9 +54,9 @@ class Box {
   /**@type {Lenght}*/
   height;
 
-  /** @param {Point} */
+  /** @type {Point} */
   _leftBottomCorner;
-  /** @param {Box | Page} */
+  /** @type {Box | Page} */
   parent;
 
   /**
@@ -88,9 +88,15 @@ class Box {
 }
 
 class PagePointer {
-  /** @type {Lenght}*/
+  /**
+   * @private
+   * @type {Lenght}
+   */
   x;
-  /** @type {Lenght}*/
+  /**
+   * @private
+   * @type {Lenght}
+   */
   y;
   /** @type {Page | Box} */
   box;
@@ -258,6 +264,9 @@ class PagePointer {
     return this.clone().moveDown(offset);
   }
 
+  /**
+   * @returns {PagePointer}
+   */
   onPage() {
     return new PagePointer(this.x, this.y, this.box.rootPage());
   }
@@ -284,19 +293,21 @@ class PagePointer {
   drawText(x, y, text, fontSize, font) {
     const height = LEN(font.heightAtSize(fontSize.in("pt")), "pt");
     const width = LEN(font.widthOfTextAtSize(text, fontSize.in("pt")), "pt");
-    const drawArgs = {
-      x: this.xPositionRelativeToThis(x, width).in("pt"),
-      y: this.yPositionRelativeToThis(y, height).in("pt"),
+    const xToDraw = this.xPositionRelativeToThis(x, width);
+    const yToDraw = this.yPositionRelativeToThis(y, height);
+
+    this.log("Draw Text at:", { x: xToDraw, y: yToDraw, text }, "\n");
+    const pdfPage = this.box.rootPage().page;
+    pdfPage.drawText(text, {
+      x: xToDraw.in("pt"),
+      y: yToDraw.in("pt"),
       font: font,
       size: fontSize.in("pt"),
-    };
-    this.log("Draw Text at:", { x: drawArgs.x, y: drawArgs.y, text }, "\n");
-    const pdfPage = this.box.rootPage().page;
-    pdfPage.drawText(text, drawArgs);
+    });
     if (this.debug) {
       pdfPage.drawRectangle({
-        x: drawArgs.x,
-        y: drawArgs.y,
+        x: xToDraw.in("pt"),
+        y: yToDraw.in("pt"),
         width: width.in("pt"),
         height: height.in("pt"),
         borderWidth: 1,
@@ -305,11 +316,7 @@ class PagePointer {
         opacity: 1,
       });
     }
-    return new Box(
-      { width, height },
-      { x: drawArgs.x, y: drawArgs.y },
-      this.box
-    );
+    return new Box({ width, height }, { x: xToDraw, y: yToDraw }, this.box);
   }
 }
 
@@ -320,12 +327,12 @@ class PagePointer {
 
 /**
  * @typedef {object} Dimesions
- * @param {Lenght} width
- * @param {Lenght} height
+ * @property {Lenght} width
+ * @property {Lenght} height
  */
 
 /**
  * @typedef {object} Point
- * @param {Lenght} x
- * @param {Lenght} y
+ * @property {Lenght} x
+ * @property {Lenght} y
  */
