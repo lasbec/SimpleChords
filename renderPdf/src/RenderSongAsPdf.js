@@ -74,36 +74,26 @@ export async function renderSongAsPdf(song, fontLoader) {
 
     const lyricLines = song.sections.flatMap((s) => s.lines);
     for (const line of lyricLines) {
-      const chordLineBox = drawChordLine(line, pointer);
-      const lyricLineBox = drawLyricLine(chordLineBox, line);
-      pointer = lyricLineBox.getPointerAt("left", "bottom");
+      const songLineBox = drawSongLine(line, pointer);
+
+      pointer = songLineBox.getPointerAt("left", "bottom");
     }
-  }
-  /**
-   *
-   * @param {Box} chordLineBox
-   * @param {SongLine} line
-   * @returns
-   */
-  function drawLyricLine(chordLineBox, line) {
-    const pointer = chordLineBox.getPointerAt("left", "bottom");
-    return pointer.drawText("right", "bottom", line.lyric, lyricTextStyle);
   }
   /**
    *
    * @param {SongLine} line
    * @param {PagePointer} pointer
    */
-  function drawChordLine(line, pointer) {
+  function drawSongLine(line, pointer) {
     const lineWidth = LEN(
       lyricFont.widthOfTextAtSize(line.lyric, lyricFontSize.in("pt")),
       "pt"
     );
-    const box = pointer.drawBox("right", "bottom", {
+    const chordLineBox = pointer.drawBox("right", "bottom", {
       height: chordLineHeight,
       width: lineWidth,
     });
-    pointer = box.getPointerAt("left", "top");
+    pointer = chordLineBox.getPointerAt("left", "top");
     const lyricLine = new DetachedTextBox(line.lyric, lyricTextStyle);
     const partialWidths = lyricLine.partialWidths();
     for (const chord of line.chords) {
@@ -113,8 +103,8 @@ export async function renderSongAsPdf(song, fontLoader) {
         .pointerRight(yOffset)
         .drawText("right", "bottom", chord.chord, chordTextStyle);
     }
-
-    return box;
+    pointer = chordLineBox.getPointerAt("left", "bottom");
+    return pointer.attachTextBox("right", "bottom", lyricLine);
   }
   function drawTitle() {
     const pointer = page.getPointerAt("center", "top").moveDown(topMargin);

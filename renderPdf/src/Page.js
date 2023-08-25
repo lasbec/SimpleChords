@@ -404,7 +404,7 @@ export class PagePointer {
    * @param {DetachedTextBox} textBox
    */
   attachTextBox(x, y, textBox) {
-    this.drawText(x, y, textBox.text, textBox.style);
+    return this.drawText(x, y, textBox.text, textBox.style);
   }
 
   /**
