@@ -76,9 +76,44 @@ export async function renderSongAsPdf(song, fontLoader) {
     pointer.moveToLeftBorder().moveRight(leftMargin);
 
     for (const section of song.sections) {
-      drawSongLines(pointer, section.lines);
+      let lines = [];
+      let c = 0;
+      /** @type {SongLine} */
+      let last;
+      for (const l of section.lines) {
+        if (c % 2 == 1) {
+          lines.push(mergeSongLines([last, l]));
+        }
+        last = l;
+        c += 1;
+      }
+      console.log(lines.map((l) => l.chords));
+
+      drawSongLines(pointer, lines);
       pointer.moveDown(sectionDistance);
     }
+  }
+
+  /**
+   * @param {SongLine[]} lines
+   */
+  function mergeSongLines(lines) {
+    /** @type {SongLine} */
+    let result = {
+      lyric: "",
+      chords: [],
+    };
+    for (const line of lines) {
+      const incrementForChordIndices = result.lyric.length;
+      result.lyric = result.lyric + line.lyric;
+      result.chords.push(
+        ...line.chords.map((c) => ({
+          chord: c.chord,
+          startIndex: c.startIndex + incrementForChordIndices,
+        }))
+      );
+    }
+    return result;
   }
 
   /**

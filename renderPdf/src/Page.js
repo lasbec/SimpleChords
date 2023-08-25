@@ -182,7 +182,7 @@ export class PagePointer {
   /** @type {Page | Box} */
   box;
 
-  debug = true;
+  debug = false;
   log(...args) {
     if (this.debug) {
       console.log(...args);
