@@ -54,7 +54,7 @@ export async function renderSongAsPdf(song, fontLoader) {
 
   async function printToPage() {
     const titleBox = drawTitle();
-    const pointer = titleBox.getPointerAt("left", "bottom").onPage();
+    let pointer = titleBox.getPointerAt("left", "bottom").onPage();
 
     pointer.moveDown(lyricLineHeight);
     pointer.moveToLeftBorder().moveRight(leftMargin);
@@ -62,11 +62,19 @@ export async function renderSongAsPdf(song, fontLoader) {
     const lyricLines = song.sections.flatMap((s) => s.lines);
     for (const line of lyricLines) {
       const chordLineBox = drawChordLine(line, pointer);
-      // Lyrics
-      pointer.moveDown(chordLineHeight);
-      pointer.drawText("right", "bottom", line.lyric, lyricFontSize, lyricFont);
-      pointer.moveDown(lyricLineHeight);
+      const lyricLineBox = drawLyricLine(chordLineBox, line);
+      pointer = lyricLineBox.getPointerAt("left", "bottom");
     }
+  }
+  function drawLyricLine(chordLineBox, line) {
+    const pointer = chordLineBox.getPointerAt("left", "bottom");
+    return pointer.drawText(
+      "right",
+      "bottom",
+      line.lyric,
+      lyricFontSize,
+      lyricFont
+    );
   }
   /**
    *
