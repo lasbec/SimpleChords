@@ -1,6 +1,7 @@
 import * as fs from "fs/promises";
 import { parseSongAST } from "./SongParser.js";
 import { renderSongAsPdf } from "./RenderSongAsPdf.js";
+import { FontLoader } from "./FontLoader.js";
 
 const [nodePath, scriptPath, inputPath] = process.argv;
 
@@ -19,7 +20,8 @@ async function main() {
   fs.writeFile(astOutputPath, JSON.stringify(ast, null, 2));
   console.log("AST result written to", astOutputPath);
 
-  const pdfBytes = await renderSongAsPdf(ast);
+  const fontLoader = new FontLoader("./fonts");
+  const pdfBytes = await renderSongAsPdf(ast, fontLoader);
 
   await fs.writeFile(pdfOutputPath, pdfBytes);
   console.log("Pdf Result written to", pdfOutputPath);
