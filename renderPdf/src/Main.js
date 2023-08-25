@@ -1,9 +1,6 @@
 import * as fs from "fs/promises";
 import { parseSongAST } from "./SongParser.js";
-import { PDFDocument } from "pdf-lib";
-import { SongPrinter } from "./SongPrinter.js";
-import { Page } from "./Page.js";
-import { StandardFonts } from "pdf-lib";
+import { renderSongAsPdf } from "./SongPrinter.js";
 
 const [nodePath, scriptPath, inputPath] = process.argv;
 
@@ -23,14 +20,8 @@ async function main() {
   fs.writeFile(astOutputPath, JSON.stringify(ast, null, 2));
   console.log("AST result written to", astOutputPath);
 
-  const pdfDoc = await PDFDocument.create();
-  const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
-  const page = new Page(pdfDoc.addPage());
+  const pdfBytes = await renderSongAsPdf(ast);
 
-  const printer = new SongPrinter(ast, timesRomanFont);
-  printer.printToPage(page);
-
-  const pdfBytes = await pdfDoc.save();
   await fs.writeFile(pdfOutputPath, pdfBytes);
   console.log("Pdf Result written to", pdfOutputPath);
 }

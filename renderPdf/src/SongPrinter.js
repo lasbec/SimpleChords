@@ -3,34 +3,30 @@
  * @typedef {import("pdf-lib").PDFFont} PDFFont
  * @typedef {import("./SongParser").SongAst} SongAst
  * @typedef {import("./SongParser").ChordsLineElement} ChordsLineElement
- * @typedef {import("./Page").Page} Page
  */
+import { PDFDocument } from "pdf-lib";
 import { LEN, Lenght } from "./Lenght.js";
+import { Page } from "./Page.js";
+import { StandardFonts } from "pdf-lib";
 
-export class SongPrinter {
-  /** @type {SongAst}*/
-  song;
-  /** @type {PDFFont}*/
-  font;
+/** @param {SongAst} song */
+export async function renderSongAsPdf(song) {
+  const pdfDoc = await PDFDocument.create();
+  const font = await pdfDoc.embedFont(StandardFonts.TimesRoman);
+  const page = new Page(pdfDoc.addPage());
+  await printToPage();
+  return await pdfDoc.save();
 
-  /**@param {SongAst} song  */
-  /**@param {PDFFont} font */
-  constructor(song, font) {
-    this.song = song;
-    this.font = font;
-  }
-
-  /** @param {Page} page */
-  async printToPage(page) {
+  async function printToPage() {
     const lyricFontSize = LEN(12, "pt");
     const lyricLineHeight = LEN(
-      this.font.heightAtSize(lyricFontSize.in("pt")),
+      font.heightAtSize(lyricFontSize.in("pt")),
       "pt"
     );
 
     const titleFontSize = lyricFontSize.mul(1.3);
     const titleLineHeight = LEN(
-      this.font.heightAtSize(titleFontSize.in("pt")),
+      font.heightAtSize(titleFontSize.in("pt")),
       "pt"
     );
 
@@ -39,38 +35,28 @@ export class SongPrinter {
     const topMargin = LEN(20, "mm");
     const bottomMargin = LEN(20, "mm");
 
-    const lyricLines = this.song.sections.flatMap((s) => s.lines);
+    const lyricLines = song.sections.flatMap((s) => s.lines);
 
     const pointer = page.getPointerAt("center", "top").moveDown(topMargin);
 
     // Title
-    pointer.drawText(
-      "center",
-      "bottom",
-      this.song.heading,
-      titleFontSize,
-      this.font
-    );
+    pointer.drawText("center", "bottom", song.heading, titleFontSize, font);
 
     pointer.moveDown(titleLineHeight);
     pointer.moveToLeftBorder().moveRight(leftMargin);
     lyricLines.forEach((line) => {
       // Chords
-      const partialWidths = getPartialWidths(
-        line.lyric,
-        this.font,
-        lyricFontSize
-      );
+      const partialWidths = getPartialWidths(line.lyric, font, lyricFontSize);
       for (const chord of line.chords) {
         const yOffset = partialWidths[chord.startIndex];
         if (!yOffset) continue;
         pointer
           .pointerRight(yOffset)
-          .drawText("right", "bottom", chord.chord, lyricFontSize, this.font);
+          .drawText("right", "bottom", chord.chord, lyricFontSize, font);
       }
       // Lyrics
       pointer.moveDown(lyricLineHeight);
-      pointer.drawText("right", "bottom", line.lyric, lyricFontSize, this.font);
+      pointer.drawText("right", "bottom", line.lyric, lyricFontSize, font);
       pointer.moveDown(lyricLineHeight);
     });
   }
