@@ -60,11 +60,11 @@ class Box {
   parent;
 
   /**
-   * @param {Dimesions} dims
    * @param {Point} leftBottomCorner
+   * @param {Dimesions} dims
    * @param {Box | Page} parent
    */
-  constructor(dims, leftBottomCorner, parent) {
+  constructor(leftBottomCorner, dims, parent) {
     this.width = dims.width;
     this.height = dims.height;
     this._leftBottomCorner = leftBottomCorner;
@@ -87,7 +87,7 @@ class Box {
   }
 }
 
-class PagePointer {
+export class PagePointer {
   /**
    * @private
    * @type {Lenght}
@@ -283,7 +283,18 @@ class PagePointer {
   }
 
   /**
-   *
+   * @param {XStartPosition} x
+   * @param {YStartPosition} y
+   * @param {Dimesions} dims
+   */
+  drawBox(x, y, dims) {
+    const xToDraw = this.xPositionRelativeToThis(x, dims.width);
+    const yToDraw = this.yPositionRelativeToThis(y, dims.height);
+    this.drawDebugRectangle({ x: xToDraw, y: yToDraw }, dims);
+    return new Box({ x: xToDraw, y: yToDraw }, dims, this.box);
+  }
+
+  /**
    * @param {XStartPosition} x
    * @param {YStartPosition} y
    * @param {string} text
@@ -304,19 +315,28 @@ class PagePointer {
       font: font,
       size: fontSize.in("pt"),
     });
+    return this.drawBox(x, y, { width, height });
+  }
+
+  /**
+   * @param {Point} leftBottomCorner
+   * @param {Dimesions} dims
+   * @private
+   */
+  drawDebugRectangle(leftBottomCorner, dims) {
+    const pdfPage = this.box.rootPage().page;
     if (this.debug) {
       pdfPage.drawRectangle({
-        x: xToDraw.in("pt"),
-        y: yToDraw.in("pt"),
-        width: width.in("pt"),
-        height: height.in("pt"),
+        x: leftBottomCorner.x.in("pt"),
+        y: leftBottomCorner.y.in("pt"),
+        width: dims.width.in("pt"),
+        height: dims.height.in("pt"),
         borderWidth: 1,
         borderColor: rgb(0.75, 0.2, 0.2),
         borderOpacity: 0.75,
         opacity: 1,
       });
     }
-    return new Box({ width, height }, { x: xToDraw, y: yToDraw }, this.box);
   }
 }
 
