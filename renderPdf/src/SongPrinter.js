@@ -5,7 +5,7 @@
  * @typedef {import("./SongParser").ChordsLineElement} ChordsLineElement
  */
 
-import { LEN } from "./Lenght.js";
+import { LEN, Lenght } from "./Lenght.js";
 
 export class SongPrinter {
   /** @type {SongAst}*/
@@ -32,30 +32,14 @@ export class SongPrinter {
       const chordsY = height - lineHeight - 2 * lineHeight * lineIndex;
       const lyricsY = height - 2 * lineHeight - 2 * lineHeight * lineIndex;
       // Chords
-      let partialLine = "";
-      let charIndex = 0;
-      const chordIter = line.chords[Symbol.iterator]();
-      let currentChord = chordIter.next();
-      for (const char of line.lyric) {
-        console.log(`line ${lineIndex}:${charIndex}.  ${currentChord}`);
-        if (currentChord.done) break;
-        /** @type {ChordsLineElement}*/
-        const chord = currentChord.value;
-        if (chord.startIndex === charIndex) {
-          const partialLineWidthPd = this.font.widthOfTextAtSize(
-            partialLine,
-            fontSize.in("pt")
-          );
-          page.drawText(chord.chord, {
-            x: partialLineWidthPd,
-            y: chordsY,
-            size: fontSize.in("pt"),
-            font: this.font,
-          });
-          currentChord = chordIter.next();
-        }
-        partialLine += char;
-        charIndex += 1;
+      const partialWidths = getPartialWidths(line.lyric, this.font, fontSize);
+      for (const chord of line.chords) {
+        page.drawText(chord.chord, {
+          x: partialWidths[chord.startIndex],
+          y: chordsY,
+          size: fontSize.in("pt"),
+          font: this.font,
+        });
       }
       // Lyrics
       page.drawText(line.lyric, {
@@ -66,4 +50,21 @@ export class SongPrinter {
       });
     });
   }
+}
+
+/**
+ *
+ * @param {string} text
+ * @param {PDFFont} font
+ * @param {Lenght} fontSize
+ * @returns
+ */
+function getPartialWidths(text, font, fontSize) {
+  const result = [];
+  let partial = "";
+  for (const char of text) {
+    result.push(font.widthOfTextAtSize(partial, fontSize.in("pt")));
+    partial += char;
+  }
+  return result;
 }
