@@ -59,6 +59,9 @@ export async function renderSongAsPdf(song, fontLoader) {
   const rightMargin = pageWidth.mul(0.07);
   const topMargin = pageWidth.mul(0.07);
   const bottomMargin = pageWidth.mul(0.07);
+
+  const sectionDistance = lyricLineHeight.mul(1.2);
+
   const page = new Page(
     pdfDoc.addPage([pageWidth.in("pt"), pageHeight.in("pt")])
   );
@@ -67,37 +70,40 @@ export async function renderSongAsPdf(song, fontLoader) {
 
   async function printToPage() {
     const titleBox = drawTitle();
-    let pointer = titleBox.getPointerAt("left", "bottom").onPage();
+    const pointer = titleBox.getPointerAt("left", "bottom").onPage();
 
     pointer.moveDown(lyricLineHeight);
     pointer.moveToLeftBorder().moveRight(leftMargin);
 
-    const lyricLines = song.sections.flatMap((s) => s.lines);
-    for (const line of lyricLines) {
-      const songLineBox = drawSongLine(line, pointer);
-
-      pointer = songLineBox.getPointerAt("left", "bottom");
+    for (const section of song.sections) {
+      drawSongLines(pointer, section.lines);
+      pointer.moveDown(sectionDistance);
     }
   }
+
   /**
-   *
-   * @param {SongLine} line
    * @param {PagePointer} pointer
-   */
-  function drawSongLine(line, pointer) {
-    const lyricLine = new DetachedTextBox(line.lyric, lyricTextStyle);
+   * @param {SongLine[]} songLines
+   * */
+  function drawSongLines(pointer, songLines) {
+    for (const line of songLines) {
+      const lyricLine = new DetachedTextBox(line.lyric, lyricTextStyle);
 
-    const partialWidths = lyricLine.partialWidths();
-    for (const chord of line.chords) {
-      const yOffset = partialWidths[chord.startIndex];
-      if (!yOffset) continue;
-      pointer
-        .pointerRight(yOffset)
-        .drawText("right", "bottom", chord.chord, chordTextStyle);
+      const partialWidths = lyricLine.partialWidths();
+      for (const chord of line.chords) {
+        const yOffset = partialWidths[chord.startIndex];
+        if (!yOffset) continue;
+        pointer
+          .pointerRight(yOffset)
+          .drawText("right", "bottom", chord.chord, chordTextStyle);
+      }
+      pointer.moveDown(chordLineHeight);
+      pointer.attachTextBox("right", "bottom", lyricLine);
+      pointer.moveDown(lyricLineHeight);
     }
-    pointer.moveDown(chordLineHeight);
-    return pointer.attachTextBox("right", "bottom", lyricLine);
+    return pointer;
   }
+
   function drawTitle() {
     const pointer = page.getPointerAt("center", "top").moveDown(topMargin);
 
