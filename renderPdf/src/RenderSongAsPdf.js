@@ -77,6 +77,32 @@ export async function renderSongAsPdf(song, fontLoader) {
     pointer.moveDown(lyricLineHeight);
     pointer.moveToLeftBorder().moveRight(leftMargin);
 
+    try {
+      const _song = halveSongLines(song);
+      drawSong(_song, pointer);
+    } catch {
+      drawSong(song, pointer);
+    }
+  }
+
+  /**
+   * @param {SongAst} _song
+   * @param {BoxPointer} pointer
+   */
+  function drawSong(_song, pointer) {
+    for (const section of _song.sections) {
+      drawSongSectionLines(pointer, section.lines);
+      pointer.moveDown(sectionDistance);
+    }
+  }
+
+  /** @param {SongAst} song */
+  function halveSongLines(song) {
+    /** @type {SongAst} */
+    const result = {
+      heading: song.heading,
+      sections: [],
+    };
     for (const section of song.sections) {
       let lines = [];
       let c = 0;
@@ -89,10 +115,12 @@ export async function renderSongAsPdf(song, fontLoader) {
         last = l;
         c += 1;
       }
-
-      drawSongLines(pointer, lines);
-      pointer.moveDown(sectionDistance);
+      result.sections.push({
+        sectionHeading: section.sectionHeading,
+        lines,
+      });
     }
+    return result;
   }
 
   /**
@@ -121,7 +149,7 @@ export async function renderSongAsPdf(song, fontLoader) {
    * @param {BoxPointer} pointer
    * @param {SongLine[]} songLines
    * */
-  function drawSongLines(pointer, songLines) {
+  function drawSongSectionLines(pointer, songLines) {
     for (const line of songLines) {
       const lyricLine = new DetachedTextBox(line.lyric, lyricTextStyle);
 
