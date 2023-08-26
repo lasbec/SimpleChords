@@ -63,37 +63,33 @@ export async function renderSongAsPdf(song, fontLoader) {
 
   const sectionDistance = lyricLineHeight.mul(1.2);
 
-  const page = new Page({ width: pageWidth, height: pageHeight });
-
-  await printToPage();
+  /** @type {Page} */
+  let page;
+  try {
+    page = await layOutOnNewPage(halveSongLines(song));
+  } catch (e) {
+    page = await layOutOnNewPage(song);
+  }
   page.appendToPdfDoc(pdfDoc);
 
   return await pdfDoc.save();
 
-  async function printToPage() {
-    const titleBox = drawTitle();
+  /**
+   * @param {SongAst} song
+   */
+  async function layOutOnNewPage(song) {
+    const page = new Page({ width: pageWidth, height: pageHeight });
+    const titleBox = drawTitle(song, page);
     const pointer = titleBox.getPointerAt("left", "bottom").onPage();
 
     pointer.moveDown(lyricLineHeight);
     pointer.moveToLeftBorder().moveRight(leftMargin);
 
-    try {
-      const _song = halveSongLines(song);
-      drawSong(_song, pointer);
-    } catch {
-      drawSong(song, pointer);
-    }
-  }
-
-  /**
-   * @param {SongAst} _song
-   * @param {BoxPointer} pointer
-   */
-  function drawSong(_song, pointer) {
-    for (const section of _song.sections) {
+    for (const section of song.sections) {
       drawSongSectionLines(pointer, section.lines);
       pointer.moveDown(sectionDistance);
     }
+    return page;
   }
 
   /** @param {SongAst} song */
@@ -168,7 +164,11 @@ export async function renderSongAsPdf(song, fontLoader) {
     return pointer;
   }
 
-  function drawTitle() {
+  /**
+   * @param {SongAst} song
+   * @param {Page} page
+   */
+  function drawTitle(song, page) {
     const pointer = page.getPointerAt("center", "top").moveDown(topMargin);
 
     // Title
