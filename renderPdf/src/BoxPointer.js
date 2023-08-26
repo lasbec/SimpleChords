@@ -7,9 +7,39 @@
  * @typedef {import("./Page.js").Point} Point
  * @typedef {import("./Page.js").TextStyle} TextStyle
  */
-import { rgb } from "pdf-lib";
 import { LEN } from "./Lenght.js";
 import { Box, DetachedTextBox, TextBox } from "./Page.js";
+
+/** @param {IBox} box */
+function assertBoxIsInsideParent(box) {
+  const rightBorder = box._leftBottomCorner.x.add(box.width);
+  const leftBorder = box._leftBottomCorner.x;
+  const topBorder = box._leftBottomCorner.y.add(box.height);
+  const bottomBorder = box._leftBottomCorner.y;
+
+  const parent = box.parent;
+  const parentRightBorder = parent._leftBottomCorner.x.add(parent.width);
+  const parentLeftBorder = parent._leftBottomCorner.x;
+  const parentTopBorder = parent._leftBottomCorner.y.add(parent.height);
+  const parentBottomBorder = parent._leftBottomCorner.y;
+
+  const overflows = [];
+  if (rightBorder.gt(parentRightBorder)) {
+    overflows.push("right");
+  }
+  if (leftBorder.lt(parentLeftBorder)) {
+    overflows.push("left");
+  }
+  if (topBorder.gt(parentTopBorder)) {
+    overflows.push("top");
+  }
+  if (bottomBorder.lt(parentBottomBorder)) {
+    overflows.push("bottom");
+  }
+  if (overflows.length > 0) {
+    throw new Error(`BoxOverflow at ` + overflows.join(", "));
+  }
+}
 
 export class BoxPointer {
   /**
@@ -200,24 +230,6 @@ export class BoxPointer {
     return new BoxPointer(this.x, this.y, this.box.parent);
   }
 
-  isOutsideOfBox() {
-    const { x: leftBorder, y: bottomBorder } = this.box._leftBottomCorner;
-    console.log("this.x.lt(leftBorder)", this.x, leftBorder);
-    if (this.x.lt(leftBorder)) return true;
-    console.log("this.y.lt(bottomBorder)", this.y, bottomBorder);
-    if (this.y.lt(bottomBorder)) return true;
-
-    const rightBorder = this.x.add(this.box.width);
-    console.log("boxWidth", this.box.width);
-    console.log("boxWidth", this.box.rootPage().width);
-    console.log("this.x.gt(rightBorder)", this.x, rightBorder);
-    if (this.x.gt(rightBorder)) return true;
-    const topBorder = this.y.add(this.box.height);
-    console.log("this.y.gt(topBorder)", this.y, topBorder);
-    if (this.y.gt(topBorder)) return true;
-    return false;
-  }
-
   /**
    * @param {XStartPosition} x
    * @param {YStartPosition} y
@@ -242,6 +254,7 @@ export class BoxPointer {
       },
       "\n"
     );
+    assertBoxIsInsideParent(result);
     return result;
   }
 
@@ -274,6 +287,7 @@ export class BoxPointer {
       this.box
     );
     this.box.rootPage().setBox(textBox);
+    assertBoxIsInsideParent(textBox);
     return textBox;
   }
   /**

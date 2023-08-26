@@ -134,32 +134,6 @@ export class Box {
     return BoxPointer.atBox(x, y, this);
   }
 
-  assertIsInsideParent() {
-    const pointer_left_top = this.getPointerAt("left", "top").onParent();
-    console.log("pointer_left_top");
-    if (pointer_left_top.isOutsideOfBox()) {
-      throw new Error("Overflow on parent box left_top");
-    }
-    const pointer_left_bottom = this.getPointerAt("left", "bottom").onParent();
-    console.log("pointer_left_bottom");
-    if (pointer_left_bottom.isOutsideOfBox()) {
-      throw new Error("Overflow on parent box left_bottom");
-    }
-    const pointer_right_top = this.getPointerAt("right", "top").onParent();
-    console.log("pointer_right_top");
-    if (pointer_right_top.isOutsideOfBox()) {
-      throw new Error("Overflow on parent box right_top");
-    }
-    const pointer_right_bottom = this.getPointerAt(
-      "right",
-      "bottom"
-    ).onParent();
-    console.log("pointer_right_bottom");
-    if (pointer_right_bottom.isOutsideOfBox()) {
-      throw new Error("Overflow on parent box right_bottom");
-    }
-  }
-
   /**@param {PDFPage} pdfPage */
   drawToPdfPage(pdfPage) {
     drawDebugBox(pdfPage, this);
