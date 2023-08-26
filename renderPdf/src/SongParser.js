@@ -190,15 +190,6 @@ class SongParser {
   chord() {
     const chordString = this.readNoneWithespace();
     return chordString;
-    // const chord = Chord.fromString(chordString);
-    // if (!chord) {
-    //   const similar = Chord.getSimilarWrittenChord(chordString);
-    //   this.throwInvalidChord({
-    //     actual: chordString,
-    //     hint: similar ? `Did you mean '${similar}'?` : "",
-    //   });
-    // }
-    // return chord;
   }
 
   readWhiteSpaceExceptLineBreak() {
