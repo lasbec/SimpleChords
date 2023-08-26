@@ -44,7 +44,7 @@ export async function renderSongAsPdf(song, fontLoader) {
 
   const chordFont = await fontLoader.loadFontIntoDoc(
     pdfDoc,
-    "DancingScript/static/DancingScript-Bold.ttf"
+    "ShantellSans/static/ShantellSans-BoldItalic.ttf"
   );
   const chordFontSize = lyricFontSize;
   const chordLineHeight = LEN(

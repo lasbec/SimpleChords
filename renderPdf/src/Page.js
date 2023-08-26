@@ -7,7 +7,7 @@ import { LEN } from "./Lenght.js";
 import { BoxPointer } from "./BoxPointer.js";
 import { PDFDocument, rgb } from "pdf-lib";
 
-const debug = true;
+const debug = false;
 /**
  * @param {PDFPage} pdfPage
  * @param {IBox} box

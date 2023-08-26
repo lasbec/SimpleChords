@@ -53,7 +53,7 @@ export class BoxPointer {
   /** @type {IBox} */
   box;
 
-  debug = true;
+  debug = false;
   log(...args) {
     if (this.debug) {
       console.log(...args);
