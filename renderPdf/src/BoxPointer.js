@@ -218,25 +218,30 @@ export class BoxPointer {
     return false;
   }
 
-  /** @return {Point} */
-  position() {
-    return {
-      x: this.x,
-      y: this.y,
-    };
-  }
-
   /**
    * @param {XStartPosition} x
    * @param {YStartPosition} y
    * @param {Dimesions} dims
    */
-  drawBox(x, y, dims) {
+  setBox(x, y, dims) {
     const xToDraw = this.xPositionRelativeToThis(x, dims.width);
     const yToDraw = this.yPositionRelativeToThis(y, dims.height);
     const result = new Box({ x: xToDraw, y: yToDraw }, dims, this.box);
     this.box.rootPage().setBox(result);
-    result.assertIsInsideParent();
+    this.log(
+      "Set Box at:",
+      {
+        x: xToDraw.in("mm"),
+        y: yToDraw.in("mm"),
+        width: dims.width.in("mm"),
+        heigh: dims.height.in("mm"),
+        wa: result.width.in("mm"),
+        hb: result.height.in("mm"),
+        xa: result._leftBottomCorner.x.in("mm"),
+        xb: result._leftBottomCorner.y.in("mm"),
+      },
+      "\n"
+    );
     return result;
   }
 
@@ -246,16 +251,28 @@ export class BoxPointer {
    * @param {string} text
    * @param {TextStyle} style
    */
-  drawText(x, y, text, style) {
+  setText(x, y, text, style) {
     const { font, fontSize } = style;
     const height = LEN(font.heightAtSize(fontSize.in("pt")), "pt");
     const width = LEN(font.widthOfTextAtSize(text, fontSize.in("pt")), "pt");
     const xToDraw = this.xPositionRelativeToThis(x, width);
     const yToDraw = this.yPositionRelativeToThis(y, height);
 
-    this.log("Draw Text at:", { x: xToDraw, y: yToDraw, text }, "\n");
+    this.log(
+      "Set Text at:",
+      { x: xToDraw.in("mm"), y: yToDraw.in("mm"), text },
+      "\n"
+    );
 
-    const textBox = new TextBox(this.position(), text, style, this.box);
+    const textBox = new TextBox(
+      {
+        x: xToDraw,
+        y: yToDraw,
+      },
+      text,
+      style,
+      this.box
+    );
     this.box.rootPage().setBox(textBox);
     return textBox;
   }
@@ -265,6 +282,6 @@ export class BoxPointer {
    * @param {DetachedTextBox} textBox
    */
   attachTextBox(x, y, textBox) {
-    return this.drawText(x, y, textBox.text, textBox.style);
+    return this.setText(x, y, textBox.text, textBox.style);
   }
 }

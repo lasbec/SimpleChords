@@ -5,7 +5,27 @@
  */
 import { LEN } from "./Lenght.js";
 import { BoxPointer } from "./BoxPointer.js";
-import { rgb } from "pdf-lib";
+import { PDFDocument, rgb } from "pdf-lib";
+
+const debug = true;
+/**
+ * @param {PDFPage} pdfPage
+ * @param {IBox} box
+ * */
+function drawDebugBox(pdfPage, box) {
+  if (debug) {
+    const args = {
+      x: box._leftBottomCorner.x.in("pt"),
+      y: box._leftBottomCorner.y.in("pt"),
+      width: box.width.in("pt"),
+      height: box.height.in("pt"),
+      opacity: 1,
+      borderWidth: 1,
+      borderColor: rgb(0.9, 0.1, 0),
+    };
+    pdfPage.drawRectangle(args);
+  }
+}
 
 export class Page {
   /** @type {PDFPage} */
@@ -56,10 +76,16 @@ export class Page {
     this.children.push(box);
   }
 
-  /**@param {PDFPage} pdfPage*/
-  drawToPdf(pdfPage) {
+  /**@param {PDFDocument} pdfDoc*/
+  appendToPdfDoc(pdfDoc) {
+    const pdfPage = pdfDoc.addPage([this.width.in("pt"), this.height.in("pt")]);
+    this.drawToPdfPage(pdfPage);
+  }
+
+  /** @param {PDFPage} pdfPage */
+  drawToPdfPage(pdfPage) {
     for (const child of this.children) {
-      child.drawToPdf(pdfPage);
+      child.drawToPdfPage(pdfPage);
     }
   }
 }
@@ -85,6 +111,12 @@ export class Box {
     this.height = dims.height;
     this._leftBottomCorner = leftBottomCorner;
     this.parent = parent;
+  }
+
+  log(...args) {
+    if (debug) {
+      console.log(...args);
+    }
   }
 
   /**
@@ -129,16 +161,8 @@ export class Box {
   }
 
   /**@param {PDFPage} pdfPage */
-  drawToPdf(pdfPage) {
-    pdfPage.drawRectangle({
-      x: this._leftBottomCorner.x.in("pt"),
-      y: this._leftBottomCorner.y.in("pt"),
-      width: this.width.in("pt"),
-      height: this.height.in("pt"),
-      opacity: 1,
-      borderWidth: 1,
-      borderColor: rgb(0.9, 0.1, 0),
-    });
+  drawToPdfPage(pdfPage) {
+    drawDebugBox(pdfPage, this);
   }
 }
 
@@ -164,6 +188,12 @@ export class DetachedTextBox {
       "pt"
     );
     this.height = LEN(style.font.heightAtSize(style.fontSize.in("pt")), "pt");
+  }
+
+  log(...args) {
+    if (debug) {
+      console.log(...args);
+    }
   }
 
   partialWidths() {
@@ -213,6 +243,12 @@ export class TextBox {
     this.parent = parent;
   }
 
+  log(...args) {
+    if (debug) {
+      console.log(...args);
+    }
+  }
+
   /**
    * @returns {Page}
    */
@@ -229,7 +265,15 @@ export class TextBox {
   }
 
   /**@param {PDFPage} pdfPage*/
-  drawToPdf(pdfPage) {
+  drawToPdfPage(pdfPage) {
+    this.log("Draw Text", {
+      text: this.text,
+      x: this._leftBottomCorner.x.in("mm"),
+      y: this._leftBottomCorner.y.in("mm"),
+      font: this.style.font.name,
+      fontSize: this.style.fontSize.in("mm"),
+    });
+    drawDebugBox(pdfPage, this);
     pdfPage.drawText(this.text, {
       x: this._leftBottomCorner.x.in("pt"),
       y: this._leftBottomCorner.y.in("pt"),

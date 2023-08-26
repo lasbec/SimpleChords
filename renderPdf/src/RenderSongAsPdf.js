@@ -66,7 +66,7 @@ export async function renderSongAsPdf(song, fontLoader) {
   const page = new Page({ width: pageWidth, height: pageHeight });
 
   await printToPage();
-  page.drawToPdf(pdfDoc.addPage());
+  page.appendToPdfDoc(pdfDoc);
 
   return await pdfDoc.save();
 
@@ -131,7 +131,7 @@ export async function renderSongAsPdf(song, fontLoader) {
         if (!yOffset) continue;
         pointer
           .pointerRight(yOffset)
-          .drawText("right", "bottom", chord.chord, chordTextStyle);
+          .setText("right", "bottom", chord.chord, chordTextStyle);
       }
       pointer.moveDown(chordLineHeight);
       pointer.attachTextBox("right", "bottom", lyricLine);
@@ -144,6 +144,6 @@ export async function renderSongAsPdf(song, fontLoader) {
     const pointer = page.getPointerAt("center", "top").moveDown(topMargin);
 
     // Title
-    return pointer.drawText("center", "bottom", song.heading, titleTextStyle);
+    return pointer.setText("center", "bottom", song.heading, titleTextStyle);
   }
 }
