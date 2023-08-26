@@ -63,10 +63,11 @@ export async function renderSongAsPdf(song, fontLoader) {
 
   const sectionDistance = lyricLineHeight.mul(1.2);
 
-  const page = new Page(
-    pdfDoc.addPage([pageWidth.in("pt"), pageHeight.in("pt")])
-  );
+  const page = new Page({ width: pageWidth, height: pageHeight });
+
   await printToPage();
+  page.drawToPdf(pdfDoc.addPage());
+
   return await pdfDoc.save();
 
   async function printToPage() {

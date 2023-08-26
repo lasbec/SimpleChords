@@ -9,7 +9,7 @@
  */
 import { rgb } from "pdf-lib";
 import { LEN } from "./Lenght.js";
-import { Box, DetachedTextBox } from "./Page.js";
+import { Box, DetachedTextBox, TextBox } from "./Page.js";
 
 export class BoxPointer {
   /**
@@ -218,6 +218,14 @@ export class BoxPointer {
     return false;
   }
 
+  /** @return {Point} */
+  position() {
+    return {
+      x: this.x,
+      y: this.y,
+    };
+  }
+
   /**
    * @param {XStartPosition} x
    * @param {YStartPosition} y
@@ -226,8 +234,8 @@ export class BoxPointer {
   drawBox(x, y, dims) {
     const xToDraw = this.xPositionRelativeToThis(x, dims.width);
     const yToDraw = this.yPositionRelativeToThis(y, dims.height);
-    this.drawDebugRectangle({ x: xToDraw, y: yToDraw }, dims);
     const result = new Box({ x: xToDraw, y: yToDraw }, dims, this.box);
+    this.box.rootPage().setBox(result);
     result.assertIsInsideParent();
     return result;
   }
@@ -246,14 +254,10 @@ export class BoxPointer {
     const yToDraw = this.yPositionRelativeToThis(y, height);
 
     this.log("Draw Text at:", { x: xToDraw, y: yToDraw, text }, "\n");
-    const pdfPage = this.box.rootPage().page;
-    pdfPage.drawText(text, {
-      x: xToDraw.in("pt"),
-      y: yToDraw.in("pt"),
-      font: font,
-      size: fontSize.in("pt"),
-    });
-    return this.drawBox(x, y, { width, height });
+
+    const textBox = new TextBox(this.position(), text, style, this.box);
+    this.box.rootPage().setBox(textBox);
+    return textBox;
   }
   /**
    * @param {XStartPosition} x
@@ -262,26 +266,5 @@ export class BoxPointer {
    */
   attachTextBox(x, y, textBox) {
     return this.drawText(x, y, textBox.text, textBox.style);
-  }
-
-  /**
-   * @param {Point} leftBottomCorner
-   * @param {Dimesions} dims
-   * @private
-   */
-  drawDebugRectangle(leftBottomCorner, dims) {
-    const pdfPage = this.box.rootPage().page;
-    if (this.debug) {
-      pdfPage.drawRectangle({
-        x: leftBottomCorner.x.in("pt"),
-        y: leftBottomCorner.y.in("pt"),
-        width: dims.width.in("pt"),
-        height: dims.height.in("pt"),
-        borderWidth: 1,
-        borderColor: rgb(0.75, 0.2, 0.2),
-        borderOpacity: 0.75,
-        opacity: 1,
-      });
-    }
   }
 }

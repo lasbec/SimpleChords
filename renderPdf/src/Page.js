@@ -5,6 +5,7 @@
  */
 import { LEN } from "./Lenght.js";
 import { BoxPointer } from "./BoxPointer.js";
+import { rgb } from "pdf-lib";
 
 export class Page {
   /** @type {PDFPage} */
@@ -20,14 +21,14 @@ export class Page {
   /** @type {Page}*/
   parent;
 
-  /**
-   * @param {PDFPage} page
-   */
-  constructor(page) {
-    const { width, height } = page.getSize();
-    this.width = LEN(width, "pt");
-    this.height = LEN(height, "pt");
-    this.page = page;
+  /** @type {IBox[]} */
+  children;
+
+  /** @param {Dimesions} dims */
+  constructor(dims) {
+    this.children = [];
+    this.width = dims.width;
+    this.height = dims.height;
     this._leftBottomCorner = {
       x: LEN(0, "pt"),
       y: LEN(0, "pt"),
@@ -48,6 +49,18 @@ export class Page {
    */
   rootPage() {
     return this;
+  }
+
+  /** @param {IBox} box  */
+  setBox(box) {
+    this.children.push(box);
+  }
+
+  /**@param {PDFPage} pdfPage*/
+  drawToPdf(pdfPage) {
+    for (const child of this.children) {
+      child.drawToPdf(pdfPage);
+    }
   }
 }
 
@@ -114,6 +127,19 @@ export class Box {
       throw new Error("Overflow on parent box right_bottom");
     }
   }
+
+  /**@param {PDFPage} pdfPage */
+  drawToPdf(pdfPage) {
+    pdfPage.drawRectangle({
+      x: this._leftBottomCorner.x.in("pt"),
+      y: this._leftBottomCorner.y.in("pt"),
+      width: this.width.in("pt"),
+      height: this.height.in("pt"),
+      opacity: 1,
+      borderWidth: 1,
+      borderColor: rgb(0.9, 0.1, 0),
+    });
+  }
 }
 
 export class DetachedTextBox {
@@ -156,6 +182,10 @@ export class DetachedTextBox {
 }
 
 export class TextBox {
+  /**@type {string}*/
+  text;
+  /**@type {TextStyle}*/
+  style;
   /**@type {Lenght}*/
   width;
   /**@type {Lenght}*/
@@ -172,6 +202,8 @@ export class TextBox {
    * @param {IBox} parent
    */
   constructor(leftBottomCorner, text, style, parent) {
+    this.text = text;
+    this.style = style;
     this.width = LEN(
       style.font.widthOfTextAtSize(text, style.fontSize.in("pt")),
       "pt"
@@ -194,6 +226,16 @@ export class TextBox {
    */
   getPointerAt(x, y) {
     return BoxPointer.atBox(x, y, this);
+  }
+
+  /**@param {PDFPage} pdfPage*/
+  drawToPdf(pdfPage) {
+    pdfPage.drawText(this.text, {
+      x: this._leftBottomCorner.x.in("pt"),
+      y: this._leftBottomCorner.y.in("pt"),
+      font: this.style.font,
+      size: this.style.fontSize.in("pt"),
+    });
   }
 }
 
