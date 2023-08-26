@@ -6,7 +6,8 @@
  */
 import { FontLoader } from "./FontLoader.js";
 import { LEN, Lenght } from "./Lenght.js";
-import { Box, DetachedTextBox, Page, PagePointer } from "./Page.js";
+import { Box, DetachedTextBox, Page } from "./Page.js";
+import { BoxPointer } from "./BoxPointer.js";
 
 import { PDFDocument, PDFForm, StandardFonts, PDFFont } from "pdf-lib";
 
@@ -87,7 +88,6 @@ export async function renderSongAsPdf(song, fontLoader) {
         last = l;
         c += 1;
       }
-      console.log(lines.map((l) => l.chords));
 
       drawSongLines(pointer, lines);
       pointer.moveDown(sectionDistance);
@@ -117,7 +117,7 @@ export async function renderSongAsPdf(song, fontLoader) {
   }
 
   /**
-   * @param {PagePointer} pointer
+   * @param {BoxPointer} pointer
    * @param {SongLine[]} songLines
    * */
   function drawSongLines(pointer, songLines) {

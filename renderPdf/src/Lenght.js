@@ -60,7 +60,7 @@ export class Lenght {
     if (this.unit === other.unit) {
       return LEN(this.value - other.value, this.unit);
     }
-    return LEN(this.in("mm") - other.in("mm"), "mm");
+    return LEN(this.in("pt") - other.in("pt"), "pt");
   }
 
   /**
@@ -71,7 +71,7 @@ export class Lenght {
     if (this.unit === other.unit) {
       return LEN(this.value + other.value, this.unit);
     }
-    return LEN(this.in("mm") + other.in("mm"), "mm");
+    return LEN(this.in("pt") + other.in("pt"), "pt");
   }
 
   /**
@@ -84,11 +84,11 @@ export class Lenght {
 
   /** @param {Lenght} other */
   lt(other) {
-    return this.in("mm") < other.in("mm");
+    return this.in("pt") < other.in("pt");
   }
 
   /** @param {Lenght} other */
   gt(other) {
-    return this.in("mm") > other.in("mm");
+    return this.in("pt") > other.in("pt");
   }
 }
