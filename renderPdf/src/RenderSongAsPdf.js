@@ -8,7 +8,7 @@ import { FontLoader } from "./FontLoader.js";
 import { LEN } from "./Lenght.js";
 import { DetachedTextBox, Page } from "./Page.js";
 import { BoxPointer } from "./BoxPointer.js";
-import { parseSongAST } from "./SongParser.js";
+import { parseSong } from "./SongParser.js";
 import * as Path from "path";
 import * as fs from "fs/promises";
 import { PDFDocument, StandardFonts } from "pdf-lib";
@@ -20,7 +20,7 @@ import { PDFDocument, StandardFonts } from "pdf-lib";
 export async function renderSingleFile(path, logAst) {
   console.log("Process", Path.parse(path).name);
   const contentToParse = await fs.readFile(path, "utf8");
-  const ast = parseSongAST(contentToParse);
+  const ast = parseSong(contentToParse);
 
   const pointSplit = path.split(".");
   const astOutputPath = pointSplit

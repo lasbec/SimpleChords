@@ -4,9 +4,10 @@ import { ParsingError } from "./ParsingError.js";
  *
  * @param {string} input
  */
-export function parseSongAST(input) {
+export function parseSong(input) {
   try {
-    return new SongParser(input).parse();
+    const ast = new SongParser(input).parse();
+    return Song.fromAst(ast);
   } catch (error) {
     if (error instanceof ParsingError) {
       console.error(error.toString());
@@ -113,7 +114,7 @@ class SongParser {
   }
 
   readBody() {
-    /** @type {SongSection[]} */
+    /** @type {SongSectionNode[]} */
     let result = [];
     while (this.currentChar() !== "`") {
       const section = this.readSection();
@@ -275,6 +276,30 @@ class SongParser {
   }
 }
 
+export class Song {
+  /**@type {string}*/
+  heading;
+  /**@type {SongSectionNode[]}*/
+  sections;
+  /**
+   * @param {string} heading
+   * @param {SongSectionNode[]} sections
+   * @private
+   */
+  constructor(heading, sections) {
+    this.heading = heading;
+    this.sections = sections;
+  }
+
+  /**
+   *
+   * @param {SongAst} ast
+   */
+  static fromAst(ast) {
+    return new Song(ast.heading, ast.sections);
+  }
+}
+
 /**
  * @typedef {object} ChordsLineElement
  * @property {number} startIndex
@@ -284,11 +309,11 @@ class SongParser {
 /**
  * @typedef {object} SongAst
  * @property {string} heading
- * @property {SongSection[]} sections
+ * @property {SongSectionNode[]} sections
  */
 
 /**
- * @typedef {object} SongSection
+ * @typedef {object} SongSectionNode
  * @property {string} sectionHeading
  * @property {SongLine[]} lines
  */
