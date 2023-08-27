@@ -92,55 +92,6 @@ export async function renderSongAsPdf(song, fontLoader) {
     return page;
   }
 
-  /** @param {SongAst} song */
-  function halveSongLines(song) {
-    /** @type {SongAst} */
-    const result = {
-      heading: song.heading,
-      sections: [],
-    };
-    for (const section of song.sections) {
-      let lines = [];
-      let c = 0;
-      /** @type {SongLine} */
-      let last;
-      for (const l of section.lines) {
-        if (c % 2 == 1) {
-          lines.push(mergeSongLines([last, l]));
-        }
-        last = l;
-        c += 1;
-      }
-      result.sections.push({
-        sectionHeading: section.sectionHeading,
-        lines,
-      });
-    }
-    return result;
-  }
-
-  /**
-   * @param {SongLine[]} lines
-   */
-  function mergeSongLines(lines) {
-    /** @type {SongLine} */
-    let result = {
-      lyric: "",
-      chords: [],
-    };
-    for (const line of lines) {
-      const incrementForChordIndices = result.lyric.length;
-      result.lyric = result.lyric + line.lyric;
-      result.chords.push(
-        ...line.chords.map((c) => ({
-          chord: c.chord,
-          startIndex: c.startIndex + incrementForChordIndices,
-        }))
-      );
-    }
-    return result;
-  }
-
   /**
    * @param {BoxPointer} pointer
    * @param {SongLine[]} songLines
@@ -170,8 +121,60 @@ export async function renderSongAsPdf(song, fontLoader) {
    */
   function drawTitle(song, page) {
     const pointer = page.getPointerAt("center", "top").moveDown(topMargin);
-
-    // Title
     return pointer.setText("center", "bottom", song.heading, titleTextStyle);
   }
+}
+
+/** @param {SongAst} song */
+function halveSongLines(song) {
+  /** @type {SongAst} */
+  const result = {
+    heading: song.heading,
+    sections: [],
+  };
+  for (const section of song.sections) {
+    let lines = [];
+    let c = 0;
+    /** @type {SongLine} */
+    let last;
+    for (const l of section.lines) {
+      if (c % 2 == 1) {
+        lines.push(mergeSongLines([last, l]));
+        last = null;
+      } else {
+        last = l;
+      }
+      c += 1;
+    }
+    if (last) {
+      lines.push(last);
+    }
+    result.sections.push({
+      sectionHeading: section.sectionHeading,
+      lines,
+    });
+  }
+  return result;
+}
+
+/**
+ * @param {SongLine[]} lines
+ */
+function mergeSongLines(lines) {
+  /** @type {SongLine} */
+  let result = {
+    lyric: "",
+    chords: [],
+  };
+  for (const line of lines) {
+    const incrementForChordIndices = result.lyric.length;
+    result.lyric = result.lyric + line.lyric;
+    result.chords.push(
+      ...line.chords.map((c) => ({
+        chord: c.chord,
+        startIndex: c.startIndex + incrementForChordIndices,
+      }))
+    );
+  }
+  return result;
 }
