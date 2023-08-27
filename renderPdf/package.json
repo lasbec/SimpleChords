@@ -3,7 +3,7 @@
 	"scripts": {
 		"type-check": "tsc --project jsconfig.json",
 		"type-check:watch": "tsc --watch --project jsconfig.json",
-		"example": "node ./src/Main.js ./example/Alles.chords.md",
+		"example": "node ./src/Main.js ./example/Alles.chords.md --log-ast",
 		"test": "vitest"	
 	},
 	"dependencies": {

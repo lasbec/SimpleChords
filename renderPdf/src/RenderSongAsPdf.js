@@ -8,8 +8,40 @@ import { FontLoader } from "./FontLoader.js";
 import { LEN } from "./Lenght.js";
 import { DetachedTextBox, Page } from "./Page.js";
 import { BoxPointer } from "./BoxPointer.js";
-
+import { parseSongAST } from "./SongParser.js";
+import * as Path from "path";
+import * as fs from "fs/promises";
 import { PDFDocument, StandardFonts } from "pdf-lib";
+
+/**
+ *  @param {string} path
+ * @param {boolean} logAst
+ */
+export async function renderSingleFile(path, logAst) {
+  console.log("Process", Path.parse(path).name);
+  const contentToParse = await fs.readFile(path, "utf8");
+  const ast = parseSongAST(contentToParse);
+
+  const pointSplit = path.split(".");
+  const astOutputPath = pointSplit
+    .map((e, i) => (i === pointSplit.length - 1 ? "AST.json" : e))
+    .join(".");
+  const pdfOutputPath = pointSplit
+    .map((e, i) => (i === pointSplit.length - 1 ? "pdf" : e))
+    .join(".");
+
+  if (logAst) {
+    fs.writeFile(astOutputPath, JSON.stringify(ast, null, 2));
+    console.log("AST result written to", Path.resolve(astOutputPath));
+  }
+
+  const fontLoader = new FontLoader("./fonts");
+  const pdfBytes = await renderSongAsPdf(ast, fontLoader);
+
+  await fs.writeFile(pdfOutputPath, pdfBytes);
+  console.log("Pdf Result written to", Path.resolve(pdfOutputPath), "\n");
+  return pdfOutputPath;
+}
 
 /**
  * @param {SongAst} song
