@@ -11,3 +11,5 @@ Barricito
 Macondo
 Carter One
 Shantell Sans
+
+Making my onwn font with fontstruct

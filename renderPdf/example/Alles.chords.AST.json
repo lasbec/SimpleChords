@@ -1,0 +1,209 @@
+{
+  "heading": "Alles",
+  "sections": [
+    {
+      "sectionHeading": "",
+      "lines": [
+        {
+          "chords": [
+            {
+              "chord": "a",
+              "startIndex": 11
+            },
+            {
+              "chord": "A",
+              "startIndex": 32
+            }
+          ],
+          "lyric": "Abgewetzte Finger schubbern über Saiten."
+        },
+        {
+          "chords": [
+            {
+              "chord": "b",
+              "startIndex": 11
+            },
+            {
+              "chord": "B",
+              "startIndex": 32
+            }
+          ],
+          "lyric": "Sie Spielen für die Armen und die Reichen."
+        }
+      ]
+    },
+    {
+      "sectionHeading": "verse",
+      "lines": [
+        {
+          "chords": [
+            {
+              "chord": "c",
+              "startIndex": 11
+            },
+            {
+              "chord": "C",
+              "startIndex": 32
+            }
+          ],
+          "lyric": "Verhornte Kuppen hämmern übers Brett."
+        },
+        {
+          "chords": [
+            {
+              "chord": "d",
+              "startIndex": 11
+            },
+            {
+              "chord": "D",
+              "startIndex": 32
+            }
+          ],
+          "lyric": "Sie lassen euch nimmer mehr ins Bett"
+        },
+        {
+          "chords": [
+            {
+              "chord": "d",
+              "startIndex": 0
+            },
+            {
+              "chord": "D",
+              "startIndex": 21
+            }
+          ],
+          "lyric": "Sie lassen euch nimmer mehr ins Bett"
+        }
+      ]
+    },
+    {
+      "sectionHeading": "ref",
+      "lines": [
+        {
+          "chords": [
+            {
+              "chord": "e",
+              "startIndex": 5
+            },
+            {
+              "chord": "E",
+              "startIndex": 16
+            }
+          ],
+          "lyric": "Also singt für mich!"
+        },
+        {
+          "chords": [
+            {
+              "chord": "f",
+              "startIndex": 5
+            },
+            {
+              "chord": "F",
+              "startIndex": 11
+            }
+          ],
+          "lyric": "Gebt mir ALLES,"
+        },
+        {
+          "chords": [
+            {
+              "chord": "g",
+              "startIndex": 5
+            },
+            {
+              "chord": "G",
+              "startIndex": 16
+            }
+          ],
+          "lyric": "gebt mir somit ALLES,"
+        },
+        {
+          "chords": [
+            {
+              "chord": "h",
+              "startIndex": 6
+            },
+            {
+              "chord": "H",
+              "startIndex": 16
+            }
+          ],
+          "lyric": "ALLES was ich brauche!"
+        }
+      ]
+    },
+    {
+      "sectionHeading": "verse",
+      "lines": [
+        {
+          "chords": [
+            {
+              "chord": "a7",
+              "startIndex": 8
+            },
+            {
+              "chord": "A#",
+              "startIndex": 29
+            }
+          ],
+          "lyric": "zerfranste Nägel Schlagen übers Loch"
+        }
+      ]
+    },
+    {
+      "sectionHeading": "verse",
+      "lines": [
+        {
+          "chords": [
+            {
+              "chord": "b#",
+              "startIndex": 8
+            },
+            {
+              "chord": "BDim",
+              "startIndex": 30
+            }
+          ],
+          "lyric": "Schwarze Strimen schlagen den Barrè"
+        }
+      ]
+    },
+    {
+      "sectionHeading": "verse",
+      "lines": [
+        {
+          "chords": [
+            {
+              "chord": "cb",
+              "startIndex": 8
+            },
+            {
+              "chord": "Cb",
+              "startIndex": 31
+            }
+          ],
+          "lyric": "Wunde Stummel klopfen euch den Tackt"
+        }
+      ]
+    },
+    {
+      "sectionHeading": "verse",
+      "lines": [
+        {
+          "chords": [
+            {
+              "chord": "d#",
+              "startIndex": 9
+            },
+            {
+              "chord": "Dis",
+              "startIndex": 34
+            }
+          ],
+          "lyric": "Gekerbte Fingerspitzen nehmen den Akkord"
+        }
+      ]
+    }
+  ]
+}

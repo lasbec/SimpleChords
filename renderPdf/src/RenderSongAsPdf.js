@@ -5,11 +5,11 @@
  * @typedef {import("./SongParser.js").SongLine} SongLine
  */
 import { FontLoader } from "./FontLoader.js";
-import { LEN, Lenght } from "./Lenght.js";
-import { Box, DetachedTextBox, Page } from "./Page.js";
+import { LEN } from "./Lenght.js";
+import { DetachedTextBox, Page } from "./Page.js";
 import { BoxPointer } from "./BoxPointer.js";
 
-import { PDFDocument, PDFForm, StandardFonts, PDFFont } from "pdf-lib";
+import { PDFDocument, StandardFonts } from "pdf-lib";
 
 /**
  * @param {SongAst} song
@@ -44,7 +44,7 @@ export async function renderSongAsPdf(song, fontLoader) {
 
   const chordFont = await fontLoader.loadFontIntoDoc(
     pdfDoc,
-    "ShantellSans/static/ShantellSans-BoldItalic.ttf"
+    "Niconne/Niconne-Regular.ttf"
   );
   const chordFontSize = lyricFontSize;
   const chordLineHeight = LEN(

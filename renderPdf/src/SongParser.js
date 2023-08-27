@@ -52,6 +52,31 @@ class SongParser {
     return this.input[this.totalIndex];
   }
 
+  setCheckpoint() {
+    const totalIndexCheckpoint = this.totalIndex;
+    const charIndexCheckpoint = this.charIndex;
+    const lineIndexCheckpoint = this.lineIndex;
+    return {
+      jumpToCheckpoint: () => {
+        this.totalIndex = totalIndexCheckpoint;
+        this.charIndex = charIndexCheckpoint;
+        this.lineIndex = lineIndexCheckpoint;
+      },
+    };
+  }
+
+  skipEmptyLines() {
+    let checkpointAtLineBeginning = this.setCheckpoint();
+    while ([" ", "\t", "\n", "\r"].includes(this.currentChar())) {
+      const lineEnd = this.currentChar() === "\n";
+      this.stepOn();
+      if (lineEnd) {
+        checkpointAtLineBeginning = this.setCheckpoint();
+      }
+    }
+    checkpointAtLineBeginning.jumpToCheckpoint();
+  }
+
   stepOn() {
     // const caller = new Error().stack.split("\n")[3].split(".")[1].split(" ")[0];
     const oldChar = this.currentChar();
@@ -118,6 +143,7 @@ class SongParser {
   }
 
   readSection() {
+    this.skipEmptyLines();
     let sectionHeading = "";
     if (this.currentChar() === "[") {
       sectionHeading = this.readSectionHeading();
@@ -126,6 +152,7 @@ class SongParser {
       this.log("no section heading");
     }
 
+    this.skipEmptyLines();
     /** @type {SongLine[]} */
     const lines = [];
     while (!["`", "["].includes(this.currentChar())) {
@@ -137,6 +164,7 @@ class SongParser {
         chords,
         lyric,
       });
+      this.skipEmptyLines();
     }
     return {
       sectionHeading,
