@@ -99,15 +99,15 @@ export async function renderSongAsPdf(song, fontLoader) {
 
   const sectionDistance = lyricLineHeight.mul(1.2);
 
-  /** @type {Page} */
-  let page;
+  /** @type {Page[]} */
+  let pages;
   try {
-    page = await layOutOnNewPage(halveSongLines(song));
+    pages = await layOutSong(halveSongLines(song));
   } catch (e) {
     try {
-      page = await layOutOnNewPage(song);
+      pages = await layOutSong(song);
     } catch (e) {
-      page = await layOutOnNewPage(
+      pages = await layOutSong(
         reshapeSongWithPdfLibLinewrap(
           song,
           lyricTextStyle,
@@ -116,14 +116,17 @@ export async function renderSongAsPdf(song, fontLoader) {
       );
     }
   }
-  page.appendToPdfDoc(pdfDoc);
+  for (const p of pages) {
+    p.appendToPdfDoc(pdfDoc);
+  }
 
   return await pdfDoc.save();
 
   /**
    * @param {Song} song
+   * @returns {Promise<Page[]>}
    */
-  async function layOutOnNewPage(song) {
+  async function layOutSong(song) {
     const page = new Page({ width: pageWidth, height: pageHeight });
     const titleBox = drawTitle(song, page);
     const pointer = titleBox.getPointerAt("left", "bottom").onPage();
@@ -142,7 +145,7 @@ export async function renderSongAsPdf(song, fontLoader) {
       drawSongSectionLines(lyricPointer, section.lines);
       lyricPointer.moveDown(sectionDistance);
     }
-    return page;
+    return [page];
   }
 
   /**
