@@ -368,7 +368,6 @@ export class SongLine {
       const lyricChar = result[chord.startIndex];
       lyricChar.chord = chord.chord;
     }
-    console.log("res", result);
     return new SongLine(result);
   }
 
