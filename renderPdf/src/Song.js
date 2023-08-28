@@ -112,9 +112,16 @@ export class SongLine {
     return SongLine.concat([this, ...others]);
   }
 
+  ensureSpaceAtEnd() {
+    if (this.lyric.endsWith(" ")) {
+      return this;
+    }
+    return new SongLine([...this.chars, { char: " ", chord: null }]);
+  }
+
   /** @param {SongLine[]} lines*/
   static concat(lines) {
-    return new SongLine(lines.flatMap((o) => o.chars));
+    return new SongLine(lines.flatMap((o) => o.ensureSpaceAtEnd().chars));
   }
 
   /**

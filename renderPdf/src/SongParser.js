@@ -202,6 +202,10 @@ class SongParser {
     /** @type {ChordsLineElement[]}  */
     const result = [];
     this.readWhiteSpaceExceptLineBreak();
+    if (this.currentChar() === "$") {
+      // this char is needed to mark empty chordlines
+      this.stepOn();
+    }
     while (this.currentChar() !== "\n") {
       const startIndex = this.charIndex;
       const chord = this.chord();
