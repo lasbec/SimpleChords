@@ -336,13 +336,15 @@ export class SongLine {
   get chords() {
     /** @type {ChordsLineElement[]} */
     const result = [];
+    let index = 0;
     for (const char of this.chars) {
       if (char.chord) {
         result.push({
           chord: char.chord,
-          startIndex: char.index,
+          startIndex: index,
         });
       }
+      index += 1;
     }
     return result;
   }
@@ -366,6 +368,7 @@ export class SongLine {
       const lyricChar = result[chord.startIndex];
       lyricChar.chord = chord.chord;
     }
+    console.log("res", result);
     return new SongLine(result);
   }
 
@@ -388,7 +391,6 @@ export class SongLine {
  * @typedef {object} LyricChar
  * @property {string} char
  * @property {string | null} chord
- * @property {number} index
  */
 
 /**
