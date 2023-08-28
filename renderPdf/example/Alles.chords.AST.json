@@ -5,27 +5,421 @@
       "sectionHeading": "",
       "lines": [
         {
-          "chords": [
+          "chars": [
             {
-              "chord": "a",
-              "startIndex": 11
+              "char": "A",
+              "chord": null,
+              "index": 0
             },
             {
+              "char": "b",
+              "chord": null,
+              "index": 1
+            },
+            {
+              "char": "g",
+              "chord": null,
+              "index": 2
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 3
+            },
+            {
+              "char": "w",
+              "chord": null,
+              "index": 4
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 5
+            },
+            {
+              "char": "t",
+              "chord": null,
+              "index": 6
+            },
+            {
+              "char": "z",
+              "chord": null,
+              "index": 7
+            },
+            {
+              "char": "t",
+              "chord": null,
+              "index": 8
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 9
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 10
+            },
+            {
+              "char": "F",
+              "chord": "a",
+              "index": 11
+            },
+            {
+              "char": "i",
+              "chord": null,
+              "index": 12
+            },
+            {
+              "char": "n",
+              "chord": null,
+              "index": 13
+            },
+            {
+              "char": "g",
+              "chord": null,
+              "index": 14
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 15
+            },
+            {
+              "char": "r",
+              "chord": null,
+              "index": 16
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 17
+            },
+            {
+              "char": "s",
+              "chord": null,
+              "index": 18
+            },
+            {
+              "char": "c",
+              "chord": null,
+              "index": 19
+            },
+            {
+              "char": "h",
+              "chord": null,
+              "index": 20
+            },
+            {
+              "char": "u",
+              "chord": null,
+              "index": 21
+            },
+            {
+              "char": "b",
+              "chord": null,
+              "index": 22
+            },
+            {
+              "char": "b",
+              "chord": null,
+              "index": 23
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 24
+            },
+            {
+              "char": "r",
+              "chord": null,
+              "index": 25
+            },
+            {
+              "char": "n",
+              "chord": null,
+              "index": 26
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 27
+            },
+            {
+              "char": "ü",
+              "chord": null,
+              "index": 28
+            },
+            {
+              "char": "b",
+              "chord": null,
+              "index": 29
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 30
+            },
+            {
+              "char": "r",
+              "chord": null,
+              "index": 31
+            },
+            {
+              "char": " ",
               "chord": "A",
-              "startIndex": 32
+              "index": 32
+            },
+            {
+              "char": "S",
+              "chord": null,
+              "index": 33
+            },
+            {
+              "char": "a",
+              "chord": null,
+              "index": 34
+            },
+            {
+              "char": "i",
+              "chord": null,
+              "index": 35
+            },
+            {
+              "char": "t",
+              "chord": null,
+              "index": 36
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 37
+            },
+            {
+              "char": "n",
+              "chord": null,
+              "index": 38
+            },
+            {
+              "char": ".",
+              "chord": null,
+              "index": 39
             }
           ],
           "lyric": "Abgewetzte Finger schubbern über Saiten."
         },
         {
-          "chords": [
+          "chars": [
             {
-              "chord": "b",
-              "startIndex": 11
+              "char": "S",
+              "chord": null,
+              "index": 0
             },
             {
+              "char": "i",
+              "chord": null,
+              "index": 1
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 2
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 3
+            },
+            {
+              "char": "S",
+              "chord": null,
+              "index": 4
+            },
+            {
+              "char": "p",
+              "chord": null,
+              "index": 5
+            },
+            {
+              "char": "i",
+              "chord": null,
+              "index": 6
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 7
+            },
+            {
+              "char": "l",
+              "chord": null,
+              "index": 8
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 9
+            },
+            {
+              "char": "n",
+              "chord": null,
+              "index": 10
+            },
+            {
+              "char": " ",
+              "chord": "b",
+              "index": 11
+            },
+            {
+              "char": "f",
+              "chord": null,
+              "index": 12
+            },
+            {
+              "char": "ü",
+              "chord": null,
+              "index": 13
+            },
+            {
+              "char": "r",
+              "chord": null,
+              "index": 14
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 15
+            },
+            {
+              "char": "d",
+              "chord": null,
+              "index": 16
+            },
+            {
+              "char": "i",
+              "chord": null,
+              "index": 17
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 18
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 19
+            },
+            {
+              "char": "A",
+              "chord": null,
+              "index": 20
+            },
+            {
+              "char": "r",
+              "chord": null,
+              "index": 21
+            },
+            {
+              "char": "m",
+              "chord": null,
+              "index": 22
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 23
+            },
+            {
+              "char": "n",
+              "chord": null,
+              "index": 24
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 25
+            },
+            {
+              "char": "u",
+              "chord": null,
+              "index": 26
+            },
+            {
+              "char": "n",
+              "chord": null,
+              "index": 27
+            },
+            {
+              "char": "d",
+              "chord": null,
+              "index": 28
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 29
+            },
+            {
+              "char": "d",
+              "chord": null,
+              "index": 30
+            },
+            {
+              "char": "i",
+              "chord": null,
+              "index": 31
+            },
+            {
+              "char": "e",
               "chord": "B",
-              "startIndex": 32
+              "index": 32
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 33
+            },
+            {
+              "char": "R",
+              "chord": null,
+              "index": 34
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 35
+            },
+            {
+              "char": "i",
+              "chord": null,
+              "index": 36
+            },
+            {
+              "char": "c",
+              "chord": null,
+              "index": 37
+            },
+            {
+              "char": "h",
+              "chord": null,
+              "index": 38
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 39
+            },
+            {
+              "char": "n",
+              "chord": null,
+              "index": 40
+            },
+            {
+              "char": ".",
+              "chord": null,
+              "index": 41
             }
           ],
           "lyric": "Sie Spielen für die Armen und die Reichen."
@@ -36,40 +430,561 @@
       "sectionHeading": "verse",
       "lines": [
         {
-          "chords": [
+          "chars": [
             {
-              "chord": "c",
-              "startIndex": 11
+              "char": "V",
+              "chord": null,
+              "index": 0
             },
             {
+              "char": "e",
+              "chord": null,
+              "index": 1
+            },
+            {
+              "char": "r",
+              "chord": null,
+              "index": 2
+            },
+            {
+              "char": "h",
+              "chord": null,
+              "index": 3
+            },
+            {
+              "char": "o",
+              "chord": null,
+              "index": 4
+            },
+            {
+              "char": "r",
+              "chord": null,
+              "index": 5
+            },
+            {
+              "char": "n",
+              "chord": null,
+              "index": 6
+            },
+            {
+              "char": "t",
+              "chord": null,
+              "index": 7
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 8
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 9
+            },
+            {
+              "char": "K",
+              "chord": null,
+              "index": 10
+            },
+            {
+              "char": "u",
+              "chord": "c",
+              "index": 11
+            },
+            {
+              "char": "p",
+              "chord": null,
+              "index": 12
+            },
+            {
+              "char": "p",
+              "chord": null,
+              "index": 13
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 14
+            },
+            {
+              "char": "n",
+              "chord": null,
+              "index": 15
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 16
+            },
+            {
+              "char": "h",
+              "chord": null,
+              "index": 17
+            },
+            {
+              "char": "ä",
+              "chord": null,
+              "index": 18
+            },
+            {
+              "char": "m",
+              "chord": null,
+              "index": 19
+            },
+            {
+              "char": "m",
+              "chord": null,
+              "index": 20
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 21
+            },
+            {
+              "char": "r",
+              "chord": null,
+              "index": 22
+            },
+            {
+              "char": "n",
+              "chord": null,
+              "index": 23
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 24
+            },
+            {
+              "char": "ü",
+              "chord": null,
+              "index": 25
+            },
+            {
+              "char": "b",
+              "chord": null,
+              "index": 26
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 27
+            },
+            {
+              "char": "r",
+              "chord": null,
+              "index": 28
+            },
+            {
+              "char": "s",
+              "chord": null,
+              "index": 29
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 30
+            },
+            {
+              "char": "B",
+              "chord": null,
+              "index": 31
+            },
+            {
+              "char": "r",
               "chord": "C",
-              "startIndex": 32
+              "index": 32
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 33
+            },
+            {
+              "char": "t",
+              "chord": null,
+              "index": 34
+            },
+            {
+              "char": "t",
+              "chord": null,
+              "index": 35
+            },
+            {
+              "char": ".",
+              "chord": null,
+              "index": 36
             }
           ],
           "lyric": "Verhornte Kuppen hämmern übers Brett."
         },
         {
-          "chords": [
+          "chars": [
             {
-              "chord": "d",
-              "startIndex": 11
+              "char": "S",
+              "chord": null,
+              "index": 0
             },
             {
+              "char": "i",
+              "chord": null,
+              "index": 1
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 2
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 3
+            },
+            {
+              "char": "l",
+              "chord": null,
+              "index": 4
+            },
+            {
+              "char": "a",
+              "chord": null,
+              "index": 5
+            },
+            {
+              "char": "s",
+              "chord": null,
+              "index": 6
+            },
+            {
+              "char": "s",
+              "chord": null,
+              "index": 7
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 8
+            },
+            {
+              "char": "n",
+              "chord": null,
+              "index": 9
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 10
+            },
+            {
+              "char": "e",
+              "chord": "d",
+              "index": 11
+            },
+            {
+              "char": "u",
+              "chord": null,
+              "index": 12
+            },
+            {
+              "char": "c",
+              "chord": null,
+              "index": 13
+            },
+            {
+              "char": "h",
+              "chord": null,
+              "index": 14
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 15
+            },
+            {
+              "char": "n",
+              "chord": null,
+              "index": 16
+            },
+            {
+              "char": "i",
+              "chord": null,
+              "index": 17
+            },
+            {
+              "char": "m",
+              "chord": null,
+              "index": 18
+            },
+            {
+              "char": "m",
+              "chord": null,
+              "index": 19
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 20
+            },
+            {
+              "char": "r",
+              "chord": null,
+              "index": 21
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 22
+            },
+            {
+              "char": "m",
+              "chord": null,
+              "index": 23
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 24
+            },
+            {
+              "char": "h",
+              "chord": null,
+              "index": 25
+            },
+            {
+              "char": "r",
+              "chord": null,
+              "index": 26
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 27
+            },
+            {
+              "char": "i",
+              "chord": null,
+              "index": 28
+            },
+            {
+              "char": "n",
+              "chord": null,
+              "index": 29
+            },
+            {
+              "char": "s",
+              "chord": null,
+              "index": 30
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 31
+            },
+            {
+              "char": "B",
               "chord": "D",
-              "startIndex": 32
+              "index": 32
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 33
+            },
+            {
+              "char": "t",
+              "chord": null,
+              "index": 34
+            },
+            {
+              "char": "t",
+              "chord": null,
+              "index": 35
             }
           ],
           "lyric": "Sie lassen euch nimmer mehr ins Bett"
         },
         {
-          "chords": [
+          "chars": [
             {
+              "char": "S",
               "chord": "d",
-              "startIndex": 0
+              "index": 0
             },
             {
+              "char": "i",
+              "chord": null,
+              "index": 1
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 2
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 3
+            },
+            {
+              "char": "l",
+              "chord": null,
+              "index": 4
+            },
+            {
+              "char": "a",
+              "chord": null,
+              "index": 5
+            },
+            {
+              "char": "s",
+              "chord": null,
+              "index": 6
+            },
+            {
+              "char": "s",
+              "chord": null,
+              "index": 7
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 8
+            },
+            {
+              "char": "n",
+              "chord": null,
+              "index": 9
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 10
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 11
+            },
+            {
+              "char": "u",
+              "chord": null,
+              "index": 12
+            },
+            {
+              "char": "c",
+              "chord": null,
+              "index": 13
+            },
+            {
+              "char": "h",
+              "chord": null,
+              "index": 14
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 15
+            },
+            {
+              "char": "n",
+              "chord": null,
+              "index": 16
+            },
+            {
+              "char": "i",
+              "chord": null,
+              "index": 17
+            },
+            {
+              "char": "m",
+              "chord": null,
+              "index": 18
+            },
+            {
+              "char": "m",
+              "chord": null,
+              "index": 19
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 20
+            },
+            {
+              "char": "r",
               "chord": "D",
-              "startIndex": 21
+              "index": 21
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 22
+            },
+            {
+              "char": "m",
+              "chord": null,
+              "index": 23
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 24
+            },
+            {
+              "char": "h",
+              "chord": null,
+              "index": 25
+            },
+            {
+              "char": "r",
+              "chord": null,
+              "index": 26
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 27
+            },
+            {
+              "char": "i",
+              "chord": null,
+              "index": 28
+            },
+            {
+              "char": "n",
+              "chord": null,
+              "index": 29
+            },
+            {
+              "char": "s",
+              "chord": null,
+              "index": 30
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 31
+            },
+            {
+              "char": "B",
+              "chord": null,
+              "index": 32
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 33
+            },
+            {
+              "char": "t",
+              "chord": null,
+              "index": 34
+            },
+            {
+              "char": "t",
+              "chord": null,
+              "index": 35
             }
           ],
           "lyric": "Sie lassen euch nimmer mehr ins Bett"
@@ -80,53 +995,411 @@
       "sectionHeading": "ref",
       "lines": [
         {
-          "chords": [
+          "chars": [
             {
-              "chord": "e",
-              "startIndex": 5
+              "char": "A",
+              "chord": null,
+              "index": 0
             },
             {
+              "char": "l",
+              "chord": null,
+              "index": 1
+            },
+            {
+              "char": "s",
+              "chord": null,
+              "index": 2
+            },
+            {
+              "char": "o",
+              "chord": null,
+              "index": 3
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 4
+            },
+            {
+              "char": "s",
+              "chord": "e",
+              "index": 5
+            },
+            {
+              "char": "i",
+              "chord": null,
+              "index": 6
+            },
+            {
+              "char": "n",
+              "chord": null,
+              "index": 7
+            },
+            {
+              "char": "g",
+              "chord": null,
+              "index": 8
+            },
+            {
+              "char": "t",
+              "chord": null,
+              "index": 9
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 10
+            },
+            {
+              "char": "f",
+              "chord": null,
+              "index": 11
+            },
+            {
+              "char": "ü",
+              "chord": null,
+              "index": 12
+            },
+            {
+              "char": "r",
+              "chord": null,
+              "index": 13
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 14
+            },
+            {
+              "char": "m",
+              "chord": null,
+              "index": 15
+            },
+            {
+              "char": "i",
               "chord": "E",
-              "startIndex": 16
+              "index": 16
+            },
+            {
+              "char": "c",
+              "chord": null,
+              "index": 17
+            },
+            {
+              "char": "h",
+              "chord": null,
+              "index": 18
+            },
+            {
+              "char": "!",
+              "chord": null,
+              "index": 19
             }
           ],
           "lyric": "Also singt für mich!"
         },
         {
-          "chords": [
+          "chars": [
             {
-              "chord": "f",
-              "startIndex": 5
+              "char": "G",
+              "chord": null,
+              "index": 0
             },
             {
+              "char": "e",
+              "chord": null,
+              "index": 1
+            },
+            {
+              "char": "b",
+              "chord": null,
+              "index": 2
+            },
+            {
+              "char": "t",
+              "chord": null,
+              "index": 3
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 4
+            },
+            {
+              "char": "m",
+              "chord": "f",
+              "index": 5
+            },
+            {
+              "char": "i",
+              "chord": null,
+              "index": 6
+            },
+            {
+              "char": "r",
+              "chord": null,
+              "index": 7
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 8
+            },
+            {
+              "char": "A",
+              "chord": null,
+              "index": 9
+            },
+            {
+              "char": "L",
+              "chord": null,
+              "index": 10
+            },
+            {
+              "char": "L",
               "chord": "F",
-              "startIndex": 11
+              "index": 11
+            },
+            {
+              "char": "E",
+              "chord": null,
+              "index": 12
+            },
+            {
+              "char": "S",
+              "chord": null,
+              "index": 13
+            },
+            {
+              "char": ",",
+              "chord": null,
+              "index": 14
             }
           ],
           "lyric": "Gebt mir ALLES,"
         },
         {
-          "chords": [
+          "chars": [
             {
-              "chord": "g",
-              "startIndex": 5
+              "char": "g",
+              "chord": null,
+              "index": 0
             },
             {
+              "char": "e",
+              "chord": null,
+              "index": 1
+            },
+            {
+              "char": "b",
+              "chord": null,
+              "index": 2
+            },
+            {
+              "char": "t",
+              "chord": null,
+              "index": 3
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 4
+            },
+            {
+              "char": "m",
+              "chord": "g",
+              "index": 5
+            },
+            {
+              "char": "i",
+              "chord": null,
+              "index": 6
+            },
+            {
+              "char": "r",
+              "chord": null,
+              "index": 7
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 8
+            },
+            {
+              "char": "s",
+              "chord": null,
+              "index": 9
+            },
+            {
+              "char": "o",
+              "chord": null,
+              "index": 10
+            },
+            {
+              "char": "m",
+              "chord": null,
+              "index": 11
+            },
+            {
+              "char": "i",
+              "chord": null,
+              "index": 12
+            },
+            {
+              "char": "t",
+              "chord": null,
+              "index": 13
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 14
+            },
+            {
+              "char": "A",
+              "chord": null,
+              "index": 15
+            },
+            {
+              "char": "L",
               "chord": "G",
-              "startIndex": 16
+              "index": 16
+            },
+            {
+              "char": "L",
+              "chord": null,
+              "index": 17
+            },
+            {
+              "char": "E",
+              "chord": null,
+              "index": 18
+            },
+            {
+              "char": "S",
+              "chord": null,
+              "index": 19
+            },
+            {
+              "char": ",",
+              "chord": null,
+              "index": 20
             }
           ],
           "lyric": "gebt mir somit ALLES,"
         },
         {
-          "chords": [
+          "chars": [
             {
-              "chord": "h",
-              "startIndex": 6
+              "char": "A",
+              "chord": null,
+              "index": 0
             },
             {
+              "char": "L",
+              "chord": null,
+              "index": 1
+            },
+            {
+              "char": "L",
+              "chord": null,
+              "index": 2
+            },
+            {
+              "char": "E",
+              "chord": null,
+              "index": 3
+            },
+            {
+              "char": "S",
+              "chord": null,
+              "index": 4
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 5
+            },
+            {
+              "char": "w",
+              "chord": "h",
+              "index": 6
+            },
+            {
+              "char": "a",
+              "chord": null,
+              "index": 7
+            },
+            {
+              "char": "s",
+              "chord": null,
+              "index": 8
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 9
+            },
+            {
+              "char": "i",
+              "chord": null,
+              "index": 10
+            },
+            {
+              "char": "c",
+              "chord": null,
+              "index": 11
+            },
+            {
+              "char": "h",
+              "chord": null,
+              "index": 12
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 13
+            },
+            {
+              "char": "b",
+              "chord": null,
+              "index": 14
+            },
+            {
+              "char": "r",
+              "chord": null,
+              "index": 15
+            },
+            {
+              "char": "a",
               "chord": "H",
-              "startIndex": 16
+              "index": 16
+            },
+            {
+              "char": "u",
+              "chord": null,
+              "index": 17
+            },
+            {
+              "char": "c",
+              "chord": null,
+              "index": 18
+            },
+            {
+              "char": "h",
+              "chord": null,
+              "index": 19
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 20
+            },
+            {
+              "char": "!",
+              "chord": null,
+              "index": 21
             }
           ],
           "lyric": "ALLES was ich brauche!"
@@ -137,14 +1410,186 @@
       "sectionHeading": "verse",
       "lines": [
         {
-          "chords": [
+          "chars": [
             {
-              "chord": "a7",
-              "startIndex": 8
+              "char": "z",
+              "chord": null,
+              "index": 0
             },
             {
+              "char": "e",
+              "chord": null,
+              "index": 1
+            },
+            {
+              "char": "r",
+              "chord": null,
+              "index": 2
+            },
+            {
+              "char": "f",
+              "chord": null,
+              "index": 3
+            },
+            {
+              "char": "r",
+              "chord": null,
+              "index": 4
+            },
+            {
+              "char": "a",
+              "chord": null,
+              "index": 5
+            },
+            {
+              "char": "n",
+              "chord": null,
+              "index": 6
+            },
+            {
+              "char": "s",
+              "chord": null,
+              "index": 7
+            },
+            {
+              "char": "t",
+              "chord": "a7",
+              "index": 8
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 9
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 10
+            },
+            {
+              "char": "N",
+              "chord": null,
+              "index": 11
+            },
+            {
+              "char": "ä",
+              "chord": null,
+              "index": 12
+            },
+            {
+              "char": "g",
+              "chord": null,
+              "index": 13
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 14
+            },
+            {
+              "char": "l",
+              "chord": null,
+              "index": 15
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 16
+            },
+            {
+              "char": "S",
+              "chord": null,
+              "index": 17
+            },
+            {
+              "char": "c",
+              "chord": null,
+              "index": 18
+            },
+            {
+              "char": "h",
+              "chord": null,
+              "index": 19
+            },
+            {
+              "char": "l",
+              "chord": null,
+              "index": 20
+            },
+            {
+              "char": "a",
+              "chord": null,
+              "index": 21
+            },
+            {
+              "char": "g",
+              "chord": null,
+              "index": 22
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 23
+            },
+            {
+              "char": "n",
+              "chord": null,
+              "index": 24
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 25
+            },
+            {
+              "char": "ü",
+              "chord": null,
+              "index": 26
+            },
+            {
+              "char": "b",
+              "chord": null,
+              "index": 27
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 28
+            },
+            {
+              "char": "r",
               "chord": "A#",
-              "startIndex": 29
+              "index": 29
+            },
+            {
+              "char": "s",
+              "chord": null,
+              "index": 30
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 31
+            },
+            {
+              "char": "L",
+              "chord": null,
+              "index": 32
+            },
+            {
+              "char": "o",
+              "chord": null,
+              "index": 33
+            },
+            {
+              "char": "c",
+              "chord": null,
+              "index": 34
+            },
+            {
+              "char": "h",
+              "chord": null,
+              "index": 35
             }
           ],
           "lyric": "zerfranste Nägel Schlagen übers Loch"
@@ -155,14 +1600,181 @@
       "sectionHeading": "verse",
       "lines": [
         {
-          "chords": [
+          "chars": [
             {
-              "chord": "b#",
-              "startIndex": 8
+              "char": "S",
+              "chord": null,
+              "index": 0
             },
             {
+              "char": "c",
+              "chord": null,
+              "index": 1
+            },
+            {
+              "char": "h",
+              "chord": null,
+              "index": 2
+            },
+            {
+              "char": "w",
+              "chord": null,
+              "index": 3
+            },
+            {
+              "char": "a",
+              "chord": null,
+              "index": 4
+            },
+            {
+              "char": "r",
+              "chord": null,
+              "index": 5
+            },
+            {
+              "char": "z",
+              "chord": null,
+              "index": 6
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 7
+            },
+            {
+              "char": " ",
+              "chord": "b#",
+              "index": 8
+            },
+            {
+              "char": "S",
+              "chord": null,
+              "index": 9
+            },
+            {
+              "char": "t",
+              "chord": null,
+              "index": 10
+            },
+            {
+              "char": "r",
+              "chord": null,
+              "index": 11
+            },
+            {
+              "char": "i",
+              "chord": null,
+              "index": 12
+            },
+            {
+              "char": "m",
+              "chord": null,
+              "index": 13
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 14
+            },
+            {
+              "char": "n",
+              "chord": null,
+              "index": 15
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 16
+            },
+            {
+              "char": "s",
+              "chord": null,
+              "index": 17
+            },
+            {
+              "char": "c",
+              "chord": null,
+              "index": 18
+            },
+            {
+              "char": "h",
+              "chord": null,
+              "index": 19
+            },
+            {
+              "char": "l",
+              "chord": null,
+              "index": 20
+            },
+            {
+              "char": "a",
+              "chord": null,
+              "index": 21
+            },
+            {
+              "char": "g",
+              "chord": null,
+              "index": 22
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 23
+            },
+            {
+              "char": "n",
+              "chord": null,
+              "index": 24
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 25
+            },
+            {
+              "char": "d",
+              "chord": null,
+              "index": 26
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 27
+            },
+            {
+              "char": "n",
+              "chord": null,
+              "index": 28
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 29
+            },
+            {
+              "char": "B",
               "chord": "BDim",
-              "startIndex": 30
+              "index": 30
+            },
+            {
+              "char": "a",
+              "chord": null,
+              "index": 31
+            },
+            {
+              "char": "r",
+              "chord": null,
+              "index": 32
+            },
+            {
+              "char": "r",
+              "chord": null,
+              "index": 33
+            },
+            {
+              "char": "è",
+              "chord": null,
+              "index": 34
             }
           ],
           "lyric": "Schwarze Strimen schlagen den Barrè"
@@ -173,14 +1785,186 @@
       "sectionHeading": "verse",
       "lines": [
         {
-          "chords": [
+          "chars": [
             {
-              "chord": "cb",
-              "startIndex": 8
+              "char": "W",
+              "chord": null,
+              "index": 0
             },
             {
+              "char": "u",
+              "chord": null,
+              "index": 1
+            },
+            {
+              "char": "n",
+              "chord": null,
+              "index": 2
+            },
+            {
+              "char": "d",
+              "chord": null,
+              "index": 3
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 4
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 5
+            },
+            {
+              "char": "S",
+              "chord": null,
+              "index": 6
+            },
+            {
+              "char": "t",
+              "chord": null,
+              "index": 7
+            },
+            {
+              "char": "u",
+              "chord": "cb",
+              "index": 8
+            },
+            {
+              "char": "m",
+              "chord": null,
+              "index": 9
+            },
+            {
+              "char": "m",
+              "chord": null,
+              "index": 10
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 11
+            },
+            {
+              "char": "l",
+              "chord": null,
+              "index": 12
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 13
+            },
+            {
+              "char": "k",
+              "chord": null,
+              "index": 14
+            },
+            {
+              "char": "l",
+              "chord": null,
+              "index": 15
+            },
+            {
+              "char": "o",
+              "chord": null,
+              "index": 16
+            },
+            {
+              "char": "p",
+              "chord": null,
+              "index": 17
+            },
+            {
+              "char": "f",
+              "chord": null,
+              "index": 18
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 19
+            },
+            {
+              "char": "n",
+              "chord": null,
+              "index": 20
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 21
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 22
+            },
+            {
+              "char": "u",
+              "chord": null,
+              "index": 23
+            },
+            {
+              "char": "c",
+              "chord": null,
+              "index": 24
+            },
+            {
+              "char": "h",
+              "chord": null,
+              "index": 25
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 26
+            },
+            {
+              "char": "d",
+              "chord": null,
+              "index": 27
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 28
+            },
+            {
+              "char": "n",
+              "chord": null,
+              "index": 29
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 30
+            },
+            {
+              "char": "T",
               "chord": "Cb",
-              "startIndex": 31
+              "index": 31
+            },
+            {
+              "char": "a",
+              "chord": null,
+              "index": 32
+            },
+            {
+              "char": "c",
+              "chord": null,
+              "index": 33
+            },
+            {
+              "char": "k",
+              "chord": null,
+              "index": 34
+            },
+            {
+              "char": "t",
+              "chord": null,
+              "index": 35
             }
           ],
           "lyric": "Wunde Stummel klopfen euch den Tackt"
@@ -191,14 +1975,206 @@
       "sectionHeading": "verse",
       "lines": [
         {
-          "chords": [
+          "chars": [
             {
-              "chord": "d#",
-              "startIndex": 9
+              "char": "G",
+              "chord": null,
+              "index": 0
             },
             {
+              "char": "e",
+              "chord": null,
+              "index": 1
+            },
+            {
+              "char": "k",
+              "chord": null,
+              "index": 2
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 3
+            },
+            {
+              "char": "r",
+              "chord": null,
+              "index": 4
+            },
+            {
+              "char": "b",
+              "chord": null,
+              "index": 5
+            },
+            {
+              "char": "t",
+              "chord": null,
+              "index": 6
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 7
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 8
+            },
+            {
+              "char": "F",
+              "chord": "d#",
+              "index": 9
+            },
+            {
+              "char": "i",
+              "chord": null,
+              "index": 10
+            },
+            {
+              "char": "n",
+              "chord": null,
+              "index": 11
+            },
+            {
+              "char": "g",
+              "chord": null,
+              "index": 12
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 13
+            },
+            {
+              "char": "r",
+              "chord": null,
+              "index": 14
+            },
+            {
+              "char": "s",
+              "chord": null,
+              "index": 15
+            },
+            {
+              "char": "p",
+              "chord": null,
+              "index": 16
+            },
+            {
+              "char": "i",
+              "chord": null,
+              "index": 17
+            },
+            {
+              "char": "t",
+              "chord": null,
+              "index": 18
+            },
+            {
+              "char": "z",
+              "chord": null,
+              "index": 19
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 20
+            },
+            {
+              "char": "n",
+              "chord": null,
+              "index": 21
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 22
+            },
+            {
+              "char": "n",
+              "chord": null,
+              "index": 23
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 24
+            },
+            {
+              "char": "h",
+              "chord": null,
+              "index": 25
+            },
+            {
+              "char": "m",
+              "chord": null,
+              "index": 26
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 27
+            },
+            {
+              "char": "n",
+              "chord": null,
+              "index": 28
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 29
+            },
+            {
+              "char": "d",
+              "chord": null,
+              "index": 30
+            },
+            {
+              "char": "e",
+              "chord": null,
+              "index": 31
+            },
+            {
+              "char": "n",
+              "chord": null,
+              "index": 32
+            },
+            {
+              "char": " ",
+              "chord": null,
+              "index": 33
+            },
+            {
+              "char": "A",
               "chord": "Dis",
-              "startIndex": 34
+              "index": 34
+            },
+            {
+              "char": "k",
+              "chord": null,
+              "index": 35
+            },
+            {
+              "char": "k",
+              "chord": null,
+              "index": 36
+            },
+            {
+              "char": "o",
+              "chord": null,
+              "index": 37
+            },
+            {
+              "char": "r",
+              "chord": null,
+              "index": 38
+            },
+            {
+              "char": "d",
+              "chord": null,
+              "index": 39
             }
           ],
           "lyric": "Gekerbte Fingerspitzen nehmen den Akkord"

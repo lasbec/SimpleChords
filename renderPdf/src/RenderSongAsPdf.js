@@ -1,7 +1,6 @@
 /**
  * @typedef {import("pdf-lib").PDFPage} PDFPage
- * @typedef {import("./SongParser.js").SongAst} SongAst
- * @typedef {import("./SongParser.js").ChordsLineElement} ChordsLineElement
+ * @typedef {import("./SongParser.js").Song} Song
  * @typedef {import("./SongParser.js").SongLine} SongLine
  */
 import { FontLoader } from "./FontLoader.js";
@@ -44,7 +43,7 @@ export async function renderSingleFile(path, logAst) {
 }
 
 /**
- * @param {SongAst} song
+ * @param {Song} song
  * @param {FontLoader} fontLoader
  */
 export async function renderSongAsPdf(song, fontLoader) {
@@ -107,7 +106,7 @@ export async function renderSongAsPdf(song, fontLoader) {
   return await pdfDoc.save();
 
   /**
-   * @param {SongAst} song
+   * @param {Song} song
    */
   async function layOutOnNewPage(song) {
     const page = new Page({ width: pageWidth, height: pageHeight });
@@ -148,7 +147,7 @@ export async function renderSongAsPdf(song, fontLoader) {
   }
 
   /**
-   * @param {SongAst} song
+   * @param {Song} song
    * @param {Page} page
    */
   function drawTitle(song, page) {
@@ -157,9 +156,9 @@ export async function renderSongAsPdf(song, fontLoader) {
   }
 }
 
-/** @param {SongAst} song */
+/** @param {Song} song */
 function halveSongLines(song) {
-  /** @type {SongAst} */
+  /** @type {Song} */
   const result = {
     heading: song.heading,
     sections: [],
@@ -171,7 +170,7 @@ function halveSongLines(song) {
     let last;
     for (const l of section.lines) {
       if (c % 2 == 1) {
-        lines.push(mergeSongLines([last, l]));
+        lines.push(last.concat([l]));
         last = null;
       } else {
         last = l;
@@ -185,28 +184,6 @@ function halveSongLines(song) {
       sectionHeading: section.sectionHeading,
       lines,
     });
-  }
-  return result;
-}
-
-/**
- * @param {SongLine[]} lines
- */
-function mergeSongLines(lines) {
-  /** @type {SongLine} */
-  let result = {
-    lyric: "",
-    chords: [],
-  };
-  for (const line of lines) {
-    const incrementForChordIndices = result.lyric.length;
-    result.lyric = result.lyric + line.lyric;
-    result.chords.push(
-      ...line.chords.map((c) => ({
-        chord: c.chord,
-        startIndex: c.startIndex + incrementForChordIndices,
-      }))
-    );
   }
   return result;
 }
