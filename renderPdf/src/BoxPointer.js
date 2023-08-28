@@ -54,6 +54,7 @@ export class BoxPointer {
   box;
 
   debug = false;
+  /** @param {unknown[]} args  */
   log(...args) {
     if (this.debug) {
       console.log(...args);

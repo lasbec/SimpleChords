@@ -1,16 +1,17 @@
 /**
  * @typedef {import("pdf-lib").PDFPage} PDFPage
- * @typedef {import("./Song.js").SongLine} SongLine
  */
 import { FontLoader } from "./FontLoader.js";
-import { LEN } from "./Lenght.js";
+import { LEN, Lenght } from "./Lenght.js";
 import { DetachedTextBox, Page } from "./Page.js";
 import { BoxPointer } from "./BoxPointer.js";
 import { parseSongAst } from "./SongParser.js";
 import * as Path from "path";
 import * as fs from "fs/promises";
-import { PDFDocument, StandardFonts } from "pdf-lib";
-import { Song } from "./Song.js";
+import { PDFDocument, StandardFonts, layoutMultilineText } from "pdf-lib";
+import { Song, SongLine } from "./Song.js";
+import { TextAlignment } from "pdf-lib";
+import { lineSplit } from "pdf-lib";
 
 /**
  *  @param {string} path
@@ -20,6 +21,10 @@ export async function renderSingleFile(path, logAst) {
   console.log("Process", Path.parse(path).name);
   const contentToParse = await fs.readFile(path, "utf8");
   const ast = parseSongAst(contentToParse);
+  if (!ast) {
+    console.log("Parsing AST failed.");
+    return;
+  }
   const song = Song.fromAst(ast);
 
   const pointSplit = path.split(".");
@@ -100,7 +105,17 @@ export async function renderSongAsPdf(song, fontLoader) {
   try {
     page = await layOutOnNewPage(halveSongLines(song));
   } catch (e) {
-    page = await layOutOnNewPage(song);
+    try {
+      page = await layOutOnNewPage(song);
+    } catch (e) {
+      page = await layOutOnNewPage(
+        reshapeSongWithPdfLibLinewrap(
+          song,
+          lyricTextStyle,
+          pageWidth.sub(leftMargin).sub(rightMargin)
+        )
+      );
+    }
   }
   page.appendToPdfDoc(pdfDoc);
 
@@ -157,6 +172,52 @@ export async function renderSongAsPdf(song, fontLoader) {
   }
 }
 
+/**
+ * @param {Song} song
+ * @param {import("./Page.js").TextStyle} style
+ * @param {Lenght} width
+ */
+function reshapeSongWithPdfLibLinewrap(song, style, width) {
+  return {
+    heading: song.heading,
+    sections: song.sections.map((s) => ({
+      sectionHeading: s.sectionHeading,
+      lines: wrapLinesWithPdfLib(s.lines, style, width),
+    })),
+  };
+}
+
+/**
+ * @param {SongLine[]} lines
+ * @param {import("./Page.js").TextStyle} style
+ * @param {Lenght} width
+ * @returns {SongLine[]}
+ */
+function wrapLinesWithPdfLib(lines, style, width) {
+  const singleSongLine = SongLine.concat(lines);
+  const lineSplittingByPdfLib = layoutMultilineText(singleSongLine.lyric, {
+    font: style.font,
+    fontSize: style.fontSize.in("pt"),
+    alignment: TextAlignment.Left,
+    bounds: {
+      x: 0,
+      y: 0,
+      width: width.in("pt"),
+      height: 0,
+    },
+  }).lines.map((l) => l.text);
+
+  let remainingLine = singleSongLine;
+  /**@type {SongLine[]} */
+  let result = [];
+  for (const pdfLibLine of lineSplittingByPdfLib) {
+    const [line, rest] = remainingLine.splitAt(pdfLibLine.length);
+    result.push(line);
+    remainingLine = rest;
+  }
+  return result;
+}
+
 /** @param {Song} song */
 function halveSongLines(song) {
   /** @type {Song} */
@@ -167,10 +228,10 @@ function halveSongLines(song) {
   for (const section of song.sections) {
     let lines = [];
     let c = 0;
-    /** @type {SongLine} */
-    let last;
+    /** @type {SongLine | null} */
+    let last = null;
     for (const l of section.lines) {
-      if (c % 2 == 1) {
+      if (last) {
         lines.push(last.concat([l]));
         last = null;
       } else {

@@ -243,7 +243,11 @@ class SongParser {
     return result;
   }
 
-  throwUnexpectedToken({ expected, actual }) {
+  /**
+   * @param {ExpectedActual} arg
+   */
+  throwUnexpectedToken(arg) {
+    const { expected, actual } = arg;
     throw new ParsingError("Unexpected token", {
       expected,
       actual,
@@ -263,7 +267,11 @@ class SongParser {
     });
   }
 
-  throwInvalidChord({ actual, hint }) {
+  /**
+   * @param {InvalidChordArgs} arg
+   */
+  throwInvalidChord(arg) {
+    const { actual, hint } = arg;
     throw new ParsingError("Invalid chord", {
       cursor: {
         lineIndex: this.lineIndex,
@@ -275,6 +283,17 @@ class SongParser {
   }
 }
 
+/**
+ * @typedef {object} ExpectedActual
+ * @property {string} expected
+ * @property {string} actual
+ */
+
+/**
+ * @typedef {object} InvalidChordArgs
+ * @property {string} actual
+ * @property {string} hint
+ */
 /**
  * @typedef {object} SongAst
  * @property {string} heading

@@ -1,3 +1,4 @@
+/** @param {unknown} x  */
 export function notNullish(x) {
   return x !== undefined && x !== null;
 }

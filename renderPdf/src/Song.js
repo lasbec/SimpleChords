@@ -106,11 +106,30 @@ export class SongLine {
   }
 
   /**
-   *
    * @param {SongLine[]} others
    */
   concat(others) {
-    return new SongLine([...this.chars, ...others.flatMap((o) => o.chars)]);
+    return SongLine.concat([this, ...others]);
+  }
+
+  /** @param {SongLine[]} lines*/
+  static concat(lines) {
+    return new SongLine(lines.flatMap((o) => o.chars));
+  }
+
+  /**
+   * @param {number} index the element on this index is included in the second line of the split.
+   * @returns {[SongLine, SongLine]}
+   */
+  splitAt(index) {
+    return [
+      new SongLine(this.chars.slice(0, index)),
+      new SongLine(this.chars.slice(index)),
+    ];
+  }
+
+  isEmpty() {
+    return this.chars.length === 0;
   }
 }
 

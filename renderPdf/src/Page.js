@@ -28,8 +28,6 @@ function drawDebugBox(pdfPage, box) {
 }
 
 export class Page {
-  /** @type {PDFPage} */
-  page;
   /** @type {Lenght}*/
   width;
   /** @type {Lenght}*/
@@ -113,6 +111,7 @@ export class Box {
     this.parent = parent;
   }
 
+  /** @param {unknown[]} args  */
   log(...args) {
     if (debug) {
       console.log(...args);
@@ -164,6 +163,9 @@ export class DetachedTextBox {
     this.height = LEN(style.font.heightAtSize(style.fontSize.in("pt")), "pt");
   }
 
+  /**
+   * @param  {unknown[]} args
+   */
   log(...args) {
     if (debug) {
       console.log(...args);
@@ -217,6 +219,9 @@ export class TextBox {
     this.parent = parent;
   }
 
+  /**
+   * @param  {unknown[]} args
+   */
   log(...args) {
     if (debug) {
       console.log(...args);
@@ -233,6 +238,7 @@ export class TextBox {
   /**
    * @param {XStartPosition} x
    * @param {YStartPosition} y
+   * @returns {BoxPointer}
    */
   getPointerAt(x, y) {
     return BoxPointer.atBox(x, y, this);
