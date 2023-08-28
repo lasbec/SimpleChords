@@ -11,7 +11,6 @@ import * as fs from "fs/promises";
 import { PDFDocument, StandardFonts, layoutMultilineText } from "pdf-lib";
 import { Song, SongLine } from "./Song.js";
 import { TextAlignment } from "pdf-lib";
-import { lineSplit } from "pdf-lib";
 
 /**
  *  @param {string} path
@@ -132,9 +131,16 @@ export async function renderSongAsPdf(song, fontLoader) {
     pointer.moveDown(lyricLineHeight);
     pointer.moveToLeftBorder().moveRight(leftMargin);
 
+    const rightBottomPointer = page
+      .getPointerAt("right", "bottom")
+      .moveUp(bottomMargin)
+      .moveLeft(rightMargin);
+    const lyricBox = pointer.spanBox(rightBottomPointer);
+    const lyricPointer = lyricBox.getPointerAt("left", "top");
+
     for (const section of song.sections) {
-      drawSongSectionLines(pointer, section.lines);
-      pointer.moveDown(sectionDistance);
+      drawSongSectionLines(lyricPointer, section.lines);
+      lyricPointer.moveDown(sectionDistance);
     }
     return page;
   }

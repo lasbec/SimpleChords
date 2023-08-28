@@ -232,6 +232,28 @@ export class BoxPointer {
   }
 
   /**
+   * @param {BoxPointer} other
+   * @returns {Box}
+   */
+  spanBox(other) {
+    const otherRelXPos = other.isLeftFrom(this) ? "left" : "right";
+    const otherRelYPos = other.isLowerThan(this) ? "bottom" : "top";
+    const width = this.x.sub(other.x).abs();
+    const height = this.y.sub(other.y).abs();
+    return this.setBox(otherRelXPos, otherRelYPos, { width, height });
+  }
+
+  /** @param {BoxPointer} other  */
+  isLeftFrom(other) {
+    return this.x.lt(other.x);
+  }
+
+  /** @param {BoxPointer} other  */
+  isLowerThan(other) {
+    return this.y.lt(other.y);
+  }
+
+  /**
    * @param {XStartPosition} x
    * @param {YStartPosition} y
    * @param {Dimesions} dims
@@ -255,7 +277,7 @@ export class BoxPointer {
       },
       "\n"
     );
-    assertBoxIsInsideParent(result);
+    this.doOverflowManagement(result);
     return result;
   }
 
@@ -288,9 +310,15 @@ export class BoxPointer {
       this.box
     );
     this.box.rootPage().setBox(textBox);
-    assertBoxIsInsideParent(textBox);
+    this.doOverflowManagement(textBox);
     return textBox;
   }
+
+  /** @param {IBox} box*/
+  doOverflowManagement(box) {
+    assertBoxIsInsideParent(box);
+  }
+
   /**
    * @param {XStartPosition} x
    * @param {YStartPosition} y

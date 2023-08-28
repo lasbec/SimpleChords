@@ -2,18 +2,28 @@
  * @typedef {import("./Lenght").Lenght} Lenght
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("pdf-lib").PDFFont} PDFFont
+ * @typedef {import("pdf-lib").Color}  Color
  */
 import { LEN } from "./Lenght.js";
 import { BoxPointer } from "./BoxPointer.js";
 import { PDFDocument, rgb } from "pdf-lib";
 
-const debug = false;
+const debug = true;
+
+/** @type {Map<number, Color>} */
+const debugLevelColorMap = new Map([
+  [0, rgb(0.8, 0.2, 0)],
+  [1, rgb(0.2, 0.9, 0.1)],
+  [2, rgb(0.9, 0.5, 0.1)],
+  [3, rgb(0.5, 0.5, 0.5)],
+]);
 /**
  * @param {PDFPage} pdfPage
  * @param {IBox} box
  * */
 function drawDebugBox(pdfPage, box) {
   if (debug) {
+    const borderColor = debugLevelColorMap.get(box.level()) || rgb(1, 0, 0);
     const args = {
       x: box._leftBottomCorner.x.in("pt"),
       y: box._leftBottomCorner.y.in("pt"),
@@ -21,7 +31,7 @@ function drawDebugBox(pdfPage, box) {
       height: box.height.in("pt"),
       opacity: 1,
       borderWidth: 1,
-      borderColor: rgb(0.9, 0.1, 0),
+      borderColor,
     };
     pdfPage.drawRectangle(args);
   }
@@ -52,6 +62,10 @@ export class Page {
       y: LEN(0, "pt"),
     };
     this.parent = this;
+  }
+
+  level() {
+    return 0;
   }
 
   /**
@@ -109,6 +123,11 @@ export class Box {
     this.height = dims.height;
     this._leftBottomCorner = leftBottomCorner;
     this.parent = parent;
+  }
+
+  /** @returns {number} */
+  level() {
+    return 1 + this.parent.level();
   }
 
   /** @param {unknown[]} args  */
@@ -226,6 +245,11 @@ export class TextBox {
     if (debug) {
       console.log(...args);
     }
+  }
+
+  /** @returns {number} */
+  level() {
+    return 1 + this.parent.level();
   }
 
   /**
