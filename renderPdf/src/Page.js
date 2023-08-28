@@ -8,7 +8,7 @@ import { LEN } from "./Lenght.js";
 import { BoxPointer } from "./BoxPointer.js";
 import { PDFDocument, rgb } from "pdf-lib";
 
-const debug = true;
+const debug = false;
 
 /** @type {Map<number, Color>} */
 const debugLevelColorMap = new Map([
@@ -37,6 +37,50 @@ function drawDebugBox(pdfPage, box) {
   }
 }
 
+export class Document {
+  /**
+   * @private
+   * @readonly
+   * @type {Page[]}
+   */
+  pages;
+
+  /**
+   * @type {Dimesions}
+   * @readonly
+   */
+  defaultPageDims;
+
+  /** @param {Dimesions} defaultPageDims */
+  constructor(defaultPageDims) {
+    this.defaultPageDims = defaultPageDims;
+    this.pages = [];
+  }
+
+  appendNewPage() {
+    const result = new Page(this.defaultPageDims, this);
+    this.pages.push(result);
+    return result;
+  }
+
+  /**@param {PDFDocument} pdfDoc*/
+  drawToPdfDoc(pdfDoc) {
+    for (const page of this.pages) {
+      const pdfPage = pdfDoc.addPage([
+        page.width.in("pt"),
+        page.height.in("pt"),
+      ]);
+      page.drawToPdfPage(pdfPage);
+    }
+  }
+}
+
+/**
+ * @typedef {object} PageLinking
+ * @property {Page | null} previous
+ * @property {Page | null} next
+ */
+
 export class Page {
   /** @type {Lenght}*/
   width;
@@ -46,14 +90,26 @@ export class Page {
   /** @type {Point} */
   leftBottomCorner;
 
-  /** @type {Page}*/
+  /**
+   * @type {Page}
+   */
   parent;
 
   /** @type {IBox[]} */
   children;
 
-  /** @param {Dimesions} dims */
-  constructor(dims) {
+  /**
+   * @type {Document}
+   * @readonly
+   */
+  doc;
+
+  /**
+   * @param {Dimesions} dims
+   * @param {Document} doc
+   */
+  constructor(dims, doc) {
+    this.doc = doc;
     this.children = [];
     this.width = dims.width;
     this.height = dims.height;
@@ -64,6 +120,11 @@ export class Page {
     this.parent = this;
   }
 
+  /** @returns {Page} */
+  appendNewPage() {
+    return this.doc.appendNewPage();
+  }
+
   level() {
     return 0;
   }
@@ -71,6 +132,7 @@ export class Page {
   /**
    * @param {XStartPosition} x
    * @param {YStartPosition} y
+   * @returns {BoxPointer}
    */
   getPointerAt(x, y) {
     return BoxPointer.atBox(x, y, this);
@@ -86,12 +148,6 @@ export class Page {
   /** @param {IBox} box  */
   setBox(box) {
     this.children.push(box);
-  }
-
-  /**@param {PDFDocument} pdfDoc*/
-  appendToPdfDoc(pdfDoc) {
-    const pdfPage = pdfDoc.addPage([this.width.in("pt"), this.height.in("pt")]);
-    this.drawToPdfPage(pdfPage);
   }
 
   /** @param {PDFPage} pdfPage */
@@ -130,13 +186,6 @@ export class Box {
     return 1 + this.parent.level();
   }
 
-  /** @param {unknown[]} args  */
-  log(...args) {
-    if (debug) {
-      console.log(...args);
-    }
-  }
-
   /**
    * @returns {Page}
    */
@@ -155,6 +204,100 @@ export class Box {
   /**@param {PDFPage} pdfPage */
   drawToPdfPage(pdfPage) {
     drawDebugBox(pdfPage, this);
+  }
+}
+
+export class DebugBox {
+  /**@type {Lenght}*/
+  width;
+  /**@type {Lenght}*/
+  height;
+
+  get leftBottomCorner() {
+    return {
+      x: this.center.x.sub(this.width.mul(1 / 2)),
+      y: this.center.y.sub(this.width.mul(1 / 2)),
+    };
+  }
+  /** @type {IBox} */
+  parent;
+
+  /** @type {number} */
+  constructCount;
+
+  static constructionCounter = 0;
+
+  /**
+   * @param {Point} center
+   * @param {IBox} parent
+   */
+  constructor(center, parent) {
+    this.width = LEN(3, "mm");
+    this.height = LEN(3, "mm");
+    this.center = center;
+    this.parent = parent;
+    this.constructCount = DebugBox.constructionCounter;
+    DebugBox.constructionCounter += 1;
+  }
+
+  /** @returns {number} */
+  level() {
+    return 1 + this.parent.level();
+  }
+
+  /**
+   * @returns {Page}
+   */
+  rootPage() {
+    return this.parent.rootPage();
+  }
+
+  /**
+   * @param {XStartPosition} x
+   * @param {YStartPosition} y
+   * @returns {BoxPointer}
+   */
+  getPointerAt(x, y) {
+    return BoxPointer.atBox(x, y, this);
+  }
+
+  /**@param {PDFPage} pdfPage */
+  drawToPdfPage(pdfPage) {
+    pdfPage.drawCircle({
+      x: this.center.x.in("pt"),
+      y: this.center.y.in("pt"),
+      size: 5,
+      borderColor: rgb(1, 0, 0),
+      borderWidth: 1,
+      opacity: 1,
+    });
+    pdfPage.drawText(`${this.constructCount}`, {
+      x: this.leftBottomCorner.x.in("pt"),
+      y: this.leftBottomCorner.y.in("pt"),
+      size: 6,
+    });
+    pdfPage.drawLine({
+      start: {
+        x: this.center.x.sub(this.width).in("pt"),
+        y: this.center.y.in("pt"),
+      },
+      end: {
+        x: this.center.x.add(this.width).in("pt"),
+        y: this.center.y.in("pt"),
+      },
+      thickness: 0.1,
+    });
+    pdfPage.drawLine({
+      start: {
+        x: this.center.x.in("pt"),
+        y: this.center.y.sub(this.height).in("pt"),
+      },
+      end: {
+        x: this.center.x.in("pt"),
+        y: this.center.y.add(this.height).in("pt"),
+      },
+      thickness: 0.1,
+    });
   }
 }
 
@@ -180,15 +323,6 @@ export class DetachedTextBox {
       "pt"
     );
     this.height = LEN(style.font.heightAtSize(style.fontSize.in("pt")), "pt");
-  }
-
-  /**
-   * @param  {unknown[]} args
-   */
-  log(...args) {
-    if (debug) {
-      console.log(...args);
-    }
   }
 
   partialWidths() {
@@ -238,15 +372,6 @@ export class TextBox {
     this.parent = parent;
   }
 
-  /**
-   * @param  {unknown[]} args
-   */
-  log(...args) {
-    if (debug) {
-      console.log(...args);
-    }
-  }
-
   /** @returns {number} */
   level() {
     return 1 + this.parent.level();
@@ -270,13 +395,6 @@ export class TextBox {
 
   /**@param {PDFPage} pdfPage*/
   drawToPdfPage(pdfPage) {
-    this.log("Draw Text", {
-      text: this.text,
-      x: this.leftBottomCorner.x.in("mm"),
-      y: this.leftBottomCorner.y.in("mm"),
-      font: this.style.font.name,
-      fontSize: this.style.fontSize.in("mm"),
-    });
     drawDebugBox(pdfPage, this);
     pdfPage.drawText(this.text, {
       x: this.leftBottomCorner.x.in("pt"),

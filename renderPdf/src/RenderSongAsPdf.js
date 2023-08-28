@@ -1,16 +1,20 @@
 /**
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  */
+import {
+  PDFDocument,
+  TextAlignment,
+  StandardFonts,
+  layoutMultilineText,
+} from "pdf-lib";
 import { FontLoader } from "./FontLoader.js";
 import { LEN, Lenght } from "./Lenght.js";
-import { DetachedTextBox, Page } from "./Page.js";
+import { DetachedTextBox, Document, Page } from "./Page.js";
 import { BoxPointer } from "./BoxPointer.js";
 import { parseSongAst } from "./SongParser.js";
 import * as Path from "path";
 import * as fs from "fs/promises";
-import { PDFDocument, StandardFonts, layoutMultilineText } from "pdf-lib";
 import { Song, SongLine } from "./Song.js";
-import { TextAlignment } from "pdf-lib";
 
 /**
  *  @param {string} path
@@ -40,7 +44,7 @@ export async function renderSingleFile(path, logAst) {
   }
 
   const fontLoader = new FontLoader("./fonts");
-  const pdfBytes = await renderSongAsPdf(song, fontLoader);
+  const pdfBytes = await renderSongAsPdf(song, fontLoader, "asIs");
 
   await fs.writeFile(pdfOutputPath, pdfBytes);
   console.log("Pdf Result written to", Path.resolve(pdfOutputPath), "\n");
@@ -50,8 +54,9 @@ export async function renderSingleFile(path, logAst) {
 /**
  * @param {Song} song
  * @param {FontLoader} fontLoader
+ * @param {"asIs" | "halveSongLines" | "pdfLibLineWrap"} shaper
  */
-export async function renderSongAsPdf(song, fontLoader) {
+export async function renderSongAsPdf(song, fontLoader, shaper) {
   const pdfDoc = await PDFDocument.create();
   const pageWidth = LEN(148.5, "mm");
   const pageHeight = LEN(210, "mm");
@@ -99,53 +104,50 @@ export async function renderSongAsPdf(song, fontLoader) {
 
   const sectionDistance = lyricLineHeight.mul(1.2);
 
-  /** @type {Page[]} */
   let pages;
-  try {
+  if (shaper === "halveSongLines") {
     pages = await layOutSong(halveSongLines(song));
-  } catch (e) {
-    try {
-      pages = await layOutSong(song);
-    } catch (e) {
-      pages = await layOutSong(
-        reshapeSongWithPdfLibLinewrap(
-          song,
-          lyricTextStyle,
-          pageWidth.sub(leftMargin).sub(rightMargin)
-        )
-      );
-    }
+  } else if (shaper === "asIs") {
+    pages = await layOutSong(song);
+  } else {
+    pages = await layOutSong(
+      reshapeSongWithPdfLibLinewrap(
+        song,
+        lyricTextStyle,
+        pageWidth.sub(leftMargin).sub(rightMargin)
+      )
+    );
   }
-  for (const p of pages) {
-    p.appendToPdfDoc(pdfDoc);
-  }
+  pages.drawToPdfDoc(pdfDoc);
 
   return await pdfDoc.save();
 
   /**
    * @param {Song} song
-   * @returns {Promise<Page[]>}
+   * @returns {Promise<Document>}
    */
   async function layOutSong(song) {
-    const page = new Page({ width: pageWidth, height: pageHeight });
-    const titleBox = drawTitle(song, page);
+    const doc = new Document({ width: pageWidth, height: pageHeight });
+    const titleBox = drawTitle(song, doc.appendNewPage());
     const pointer = titleBox.getPointerAt("left", "bottom").onPage();
 
     pointer.moveDown(lyricLineHeight);
     pointer.moveToLeftBorder().moveRight(leftMargin);
 
-    const rightBottomPointer = page
-      .getPointerAt("right", "bottom")
+    const rightBottomPointer = pointer
+      .onPage()
+      .moveToBottomBorder()
+      .moveToRightBorder()
       .moveUp(bottomMargin)
       .moveLeft(rightMargin);
     const lyricBox = pointer.spanBox(rightBottomPointer);
-    const lyricPointer = lyricBox.getPointerAt("left", "top");
+    let lyricPointer = lyricBox.getPointerAt("left", "top");
 
     for (const section of song.sections) {
-      drawSongSectionLines(lyricPointer, section.lines);
+      lyricPointer = drawSongSectionLines(lyricPointer, section.lines);
       lyricPointer.moveDown(sectionDistance);
     }
-    return [page];
+    return doc;
   }
 
   /**
@@ -153,6 +155,29 @@ export async function renderSongAsPdf(song, fontLoader) {
    * @param {SongLine[]} songLines
    * */
   function drawSongSectionLines(pointer, songLines) {
+    const heightOfSection = chordLineHeight
+      .add(lyricLineHeight)
+      .mul(songLines.length);
+
+    const lowerEndOfSection = pointer.clone().moveToBottomBorder();
+
+    const sectionWillExeedPage = pointer
+      .pointerDown(heightOfSection)
+      .isLowerThan(lowerEndOfSection);
+    if (sectionWillExeedPage) {
+      const leftTopCorner = pointer
+        .nextPageAt("left", "top")
+        .moveDown(topMargin)
+        .moveRight(leftMargin);
+      const rightBottomCorner = pointer
+        .onPage()
+        .moveToBottomBorder()
+        .moveToRightBorder()
+        .moveUp(topMargin)
+        .moveLeft(rightMargin);
+      const lyricBox = leftTopCorner.spanBox(rightBottomCorner);
+      pointer = lyricBox.getPointerAt("left", "top");
+    }
     for (const line of songLines) {
       const lyricLine = new DetachedTextBox(line.lyric, lyricTextStyle);
 

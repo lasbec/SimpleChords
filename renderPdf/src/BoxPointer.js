@@ -8,7 +8,7 @@
  * @typedef {import("./Page.js").TextStyle} TextStyle
  */
 import { LEN } from "./Lenght.js";
-import { Box, DetachedTextBox, TextBox } from "./Page.js";
+import { Box, DebugBox, DetachedTextBox, TextBox } from "./Page.js";
 
 /**
  * @typedef {object} BoxStruct
@@ -73,44 +73,37 @@ export class BoxOverflows {
     const parentTopBorder = parent.leftBottomCorner.y.add(parent.height);
     const parentBottomBorder = parent.leftBottomCorner.y;
 
-    const overflows = [];
     return new BoxOverflows({
-      right: rightBorder.sub(parentRightBorder).maximumZero(),
-      left: parentLeftBorder.sub(leftBorder).maximumZero(),
-      top: topBorder.sub(parentTopBorder).maximumZero(),
-      bottom: parentBottomBorder.sub(bottomBorder).maximumZero(),
+      right: rightBorder.sub(parentRightBorder).atLeastZero(),
+      left: parentLeftBorder.sub(leftBorder).atLeastZero(),
+      top: topBorder.sub(parentTopBorder).atLeastZero(),
+      bottom: parentBottomBorder.sub(bottomBorder).atLeastZero(),
     });
+  }
+
+  toString() {
+    let result = [];
+    if (this.bottom.gtz()) {
+      result.push("bottom");
+    }
+    if (this.top.gtz()) {
+      result.push("top");
+    }
+    if (this.left.gtz()) {
+      result.push("left");
+    }
+    if (this.right.gtz()) {
+      result.push("right");
+    }
+    return `BoxOverflow at: ` + result.join(", ") + ".";
   }
 }
 
 /** @param {IBox} box */
 function assertBoxIsInsideParent(box) {
-  const rightBorder = box.leftBottomCorner.x.add(box.width);
-  const leftBorder = box.leftBottomCorner.x;
-  const topBorder = box.leftBottomCorner.y.add(box.height);
-  const bottomBorder = box.leftBottomCorner.y;
-
-  const parent = box.parent;
-  const parentRightBorder = parent.leftBottomCorner.x.add(parent.width);
-  const parentLeftBorder = parent.leftBottomCorner.x;
-  const parentTopBorder = parent.leftBottomCorner.y.add(parent.height);
-  const parentBottomBorder = parent.leftBottomCorner.y;
-
-  const overflows = [];
-  if (rightBorder.gt(parentRightBorder)) {
-    overflows.push("right");
-  }
-  if (leftBorder.lt(parentLeftBorder)) {
-    overflows.push("left");
-  }
-  if (topBorder.gt(parentTopBorder)) {
-    overflows.push("top");
-  }
-  if (bottomBorder.lt(parentBottomBorder)) {
-    overflows.push("bottom");
-  }
-  if (overflows.length > 0) {
-    throw new Error(`BoxOverflow at ` + overflows.join(", "));
+  const overflows = BoxOverflows.from({ child: box, parent: box.parent });
+  if (!overflows.isEmpty()) {
+    throw new Error(overflows.toString());
   }
 }
 
@@ -130,7 +123,7 @@ export class BoxPointer {
   /** @param {unknown[]} args  */
   log(...args) {
     if (this.debug) {
-      console.log(...args);
+      // console.log(...args);
     }
   }
 
@@ -329,6 +322,22 @@ export class BoxPointer {
   /**
    * @param {XStartPosition} x
    * @param {YStartPosition} y
+   */
+  nextPageAt(x, y) {
+    return this.box.rootPage().appendNewPage().getPointerAt(x, y);
+  }
+
+  setDebug() {
+    if (this.debug) {
+      const result = new DebugBox({ x: this.x, y: this.y }, this.box);
+      this.box.rootPage().setBox(result);
+      return result;
+    }
+  }
+
+  /**
+   * @param {XStartPosition} x
+   * @param {YStartPosition} y
    * @param {Dimesions} dims
    * @returns {Box | BoxOverflows}
    */
@@ -407,7 +416,10 @@ export class BoxPointer {
 
   /** @param {IBox} box*/
   doOverflowManagement(box) {
-    assertBoxIsInsideParent(box);
+    if (!this.debug) assertBoxIsInsideParent(box);
+    const overflows = BoxOverflows.from({ child: box, parent: box.parent });
+    if (overflows.isEmpty()) return;
+    console.error("Overflow detecded", overflows.toString());
   }
 
   /**

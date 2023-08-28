@@ -92,6 +92,10 @@ export class Lenght {
     return this.in("pt") > other.in("pt");
   }
 
+  gtz() {
+    return this.value > 0;
+  }
+
   abs() {
     return new Lenght(Math.abs(this.value), this.unit);
   }
