@@ -15,6 +15,7 @@ import { parseSongAst } from "./SongParser.js";
 import * as Path from "path";
 import * as fs from "fs/promises";
 import { Song, SongLine } from "./Song.js";
+import { checkSongAst } from "./SongChecker.js";
 
 /**
  *  @param {string} path
@@ -28,6 +29,7 @@ export async function renderSingleFile(path, logAst) {
     console.log("Parsing AST failed.");
     return;
   }
+  checkSongAst(ast);
   const song = Song.fromAst(ast);
 
   const pointSplit = path.split(".");
@@ -44,7 +46,7 @@ export async function renderSingleFile(path, logAst) {
   }
 
   const fontLoader = new FontLoader("./fonts");
-  const pdfBytes = await renderSongAsPdf(song, fontLoader, "asIs");
+  const pdfBytes = await renderSongAsPdf(song, fontLoader, "pdfLibLineWrap");
 
   await fs.writeFile(pdfOutputPath, pdfBytes);
   console.log("Pdf Result written to", Path.resolve(pdfOutputPath), "\n");
@@ -109,7 +111,7 @@ export async function renderSongAsPdf(song, fontLoader, shaper) {
     pages = await layOutSong(halveSongLines(song));
   } else if (shaper === "asIs") {
     pages = await layOutSong(song);
-  } else {
+  } else if (shaper === "pdfLibLineWrap") {
     pages = await layOutSong(
       reshapeSongWithPdfLibLinewrap(
         song,
@@ -117,6 +119,8 @@ export async function renderSongAsPdf(song, fontLoader, shaper) {
         pageWidth.sub(leftMargin).sub(rightMargin)
       )
     );
+  } else {
+    throw Error("Unknown shaper '" + shaper + "'");
   }
   pages.drawToPdfDoc(pdfDoc);
 
