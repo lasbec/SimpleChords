@@ -4,10 +4,9 @@ import { ParsingError } from "./ParsingError.js";
  *
  * @param {string} input
  */
-export function parseSong(input) {
+export function parseSongAst(input) {
   try {
-    const ast = new SongParser(input).parse();
-    return Song.fromAst(ast);
+    return new SongParser(input).parse();
   } catch (error) {
     if (error instanceof ParsingError) {
       console.error(error.toString());
@@ -275,122 +274,6 @@ class SongParser {
     });
   }
 }
-
-export class Song {
-  /**@type {string}*/
-  heading;
-  /**@type {SongSection[]}*/
-  sections;
-  /**
-   * @param {string} heading
-   * @param {SongSection[]} sections
-   * @private
-   */
-  constructor(heading, sections) {
-    this.heading = heading;
-    this.sections = sections;
-  }
-
-  /**
-   *
-   * @param {SongAst} ast
-   */
-  static fromAst(ast) {
-    /** @type {SongSection[]} */
-    const sections = ast.sections.map((s) => ({
-      sectionHeading: s.sectionHeading,
-      lines: s.lines.map(SongLine.fromSongLineNode),
-    }));
-    return new Song(ast.heading, sections);
-  }
-}
-
-/**
- * @typedef {object} SongSection
- * @property {string} sectionHeading
- * @property {SongLine[]} lines
- */
-
-export class SongLine {
-  /**
-   * @readonly
-   * @type {ReadonlyArray<LyricChar>}
-   */
-  chars;
-
-  /**
-   * @readonly
-   * @type {string}
-   */
-  lyric;
-
-  /**
-   * @param {ReadonlyArray<LyricChar>} chars
-   * @private
-   */
-  constructor(chars) {
-    this.chars = chars;
-    this.lyric = chars.map((c) => c.char).join("");
-  }
-
-  get chords() {
-    /** @type {ChordsLineElement[]} */
-    const result = [];
-    let index = 0;
-    for (const char of this.chars) {
-      if (char.chord) {
-        result.push({
-          chord: char.chord,
-          startIndex: index,
-        });
-      }
-      index += 1;
-    }
-    return result;
-  }
-
-  /**
-   * @param {SongLineNode} node
-   * @returns {SongLine}
-   */
-  static fromSongLineNode(node) {
-    const startIndexOfLastChord =
-      node.chords.length === 0
-        ? 0
-        : node.chords[node.chords.length - 1].startIndex + 1;
-
-    /**@type {LyricChar[]} */
-    const result = node.lyric
-      .padEnd(startIndexOfLastChord, " ")
-      .split("")
-      .map((c, i) => ({ char: c, chord: null, index: i }));
-    for (const chord of node.chords) {
-      const lyricChar = result[chord.startIndex];
-      lyricChar.chord = chord.chord;
-    }
-    return new SongLine(result);
-  }
-
-  *[Symbol.iterator]() {
-    for (const c of this.chars) {
-      yield c;
-    }
-  }
-
-  /**
-   *
-   * @param {SongLine[]} others
-   */
-  concat(others) {
-    return new SongLine([...this.chars, ...others.flatMap((o) => o.chars)]);
-  }
-}
-
-/**
- * @typedef {object} LyricChar
- * @property {string} char
- * @property {string | null} chord
- */
 
 /**
  * @typedef {object} SongAst
