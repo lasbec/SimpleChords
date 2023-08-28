@@ -95,4 +95,24 @@ export class Lenght {
   abs() {
     return new Lenght(Math.abs(this.value), this.unit);
   }
+
+  isZero() {
+    return this.value === 0;
+  }
+
+  static zero = new Lenght(0, "pt");
+
+  atLeastZero() {
+    if (this.value < 0) {
+      return Lenght.zero;
+    }
+    return this;
+  }
+
+  maximumZero() {
+    if (this.value > 0) {
+      return Lenght.zero;
+    }
+    return this;
+  }
 }

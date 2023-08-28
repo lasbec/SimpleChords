@@ -10,18 +10,91 @@
 import { LEN } from "./Lenght.js";
 import { Box, DetachedTextBox, TextBox } from "./Page.js";
 
+/**
+ * @typedef {object} BoxStruct
+ * @property {Point} leftBottomCorner
+ * @property {Lenght} width
+ * @property {Lenght} height
+ */
+
+/**
+ * @typedef {object} OverflowCalcArgs
+ * @property {BoxStruct} parent
+ * @property {BoxStruct} child
+ */
+
+/**
+ * @typedef {object} BoxOverflowsConstructorArgs
+ * @property {Lenght} left
+ * @property {Lenght} right
+ * @property {Lenght} bottom
+ * @property {Lenght} top
+ */
+export class BoxOverflows {
+  /** @type {Lenght}*/
+  left;
+  /** @type {Lenght}*/
+  right;
+  /** @type {Lenght}*/
+  bottom;
+  /** @type {Lenght}*/
+  top;
+
+  /**
+   * @param {BoxOverflowsConstructorArgs} args
+   */
+  constructor(args) {
+    this.left = args.left;
+    this.right = args.right;
+    this.bottom = args.bottom;
+    this.top = args.top;
+  }
+
+  isEmpty() {
+    return (
+      this.top.isZero() &&
+      this.bottom.isZero() &&
+      this.left.isZero() &&
+      this.right.isZero()
+    );
+  }
+
+  /** @param {OverflowCalcArgs} args */
+  static from(args) {
+    const box = args.child;
+    const rightBorder = box.leftBottomCorner.x.add(box.width);
+    const leftBorder = box.leftBottomCorner.x;
+    const topBorder = box.leftBottomCorner.y.add(box.height);
+    const bottomBorder = box.leftBottomCorner.y;
+
+    const parent = args.parent;
+    const parentRightBorder = parent.leftBottomCorner.x.add(parent.width);
+    const parentLeftBorder = parent.leftBottomCorner.x;
+    const parentTopBorder = parent.leftBottomCorner.y.add(parent.height);
+    const parentBottomBorder = parent.leftBottomCorner.y;
+
+    const overflows = [];
+    return new BoxOverflows({
+      right: rightBorder.sub(parentRightBorder).maximumZero(),
+      left: parentLeftBorder.sub(leftBorder).maximumZero(),
+      top: topBorder.sub(parentTopBorder).maximumZero(),
+      bottom: parentBottomBorder.sub(bottomBorder).maximumZero(),
+    });
+  }
+}
+
 /** @param {IBox} box */
 function assertBoxIsInsideParent(box) {
-  const rightBorder = box._leftBottomCorner.x.add(box.width);
-  const leftBorder = box._leftBottomCorner.x;
-  const topBorder = box._leftBottomCorner.y.add(box.height);
-  const bottomBorder = box._leftBottomCorner.y;
+  const rightBorder = box.leftBottomCorner.x.add(box.width);
+  const leftBorder = box.leftBottomCorner.x;
+  const topBorder = box.leftBottomCorner.y.add(box.height);
+  const bottomBorder = box.leftBottomCorner.y;
 
   const parent = box.parent;
-  const parentRightBorder = parent._leftBottomCorner.x.add(parent.width);
-  const parentLeftBorder = parent._leftBottomCorner.x;
-  const parentTopBorder = parent._leftBottomCorner.y.add(parent.height);
-  const parentBottomBorder = parent._leftBottomCorner.y;
+  const parentRightBorder = parent.leftBottomCorner.x.add(parent.width);
+  const parentLeftBorder = parent.leftBottomCorner.x;
+  const parentTopBorder = parent.leftBottomCorner.y.add(parent.height);
+  const parentBottomBorder = parent.leftBottomCorner.y;
 
   const overflows = [];
   if (rightBorder.gt(parentRightBorder)) {
@@ -94,7 +167,7 @@ export class BoxPointer {
    */
   static xPositionOnPage(xRelative, box) {
     const width = box.width;
-    const { x } = box._leftBottomCorner;
+    const { x } = box.leftBottomCorner;
     if (xRelative === "left") return x;
     if (xRelative === "center") return x.add(width.mul(1 / 2));
     if (xRelative === "right") return x.add(width);
@@ -108,7 +181,7 @@ export class BoxPointer {
    */
   static yPositionOnPage(yRelative, box) {
     const height = box.height;
-    const { y } = box._leftBottomCorner;
+    const { y } = box.leftBottomCorner;
     if (yRelative === "top") return y.add(height);
     if (yRelative === "center") return y.add(height.mul(1 / 2));
     if (yRelative === "bottom") return y;
@@ -257,6 +330,24 @@ export class BoxPointer {
    * @param {XStartPosition} x
    * @param {YStartPosition} y
    * @param {Dimesions} dims
+   * @returns {Box | BoxOverflows}
+   */
+  trySetBox(x, y, dims) {
+    const { width, height } = dims;
+    const xToDraw = this.xPositionRelativeToThis(x, width);
+    const yToDraw = this.yPositionRelativeToThis(y, height);
+
+    const overflows = BoxOverflows.from({
+      child: { leftBottomCorner: { x: xToDraw, y: yToDraw }, width, height },
+      parent: this.box,
+    });
+    return overflows.isEmpty() ? this.setBox(x, y, dims) : overflows;
+  }
+
+  /**
+   * @param {XStartPosition} x
+   * @param {YStartPosition} y
+   * @param {Dimesions} dims
    */
   setBox(x, y, dims) {
     const xToDraw = this.xPositionRelativeToThis(x, dims.width);
@@ -272,8 +363,8 @@ export class BoxPointer {
         heigh: dims.height.in("mm"),
         wa: result.width.in("mm"),
         hb: result.height.in("mm"),
-        xa: result._leftBottomCorner.x.in("mm"),
-        xb: result._leftBottomCorner.y.in("mm"),
+        xa: result.leftBottomCorner.x.in("mm"),
+        xb: result.leftBottomCorner.y.in("mm"),
       },
       "\n"
     );

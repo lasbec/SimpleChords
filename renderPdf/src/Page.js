@@ -25,8 +25,8 @@ function drawDebugBox(pdfPage, box) {
   if (debug) {
     const borderColor = debugLevelColorMap.get(box.level()) || rgb(1, 0, 0);
     const args = {
-      x: box._leftBottomCorner.x.in("pt"),
-      y: box._leftBottomCorner.y.in("pt"),
+      x: box.leftBottomCorner.x.in("pt"),
+      y: box.leftBottomCorner.y.in("pt"),
       width: box.width.in("pt"),
       height: box.height.in("pt"),
       opacity: 1,
@@ -44,7 +44,7 @@ export class Page {
   height;
 
   /** @type {Point} */
-  _leftBottomCorner;
+  leftBottomCorner;
 
   /** @type {Page}*/
   parent;
@@ -57,7 +57,7 @@ export class Page {
     this.children = [];
     this.width = dims.width;
     this.height = dims.height;
-    this._leftBottomCorner = {
+    this.leftBottomCorner = {
       x: LEN(0, "pt"),
       y: LEN(0, "pt"),
     };
@@ -109,7 +109,7 @@ export class Box {
   height;
 
   /** @type {Point} */
-  _leftBottomCorner;
+  leftBottomCorner;
   /** @type {IBox} */
   parent;
 
@@ -121,7 +121,7 @@ export class Box {
   constructor(leftBottomCorner, dims, parent) {
     this.width = dims.width;
     this.height = dims.height;
-    this._leftBottomCorner = leftBottomCorner;
+    this.leftBottomCorner = leftBottomCorner;
     this.parent = parent;
   }
 
@@ -216,7 +216,7 @@ export class TextBox {
   /**@type {Lenght}*/
   height;
   /** @type {Point} */
-  _leftBottomCorner;
+  leftBottomCorner;
   /** @type {IBox} */
   parent;
 
@@ -234,7 +234,7 @@ export class TextBox {
       "pt"
     );
     this.height = LEN(style.font.heightAtSize(style.fontSize.in("pt")), "pt");
-    this._leftBottomCorner = leftBottomCorner;
+    this.leftBottomCorner = leftBottomCorner;
     this.parent = parent;
   }
 
@@ -272,15 +272,15 @@ export class TextBox {
   drawToPdfPage(pdfPage) {
     this.log("Draw Text", {
       text: this.text,
-      x: this._leftBottomCorner.x.in("mm"),
-      y: this._leftBottomCorner.y.in("mm"),
+      x: this.leftBottomCorner.x.in("mm"),
+      y: this.leftBottomCorner.y.in("mm"),
       font: this.style.font.name,
       fontSize: this.style.fontSize.in("mm"),
     });
     drawDebugBox(pdfPage, this);
     pdfPage.drawText(this.text, {
-      x: this._leftBottomCorner.x.in("pt"),
-      y: this._leftBottomCorner.y.in("pt"),
+      x: this.leftBottomCorner.x.in("pt"),
+      y: this.leftBottomCorner.y.in("pt"),
       font: this.style.font,
       size: this.style.fontSize.in("pt"),
     });
