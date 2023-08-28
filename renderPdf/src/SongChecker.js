@@ -1,5 +1,7 @@
 /**
  * @typedef {import("./SongParser").SongAst} SongAst
+ * @typedef {import("./SongParser").SongLineNode} SongLineNode
+ * @typedef {import("./SongParser").SongSectionNode} SongSectionNode
  */
 
 /** @param {SongAst} ast  */
@@ -13,6 +15,51 @@ export function checkSongAst(ast) {
       }
     }
   }
+
+  /**@type {Map<string, string[][]>} */
+  const chordSchemas = new Map();
+
+  for (const section of ast.sections) {
+    const sectionType = section.sectionHeading.trim().toLowerCase();
+    const schema = chordSchemas.get(sectionType);
+    if (schema) {
+      validateSectionAgainstSchema(section, schema);
+    } else {
+      const newSchema = parseSchema(section.lines);
+      chordSchemas.set(sectionType, newSchema);
+    }
+  }
+}
+
+/**
+ * @param {SongLineNode[]} lines
+ * @returns {string[][]}
+ */
+function parseSchema(lines) {
+  return lines.map((l) => l.chords.map((c) => c.chord));
+}
+
+/**
+ * @param {SongSectionNode} section
+ *  * @param {string[][]} schema
+ */
+function validateSectionAgainstSchema(section, schema) {
+  const lines = section.lines;
+  let lineIndex = -1;
+  for (const line of lines) {
+    lineIndex += 1;
+    const warning =
+      "line schemas are differing for sections " +
+      section.sectionHeading +
+      " near:\n" +
+      line.lyric;
+    if (line.chords.length !== schema[lineIndex]?.length) {
+      console.warn(warning);
+    }
+    if (line.chords.some((c, i) => c.chord !== schema[lineIndex][i])) {
+      console.warn(warning);
+    }
+  }
 }
 
 /** @param {string} str */
@@ -21,7 +68,6 @@ function isSpecialSign(str) {
 }
 
 const note = ["a", "b", "c", "d", "e", "f", "g", "h"];
-const genus = ["m"];
 const halfSteps = ["#", "b", "is", "es"];
 const variants = ["7", "6", "5", "dim", "maj7", "sus2", "sus4", "+"];
 
