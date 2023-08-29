@@ -1,7 +1,7 @@
 /**
- * @typedef {import("./SongParser").SongAst} SongAst
- * @typedef {import("./SongParser").SongLineNode} SongLineNode
- * @typedef {import("./SongParser").SongSectionNode} SongSectionNode
+ * @typedef {import("./SongParser.js").SongAst} SongAst
+ * @typedef {import("./SongParser.js").SongLineNode} SongLineNode
+ * @typedef {import("./SongParser.js").SongSectionNode} SongSectionNode
  */
 
 /** @param {SongAst} ast  */

@@ -1,5 +1,5 @@
 /**
- * @typedef {import("./Lenght").Lenght} Lenght
+ * @typedef {import("./Lenght.js").Lenght} Lenght
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("pdf-lib").PDFFont} PDFFont
  * @typedef {import("pdf-lib").Color}  Color

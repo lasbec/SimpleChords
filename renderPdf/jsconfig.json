@@ -4,7 +4,10 @@
       "maxNodeModuleJsDepth": 5,
       "lib": ["es2020"],
       "strict": true,
-      "noImplicitAny": true
+      "noImplicitAny": true,
+      "target":"ES2015",
+      "moduleResolution": "nodenext",
+      "module": "NodeNext"
     },
     "input": ["src"]
   }  
