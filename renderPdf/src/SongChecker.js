@@ -56,7 +56,13 @@ export function validateSectionAgainstSchema(section, schema) {
     if (line.chords.length !== schema[lineIndex]?.length) {
       console.warn(warning);
     }
-    if (line.chords.some((c, i) => c.chord !== schema[lineIndex][i])) {
+    if (
+      line.chords.some((c, i) => {
+        const schemaLine = schema[lineIndex];
+        if (!schemaLine) return true;
+        c.chord !== schemaLine[i];
+      })
+    ) {
       console.warn(warning);
     }
   }
