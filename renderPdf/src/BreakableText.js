@@ -17,20 +17,38 @@ export class BreakableText {
   /** @type {"middle" | "right"} */
   favor;
 
+  /** @type {number[]} */
+  favoriteBreakingIndices;
+
   /**
    * @param {string} text
+   * @param {number[]} favoriteBreakingIndices
+   * @param {"middle" | "right"} favor
    * @private
    */
-  constructor(text) {
+  constructor(text, favoriteBreakingIndices, favor) {
     this.text = text;
+    this.favoriteBreakingIndices = favoriteBreakingIndices;
     this.lenght = text.length;
-    this.favor = "right";
+    this.favor = favor;
   }
   //   static addBadnessForBeingInWord(badness) {}
 
-  /** @param {string} str  */
-  static fromString(str) {
-    return new BreakableText(str);
+  /**
+   * @param {string} str
+   * @param {"middle" | "right"} favor
+   */
+  static fromString(str, favor = "right") {
+    return new BreakableText(str, [], favor);
+  }
+
+  /**
+   * @param {string[]} lines
+   * @param {"middle" | "right"} favor
+   */
+  static fromPrefferdLineUp(lines, favor = "right") {
+    const favoriteBreakingIndices = lines.map((l) => l.length - 1);
+    return new BreakableText(lines.join(""), favoriteBreakingIndices, favor);
   }
 
   /**
@@ -47,13 +65,12 @@ export class BreakableText {
       return [this.text];
     }
     const [newLine, rest] = this.break(breakRange);
-    const text = BreakableText.fromString(rest);
-    return [newLine, ...text.breakUntil(predicate)];
+    return [newLine, ...rest.breakUntil(predicate)];
   }
 
   /**
    * @param {BeforAfter} beforeAfter
-   * @returns {[string, string]}
+   * @returns {[string, BreakableText]}
    */
   break(beforeAfter) {
     const { before: _beforeIndex, after: afterIndex } = beforeAfter;
@@ -83,7 +100,11 @@ export class BreakableText {
       searchFor: [" "],
     }).map((i) => i + afterIndex);
     const candidateBreakPoints =
-      veryGoodBreakPoints.length > 0 ? veryGoodBreakPoints : okBreakPoints;
+      this.favoriteBreakingIndices.length > 0
+        ? this.favoriteBreakingIndices
+        : veryGoodBreakPoints.length > 0
+        ? veryGoodBreakPoints
+        : okBreakPoints;
 
     const middleOfBrakingSpace =
       this.favor === "middle"
@@ -101,7 +122,13 @@ export class BreakableText {
 
     return [
       this.text.slice(0, indexToBreakAfter + 1),
-      this.text.slice(indexToBreakAfter + 1),
+      new BreakableText(
+        this.text.slice(indexToBreakAfter + 1),
+        this.favoriteBreakingIndices
+          .map((i) => i - indexToBreakAfter)
+          .filter((i) => 0 < i),
+        this.favor
+      ),
     ];
   }
 }

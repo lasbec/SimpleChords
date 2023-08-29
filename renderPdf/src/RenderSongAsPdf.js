@@ -256,10 +256,11 @@ function getMaxLenToFitWidth(str, style, width) {
  * @returns {SongLine[]}
  */
 function wrapLinesWithPdfLib(lines, style, width) {
-  const singleSongLine = SongLine.concat(lines);
-  const splittedLines = BreakableText.fromString(
-    singleSongLine.lyric
-  ).breakUntil((l) => {
+  const breakingText = BreakableText.fromPrefferdLineUp(
+    lines.map((l) => l.lyric)
+  );
+  console.log(breakingText.favoriteBreakingIndices);
+  const splittedLines = breakingText.breakUntil((l) => {
     const maxLen = getMaxLenToFitWidth(l, style, width);
     if (maxLen >= l.length) return;
     return {
@@ -268,7 +269,7 @@ function wrapLinesWithPdfLib(lines, style, width) {
     };
   });
 
-  let remainingLine = singleSongLine;
+  let remainingLine = SongLine.concat(lines);
   /**@type {SongLine[]} */
   let result = [];
   for (const l of splittedLines) {
