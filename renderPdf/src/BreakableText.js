@@ -52,8 +52,12 @@ export class BreakableText {
     for (const line of lines) {
       if (line.length === 0) continue;
       const lastIndex =
-        favoriteBreakingIndices[favoriteBreakingIndices.length - 1] || 0;
-      favoriteBreakingIndices.push(lastIndex + line.length - 1);
+        favoriteBreakingIndices[favoriteBreakingIndices.length - 1];
+      if (lastIndex == undefined) {
+        favoriteBreakingIndices.push(line.length - 1);
+        continue;
+      }
+      favoriteBreakingIndices.push(lastIndex + line.length);
     }
     return new BreakableText(lines.join(""), favoriteBreakingIndices, favor);
   }
@@ -135,7 +139,7 @@ export class BreakableText {
       new BreakableText(
         this.text.slice(indexToBreakAfter + 1),
         this.favoriteBreakingIndices
-          .map((i) => i - indexToBreakAfter)
+          .map((i) => i - indexToBreakAfter - 1)
           .filter((i) => 0 < i),
         this.favor
       ),

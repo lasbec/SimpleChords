@@ -74,18 +74,35 @@ describe("BreakableText", () => {
   //     "Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
   //   ]);
   // });
-  // it("die Lunge verse 1", () => {
-  //   const verse = [
-  //     "Oj, joy, joy wo ist die Luft, die Luft in meiner Lunge,",
-  //     "zum Sprechen reicht sie lang nicht mehr, im Mund liegt lahm die Zunge. ",
-  //     "Mein Atem ist fast ausgelöscht und dennoch kann ich singen,",
-  //     "da ist noch was ganz tief in mir bringt mich manchmal zum Klingen.",
-  //   ];
-  //   const text = BreakableText.fromPrefferdLineUp(verse);
-  //   expect(
-  //     text.breakUntil((/** @type {string | any[]} */ str) =>
-  //       str.length > 100 ? { before: 100, after: 0 } : undefined
-  //     )
-  //   ).toEqual(verse);
-  // });
+  it("die Lunge verse 1", () => {
+    const verse = [
+      "Oj, joy, joy wo ist die Luft, die Luft in meiner Lunge,",
+      "zum Sprechen reicht sie lang nicht mehr, im Mund liegt lahm die Zunge. ",
+      "Mein Atem ist fast ausgelöscht und dennoch kann ich singen,",
+      "da ist noch was ganz tief in mir bringt mich manchmal zum Klingen.",
+    ];
+    const text = BreakableText.fromPrefferdLineUp(verse);
+    expect(
+      text.breakUntil((/** @type {string | any[]} */ str) =>
+        str.length > 100 ? { before: 100, after: 0 } : undefined
+      )
+    ).toEqual(verse);
+  });
+  it("Der Wagen verse 1", () => {
+    const verse = [
+      "Staub, Staub und Steppenland,",
+      "zwei alte Mulis am Wegesrand",
+      "ziehen den Wagen aus der Stadt,",
+      "weiter nach Osten dreht sich das Rad.",
+    ];
+    const text = BreakableText.fromPrefferdLineUp(verse);
+    expect(
+      text.breakUntil((/** @type {string | any[]} */ str) =>
+        str.length > 70 ? { before: 70, after: 0 } : undefined
+      )
+    ).toEqual([
+      "Staub, Staub und Steppenland,zwei alte Mulis am Wegesrand",
+      "ziehen den Wagen aus der Stadt,weiter nach Osten dreht sich das Rad.",
+    ]);
+  });
 });
