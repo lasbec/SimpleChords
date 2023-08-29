@@ -1,8 +1,5 @@
 import { describe, it, expect } from "vitest";
-import {
-  BreakableText,
-  wrapIntoStringsOfMaxLenghtOf,
-} from "./BreakableText.js";
+import { BreakableText } from "./BreakableText.js";
 
 describe("BreakableText", () => {
   describe("break", () => {
@@ -53,12 +50,12 @@ describe("BreakableText", () => {
   });
 
   it("breakeToMaxLen", () => {
+    const text = BreakableText.fromString(
+      "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
+    );
     expect(
-      wrapIntoStringsOfMaxLenghtOf(
-        BreakableText.fromString(
-          "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
-        ),
-        100
+      text.breakUntil((/** @type {string | any[]} */ str) =>
+        str.length > 100 ? { beforeIndex: 100, afterIndex: 0 } : undefined
       )
     ).toEqual([
       "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, ",
@@ -69,6 +66,7 @@ describe("BreakableText", () => {
       "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, ",
       "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, ",
       "sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. ",
+      "Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
     ]);
   });
 });

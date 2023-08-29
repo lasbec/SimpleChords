@@ -1,59 +1,8 @@
 /**
- * @param {BreakableText} text
- * @param {number} maxLen
+ * @callback BreakUntilPredicate
+ * @param {string} str
+ * @returns {BeforAfter | undefined}
  */
-export function wrapIntoStringsOfMaxLenghtOf(text, maxLen) {
-  /** @type {string[]} */
-  let result = [];
-  while (text.lenght > maxLen) {
-    const [newLine, rest] = text.break({ afterIndex: 0, beforeIndex: maxLen });
-    result.push(newLine);
-    text = BreakableText.fromString(rest);
-  }
-  return result;
-}
-
-/**
- * @param {number[]} arr
- */
-export function getIndexOfMostRightMinimum(arr) {
-  const fst = arr[0];
-  if (fst === undefined) return;
-  /** @type {number} */
-  let currIndexOfMinimum = 0;
-  /** @type {number} */
-  let currMinimum = fst;
-  arr.forEach((n, i) => {
-    if (n <= currMinimum) {
-      currMinimum = n;
-      currIndexOfMinimum = i;
-    }
-  });
-  return currIndexOfMinimum;
-}
-
-/**
- * @typedef {object} RangeArgs
- * @property {number} from inclusive
- * @property {number} to exclusive
- * @property {number} by
- */
-
-/**
- * @param {number[]} arr;
- * @param {RangeArgs} range
- * @return {void}
- */
-function increaseInRangeBy(arr, range) {
-  let i = range.from - 1;
-  while (i < range.to) {
-    i += 1;
-
-    if (i >= 0 && arr[i] !== undefined) {
-      arr[i] += range.by;
-    }
-  }
-}
 
 const punctuation = [".", ",", ":", "!", "?", ";"];
 /**
@@ -79,6 +28,24 @@ export class BreakableText {
   /** @param {string} str  */
   static fromString(str) {
     return new BreakableText(str);
+  }
+
+  /**
+   *
+   * @param {BreakUntilPredicate} predicate
+   * @returns {string[]}
+   */
+  breakUntil(predicate) {
+    /** @type {string[]} */
+    let result = [];
+
+    const breakRange = predicate(this.text);
+    if (!breakRange) {
+      return [this.text];
+    }
+    const [newLine, rest] = this.break(breakRange);
+    const text = BreakableText.fromString(rest);
+    return [newLine, ...text.breakUntil(predicate)];
   }
 
   /**
