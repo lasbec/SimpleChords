@@ -91,9 +91,13 @@ export class BreakableText {
   /**
    *
    * @param {BreakUntilPredicate<StrLike>} predicate
+   * @param {number} recursionDepth
    * @returns {StrLike[]}
    */
-  breakUntil(predicate) {
+  breakUntil(predicate, recursionDepth = 0) {
+    if (recursionDepth > 10_000) {
+      throw Error("Max Recursion Depth exceeded");
+    }
     /** @type {StrLike[]} */
     let result = [];
 
@@ -102,7 +106,7 @@ export class BreakableText {
       return [this.text];
     }
     const [newLine, rest] = this.break(breakRange);
-    return [newLine, ...rest.breakUntil(predicate)];
+    return [newLine, ...rest.breakUntil(predicate, recursionDepth + 1)];
   }
 
   /**
@@ -120,7 +124,7 @@ export class BreakableText {
         return i + afterIndex;
       })
       .filter((i) => {
-        // we dont wont breaks after |: or :|
+        // we dont want breaks after |: or :|
         return (
           this.text.charAt(i - 1) !== "|" && this.text.charAt(i + 1) !== "|"
         );

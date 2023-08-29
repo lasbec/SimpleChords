@@ -1,5 +1,7 @@
 /**
  * @typedef {import("pdf-lib").PDFPage} PDFPage
+ * @typedef {import("./Page.js").TextStyle} TextStyle
+ * @typedef {import("./Song.js").SongSection} SongSection
  */
 import { PDFDocument, StandardFonts } from "pdf-lib";
 import { FontLoader } from "./FontLoader.js";
@@ -10,7 +12,7 @@ import { parseSongAst } from "./SongParser.js";
 import * as Path from "path";
 import * as fs from "fs/promises";
 import { Song, SongLine } from "./Song.js";
-import { checkSongAst } from "./SongChecker.js";
+import { checkSongAst, parseSchema } from "./SongChecker.js";
 import { BreakableText } from "./BreakableText.js";
 
 /**
@@ -104,7 +106,7 @@ export async function renderSongAsPdf(song, fontLoader, debug) {
   const sectionDistance = lyricLineHeight.mul(1.2);
 
   const pages = await layOutSong(
-    reshapeSongWithLineBreaks(
+    reshapeSongWithSchema(
       song,
       lyricTextStyle,
       pageWidth.sub(leftMargin).sub(rightMargin)
@@ -214,6 +216,23 @@ function reshapeSongWithLineBreaks(song, style, width) {
 }
 
 /**
+ * @param {Song} _song
+ * @param {import("./Page.js").TextStyle} style
+ * @param {Lenght} width
+ */
+function reshapeSongWithSchema(_song, style, width) {
+  const song = reshapeSongWithLineBreaks(_song, style, width);
+  const firstSchema = parseSchema(song.sections[0]?.lines);
+  return {
+    heading: song.heading,
+    sections: song.sections.map((s) => ({
+      sectionHeading: s.sectionHeading,
+      lines: wrapLinesToSchema(s.lines, firstSchema, style, width),
+    })),
+  };
+}
+
+/**
  * @param {string} str
  * @param {import("./Page.js").TextStyle} style
  * @param {Lenght} width
@@ -239,18 +258,57 @@ function getMaxLenToFitWidth(line, style, width) {
 
 /**
  * @param {SongLine[]} lines
- * @param {import("./Page.js").TextStyle} style
+ * @param {string[][]} _schema
+ * @param {TextStyle} style
+ * @param {Lenght} width
+ * @returns {SongLine[]}
+ */
+function wrapLinesToSchema(lines, _schema, style, width) {
+  const schema = [..._schema];
+  const breakingText = BreakableText.fromPrefferdLineUp(SongLine, lines);
+
+  const result = breakingText.breakUntil((l) => {
+    const lineSchema = schema.shift();
+    if (lineSchema === undefined) return;
+
+    /** @type {import("./SongParser.js").ChordsLineElement | null} */
+    let lastMatchInARow = null;
+    /** @type {import("./SongParser.js").ChordsLineElement | null} */
+    let firstMissmatch = null;
+    let i = -1;
+    for (const chord of lineSchema) {
+      i += 1;
+
+      if (chord === l.chords[i]?.chord) {
+        lastMatchInARow = l.chords[i];
+      } else {
+        firstMissmatch = l.chords[i];
+        break;
+      }
+    }
+    if (lineSchema.length < l.chords.length) {
+      firstMissmatch = l.chords[lineSchema.length];
+    }
+
+    if (lastMatchInARow === null) return;
+    if (firstMissmatch === null) return;
+
+    return {
+      before: firstMissmatch.startIndex,
+      after: lastMatchInARow.startIndex + 1,
+    };
+  });
+  return result;
+}
+
+/**
+ * @param {SongLine[]} lines
+ * @param {TextStyle} style
  * @param {Lenght} width
  * @returns {SongLine[]}
  */
 function wrapLines(lines, style, width) {
-  /** @type {import("./BreakableText.js").StrLikeImpl<SongLine>} */
-  const StrLikeImplSongLine = SongLine;
-
-  const breakingText = BreakableText.fromPrefferdLineUp(
-    StrLikeImplSongLine,
-    lines
-  );
+  const breakingText = BreakableText.fromPrefferdLineUp(SongLine, lines);
   const result = breakingText.breakUntil((l) => {
     const maxLen = getMaxLenToFitWidth(l, style, width);
     if (maxLen >= l.length) return;

@@ -35,7 +35,7 @@ export function checkSongAst(ast) {
  * @param {SongLineNode[]} lines
  * @returns {string[][]}
  */
-function parseSchema(lines) {
+export function parseSchema(lines) {
   return lines.map((l) => l.chords.map((c) => c.chord));
 }
 
@@ -43,7 +43,7 @@ function parseSchema(lines) {
  * @param {SongSectionNode} section
  *  * @param {string[][]} schema
  */
-function validateSectionAgainstSchema(section, schema) {
+export function validateSectionAgainstSchema(section, schema) {
   const lines = section.lines;
   let lineIndex = -1;
   for (const line of lines) {
