@@ -14,6 +14,8 @@ export class BreakableText {
   text;
   /** @type {number} */
   lenght;
+  /** @type {"middle" | "right"} */
+  favor;
 
   /**
    * @param {string} text
@@ -22,6 +24,7 @@ export class BreakableText {
   constructor(text) {
     this.text = text;
     this.lenght = text.length;
+    this.favor = "right";
   }
   //   static addBadnessForBeingInWord(badness) {}
 
@@ -53,19 +56,27 @@ export class BreakableText {
    * @returns {[string, string]}
    */
   break(beforeAfter) {
-    const { beforeIndex: _beforeIndex, afterIndex } = beforeAfter;
+    const { before: _beforeIndex, after: afterIndex } = beforeAfter;
     const beforeIndex = Math.min(_beforeIndex, this.text.length);
     const veryGoodBreakPoints = findIndicesOf({
       findIn: this.text.slice(afterIndex, beforeIndex),
       searchFor: punctuation,
-    }).map((i) => {
-      const totalIndex = i + afterIndex;
-      const maybeBetterCandidate = totalIndex + 1;
-      return this.text[maybeBetterCandidate] === " " &&
-        beforeIndex > maybeBetterCandidate
-        ? maybeBetterCandidate
-        : totalIndex;
-    });
+    })
+      .map((i) => {
+        return i + afterIndex;
+      })
+      .filter((i) => {
+        // we dont wont breaks after |: or :|
+        return this.text[i - 1] !== "|" && this.text[i + 1] !== "|";
+      })
+      .map((i) => {
+        // don't break after dot and bring following space to next line.
+        const maybeBetterCandidate = i + 1;
+        return this.text[maybeBetterCandidate] === " " &&
+          beforeIndex > maybeBetterCandidate
+          ? maybeBetterCandidate
+          : i;
+      });
 
     const okBreakPoints = findIndicesOf({
       findIn: this.text.slice(afterIndex, beforeIndex),
@@ -74,7 +85,10 @@ export class BreakableText {
     const candidateBreakPoints =
       veryGoodBreakPoints.length > 0 ? veryGoodBreakPoints : okBreakPoints;
 
-    const middleOfBrakingSpace = (beforeIndex - afterIndex) / 2;
+    const middleOfBrakingSpace =
+      this.favor === "middle"
+        ? (beforeIndex - afterIndex) / 2
+        : this.text.length;
     const middlestGoodBreakPoint = findClosestTo(
       candidateBreakPoints,
       middleOfBrakingSpace
@@ -132,6 +146,6 @@ function findClosestTo(arr, i) {
 
 /**
  * @typedef {object} BeforAfter
- * @property {number} beforeIndex excluding
- * @property {number} afterIndex including
+ * @property {number} before excluding
+ * @property {number} after including
  */

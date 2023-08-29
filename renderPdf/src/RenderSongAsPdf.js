@@ -16,6 +16,7 @@ import * as Path from "path";
 import * as fs from "fs/promises";
 import { Song, SongLine } from "./Song.js";
 import { checkSongAst } from "./SongChecker.js";
+import { BreakableText } from "./BreakableText.js";
 
 /**
  *  @param {string} path
@@ -46,7 +47,7 @@ export async function renderSingleFile(path, logAst) {
   }
 
   const fontLoader = new FontLoader("./fonts");
-  const pdfBytes = await renderSongAsPdf(song, fontLoader, "pdfLibLineWrap");
+  const pdfBytes = await renderSongAsPdf(song, fontLoader, "breakLines");
 
   await fs.writeFile(pdfOutputPath, pdfBytes);
   console.log("Pdf Result written to", Path.resolve(pdfOutputPath), "\n");
@@ -56,7 +57,7 @@ export async function renderSingleFile(path, logAst) {
 /**
  * @param {Song} song
  * @param {FontLoader} fontLoader
- * @param {"asIs" | "halveSongLines" | "pdfLibLineWrap"} shaper
+ * @param {"asIs" | "halveSongLines" | "breakLines"} shaper
  */
 export async function renderSongAsPdf(song, fontLoader, shaper) {
   const pdfDoc = await PDFDocument.create();
@@ -111,9 +112,9 @@ export async function renderSongAsPdf(song, fontLoader, shaper) {
     pages = await layOutSong(halveSongLines(song));
   } else if (shaper === "asIs") {
     pages = await layOutSong(song);
-  } else if (shaper === "pdfLibLineWrap") {
+  } else if (shaper === "breakLines") {
     pages = await layOutSong(
-      reshapeSongWithPdfLibLinewrap(
+      reshapeSongWithLineBreaks(
         song,
         lyricTextStyle,
         pageWidth.sub(leftMargin).sub(rightMargin)
@@ -215,7 +216,7 @@ export async function renderSongAsPdf(song, fontLoader, shaper) {
  * @param {import("./Page.js").TextStyle} style
  * @param {Lenght} width
  */
-function reshapeSongWithPdfLibLinewrap(song, style, width) {
+function reshapeSongWithLineBreaks(song, style, width) {
   return {
     heading: song.heading,
     sections: song.sections.map((s) => ({
@@ -226,6 +227,29 @@ function reshapeSongWithPdfLibLinewrap(song, style, width) {
 }
 
 /**
+ * @param {string} str
+ * @param {import("./Page.js").TextStyle} style
+ * @param {Lenght} width
+ */
+function fitsWidth(str, style, width) {
+  return (
+    style.font.widthOfTextAtSize(str, style.fontSize.in("pt")) <= width.in("pt")
+  );
+}
+
+/**
+ * @param {string} str
+ * @param {import("./Page.js").TextStyle} style
+ * @param {Lenght} width
+ */
+function getMaxLenToFitWidth(str, style, width) {
+  while (!fitsWidth(str, style, width)) {
+    str = str.slice(0, -1);
+  }
+  return str.length;
+}
+
+/**
  * @param {SongLine[]} lines
  * @param {import("./Page.js").TextStyle} style
  * @param {Lenght} width
@@ -233,23 +257,22 @@ function reshapeSongWithPdfLibLinewrap(song, style, width) {
  */
 function wrapLinesWithPdfLib(lines, style, width) {
   const singleSongLine = SongLine.concat(lines);
-  const lineSplittingByPdfLib = layoutMultilineText(singleSongLine.lyric, {
-    font: style.font,
-    fontSize: style.fontSize.in("pt"),
-    alignment: TextAlignment.Left,
-    bounds: {
-      x: 0,
-      y: 0,
-      width: width.in("pt"),
-      height: 0,
-    },
-  }).lines.map((l) => l.text);
+  const splittedLines = BreakableText.fromString(
+    singleSongLine.lyric
+  ).breakUntil((l) => {
+    const maxLen = getMaxLenToFitWidth(l, style, width);
+    if (maxLen >= l.length) return;
+    return {
+      before: maxLen,
+      after: 0,
+    };
+  });
 
   let remainingLine = singleSongLine;
   /**@type {SongLine[]} */
   let result = [];
-  for (const pdfLibLine of lineSplittingByPdfLib) {
-    const [line, rest] = remainingLine.splitAt(pdfLibLine.length);
+  for (const l of splittedLines) {
+    const [line, rest] = remainingLine.splitAt(l.length);
     result.push(line);
     remainingLine = rest;
   }

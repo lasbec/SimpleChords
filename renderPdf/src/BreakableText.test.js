@@ -5,14 +5,14 @@ describe("BreakableText", () => {
   describe("break", () => {
     it("empty", () => {
       const text = BreakableText.fromString("");
-      expect(text.break({ beforeIndex: 10, afterIndex: 0 })).toEqual(["", ""]);
+      expect(text.break({ before: 10, after: 0 })).toEqual(["", ""]);
     });
 
     it("simple", () => {
       const text = BreakableText.fromString(
         "simple test should breake before this"
       );
-      expect(text.break({ beforeIndex: 35, afterIndex: 0 })).toEqual([
+      expect(text.break({ before: 35, after: 0 })).toEqual([
         "simple test should ",
         "breake before this",
       ]);
@@ -22,7 +22,7 @@ describe("BreakableText", () => {
       const text = BreakableText.fromString(
         "simple test should breake before this"
       );
-      expect(text.break({ beforeIndex: 35, afterIndex: 33 })).toEqual([
+      expect(text.break({ before: 35, after: 33 })).toEqual([
         "simple test should breake before th",
         "is",
       ]);
@@ -32,7 +32,7 @@ describe("BreakableText", () => {
       const text = BreakableText.fromString(
         "simple test should breake before this"
       );
-      expect(text.break({ beforeIndex: 35, afterIndex: 19 })).toEqual([
+      expect(text.break({ before: 35, after: 19 })).toEqual([
         "simple test should breake ",
         "before this",
       ]);
@@ -42,7 +42,7 @@ describe("BreakableText", () => {
       const text = BreakableText.fromString(
         "Some simple sentence can be written down. Another Sentence too."
       );
-      expect(text.break({ beforeIndex: 1000, afterIndex: 0 })).toEqual([
+      expect(text.break({ before: 1000, after: 0 })).toEqual([
         "Some simple sentence can be written down. ",
         "Another Sentence too.",
       ]);
@@ -55,7 +55,7 @@ describe("BreakableText", () => {
     );
     expect(
       text.breakUntil((/** @type {string | any[]} */ str) =>
-        str.length > 100 ? { beforeIndex: 100, afterIndex: 0 } : undefined
+        str.length > 100 ? { before: 100, after: 0 } : undefined
       )
     ).toEqual([
       "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, ",
