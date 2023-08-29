@@ -148,19 +148,19 @@ export class BreakableText {
         ? veryGoodBreakPoints
         : okBreakPoints;
 
-    const middleOfBrakingSpace =
+    const prefferdTarget =
       this.favor === "middle"
         ? (beforeIndex - afterIndex) / 2
         : this.text.length;
-    const middlestGoodBreakPoint = findClosestTo(
+    const closestBreakPoint = findClosestTo(
       candidateBreakPoints,
-      middleOfBrakingSpace
+      prefferdTarget
     );
 
     const indexToBreakAfter =
-      middlestGoodBreakPoint === undefined
-        ? afterIndex + Math.floor(middleOfBrakingSpace)
-        : middlestGoodBreakPoint;
+      closestBreakPoint === undefined
+        ? afterIndex + Math.floor(prefferdTarget)
+        : closestBreakPoint;
 
     return [
       this.strImpl.slice(this.text, 0, indexToBreakAfter + 1),

@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { BreakableText } from "./BreakableText.js";
+import { SongLine } from "./Song.js";
 
 /** @type {import("./BreakableText.js").StrLikeImpl<string>} */
 const StrLikeImplOnString = {
@@ -129,4 +130,97 @@ describe("BreakableText", () => {
       "ziehen den Wagen aus der Stadt,weiter nach Osten dreht sich das Rad.",
     ]);
   });
+
+  it("Der Wagen verse 1 Song lines", () => {
+    const verse = derWagenVerse1.map((l) => {
+      return SongLine.fromSongLineNode(l);
+    });
+    const text = BreakableText.fromPrefferdLineUp(SongLine, verse);
+    expect(
+      text
+        .breakUntil((str) =>
+          str.length > 70 ? { before: 70, after: 0 } : undefined
+        )
+        .map((l) => l.lyric)
+    ).toEqual([
+      "Staub, Staub und Steppenland, zwei alte Mulis am Wegesrand ",
+      "ziehen den Wagen aus der Stadt, weiter nach Osten dreht sich das Rad. ",
+    ]);
+  });
 });
+
+/** @type {import("./SongParser.js").SongLineNode[]} */
+const derWagenVerse1 = [
+  {
+    chords: [
+      {
+        chord: "a",
+        startIndex: 2,
+      },
+      {
+        chord: "F",
+        startIndex: 9,
+      },
+      {
+        chord: "G",
+        startIndex: 12,
+      },
+      {
+        chord: "a",
+        startIndex: 26,
+      },
+    ],
+    lyric: "Staub, Staub und Steppenland,",
+  },
+  {
+    chords: [
+      {
+        chord: "F",
+        startIndex: 10,
+      },
+      {
+        chord: "G",
+        startIndex: 15,
+      },
+      {
+        chord: "a",
+        startIndex: 26,
+      },
+    ],
+    lyric: "zwei alte Mulis am Wegesrand",
+  },
+  {
+    chords: [
+      {
+        chord: "F",
+        startIndex: 11,
+      },
+      {
+        chord: "G",
+        startIndex: 16,
+      },
+      {
+        chord: "d",
+        startIndex: 28,
+      },
+    ],
+    lyric: "ziehen den Wagen aus der Stadt,",
+  },
+  {
+    chords: [
+      {
+        chord: "a",
+        startIndex: 12,
+      },
+      {
+        chord: "E",
+        startIndex: 17,
+      },
+      {
+        chord: "a",
+        startIndex: 34,
+      },
+    ],
+    lyric: "weiter nach Osten dreht sich das Rad.",
+  },
+];

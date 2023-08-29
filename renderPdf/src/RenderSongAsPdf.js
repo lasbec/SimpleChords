@@ -26,7 +26,6 @@ export async function renderSingleFile(path, debug) {
     return;
   }
   checkSongAst(ast);
-  const song = Song.fromAst(ast);
 
   const pointSplit = path.split(".");
   const astOutputPath = pointSplit
@@ -37,9 +36,10 @@ export async function renderSingleFile(path, debug) {
     .join(".");
 
   if (debug) {
-    fs.writeFile(astOutputPath, JSON.stringify(song, null, 2));
+    fs.writeFile(astOutputPath, JSON.stringify(ast, null, 2));
     console.log("AST result written to", Path.resolve(astOutputPath));
   }
+  const song = Song.fromAst(ast);
 
   const fontLoader = new FontLoader("./fonts");
   const pdfBytes = await renderSongAsPdf(song, fontLoader, debug);
@@ -251,23 +251,13 @@ function wrapLines(lines, style, width) {
     StrLikeImplSongLine,
     lines
   );
-  const splittedLines = breakingText.breakUntil((l) => {
+  const result = breakingText.breakUntil((l) => {
     const maxLen = getMaxLenToFitWidth(l, style, width);
-    console.log(maxLen, "\n", l, "\n", SongLine.slice(l, 0, maxLen), "\n--");
     if (maxLen >= l.length) return;
     return {
       before: maxLen,
       after: 0,
     };
   });
-
-  let remainingLine = SongLine.concat(lines);
-  /**@type {SongLine[]} */
-  let result = [];
-  for (const l of splittedLines) {
-    const [line, rest] = remainingLine.splitAt(l.length);
-    result.push(line);
-    remainingLine = rest;
-  }
   return result;
 }

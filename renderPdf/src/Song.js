@@ -109,7 +109,7 @@ export class SongLine {
       const lyricChar = result[chord.startIndex];
       lyricChar.chord = chord.chord;
     }
-    return new SongLine(result);
+    return new SongLine(SongLine.ensureSpaceAtEnd(result));
   }
 
   /** @returns {Iterator<string>} */
@@ -126,16 +126,21 @@ export class SongLine {
     return SongLine.concat([this, ...others]);
   }
 
-  ensureSpaceAtEnd() {
-    if (this.lyric.endsWith(" ")) {
-      return this;
+  /**
+   *
+   * @param {LyricChar[]} chars
+   * @returns {LyricChar[]}
+   */
+  static ensureSpaceAtEnd(chars) {
+    if (chars[chars.length - 1]?.char === " ") {
+      return chars;
     }
-    return new SongLine([...this.chars, { char: " ", chord: null }]);
+    return [...chars, { char: " ", chord: null }];
   }
 
   /** @param {SongLine[]} lines*/
   static concat(lines) {
-    return new SongLine(lines.flatMap((o) => o.ensureSpaceAtEnd().chars));
+    return new SongLine(lines.flatMap((o) => o.chars));
   }
 
   /**
@@ -154,17 +159,6 @@ export class SongLine {
    */
   slice(start, stop) {
     return SongLine.slice(this, start, stop);
-  }
-
-  /**
-   * @param {number} index the element on this index is included in the second line of the split.
-   * @returns {[SongLine, SongLine]}
-   */
-  splitAt(index) {
-    return [
-      new SongLine(this.chars.slice(0, index)),
-      new SongLine(this.chars.slice(index)),
-    ];
   }
 
   isEmpty() {
