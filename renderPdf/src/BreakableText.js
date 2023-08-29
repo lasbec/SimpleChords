@@ -1,6 +1,16 @@
 /**
+ * @template StrLike
+ * @typedef {{slice(s:StrLike, start:number, stop?:number):StrLike, concat(s:StrLike[]):StrLike}} StrLikeImpl
+ */
+
+/**
+ * @typedef {Iterable<string> & {length:number; charAt(index:number):string; toString():string}} StrLikeConstraint
+ */
+
+/**
+ * @template StrLike
  * @callback BreakUntilPredicate
- * @param {string} str
+ * @param {StrLike} str
  * @returns {BeforAfter | undefined}
  */
 
@@ -8,10 +18,16 @@ const punctuation = [".", ",", ":", "!", "?", ";"];
 /**
  * Class to wrap text.
  * Goal is to offer functionality to break a paragraph into lines.
+ * @template {StrLikeConstraint} StrLike
  */
 export class BreakableText {
-  /** @type {string} */
+  /** @type {StrLikeImpl<StrLike>} */
+  strImpl;
+  /**
+   * @type {StrLike}
+   */
   text;
+
   /** @type {number} */
   lenght;
   /** @type {"middle" | "right"} */
@@ -21,32 +37,37 @@ export class BreakableText {
   favoriteBreakingIndices;
 
   /**
-   * @param {string} text
+   * @param {StrLikeImpl<StrLike>} strImpl
+   * @param {StrLike} text
    * @param {number[]} favoriteBreakingIndices
    * @param {"middle" | "right"} favor
    * @private
    */
-  constructor(text, favoriteBreakingIndices, favor) {
+  constructor(strImpl, text, favoriteBreakingIndices, favor) {
+    this.strImpl = strImpl;
     this.text = text;
     this.favoriteBreakingIndices = favoriteBreakingIndices;
     this.lenght = text.length;
     this.favor = favor;
   }
-  //   static addBadnessForBeingInWord(badness) {}
 
   /**
-   * @param {string} str
+   * @template {StrLikeConstraint} StrLike
+   * @param {StrLikeImpl<StrLike>} strImpl
+   * @param {StrLike} str
    * @param {"middle" | "right"} favor
    */
-  static fromString(str, favor = "right") {
-    return new BreakableText(str, [], favor);
+  static fromString(strImpl, str, favor = "right") {
+    return new BreakableText(strImpl, str, [], favor);
   }
 
   /**
-   * @param {string[]} lines
+   * @template {StrLikeConstraint} StrLike
+   * @param {StrLikeImpl<StrLike>} strImpl
+   * @param {StrLike[]} lines
    * @param {"middle" | "right"} favor
    */
-  static fromPrefferdLineUp(lines, favor = "right") {
+  static fromPrefferdLineUp(strImpl, lines, favor = "right") {
     /** @type {number[]} */
     const favoriteBreakingIndices = [];
     for (const line of lines) {
@@ -59,16 +80,21 @@ export class BreakableText {
       }
       favoriteBreakingIndices.push(lastIndex + line.length);
     }
-    return new BreakableText(lines.join(""), favoriteBreakingIndices, favor);
+    return new BreakableText(
+      strImpl,
+      strImpl.concat(lines),
+      favoriteBreakingIndices,
+      favor
+    );
   }
 
   /**
    *
-   * @param {BreakUntilPredicate} predicate
-   * @returns {string[]}
+   * @param {BreakUntilPredicate<StrLike>} predicate
+   * @returns {StrLike[]}
    */
   breakUntil(predicate) {
-    /** @type {string[]} */
+    /** @type {StrLike[]} */
     let result = [];
 
     const breakRange = predicate(this.text);
@@ -81,13 +107,13 @@ export class BreakableText {
 
   /**
    * @param {BeforAfter} beforeAfter
-   * @returns {[string, BreakableText]}
+   * @returns {[StrLike, BreakableText<StrLike>]}
    */
   break(beforeAfter) {
     const { before: _beforeIndex, after: afterIndex } = beforeAfter;
     const beforeIndex = Math.min(_beforeIndex, this.text.length);
     const veryGoodBreakPoints = findIndicesOf({
-      findIn: this.text.slice(afterIndex, beforeIndex),
+      findIn: this.strImpl.slice(this.text, afterIndex, beforeIndex),
       searchFor: punctuation,
     })
       .map((i) => {
@@ -95,19 +121,21 @@ export class BreakableText {
       })
       .filter((i) => {
         // we dont wont breaks after |: or :|
-        return this.text[i - 1] !== "|" && this.text[i + 1] !== "|";
+        return (
+          this.text.charAt(i - 1) !== "|" && this.text.charAt(i + 1) !== "|"
+        );
       })
       .map((i) => {
         // don't break after dot and bring following space to next line.
         const maybeBetterCandidate = i + 1;
-        return this.text[maybeBetterCandidate] === " " &&
+        return this.text.charAt(maybeBetterCandidate) === " " &&
           beforeIndex > maybeBetterCandidate
           ? maybeBetterCandidate
           : i;
       });
 
     const okBreakPoints = findIndicesOf({
-      findIn: this.text.slice(afterIndex, beforeIndex),
+      findIn: this.strImpl.slice(this.text, afterIndex, beforeIndex),
       searchFor: [" "],
     }).map((i) => i + afterIndex);
     const favoriteBreakpoints = this.favoriteBreakingIndices.filter(
@@ -135,9 +163,10 @@ export class BreakableText {
         : middlestGoodBreakPoint;
 
     return [
-      this.text.slice(0, indexToBreakAfter + 1),
+      this.strImpl.slice(this.text, 0, indexToBreakAfter + 1),
       new BreakableText(
-        this.text.slice(indexToBreakAfter + 1),
+        this.strImpl,
+        this.strImpl.slice(this.text, indexToBreakAfter + 1),
         this.favoriteBreakingIndices
           .map((i) => i - indexToBreakAfter - 1)
           .filter((i) => 0 < i),
@@ -149,7 +178,7 @@ export class BreakableText {
 
 /**
  * @typedef {object} FindIndicesOfArgs
- * @property {string} findIn
+ * @property {StrLikeConstraint} findIn
  * @property {string[]} searchFor
  */
 

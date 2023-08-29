@@ -61,6 +61,19 @@ export class SongLine {
     this.lyric = chars.map((c) => c.char).join("");
   }
 
+  get length() {
+    return this.lyric.length;
+  }
+
+  /**
+   *
+   * @param {number} index
+   * @returns {string}
+   */
+  charAt(index) {
+    return this.lyric.charAt(index);
+  }
+
   get chords() {
     /** @type {ChordsLineElement[]} */
     const result = [];
@@ -99,9 +112,10 @@ export class SongLine {
     return new SongLine(result);
   }
 
+  /** @returns {Iterator<string>} */
   *[Symbol.iterator]() {
     for (const c of this.chars) {
-      yield c;
+      yield c.char;
     }
   }
 
@@ -122,6 +136,24 @@ export class SongLine {
   /** @param {SongLine[]} lines*/
   static concat(lines) {
     return new SongLine(lines.flatMap((o) => o.ensureSpaceAtEnd().chars));
+  }
+
+  /**
+   *
+   * @param {SongLine} line
+   * @param {number} start
+   * @param {number=} stop
+   */
+  static slice(line, start, stop) {
+    return new SongLine(line.chars.slice(start, stop));
+  }
+
+  /**
+   * @param {number} start
+   * @param {number=} stop
+   */
+  slice(start, stop) {
+    return SongLine.slice(this, start, stop);
   }
 
   /**

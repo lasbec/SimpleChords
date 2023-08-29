@@ -208,7 +208,7 @@ function reshapeSongWithLineBreaks(song, style, width) {
     heading: song.heading,
     sections: song.sections.map((s) => ({
       sectionHeading: s.sectionHeading,
-      lines: wrapLinesWithPdfLib(s.lines, style, width),
+      lines: wrapLines(s.lines, style, width),
     })),
   };
 }
@@ -225,11 +225,12 @@ function fitsWidth(str, style, width) {
 }
 
 /**
- * @param {string} str
+ * @param {SongLine} line
  * @param {import("./Page.js").TextStyle} style
  * @param {Lenght} width
  */
-function getMaxLenToFitWidth(str, style, width) {
+function getMaxLenToFitWidth(line, style, width) {
+  let str = line.lyric;
   while (!fitsWidth(str, style, width)) {
     str = str.slice(0, -1);
   }
@@ -242,12 +243,17 @@ function getMaxLenToFitWidth(str, style, width) {
  * @param {Lenght} width
  * @returns {SongLine[]}
  */
-function wrapLinesWithPdfLib(lines, style, width) {
+function wrapLines(lines, style, width) {
+  /** @type {import("./BreakableText.js").StrLikeImpl<SongLine>} */
+  const StrLikeImplSongLine = SongLine;
+
   const breakingText = BreakableText.fromPrefferdLineUp(
-    lines.map((l) => l.lyric)
+    StrLikeImplSongLine,
+    lines
   );
   const splittedLines = breakingText.breakUntil((l) => {
     const maxLen = getMaxLenToFitWidth(l, style, width);
+    console.log(maxLen, "\n", l, "\n", SongLine.slice(l, 0, maxLen), "\n--");
     if (maxLen >= l.length) return;
     return {
       before: maxLen,
@@ -262,38 +268,6 @@ function wrapLinesWithPdfLib(lines, style, width) {
     const [line, rest] = remainingLine.splitAt(l.length);
     result.push(line);
     remainingLine = rest;
-  }
-  return result;
-}
-
-/** @param {Song} song */
-function halveSongLines(song) {
-  /** @type {Song} */
-  const result = {
-    heading: song.heading,
-    sections: [],
-  };
-  for (const section of song.sections) {
-    let lines = [];
-    let c = 0;
-    /** @type {SongLine | null} */
-    let last = null;
-    for (const l of section.lines) {
-      if (last) {
-        lines.push(last.concat([l]));
-        last = null;
-      } else {
-        last = l;
-      }
-      c += 1;
-    }
-    if (last) {
-      lines.push(last);
-    }
-    result.sections.push({
-      sectionHeading: section.sectionHeading,
-      lines,
-    });
   }
   return result;
 }
