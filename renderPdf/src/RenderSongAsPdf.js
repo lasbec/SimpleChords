@@ -1,12 +1,7 @@
 /**
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  */
-import {
-  PDFDocument,
-  TextAlignment,
-  StandardFonts,
-  layoutMultilineText,
-} from "pdf-lib";
+import { PDFDocument, StandardFonts } from "pdf-lib";
 import { FontLoader } from "./FontLoader.js";
 import { LEN, Lenght } from "./Lenght.js";
 import { DetachedTextBox, Document, Page } from "./Page.js";
@@ -20,9 +15,9 @@ import { BreakableText } from "./BreakableText.js";
 
 /**
  *  @param {string} path
- * @param {boolean} logAst
+ * @param {boolean} debug
  */
-export async function renderSingleFile(path, logAst) {
+export async function renderSingleFile(path, debug) {
   console.log("Process", Path.parse(path).name);
   const contentToParse = await fs.readFile(path, "utf8");
   const ast = parseSongAst(contentToParse);
@@ -41,13 +36,13 @@ export async function renderSingleFile(path, logAst) {
     .map((e, i) => (i === pointSplit.length - 1 ? "pdf" : e))
     .join(".");
 
-  if (logAst) {
+  if (debug) {
     fs.writeFile(astOutputPath, JSON.stringify(song, null, 2));
     console.log("AST result written to", Path.resolve(astOutputPath));
   }
 
   const fontLoader = new FontLoader("./fonts");
-  const pdfBytes = await renderSongAsPdf(song, fontLoader, "breakLines");
+  const pdfBytes = await renderSongAsPdf(song, fontLoader, debug);
 
   await fs.writeFile(pdfOutputPath, pdfBytes);
   console.log("Pdf Result written to", Path.resolve(pdfOutputPath), "\n");
@@ -57,9 +52,10 @@ export async function renderSingleFile(path, logAst) {
 /**
  * @param {Song} song
  * @param {FontLoader} fontLoader
- * @param {"asIs" | "halveSongLines" | "breakLines"} shaper
+ * @param {boolean} debug
  */
-export async function renderSongAsPdf(song, fontLoader, shaper) {
+export async function renderSongAsPdf(song, fontLoader, debug) {
+  Document.debug = debug;
   const pdfDoc = await PDFDocument.create();
   const pageWidth = LEN(148.5, "mm");
   const pageHeight = LEN(210, "mm");
@@ -107,22 +103,13 @@ export async function renderSongAsPdf(song, fontLoader, shaper) {
 
   const sectionDistance = lyricLineHeight.mul(1.2);
 
-  let pages;
-  if (shaper === "halveSongLines") {
-    pages = await layOutSong(halveSongLines(song));
-  } else if (shaper === "asIs") {
-    pages = await layOutSong(song);
-  } else if (shaper === "breakLines") {
-    pages = await layOutSong(
-      reshapeSongWithLineBreaks(
-        song,
-        lyricTextStyle,
-        pageWidth.sub(leftMargin).sub(rightMargin)
-      )
-    );
-  } else {
-    throw Error("Unknown shaper '" + shaper + "'");
-  }
+  const pages = await layOutSong(
+    reshapeSongWithLineBreaks(
+      song,
+      lyricTextStyle,
+      pageWidth.sub(leftMargin).sub(rightMargin)
+    )
+  );
   pages.drawToPdfDoc(pdfDoc);
 
   return await pdfDoc.save();
@@ -259,7 +246,6 @@ function wrapLinesWithPdfLib(lines, style, width) {
   const breakingText = BreakableText.fromPrefferdLineUp(
     lines.map((l) => l.lyric)
   );
-  console.log(breakingText.favoriteBreakingIndices);
   const splittedLines = breakingText.breakUntil((l) => {
     const maxLen = getMaxLenToFitWidth(l, style, width);
     if (maxLen >= l.length) return;

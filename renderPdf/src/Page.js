@@ -8,8 +8,6 @@ import { LEN } from "./Lenght.js";
 import { BoxPointer } from "./BoxPointer.js";
 import { PDFDocument, rgb } from "pdf-lib";
 
-const debug = false;
-
 /** @type {Map<number, Color>} */
 const debugLevelColorMap = new Map([
   [0, rgb(0.8, 0.2, 0)],
@@ -22,7 +20,7 @@ const debugLevelColorMap = new Map([
  * @param {IBox} box
  * */
 function drawDebugBox(pdfPage, box) {
-  if (debug) {
+  if (Document.debug) {
     const borderColor = debugLevelColorMap.get(box.level()) || rgb(1, 0, 0);
     const args = {
       x: box.leftBottomCorner.x.in("pt"),
@@ -38,6 +36,8 @@ function drawDebugBox(pdfPage, box) {
 }
 
 export class Document {
+  static debug = false;
+
   /**
    * @private
    * @readonly

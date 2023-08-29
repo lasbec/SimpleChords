@@ -2,16 +2,16 @@ import * as fs from "fs/promises";
 import * as Path from "path";
 import { renderSingleFile } from "./RenderSongAsPdf.js";
 
-const [nodePath, scriptPath, inputPath, logAstArg] = process.argv;
+const [nodePath, scriptPath, inputPath, debugArg] = process.argv;
 
 async function main() {
-  const logAst = !!logAstArg;
+  const debug = !!debugArg;
   if (inputPath.endsWith(".chords.md")) {
-    const pdfOutputPath = await renderSingleFile(inputPath, logAst);
+    const pdfOutputPath = await renderSingleFile(inputPath, debug);
   } else {
     for (const file of await fs.readdir(inputPath)) {
       if (file.endsWith(".chords.md")) {
-        await renderSingleFile(Path.join(inputPath, file), logAst);
+        await renderSingleFile(Path.join(inputPath, file), debug);
       }
     }
   }

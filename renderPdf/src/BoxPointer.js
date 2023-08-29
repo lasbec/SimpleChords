@@ -8,7 +8,7 @@
  * @typedef {import("./Page.js").TextStyle} TextStyle
  */
 import { LEN } from "./Lenght.js";
-import { Box, DebugBox, DetachedTextBox, TextBox } from "./Page.js";
+import { Box, DebugBox, DetachedTextBox, Document, TextBox } from "./Page.js";
 
 /**
  * @typedef {object} BoxStruct
@@ -119,10 +119,9 @@ export class BoxPointer {
   /** @type {IBox} */
   box;
 
-  debug = false;
   /** @param {unknown[]} args  */
   log(...args) {
-    if (this.debug) {
+    if (Document.debug) {
       // console.log(...args);
     }
   }
@@ -328,7 +327,7 @@ export class BoxPointer {
   }
 
   setDebug() {
-    if (this.debug) {
+    if (Document.debug) {
       const result = new DebugBox({ x: this.x, y: this.y }, this.box);
       this.box.rootPage().setBox(result);
       return result;
@@ -416,7 +415,7 @@ export class BoxPointer {
 
   /** @param {IBox} box*/
   doOverflowManagement(box) {
-    if (!this.debug) assertBoxIsInsideParent(box);
+    if (!Document.debug) assertBoxIsInsideParent(box);
     const overflows = BoxOverflows.from({ child: box, parent: box.parent });
     if (overflows.isEmpty()) return;
     console.error("Overflow detecded", overflows.toString());

@@ -47,7 +47,14 @@ export class BreakableText {
    * @param {"middle" | "right"} favor
    */
   static fromPrefferdLineUp(lines, favor = "right") {
-    const favoriteBreakingIndices = lines.map((l) => l.length - 1);
+    /** @type {number[]} */
+    const favoriteBreakingIndices = [];
+    for (const line of lines) {
+      if (line.length === 0) continue;
+      const lastIndex =
+        favoriteBreakingIndices[favoriteBreakingIndices.length - 1] || 0;
+      favoriteBreakingIndices.push(lastIndex + line.length - 1);
+    }
     return new BreakableText(lines.join(""), favoriteBreakingIndices, favor);
   }
 
@@ -99,9 +106,12 @@ export class BreakableText {
       findIn: this.text.slice(afterIndex, beforeIndex),
       searchFor: [" "],
     }).map((i) => i + afterIndex);
+    const favoriteBreakpoints = this.favoriteBreakingIndices.filter(
+      (i) => i < beforeIndex && i >= afterIndex
+    );
     const candidateBreakPoints =
-      this.favoriteBreakingIndices.length > 0
-        ? this.favoriteBreakingIndices
+      favoriteBreakpoints.length > 0
+        ? favoriteBreakpoints
         : veryGoodBreakPoints.length > 0
         ? veryGoodBreakPoints
         : okBreakPoints;
