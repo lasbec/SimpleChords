@@ -19,7 +19,6 @@ export function parseSongAst(input) {
 class SongParser {
   /** @type {string} */
   input;
-
   /** @type {number} */
   totalIndex;
   /** @type {number} */
@@ -77,10 +76,15 @@ class SongParser {
     checkpointAtLineBeginning.jumpToCheckpoint();
   }
 
-  stepOn() {
+  /**
+   *
+   * @param {boolean=} expectFileEnd
+   * @returns
+   */
+  stepOn(expectFileEnd) {
     // const caller = new Error().stack.split("\n")[3].split(".")[1].split(" ")[0];
     const oldChar = this.currentChar();
-    if (!oldChar) this.throwUnexpectedEndOfFile();
+    if (!oldChar && !expectFileEnd) this.throwUnexpectedEndOfFile();
     this.totalIndex += 1;
     this.charIndex += 1;
     if (oldChar == "\n") {
@@ -240,10 +244,10 @@ class SongParser {
 
   readLine() {
     let result = "";
-    while (this.currentChar() !== "\n") {
+    while (this.currentChar() !== "\n" && this.currentChar() !== undefined) {
       result += this.stepOn();
     }
-    this.stepOn(); // skip linebreak
+    this.stepOn(true); // skip linebreak but it's  ok when end of file is reached
     return result;
   }
 
