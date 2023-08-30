@@ -17,7 +17,7 @@ export const WellKnownSectionType = {
 /** @param {SongAst} ast  */
 export function checkSongAst(ast) {
   for (const section of ast.sections) {
-    if(!Object.values(WellKnownSectionType).includes(section.type)){
+    if(!Object.values(WellKnownSectionType).includes(section.type) && section.type !== ""){
       console.warn(`Unknown section type '${section.type}'`);
     }
     for (const line of section.lines) {
@@ -93,7 +93,7 @@ const variants = ["7", "6", "5", "dim", "maj7", "sus2", "sus4", "+"];
 /** @param {string} str */
 export function isChord(str) {
   str = str.toLowerCase();
-  if (str[0] == "(" && str[str.length - 1] == ")") {
+  if (str[0] === "(" && str[str.length - 1] === ")") {
     str = str.slice(1);
     str = str.slice(0, -1);
   }
@@ -104,7 +104,7 @@ export function isChord(str) {
   if (str[0] === "m") {
     str = str.slice(1);
   }
-  if (str[0] == "_") {
+  if (str[0] === "_") {
     str = str.slice(1);
   }
   for (const step of halfSteps) {
@@ -113,7 +113,7 @@ export function isChord(str) {
       break;
     }
   }
-  if (str[0] == "_") {
+  if (str[0] === "_") {
     str = str.slice(1);
   }
 

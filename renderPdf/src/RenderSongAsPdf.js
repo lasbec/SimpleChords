@@ -12,7 +12,7 @@ import { parseSongAst } from "./SongParser.js";
 import * as Path from "path";
 import * as fs from "fs/promises";
 import { Song, SongLine } from "./Song.js";
-import { checkSongAst } from "./SongChecker.js";
+import {checkSongAst} from "./SongChecker.js";
 import { BreakableText } from "./BreakableText.js";
 
 /**
@@ -313,9 +313,10 @@ class SchemaWrapper {
   width;
   /** @type {TextStyle}*/
   style;
-
-    /** @type {Result[]}*/
-    results;
+  /** @type {Result[]}*/
+  results;
+  /** @type {Record<string, Result[]>}*/
+  resultsBySectionType;
 
 
   /**
@@ -330,6 +331,15 @@ class SchemaWrapper {
       type: s.type,
       lines: []
     }))
+    this.resultsBySectionType = {};
+    for(const r of this.results){
+      let results = this.resultsBySectionType[r.type];
+      if(!results){
+            results = []
+            this.resultsBySectionType[r.type] = results;
+        }
+        results.push(r)
+    }
     this.style = style;
     this.width = width;
   }
@@ -352,17 +362,23 @@ class SchemaWrapper {
   breakLineAfterChord(result, chordIndex){
     const c0 = result.toBeProcessed.text.chords[chordIndex]
     const c1 = result.toBeProcessed.text.chords[chordIndex + 1]
-    const [newLine, rest] = result.toBeProcessed.break({before: c1?.startIndex || 100_000, after: (c0?.startIndex || -1) + 1});
-    result.lines.push(newLine);
+    const maxLen = getMaxLenToFitWidth(result.toBeProcessed.text, this.style, this.width);
+    const before = Math.min(c1?.startIndex !== undefined ? c1.startIndex : result.length +1, maxLen);
+    const [newLine, rest] = result.toBeProcessed.break(
+        {after: (c0?.startIndex || -1) + 1, before }
+    );
+    if(newLine.length > 0) result.lines.push(newLine);
     result.toBeProcessed = rest;
 
   }
 
   breakLines(){
-    const min =Math.min(...this.results.map((v) => this.possibleChordsAInLine(v.toBeProcessed)));
-    this.results.forEach((v) => {
-      this.breakLineAfterChord(v, min)
-    });
+    for(const [sectionType, results] of Object.entries(this.resultsBySectionType)) {
+      const min = Math.min(...results.map((r) => this.possibleChordsAInLine(r.toBeProcessed)));
+      results.forEach((r) => {
+        this.breakLineAfterChord(r, min -1)
+      });
+    }
   }
 
   isDone(){

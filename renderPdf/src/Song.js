@@ -3,6 +3,7 @@
  * @typedef {import("./SongParser.js").ChordsLineElement} ChordsLineElement
  * @typedef {import("./SongParser.js").SongLineNode}  SongLineNode
  */
+import {WellKnownSectionType} from "./SongChecker.js";
 
 export class Song {
   /**@type {string}*/
@@ -26,7 +27,7 @@ export class Song {
   static fromAst(ast) {
     /** @type {SongSection[]} */
     const sections = ast.sections.map((s) => ({
-      type: s.type.trim().toLowerCase(),
+      type: s.type.trim().toLowerCase() || WellKnownSectionType.Verse,
       lines: s.lines.map(SongLine.fromSongLineNode),
     }));
     return new Song(ast.heading, sections);
