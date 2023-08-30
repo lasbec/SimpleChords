@@ -47,37 +47,29 @@ export function checkSongAst(ast) {
 
 /**
  * @param {SongLineNode[]} lines
- * @returns {string[][]}
+ * @returns {string[]}
  */
 export function parseSchema(lines) {
-  return lines.map((l) => l.chords.map((c) => c.chord));
+  return lines.flatMap((l) => l.chords.map((c) => c.chord));
 }
 
 /**
  * @param {SongSectionNode} section
- *  * @param {string[][]} schema
+ *  * @param {string[]} _schema
  */
-export function validateSectionAgainstSchema(section, schema) {
+export function validateSectionAgainstSchema(section, _schema) {
+  const schema = [..._schema]
   const lines = section.lines;
   let lineIndex = -1;
   for (const line of lines) {
     lineIndex += 1;
     const warning =
-      "line schemas are differing for sections " +
-      section.type +
-      " near:\n" +
-      line.lyric;
-    if (line.chords.length !== schema[lineIndex]?.length) {
-      console.warn(warning);
-    }
-    if (
-      line.chords.some((c, i) => {
-        const schemaLine = schema[lineIndex];
-        if (!schemaLine) return true;
-        c.chord !== schemaLine[i];
-      })
-    ) {
-      console.warn(warning);
+      `line schemas are differing for '${section.type}' sections near:\n${line.lyric}`;
+    for(const chord of line.chords){
+      const schemaChord = schema.shift();
+      if(schemaChord !== chord.chord){
+        console.warn(warning);
+      }
     }
   }
 }

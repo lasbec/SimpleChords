@@ -26,8 +26,8 @@ Und ich bin von KI geschriben
 So wahr ich lebe, so wie ich bin,
         eb                  Eb
 Wenn es sein muss, bis zum Ende,
-        f                   F        g                   G
-Kann es dröhnen, kann es schmerzen, Ich bin ein Teil von diesem Lied
+        f                   F         g                   G
+Kann es dröhnen, kann es schmerzen,  Ich bin ein Teil von diesem Lied
 
  
 [ref]

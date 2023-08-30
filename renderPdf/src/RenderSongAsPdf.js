@@ -211,9 +211,9 @@ export async function renderSongAsPdf(song, fontLoader, debug) {
           .pointerRight(yOffset)
           .setText("right", "bottom", chord.chord, chordTextStyle);
       }
-      pointer.moveDown(chordLineHeight);
+      pointer.moveDown(chordLineHeight.mul(0.9));
       pointer.attachTextBox("right", "bottom", lyricLine);
-      pointer.moveDown(lyricLineHeight);
+      pointer.moveDown(lyricLineHeight.mul(0.75));
     }
     return pointer;
   }
