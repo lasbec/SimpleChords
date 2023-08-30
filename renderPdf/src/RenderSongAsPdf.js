@@ -64,21 +64,28 @@ export async function renderSongAsPdf(song, fontLoader, debug) {
 
   const lyricFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
   const lyricFontSize = LEN(12, "pt");
-  const lyricLineHeight = LEN(
-    lyricFont.heightAtSize(lyricFontSize.in("pt")),
-    "pt"
-  );
+  /** @type {TextStyle} */
   const lyricTextStyle = {
     font: lyricFont,
     fontSize: lyricFontSize,
   };
 
+  const lyricFontBold = await pdfDoc.embedFont(StandardFonts.TimesRomanBold);
+  /** @type {TextStyle} */
+  const lyricTextStyleBold = {
+    font: lyricFontBold,
+    fontSize: lyricFontSize,
+  };
+
+  const lyricFontItalic = await pdfDoc.embedFont(StandardFonts.TimesRomanItalic);
+  /** @type {TextStyle} */
+  const lyricTextStyleItalic = {
+    font: lyricFontItalic,
+    fontSize: lyricFontSize,
+  };
+
   const titleFont = lyricFont;
   const titleFontSize = lyricFontSize.mul(1.3);
-  const titleLineHeight = LEN(
-    lyricFont.heightAtSize(titleFontSize.in("pt")),
-    "pt"
-  );
   const titleTextStyle = {
     fontSize: titleFontSize,
     font: titleFont,
@@ -103,6 +110,10 @@ export async function renderSongAsPdf(song, fontLoader, debug) {
   const topMargin = pageWidth.mul(0.07);
   const bottomMargin = pageWidth.mul(0.07);
 
+  const lyricLineHeight = LEN(
+      lyricFont.heightAtSize(lyricFontSize.in("pt")),
+      "pt"
+  );
   const sectionDistance = lyricLineHeight.mul(1.2);
 
   const pages = await layOutSong(
@@ -142,7 +153,15 @@ export async function renderSongAsPdf(song, fontLoader, debug) {
       if(onlyChordsSections.includes(section.type)) {
         lyricPointer = drawSongSectionLinesOnlyChords(lyricPointer, section.lines, section.type + ": ")
       }else {
-        lyricPointer = drawSongSectionLines(lyricPointer, section.lines);
+        console.log(section.type, WellKnownSectionType.Chorus, section.type === WellKnownSectionType.Chorus)
+        /** @type {TextStyle} */
+        const lyricStyle =
+            section.type === WellKnownSectionType.Chorus
+            ? lyricTextStyleItalic
+            : section.type === WellKnownSectionType.Ref
+            ? lyricTextStyleBold
+            :lyricTextStyle;
+        lyricPointer = drawSongSectionLines(lyricPointer, section.lines, lyricStyle);
       }
       lyricPointer.moveDown(sectionDistance);
     }
@@ -152,8 +171,13 @@ export async function renderSongAsPdf(song, fontLoader, debug) {
   /**
    * @param {BoxPointer} pointer
    * @param {SongLine[]} songLines
+   * @param {TextStyle} lyricStyle
    * */
-  function drawSongSectionLines(pointer, songLines) {
+  function drawSongSectionLines(pointer, songLines, lyricStyle) {
+    const lyricLineHeight = LEN(
+        lyricStyle.font.heightAtSize(titleFontSize.in("pt")),
+        "pt"
+    );
     const heightOfSection = chordLineHeight
       .add(lyricLineHeight)
       .mul(songLines.length);
@@ -178,7 +202,7 @@ export async function renderSongAsPdf(song, fontLoader, debug) {
       pointer = lyricBox.getPointerAt("left", "top");
     }
     for (const line of songLines) {
-      const lyricLine = new DetachedTextBox(line.lyric, lyricTextStyle);
+      const lyricLine = new DetachedTextBox(line.lyric, lyricStyle);
 
       const partialWidths = lyricLine.partialWidths();
       for (const chord of line.chords) {
@@ -347,6 +371,10 @@ function wrapLinesToSchema(lines, _schema, style, width) {
  * @typedef {SongSection & {toBeProcessed:BreakableText<SongLine> }} Result
  */
 
+/**
+ * Wrapping the sections of the same type in a way that they fit onto the page
+ * AND in each line are the same amount of chords
+ */
 class SchemaWrapper {
   /** @type {Song}*/
   song;
@@ -404,7 +432,7 @@ class SchemaWrapper {
     const c0 = result.toBeProcessed.text.chords[chordIndex]
     const c1 = result.toBeProcessed.text.chords[chordIndex + 1]
     const maxLen = getMaxLenToFitWidth(result.toBeProcessed.text, this.style, this.width);
-    const before = Math.min(c1?.startIndex !== undefined ? c1.startIndex : result.length +1, maxLen);
+    const before = Math.min(c1?.startIndex !== undefined ? c1.startIndex : result.toBeProcessed.lenght +1, maxLen);
     const [newLine, rest] = result.toBeProcessed.break(
         {after: (c0?.startIndex || -1) + 1, before }
     );

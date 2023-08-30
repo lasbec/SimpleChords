@@ -177,6 +177,58 @@
       ]
     },
     {
+      "type": "chorus",
+      "lines": [
+        {
+          "chords": [
+            {
+              "chord": "db",
+              "startIndex": 8
+            },
+            {
+              "chord": "Db",
+              "startIndex": 28
+            }
+          ],
+          "lyric": "So wahr ich lebe, so wie ich bin,"
+        },
+        {
+          "chords": [
+            {
+              "chord": "eb",
+              "startIndex": 8
+            },
+            {
+              "chord": "Eb",
+              "startIndex": 28
+            }
+          ],
+          "lyric": "Wenn es sein muss, bis zum Ende,"
+        },
+        {
+          "chords": [
+            {
+              "chord": "f",
+              "startIndex": 8
+            },
+            {
+              "chord": "F",
+              "startIndex": 28
+            },
+            {
+              "chord": "g",
+              "startIndex": 37
+            },
+            {
+              "chord": "G",
+              "startIndex": 57
+            }
+          ],
+          "lyric": "Kann es dröhnen, kann es schmerzen, Ich bin ein Teil von diesem Lied"
+        }
+      ]
+    },
+    {
       "type": "ref",
       "lines": [
         {
@@ -327,6 +379,63 @@
             }
           ],
           "lyric": "zerfranste Nägel Schlagen übers Loch Schwarze Strimen schlagen den Barrè Wunde Stummel klopfen euch den Tackt Gekerbte Fingerspitzen nehmen den Akkord!"
+        }
+      ]
+    },
+    {
+      "type": "chorus",
+      "lines": [
+        {
+          "chords": [
+            {
+              "chord": "db",
+              "startIndex": 1
+            },
+            {
+              "chord": "Db",
+              "startIndex": 21
+            }
+          ],
+          "lyric": " Bald ist es vorbei, dann ist es vorbei"
+        },
+        {
+          "chords": [
+            {
+              "chord": "eb",
+              "startIndex": 4
+            },
+            {
+              "chord": "Eb",
+              "startIndex": 24
+            }
+          ],
+          "lyric": "Endlich ist es vorbei, dann ist es vorbei"
+        },
+        {
+          "chords": [
+            {
+              "chord": "f",
+              "startIndex": 4
+            },
+            {
+              "chord": "F",
+              "startIndex": 24
+            }
+          ],
+          "lyric": "Meine Finger bluten, wie meine Seele"
+        },
+        {
+          "chords": [
+            {
+              "chord": "g",
+              "startIndex": 4
+            },
+            {
+              "chord": "G",
+              "startIndex": 24
+            }
+          ],
+          "lyric": "Sobald ich aufhöre, bin ich tot"
         }
       ]
     },

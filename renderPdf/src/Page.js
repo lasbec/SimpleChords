@@ -401,6 +401,7 @@ export class TextBox {
       y: this.leftBottomCorner.y.in("pt"),
       font: this.style.font,
       size: this.style.fontSize.in("pt"),
+
     });
   }
 }
@@ -430,4 +431,5 @@ export class TextBox {
  * @typedef {object} TextStyle
  * @property {PDFFont} font
  * @property {Lenght} fontSize
+ *
  */

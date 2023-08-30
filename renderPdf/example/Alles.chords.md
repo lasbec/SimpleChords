@@ -21,6 +21,15 @@ Gröhlt der Chor der Gitarren,
         f                    F
 Und ich bin von KI geschriben
 
+[chorus]
+        db                  Db
+So wahr ich lebe, so wie ich bin,
+        eb                  Eb
+Wenn es sein muss, bis zum Ende,
+        f                   F        g                   G
+Kann es dröhnen, kann es schmerzen, Ich bin ein Teil von diesem Lied
+
+ 
 [ref]
 d                    D
 Sie lassen euch nimmer mehr ins Bett
@@ -40,6 +49,16 @@ zerfranste Nägel Schlagen übers Loch Schwarze Strimen schlagen den Barrè Wund
 []
                             a            A        b         B        b#                BDim             cb              Cb
 zerfranste Nägel Schlagen übers Loch Schwarze Strimen schlagen den Barrè Wunde Stummel klopfen euch den Tackt Gekerbte Fingerspitzen nehmen den Akkord!
+
+[chorus]
+ db                  Db
+ Bald ist es vorbei, dann ist es vorbei
+    eb                  Eb
+Endlich ist es vorbei, dann ist es vorbei
+    f                   F
+Meine Finger bluten, wie meine Seele
+    g                   G
+Sobald ich aufhöre, bin ich tot
 
 [outro]
 f# fis H+ H+ a7
