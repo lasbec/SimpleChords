@@ -66,6 +66,8 @@ export async function renderSingleFile(path, debug) {
  *
  * @property {Length} pageWidth
  * @property {Length} pageHeight
+ *
+ * @property {Length} sectionDistance
  */
 
 /**
@@ -89,15 +91,15 @@ export async function renderSongAsPdf(song, fontLoader, debug) {
 
     lyricTextConfig: {
       font: await pdfDoc.embedFont(StandardFonts.TimesRoman),
-      fontSize: LEN(12, "pt"),
+      fontSize: LEN(10, "pt"),
     },
     refTextConfig: {
       font: await pdfDoc.embedFont(StandardFonts.TimesRomanBold),
-      fontSize: LEN(12, "pt"),
+      fontSize: LEN(10, "pt"),
     },
     chorusTextConfig: {
       font: await pdfDoc.embedFont(StandardFonts.TimesRomanItalic),
-      fontSize: LEN(12, "pt"),
+      fontSize: LEN(10, "pt"),
     },
     titleTextConfig: {
       fontSize: LEN(14, "pt"),
@@ -106,30 +108,16 @@ export async function renderSongAsPdf(song, fontLoader, debug) {
     chordTextConfig: {
       font: await fontLoader.loadFontIntoDoc(
         pdfDoc,
-        "Niconne/Niconne-Regular.ttf"
+        "CarterOne/CarterOne-Regular.ttf"
       ),
-      fontSize: LEN(12, "pt"),
+      fontSize: LEN(8, "pt"),
     },
     leftMargin: A5.width.mul(0.07),
     rightMargin: A5.width.mul(0.07),
-    topMargin: A5.width.mul(0.07),
-    bottomMargin: A5.width.mul(0.07),
+    topMargin: A5.width.mul(0.02),
+    bottomMargin: A5.width.mul(0.02),
+    sectionDistance: LEN(6, "mm"),
   };
-
-  const chordLineHeight = LEN(
-    layoutConfig.chordTextConfig.font.heightAtSize(
-      layoutConfig.chordTextConfig.fontSize.in("pt")
-    ),
-    "pt"
-  );
-
-  const lyricLineHeight = LEN(
-    layoutConfig.lyricTextConfig.font.heightAtSize(
-      layoutConfig.lyricTextConfig.fontSize.in("pt")
-    ),
-    "pt"
-  );
-  const sectionDistance = lyricLineHeight.mul(1.2);
 
   const pages = await layOutSong(
     reshapeSongWithSchema(
@@ -138,180 +126,201 @@ export async function renderSongAsPdf(song, fontLoader, debug) {
       layoutConfig.pageWidth
         .sub(layoutConfig.leftMargin)
         .sub(layoutConfig.rightMargin)
-    )
+    ),
+    layoutConfig
   );
   pages.drawToPdfDoc(pdfDoc);
 
   return await pdfDoc.save();
+}
 
-  /**
-   * @param {Song} song
-   * @returns {Promise<Document>}
-   */
-  async function layOutSong(song) {
-    const doc = new Document({
-      width: layoutConfig.pageWidth,
-      height: layoutConfig.pageHeight,
-    });
-    const titleBox = drawTitle(song, doc.appendNewPage());
-    const pointer = titleBox.getPointerAt("left", "bottom").onPage();
+/**
+ * @param {Song} song
+ * @param {LayoutConfig} layoutConfig
+ * @returns {Promise<Document>}
+ */
+async function layOutSong(song, layoutConfig) {
+  const lyricLineHeight = LEN(
+    layoutConfig.lyricTextConfig.font.heightAtSize(
+      layoutConfig.lyricTextConfig.fontSize.in("pt")
+    ),
+    "pt"
+  );
+  const doc = new Document({
+    width: layoutConfig.pageWidth,
+    height: layoutConfig.pageHeight,
+  });
+  const titleBox = drawTitle(
+    song,
+    doc.appendNewPage(),
+    layoutConfig.topMargin,
+    layoutConfig.titleTextConfig
+  );
+  const pointer = titleBox.getPointerAt("left", "bottom").onPage();
 
-    pointer.moveDown(lyricLineHeight);
-    pointer.moveToLeftBorder().moveRight(layoutConfig.leftMargin);
+  pointer.moveDown(lyricLineHeight);
+  pointer.moveToLeftBorder().moveRight(layoutConfig.leftMargin);
 
-    const rightBottomPointer = pointer
+  const rightBottomPointer = pointer
+    .onPage()
+    .moveToBottomBorder()
+    .moveToRightBorder()
+    .moveUp(layoutConfig.bottomMargin)
+    .moveLeft(layoutConfig.rightMargin);
+  const lyricBox = pointer.spanBox(rightBottomPointer);
+  let lyricPointer = lyricBox.getPointerAt("left", "top");
+
+  for (const section of song.sections) {
+    let onlyChordsSections = [
+      WellKnownSectionType.Intro,
+      WellKnownSectionType.Outro,
+      WellKnownSectionType.Interlude,
+    ];
+    if (onlyChordsSections.includes(section.type)) {
+      lyricPointer = drawSongSectionLinesOnlyChords(
+        lyricPointer,
+        section.lines,
+        section.type + "   ",
+        layoutConfig
+      );
+    } else {
+      lyricPointer = drawSongSectionLines(
+        lyricPointer,
+        section.lines,
+        section.type,
+        layoutConfig
+      );
+    }
+    lyricPointer.moveDown(layoutConfig.sectionDistance);
+  }
+  return doc;
+}
+
+/**
+ * @param {BoxPointer} pointer
+ * @param {SongLine[]} songLines
+ * @param {string} sectionType
+ * @param {LayoutConfig} layoutConfig
+ * */
+function drawSongSectionLines(pointer, songLines, sectionType, layoutConfig) {
+  /** @type {TextConfig} */
+  const lyricStyle =
+    sectionType === WellKnownSectionType.Chorus
+      ? layoutConfig.chorusTextConfig
+      : sectionType === WellKnownSectionType.Ref
+      ? layoutConfig.refTextConfig
+      : layoutConfig.lyricTextConfig;
+  const lyricLineHeight = LEN(
+    lyricStyle.font.heightAtSize(lyricStyle.fontSize.in("pt")),
+    "pt"
+  );
+
+  const chordTextConfig = layoutConfig.chordTextConfig;
+  const chordLineHeight = LEN(
+    chordTextConfig.font.heightAtSize(chordTextConfig.fontSize.in("pt")),
+    "pt"
+  );
+  const heightOfSection = chordLineHeight
+    .add(lyricLineHeight)
+    .mul(songLines.length);
+
+  const lowerEndOfSection = pointer.clone().moveToBottomBorder();
+
+  const sectionWillExeedPage = pointer
+    .pointerDown(heightOfSection)
+    .isLowerThan(lowerEndOfSection);
+  if (sectionWillExeedPage) {
+    const leftTopCorner = pointer
+      .nextPageAt("left", "top")
+      .moveDown(layoutConfig.topMargin)
+      .moveRight(layoutConfig.leftMargin);
+    const rightBottomCorner = pointer
       .onPage()
       .moveToBottomBorder()
       .moveToRightBorder()
-      .moveUp(layoutConfig.bottomMargin)
+      .moveUp(layoutConfig.topMargin)
       .moveLeft(layoutConfig.rightMargin);
-    const lyricBox = pointer.spanBox(rightBottomPointer);
-    let lyricPointer = lyricBox.getPointerAt("left", "top");
-
-    for (const section of song.sections) {
-      let onlyChordsSections = [
-        WellKnownSectionType.Intro,
-        WellKnownSectionType.Outro,
-        WellKnownSectionType.Interlude,
-      ];
-      if (onlyChordsSections.includes(section.type)) {
-        lyricPointer = drawSongSectionLinesOnlyChords(
-          lyricPointer,
-          section.lines,
-          section.type + ": "
-        );
-      } else {
-        /** @type {TextConfig} */
-        const lyricStyle =
-          section.type === WellKnownSectionType.Chorus
-            ? layoutConfig.chorusTextConfig
-            : section.type === WellKnownSectionType.Ref
-            ? layoutConfig.refTextConfig
-            : layoutConfig.lyricTextConfig;
-        lyricPointer = drawSongSectionLines(
-          lyricPointer,
-          section.lines,
-          lyricStyle
-        );
-      }
-      lyricPointer.moveDown(sectionDistance);
-    }
-    return doc;
+    const lyricBox = leftTopCorner.spanBox(rightBottomCorner);
+    pointer = lyricBox.getPointerAt("left", "top");
   }
+  for (const line of songLines) {
+    const lyricLine = new DetachedTextBox(line.lyric, lyricStyle);
 
-  /**
-   * @param {BoxPointer} pointer
-   * @param {SongLine[]} songLines
-   * @param {TextConfig} lyricStyle
-   * */
-  function drawSongSectionLines(pointer, songLines, lyricStyle) {
-    const lyricLineHeight = LEN(
-      lyricStyle.font.heightAtSize(
-        layoutConfig.titleTextConfig.fontSize.in("pt")
-      ),
-      "pt"
-    );
-    const heightOfSection = chordLineHeight
-      .add(lyricLineHeight)
-      .mul(songLines.length);
-
-    const lowerEndOfSection = pointer.clone().moveToBottomBorder();
-
-    const sectionWillExeedPage = pointer
-      .pointerDown(heightOfSection)
-      .isLowerThan(lowerEndOfSection);
-    if (sectionWillExeedPage) {
-      const leftTopCorner = pointer
-        .nextPageAt("left", "top")
-        .moveDown(layoutConfig.topMargin)
-        .moveRight(layoutConfig.leftMargin);
-      const rightBottomCorner = pointer
-        .onPage()
-        .moveToBottomBorder()
-        .moveToRightBorder()
-        .moveUp(layoutConfig.topMargin)
-        .moveLeft(layoutConfig.rightMargin);
-      const lyricBox = leftTopCorner.spanBox(rightBottomCorner);
-      pointer = lyricBox.getPointerAt("left", "top");
+    const partialWidths = lyricLine.partialWidths();
+    for (const chord of line.chords) {
+      const yOffset = partialWidths[chord.startIndex];
+      if (!yOffset) continue;
+      pointer
+        .pointerRight(yOffset)
+        .setText("right", "bottom", chord.chord, layoutConfig.chordTextConfig);
     }
-    for (const line of songLines) {
-      const lyricLine = new DetachedTextBox(line.lyric, lyricStyle);
-
-      const partialWidths = lyricLine.partialWidths();
-      for (const chord of line.chords) {
-        const yOffset = partialWidths[chord.startIndex];
-        if (!yOffset) continue;
-        pointer
-          .pointerRight(yOffset)
-          .setText(
-            "right",
-            "bottom",
-            chord.chord,
-            layoutConfig.chordTextConfig
-          );
-      }
-      pointer.moveDown(chordLineHeight.mul(0.9));
-      pointer.attachTextBox("right", "bottom", lyricLine);
-      pointer.moveDown(lyricLineHeight.mul(0.75));
-    }
-    return pointer;
+    pointer.moveDown(chordLineHeight);
+    pointer.attachTextBox("right", "bottom", lyricLine);
+    pointer.moveDown(lyricLineHeight.mul(0.75));
   }
+  return pointer;
+}
 
-  /**
-   * @param {BoxPointer} pointer
-   * @param {SongLine[]} songLines
-   * @param {string} title
-   * */
-  function drawSongSectionLinesOnlyChords(pointer, songLines, title) {
-    const heightOfSection = chordLineHeight.mul(songLines.length);
+/**
+ * @param {BoxPointer} pointer
+ * @param {SongLine[]} songLines
+ * @param {string} title
+ * @param {LayoutConfig} layoutConfig
+ * */
+function drawSongSectionLinesOnlyChords(
+  pointer,
+  songLines,
+  title,
+  layoutConfig
+) {
+  const chordTextConfig = layoutConfig.chordTextConfig;
+  const chordLineHeight = LEN(
+    chordTextConfig.font.heightAtSize(chordTextConfig.fontSize.in("pt")),
+    "pt"
+  );
+  const heightOfSection = chordLineHeight.mul(songLines.length);
 
-    const lowerEndOfSection = pointer.clone().moveToBottomBorder();
+  const lowerEndOfSection = pointer.clone().moveToBottomBorder();
 
-    const sectionWillExeedPage = pointer
-      .pointerDown(heightOfSection)
-      .isLowerThan(lowerEndOfSection);
-    if (sectionWillExeedPage) {
-      const leftTopCorner = pointer
-        .nextPageAt("left", "top")
-        .moveDown(layoutConfig.topMargin)
-        .moveRight(layoutConfig.leftMargin);
-      const rightBottomCorner = pointer
-        .onPage()
-        .moveToBottomBorder()
-        .moveToRightBorder()
-        .moveUp(layoutConfig.topMargin)
-        .moveLeft(layoutConfig.rightMargin);
-      const lyricBox = leftTopCorner.spanBox(rightBottomCorner);
-      pointer = lyricBox.getPointerAt("left", "top");
-    }
-    for (const line of songLines) {
-      const lineString = title + line.chords.map((c) => c.chord).join(" ");
-      pointer.setText(
-        "right",
-        "bottom",
-        lineString,
-        layoutConfig.chordTextConfig
-      );
-      pointer.moveDown(chordLineHeight);
-    }
-    return pointer;
+  const sectionWillExeedPage = pointer
+    .pointerDown(heightOfSection)
+    .isLowerThan(lowerEndOfSection);
+  if (sectionWillExeedPage) {
+    const leftTopCorner = pointer
+      .nextPageAt("left", "top")
+      .moveDown(layoutConfig.topMargin)
+      .moveRight(layoutConfig.leftMargin);
+    const rightBottomCorner = pointer
+      .onPage()
+      .moveToBottomBorder()
+      .moveToRightBorder()
+      .moveUp(layoutConfig.topMargin)
+      .moveLeft(layoutConfig.rightMargin);
+    const lyricBox = leftTopCorner.spanBox(rightBottomCorner);
+    pointer = lyricBox.getPointerAt("left", "top");
   }
-
-  /**
-   * @param {Song} song
-   * @param {Page} page
-   */
-  function drawTitle(song, page) {
-    const pointer = page
-      .getPointerAt("center", "top")
-      .moveDown(layoutConfig.topMargin);
-    return pointer.setText(
-      "center",
+  for (const line of songLines) {
+    const lineString = title + line.chords.map((c) => c.chord).join(" ");
+    pointer.setText(
+      "right",
       "bottom",
-      song.heading,
-      layoutConfig.titleTextConfig
+      lineString,
+      layoutConfig.chordTextConfig
     );
+    pointer.moveDown(chordLineHeight);
   }
+  return pointer;
+}
+
+/**
+ * @param {Song} song
+ * @param {Page} page
+ * @param {Length} topMargin
+ * @param {TextConfig} textConfig
+ */
+function drawTitle(song, page, topMargin, textConfig) {
+  const pointer = page.getPointerAt("center", "top").moveDown(topMargin);
+  return pointer.setText("center", "bottom", song.heading, textConfig);
 }
 
 /**
