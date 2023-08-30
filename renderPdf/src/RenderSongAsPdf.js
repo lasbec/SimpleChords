@@ -17,9 +17,10 @@ import { SchemaWrapper } from "./SchemaWrapper.js";
 
 /**
  *  @param {string} path
+ *  @param {string} outPath
  * @param {boolean} debug
  */
-export async function renderSingleFile(path, debug) {
+export async function renderSingleFile(path, outPath, debug) {
   console.log("Process", Path.parse(path).name);
   const contentToParse = (await fs.readFile(path, "utf8")).replace(/\r/g, ""); // ensure linebreaks are \n and not \r\n;
   const ast = parseSongAst(contentToParse);
@@ -33,9 +34,6 @@ export async function renderSingleFile(path, debug) {
   const astOutputPath = pointSplit
     .map((e, i) => (i === pointSplit.length - 1 ? "AST.json" : e))
     .join(".");
-  const pdfOutputPath = pointSplit
-    .map((e, i) => (i === pointSplit.length - 1 ? "pdf" : e))
-    .join(".");
 
   if (debug) {
     fs.writeFile(astOutputPath, JSON.stringify(ast, null, 2));
@@ -44,11 +42,45 @@ export async function renderSingleFile(path, debug) {
   const song = Song.fromAst(ast);
 
   const fontLoader = new FontLoader("./fonts");
-  const pdfBytes = await renderSongAsPdf(song, fontLoader, debug);
+  const pdfBytes = await renderSongAsPdf([song], fontLoader, debug);
 
-  await fs.writeFile(pdfOutputPath, pdfBytes);
-  console.log("Pdf Result written to", Path.resolve(pdfOutputPath), "\n");
-  return pdfOutputPath;
+  await fs.writeFile(outPath, pdfBytes);
+  console.log("Pdf Result written to", Path.resolve(outPath), "\n");
+}
+
+/**
+ *  @param {string[]} paths
+ *  @param {string} outPath
+ * @param {boolean} debug
+ */
+export async function renderAllInSingleFile(paths, outPath, debug) {
+  let asts = [];
+  for (const path of paths) {
+    console.log("Process", Path.parse(path).name);
+    const contentToParse = (await fs.readFile(path, "utf8")).replace(/\r/g, ""); // ensure linebreaks are \n and not \r\n;
+    const ast = parseSongAst(contentToParse);
+    if (!ast) {
+      throw Error("Could not parse " + path);
+    }
+    checkSongAst(ast);
+    asts.push(ast);
+    const pointSplit = path.split(".");
+    const astOutputPath = pointSplit
+      .map((e, i) => (i === pointSplit.length - 1 ? "AST.json" : e))
+      .join(".");
+    if (debug) {
+      fs.writeFile(astOutputPath, JSON.stringify(ast, null, 2));
+      console.log("AST result written to", Path.resolve(astOutputPath));
+    }
+  }
+
+  const songs = asts.map(Song.fromAst);
+
+  const fontLoader = new FontLoader("./fonts");
+  const pdfBytes = await renderSongAsPdf(songs, fontLoader, debug);
+
+  await fs.writeFile(outPath, pdfBytes);
+  console.log("Pdf Result written to", Path.resolve(outPath), "\n");
 }
 
 /**
@@ -71,11 +103,11 @@ export async function renderSingleFile(path, debug) {
  */
 
 /**
- * @param {Song} song
+ * @param {Song[]} songs
  * @param {FontLoader} fontLoader
  * @param {boolean} debug
  */
-export async function renderSongAsPdf(song, fontLoader, debug) {
+export async function renderSongAsPdf(songs, fontLoader, debug) {
   Document.debug = debug;
   const pdfDoc = await PDFDocument.create();
 
@@ -119,17 +151,24 @@ export async function renderSongAsPdf(song, fontLoader, debug) {
     sectionDistance: LEN(6, "mm"),
   };
 
-  const pages = await layOutSong(
-    reshapeSongWithSchema(
-      song,
+  const doc = new Document({
+    width: layoutConfig.pageWidth,
+    height: layoutConfig.pageHeight,
+  });
+  for (const song of songs) {
+    await layOutSongOnNewPage(
+      reshapeSongWithSchema(
+        song,
+        layoutConfig,
+        layoutConfig.pageWidth
+          .sub(layoutConfig.leftMargin)
+          .sub(layoutConfig.rightMargin)
+      ),
       layoutConfig,
-      layoutConfig.pageWidth
-        .sub(layoutConfig.leftMargin)
-        .sub(layoutConfig.rightMargin)
-    ),
-    layoutConfig
-  );
-  pages.drawToPdfDoc(pdfDoc);
+      doc
+    );
+  }
+  doc.drawToPdfDoc(pdfDoc);
 
   return await pdfDoc.save();
 }
@@ -137,19 +176,16 @@ export async function renderSongAsPdf(song, fontLoader, debug) {
 /**
  * @param {Song} song
  * @param {LayoutConfig} layoutConfig
+ * @param {Document} doc
  * @returns {Promise<Document>}
  */
-async function layOutSong(song, layoutConfig) {
+async function layOutSongOnNewPage(song, layoutConfig, doc) {
   const lyricLineHeight = LEN(
     layoutConfig.lyricTextConfig.font.heightAtSize(
       layoutConfig.lyricTextConfig.fontSize.in("pt")
     ),
     "pt"
   );
-  const doc = new Document({
-    width: layoutConfig.pageWidth,
-    height: layoutConfig.pageHeight,
-  });
   const titleBox = drawTitle(
     song,
     doc.appendNewPage(),
