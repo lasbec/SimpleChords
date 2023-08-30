@@ -13,54 +13,39 @@
             {
               "chord": "A",
               "startIndex": 32
-            }
-          ],
-          "lyric": "Abgewetzte Finger schubbern über Saiten."
-        },
-        {
-          "chords": [
+            },
             {
               "chord": "b",
-              "startIndex": 11
+              "startIndex": 52
             },
             {
               "chord": "B",
-              "startIndex": 32
+              "startIndex": 73
+            },
+            {
+              "chord": "b#",
+              "startIndex": 91
+            },
+            {
+              "chord": "BDim",
+              "startIndex": 113
+            },
+            {
+              "chord": "cb",
+              "startIndex": 130
+            },
+            {
+              "chord": "Cb",
+              "startIndex": 153
             }
           ],
-          "lyric": "Sie Spielen für die Armen und die Reichen."
+          "lyric": "Abgewetzte Finger schubbern über Saiten! Sie Spielen für die Armen und die Reichen; Verhornte Kuppen hämmern übers Brett, Sie lassen euch nimmer mehr ins Bett."
         }
       ]
     },
     {
-      "sectionHeading": "verse",
+      "sectionHeading": "ref",
       "lines": [
-        {
-          "chords": [
-            {
-              "chord": "c",
-              "startIndex": 11
-            },
-            {
-              "chord": "C",
-              "startIndex": 32
-            }
-          ],
-          "lyric": "Verhornte Kuppen hämmern übers Brett."
-        },
-        {
-          "chords": [
-            {
-              "chord": "d",
-              "startIndex": 11
-            },
-            {
-              "chord": "D",
-              "startIndex": 32
-            }
-          ],
-          "lyric": "Sie lassen euch nimmer mehr ins Bett"
-        },
         {
           "chords": [
             {
@@ -73,12 +58,7 @@
             }
           ],
           "lyric": "Sie lassen euch nimmer mehr ins Bett"
-        }
-      ]
-    },
-    {
-      "sectionHeading": "ref",
-      "lines": [
+        },
         {
           "chords": [
             {
@@ -139,51 +119,39 @@
         {
           "chords": [
             {
-              "chord": "a7",
-              "startIndex": 8
+              "chord": "a",
+              "startIndex": 11
             },
             {
-              "chord": "A#",
-              "startIndex": 29
-            }
-          ],
-          "lyric": "zerfranste Nägel Schlagen übers Loch"
-        }
-      ]
-    },
-    {
-      "sectionHeading": "verse",
-      "lines": [
-        {
-          "chords": [
+              "chord": "A",
+              "startIndex": 32
+            },
+            {
+              "chord": "b",
+              "startIndex": 52
+            },
+            {
+              "chord": "B",
+              "startIndex": 68
+            },
             {
               "chord": "b#",
-              "startIndex": 8
+              "startIndex": 81
             },
             {
               "chord": "BDim",
-              "startIndex": 30
-            }
-          ],
-          "lyric": "Schwarze Strimen schlagen den Barrè"
-        }
-      ]
-    },
-    {
-      "sectionHeading": "verse",
-      "lines": [
-        {
-          "chords": [
+              "startIndex": 103
+            },
             {
               "chord": "cb",
-              "startIndex": 8
+              "startIndex": 120
             },
             {
               "chord": "Cb",
-              "startIndex": 31
+              "startIndex": 143
             }
           ],
-          "lyric": "Wunde Stummel klopfen euch den Tackt"
+          "lyric": "zerfranste Nägel Schlagen übers Loch Schwarze Strimen schlagen den Barrè Wunde Stummel klopfen euch den Tackt Gekerbte Fingerspitzen nehmen den Akkord!"
         }
       ]
     },
@@ -193,15 +161,39 @@
         {
           "chords": [
             {
-              "chord": "d#",
-              "startIndex": 9
+              "chord": "a",
+              "startIndex": 28
             },
             {
-              "chord": "Dis",
-              "startIndex": 34
+              "chord": "A",
+              "startIndex": 41
+            },
+            {
+              "chord": "b",
+              "startIndex": 50
+            },
+            {
+              "chord": "B",
+              "startIndex": 60
+            },
+            {
+              "chord": "b#",
+              "startIndex": 69
+            },
+            {
+              "chord": "BDim",
+              "startIndex": 87
+            },
+            {
+              "chord": "cb",
+              "startIndex": 104
+            },
+            {
+              "chord": "Cb",
+              "startIndex": 120
             }
           ],
-          "lyric": "Gekerbte Fingerspitzen nehmen den Akkord"
+          "lyric": "zerfranste Nägel Schlagen übers Loch Schwarze Strimen schlagen den Barrè Wunde Stummel klopfen euch den Tackt Gekerbte Fingerspitzen nehmen den Akkord!"
         }
       ]
     }

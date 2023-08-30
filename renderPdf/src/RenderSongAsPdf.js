@@ -12,7 +12,7 @@ import { parseSongAst } from "./SongParser.js";
 import * as Path from "path";
 import * as fs from "fs/promises";
 import { Song, SongLine } from "./Song.js";
-import { checkSongAst, parseSchema } from "./SongChecker.js";
+import { checkSongAst } from "./SongChecker.js";
 import { BreakableText } from "./BreakableText.js";
 
 /**
@@ -55,7 +55,6 @@ export async function renderSingleFile(path, debug) {
  * @param {Song} song
  * @param {FontLoader} fontLoader
  * @param {boolean} debug
- * @returns {Buffer}
  */
 export async function renderSongAsPdf(song, fontLoader, debug) {
   Document.debug = debug;
@@ -223,14 +222,15 @@ function reshapeSongWithLineBreaks(song, style, width) {
  */
 function reshapeSongWithSchema(_song, style, width) {
   const song = reshapeSongWithLineBreaks(_song, style, width);
-  const firstSchema = parseSchema(song.sections[0]?.lines);
-  return {
-    heading: song.heading,
-    sections: song.sections.map((s) => ({
-      sectionHeading: s.sectionHeading,
-      lines: wrapLinesToSchema(s.lines, firstSchema, style, width),
-    })),
-  };
+  // const firstSchema = parseSchema(song.sections[0]?.lines);
+  return new SchemaWrapper(song, width, style).process()
+  // return {
+  //   heading: song.heading,
+  //   sections: song.sections.map((s) => ({
+  //     sectionHeading: s.sectionHeading,
+  //     lines: wrapLinesToSchema(s.lines, firstSchema, style, width),
+  //   })),
+  // };
 }
 
 /**
@@ -301,6 +301,96 @@ function wrapLinesToSchema(lines, _schema, style, width) {
   });
   return result;
 }
+
+/**
+ * @typedef {SongSection & {toBeProcessed:BreakableText<SongLine> }} Result
+ */
+
+class SchemaWrapper {
+  /** @type {Song}*/
+  song;
+  /** @type {Lenght}*/
+  width;
+  /** @type {TextStyle}*/
+  style;
+
+    /** @type {Result[]}*/
+    results;
+
+
+  /**
+   * @param {Song} song
+   * @param {Lenght} width
+   * @param {TextStyle} style
+   */
+  constructor(song, width, style) {
+    this.song = song
+    this.results = song.sections.map((s) => ({
+      toBeProcessed: BreakableText.fromPrefferdLineUp(SongLine, s.lines),
+      sectionHeading: s.sectionHeading,
+      lines: []
+    }))
+    this.style = style;
+    this.width = width;
+  }
+
+  /**
+   * @param {BreakableText<SongLine>} line
+   * @returns {number}
+   */
+  possibleChordsAInLine(line){
+    const maxLen = getMaxLenToFitWidth(line.text, this.style, this.width);
+    const [x, _] = line.break({ before: maxLen + 1, after: 0});
+    return x.chords.length;
+  }
+
+  /**
+   *
+   * @param {Result} result
+   * @param {number} chordIndex
+   */
+  breakLineAfterChord(result, chordIndex){
+    const c0 = result.toBeProcessed.text.chords[chordIndex]
+    const c1 = result.toBeProcessed.text.chords[chordIndex + 1]
+    const [newLine, rest] = result.toBeProcessed.break({before: c1?.startIndex || 100_000, after: (c0?.startIndex || -1) + 1});
+    result.lines.push(newLine);
+    result.toBeProcessed = rest;
+
+  }
+
+  breakLines(){
+    const min =Math.min(...this.results.map((v) => this.possibleChordsAInLine(v.toBeProcessed)));
+    this.results.forEach((v) => {
+      this.breakLineAfterChord(v, min)
+    });
+  }
+
+  isDone(){
+    return this.results.every((v) => v.toBeProcessed.lenght === 0);
+  }
+
+  /** @returns {Song} */
+  process(){
+    let iterations = 0;
+    while(!this.isDone()){
+      this.breakLines();
+      iterations += 1
+      if(iterations > 1_000){
+        throw new Error("Max iterations exceeded")
+      }
+    }
+    return {
+      heading: this.song.heading,
+      sections: this.results.map((r) =>( {
+        sectionHeading: r.sectionHeading,
+        lines: r.lines
+      }))
+    };
+  }
+
+
+}
+
 
 /**
  * @param {SongLine[]} lines
