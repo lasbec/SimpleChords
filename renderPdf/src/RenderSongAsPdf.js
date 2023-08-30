@@ -21,7 +21,7 @@ import { BreakableText } from "./BreakableText.js";
  */
 export async function renderSingleFile(path, debug) {
   console.log("Process", Path.parse(path).name);
-  const contentToParse = await fs.readFile(path, "utf8");
+  const contentToParse = (await fs.readFile(path, "utf8")).replace(/\r/g, ""); // ensure linebreaks are \n and not \r\n;
   const ast = parseSongAst(contentToParse);
   if (!ast) {
     console.log("Parsing AST failed.");
@@ -55,6 +55,7 @@ export async function renderSingleFile(path, debug) {
  * @param {Song} song
  * @param {FontLoader} fontLoader
  * @param {boolean} debug
+ * @returns {Buffer}
  */
 export async function renderSongAsPdf(song, fontLoader, debug) {
   Document.debug = debug;
