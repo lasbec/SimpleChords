@@ -12,7 +12,7 @@ import { parseSongAst } from "./SongParser.js";
 import * as Path from "path";
 import * as fs from "fs/promises";
 import { Song, SongLine } from "./Song.js";
-import {checkSongAst} from "./SongChecker.js";
+import {checkSongAst, WellKnownSectionType} from "./SongChecker.js";
 import { BreakableText } from "./BreakableText.js";
 
 /**
@@ -138,7 +138,12 @@ export async function renderSongAsPdf(song, fontLoader, debug) {
     let lyricPointer = lyricBox.getPointerAt("left", "top");
 
     for (const section of song.sections) {
-      lyricPointer = drawSongSectionLines(lyricPointer, section.lines);
+      let onlyChordsSections = [WellKnownSectionType.Intro, WellKnownSectionType.Outro, WellKnownSectionType.Interlude];
+      if(onlyChordsSections.includes(section.type)) {
+        lyricPointer = drawSongSectionLinesOnlyChords(lyricPointer, section.lines, section.type + ": ")
+      }else {
+        lyricPointer = drawSongSectionLines(lyricPointer, section.lines);
+      }
       lyricPointer.moveDown(sectionDistance);
     }
     return doc;
@@ -186,6 +191,42 @@ export async function renderSongAsPdf(song, fontLoader, debug) {
       pointer.moveDown(chordLineHeight);
       pointer.attachTextBox("right", "bottom", lyricLine);
       pointer.moveDown(lyricLineHeight);
+    }
+    return pointer;
+  }
+
+  /**
+   * @param {BoxPointer} pointer
+   * @param {SongLine[]} songLines
+   * @param {string} title
+   * */
+  function drawSongSectionLinesOnlyChords(pointer, songLines, title) {
+    const heightOfSection = chordLineHeight
+        .mul(songLines.length);
+
+    const lowerEndOfSection = pointer.clone().moveToBottomBorder();
+
+    const sectionWillExeedPage = pointer
+        .pointerDown(heightOfSection)
+        .isLowerThan(lowerEndOfSection);
+    if (sectionWillExeedPage) {
+      const leftTopCorner = pointer
+          .nextPageAt("left", "top")
+          .moveDown(topMargin)
+          .moveRight(leftMargin);
+      const rightBottomCorner = pointer
+          .onPage()
+          .moveToBottomBorder()
+          .moveToRightBorder()
+          .moveUp(topMargin)
+          .moveLeft(rightMargin);
+      const lyricBox = leftTopCorner.spanBox(rightBottomCorner);
+      pointer = lyricBox.getPointerAt("left", "top");
+    }
+    for (const line of songLines) {
+      const lineString = title + line.chords.map((c) => c.chord).join(" ");
+      pointer.setText("right", "bottom", lineString, chordTextStyle);
+      pointer.moveDown(chordLineHeight);
     }
     return pointer;
   }

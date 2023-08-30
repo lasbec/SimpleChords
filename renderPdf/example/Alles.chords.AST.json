@@ -2,7 +2,37 @@
   "heading": "Alles",
   "sections": [
     {
-      "type": "",
+      "type": "intro",
+      "lines": [
+        {
+          "chords": [
+            {
+              "chord": "F#",
+              "startIndex": 0
+            },
+            {
+              "chord": "Fis",
+              "startIndex": 3
+            },
+            {
+              "chord": "h+",
+              "startIndex": 7
+            },
+            {
+              "chord": "h+",
+              "startIndex": 10
+            },
+            {
+              "chord": "A7",
+              "startIndex": 13
+            }
+          ],
+          "lyric": ""
+        }
+      ]
+    },
+    {
+      "type": "verse",
       "lines": [
         {
           "chords": [
@@ -40,6 +70,109 @@
             }
           ],
           "lyric": "Abgewetzte Finger schubbern über Saiten! Sie Spielen für die Armen und die Reichen; Verhornte Kuppen hämmern übers Brett, Sie lassen euch nimmer mehr ins Bett."
+        }
+      ]
+    },
+    {
+      "type": "interlude",
+      "lines": [
+        {
+          "chords": [
+            {
+              "chord": "|:",
+              "startIndex": 1
+            },
+            {
+              "chord": "e",
+              "startIndex": 4
+            },
+            {
+              "chord": "a",
+              "startIndex": 6
+            },
+            {
+              "chord": "B",
+              "startIndex": 8
+            },
+            {
+              "chord": "b#",
+              "startIndex": 10
+            },
+            {
+              "chord": "BDim",
+              "startIndex": 13
+            },
+            {
+              "chord": "cb",
+              "startIndex": 18
+            },
+            {
+              "chord": "Cb",
+              "startIndex": 21
+            },
+            {
+              "chord": ":|",
+              "startIndex": 24
+            }
+          ],
+          "lyric": ""
+        }
+      ]
+    },
+    {
+      "type": "bridge",
+      "lines": [
+        {
+          "chords": [
+            {
+              "chord": "c",
+              "startIndex": 8
+            },
+            {
+              "chord": "C",
+              "startIndex": 29
+            }
+          ],
+          "lyric": "Ohne Rückhalt, ohne Schonung,"
+        },
+        {
+          "chords": [
+            {
+              "chord": "d",
+              "startIndex": 8
+            },
+            {
+              "chord": "D",
+              "startIndex": 29
+            }
+          ],
+          "lyric": "ohne Rücksicht auf Verluste, "
+        },
+        {
+          "chords": [
+            {
+              "chord": "e",
+              "startIndex": 8
+            },
+            {
+              "chord": "E",
+              "startIndex": 29
+            }
+          ],
+          "lyric": "Gröhlt der Chor der Gitarren,"
+        },
+        {
+          "chords": [
+            {
+              "chord": "f",
+              "startIndex": 8
+            },
+            {
+              "chord": "F",
+              "startIndex": 29
+            }
+          ],
+          "lyric": "Und ich bin von KI geschriben"
         }
       ]
     },
@@ -194,6 +327,36 @@
             }
           ],
           "lyric": "zerfranste Nägel Schlagen übers Loch Schwarze Strimen schlagen den Barrè Wunde Stummel klopfen euch den Tackt Gekerbte Fingerspitzen nehmen den Akkord!"
+        }
+      ]
+    },
+    {
+      "type": "outro",
+      "lines": [
+        {
+          "chords": [
+            {
+              "chord": "f#",
+              "startIndex": 0
+            },
+            {
+              "chord": "fis",
+              "startIndex": 3
+            },
+            {
+              "chord": "H+",
+              "startIndex": 7
+            },
+            {
+              "chord": "H+",
+              "startIndex": 10
+            },
+            {
+              "chord": "a7",
+              "startIndex": 13
+            }
+          ],
+          "lyric": ""
         }
       ]
     }
