@@ -153,7 +153,6 @@ export async function renderSongAsPdf(song, fontLoader, debug) {
       if(onlyChordsSections.includes(section.type)) {
         lyricPointer = drawSongSectionLinesOnlyChords(lyricPointer, section.lines, section.type + ": ")
       }else {
-        console.log(section.type, WellKnownSectionType.Chorus, section.type === WellKnownSectionType.Chorus)
         /** @type {TextStyle} */
         const lyricStyle =
             section.type === WellKnownSectionType.Chorus
@@ -286,16 +285,7 @@ function reshapeSongWithLineBreaks(song, style, width) {
  * @param {Length} width
  */
 function reshapeSongWithSchema(_song, style, width) {
-  const song = reshapeSongWithLineBreaks(_song, style, width);
-  // const firstSchema = parseSchema(song.sections[0]?.lines);
-  return new SchemaWrapper(song, width, style).process()
-  // return {
-  //   heading: song.heading,
-  //   sections: song.sections.map((s) => ({
-  //     type: s.type,
-  //     lines: wrapLinesToSchema(s.lines, firstSchema, style, width),
-  //   })),
-  // };
+  return new SchemaWrapper(_song, width, style).process()
 }
 
 /**
@@ -322,50 +312,6 @@ function getMaxLenToFitWidth(line, style, width) {
   return str.length;
 }
 
-/**
- * @param {SongLine[]} lines
- * @param {string[][]} _schema
- * @param {TextStyle} style
- * @param {Length} width
- * @returns {SongLine[]}
- */
-function wrapLinesToSchema(lines, _schema, style, width) {
-  const schema = [..._schema];
-  const breakingText = BreakableText.fromPrefferdLineUp(SongLine, lines);
-
-  const result = breakingText.breakUntil((l) => {
-    const lineSchema = schema.shift();
-    if (lineSchema === undefined) return;
-
-    /** @type {import("./SongParser.js").ChordsLineElement | null} */
-    let lastMatchInARow = null;
-    /** @type {import("./SongParser.js").ChordsLineElement | null} */
-    let firstMissmatch = null;
-    let i = -1;
-    for (const chord of lineSchema) {
-      i += 1;
-
-      if (chord === l.chords[i]?.chord) {
-        lastMatchInARow = l.chords[i];
-      } else {
-        firstMissmatch = l.chords[i];
-        break;
-      }
-    }
-    if (lineSchema.length < l.chords.length) {
-      firstMissmatch = l.chords[lineSchema.length];
-    }
-
-    if (lastMatchInARow === null) return;
-    if (firstMissmatch === null) return;
-
-    return {
-      before: firstMissmatch.startIndex,
-      after: lastMatchInARow.startIndex + 1,
-    };
-  });
-  return result;
-}
 
 /**
  * @typedef {SongSection & {toBeProcessed:BreakableText<SongLine> }} Result
@@ -472,26 +418,4 @@ class SchemaWrapper {
       }))
     };
   }
-
-
-}
-
-
-/**
- * @param {SongLine[]} lines
- * @param {TextStyle} style
- * @param {Length} width
- * @returns {SongLine[]}
- */
-function wrapLines(lines, style, width) {
-  const breakingText = BreakableText.fromPrefferdLineUp(SongLine, lines);
-  const result = breakingText.breakUntil((l) => {
-    const maxLen = getMaxLenToFitWidth(l, style, width);
-    if (maxLen >= l.length) return;
-    return {
-      before: maxLen,
-      after: 0,
-    };
-  });
-  return result;
 }
