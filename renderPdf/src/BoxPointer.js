@@ -5,7 +5,7 @@
  * @typedef {import("./Page.js").XStartPosition} XStartPosition
  * @typedef {import("./Page.js").YStartPosition} YStartPosition
  * @typedef {import("./Page.js").Point} Point
- * @typedef {import("./Page.js").TextStyle} TextStyle
+ * @typedef {import("./Page.js").TextConfig} TextStyle
  */
 import { LEN } from "./Length.js";
 import { Box, DebugBox, DetachedTextBox, Document, TextBox } from "./Page.js";

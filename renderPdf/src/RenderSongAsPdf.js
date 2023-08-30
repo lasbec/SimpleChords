@@ -1,6 +1,6 @@
 /**
  * @typedef {import("pdf-lib").PDFPage} PDFPage
- * @typedef {import("./Page.js").TextStyle} TextConfig
+ * @typedef {import("./Page.js").TextConfig} TextConfig
  * @typedef {import("./Song.js").SongSection} SongSection
  */
 import { PDFDocument, StandardFonts } from "pdf-lib";
@@ -13,7 +13,6 @@ import * as Path from "path";
 import * as fs from "fs/promises";
 import { Song, SongLine } from "./Song.js";
 import { checkSongAst, WellKnownSectionType } from "./SongChecker.js";
-import { BreakableText } from "./BreakableText.js";
 import { SchemaWrapper } from "./SchemaWrapper.js";
 
 /**
@@ -54,10 +53,19 @@ export async function renderSingleFile(path, debug) {
 
 /**
  * @typedef LayoutConfig
- * @property {TextConfig} lyricTextStyle
- * @property {TextConfig} chorusTextStyle
- * @property {TextConfig} refTextStyle
- * @property {TextConfig} chordTextStyle
+ * @property {TextConfig} lyricTextConfig
+ * @property {TextConfig} chorusTextConfig
+ * @property {TextConfig} refTextConfig
+ * @property {TextConfig} titleTextConfig
+ * @property {TextConfig} chordTextConfig
+ *
+ * @property {Length} leftMargin
+ * @property {Length} rightMargin
+ * @property {Length} topMargin
+ * @property {Length} bottomMargin
+ *
+ * @property {Length} pageWidth
+ * @property {Length} pageHeight
  */
 
 /**
@@ -68,52 +76,57 @@ export async function renderSingleFile(path, debug) {
 export async function renderSongAsPdf(song, fontLoader, debug) {
   Document.debug = debug;
   const pdfDoc = await PDFDocument.create();
-  const pageWidth = LEN(148.5, "mm");
-  const pageHeight = LEN(210, "mm");
 
-  const lyricFontSize = LEN(12, "pt");
-  /** @type {TextConfig} */
-  const lyricTextStyle = {
-    font: await pdfDoc.embedFont(StandardFonts.TimesRoman),
-    fontSize: lyricFontSize,
+  /** @type {import("./Page.js").Dimesions} */
+  const A5 = {
+    width: LEN(148.5, "mm"),
+    height: LEN(210, "mm"),
+  };
+  /**@type {LayoutConfig} */
+  const layoutConfig = {
+    pageHeight: A5.height,
+    pageWidth: A5.width,
+
+    lyricTextConfig: {
+      font: await pdfDoc.embedFont(StandardFonts.TimesRoman),
+      fontSize: LEN(12, "pt"),
+    },
+    refTextConfig: {
+      font: await pdfDoc.embedFont(StandardFonts.TimesRomanBold),
+      fontSize: LEN(12, "pt"),
+    },
+    chorusTextConfig: {
+      font: await pdfDoc.embedFont(StandardFonts.TimesRomanItalic),
+      fontSize: LEN(12, "pt"),
+    },
+    titleTextConfig: {
+      fontSize: LEN(14, "pt"),
+      font: await pdfDoc.embedFont(StandardFonts.TimesRoman),
+    },
+    chordTextConfig: {
+      font: await fontLoader.loadFontIntoDoc(
+        pdfDoc,
+        "Niconne/Niconne-Regular.ttf"
+      ),
+      fontSize: LEN(12, "pt"),
+    },
+    leftMargin: A5.width.mul(0.07),
+    rightMargin: A5.width.mul(0.07),
+    topMargin: A5.width.mul(0.07),
+    bottomMargin: A5.width.mul(0.07),
   };
 
-  /** @type {TextConfig} */
-  const refTextStyle = {
-    font: await pdfDoc.embedFont(StandardFonts.TimesRomanBold),
-    fontSize: lyricFontSize,
-  };
-
-  /** @type {TextConfig} */
-  const chorusTextStyle = {
-    font: await pdfDoc.embedFont(StandardFonts.TimesRomanItalic),
-    fontSize: lyricFontSize,
-  };
-  /** @type {TextConfig} */
-  const titleTextStyle = {
-    fontSize: lyricFontSize.mul(1.3),
-    font: await pdfDoc.embedFont(StandardFonts.TimesRoman),
-  };
-
-  const chordTextStyle = {
-    font: await fontLoader.loadFontIntoDoc(
-      pdfDoc,
-      "Niconne/Niconne-Regular.ttf"
-    ),
-    fontSize: lyricFontSize,
-  };
   const chordLineHeight = LEN(
-    chordTextStyle.font.heightAtSize(chordTextStyle.fontSize.in("pt")),
+    layoutConfig.chordTextConfig.font.heightAtSize(
+      layoutConfig.chordTextConfig.fontSize.in("pt")
+    ),
     "pt"
   );
 
-  const leftMargin = pageWidth.mul(0.07);
-  const rightMargin = pageWidth.mul(0.07);
-  const topMargin = pageWidth.mul(0.07);
-  const bottomMargin = pageWidth.mul(0.07);
-
   const lyricLineHeight = LEN(
-    lyricTextStyle.font.heightAtSize(lyricFontSize.in("pt")),
+    layoutConfig.lyricTextConfig.font.heightAtSize(
+      layoutConfig.lyricTextConfig.fontSize.in("pt")
+    ),
     "pt"
   );
   const sectionDistance = lyricLineHeight.mul(1.2);
@@ -121,8 +134,10 @@ export async function renderSongAsPdf(song, fontLoader, debug) {
   const pages = await layOutSong(
     reshapeSongWithSchema(
       song,
-      lyricTextStyle,
-      pageWidth.sub(leftMargin).sub(rightMargin)
+      layoutConfig,
+      layoutConfig.pageWidth
+        .sub(layoutConfig.leftMargin)
+        .sub(layoutConfig.rightMargin)
     )
   );
   pages.drawToPdfDoc(pdfDoc);
@@ -134,19 +149,22 @@ export async function renderSongAsPdf(song, fontLoader, debug) {
    * @returns {Promise<Document>}
    */
   async function layOutSong(song) {
-    const doc = new Document({ width: pageWidth, height: pageHeight });
+    const doc = new Document({
+      width: layoutConfig.pageWidth,
+      height: layoutConfig.pageHeight,
+    });
     const titleBox = drawTitle(song, doc.appendNewPage());
     const pointer = titleBox.getPointerAt("left", "bottom").onPage();
 
     pointer.moveDown(lyricLineHeight);
-    pointer.moveToLeftBorder().moveRight(leftMargin);
+    pointer.moveToLeftBorder().moveRight(layoutConfig.leftMargin);
 
     const rightBottomPointer = pointer
       .onPage()
       .moveToBottomBorder()
       .moveToRightBorder()
-      .moveUp(bottomMargin)
-      .moveLeft(rightMargin);
+      .moveUp(layoutConfig.bottomMargin)
+      .moveLeft(layoutConfig.rightMargin);
     const lyricBox = pointer.spanBox(rightBottomPointer);
     let lyricPointer = lyricBox.getPointerAt("left", "top");
 
@@ -166,10 +184,10 @@ export async function renderSongAsPdf(song, fontLoader, debug) {
         /** @type {TextConfig} */
         const lyricStyle =
           section.type === WellKnownSectionType.Chorus
-            ? chorusTextStyle
+            ? layoutConfig.chorusTextConfig
             : section.type === WellKnownSectionType.Ref
-            ? refTextStyle
-            : lyricTextStyle;
+            ? layoutConfig.refTextConfig
+            : layoutConfig.lyricTextConfig;
         lyricPointer = drawSongSectionLines(
           lyricPointer,
           section.lines,
@@ -188,7 +206,9 @@ export async function renderSongAsPdf(song, fontLoader, debug) {
    * */
   function drawSongSectionLines(pointer, songLines, lyricStyle) {
     const lyricLineHeight = LEN(
-      lyricStyle.font.heightAtSize(titleTextStyle.fontSize.in("pt")),
+      lyricStyle.font.heightAtSize(
+        layoutConfig.titleTextConfig.fontSize.in("pt")
+      ),
       "pt"
     );
     const heightOfSection = chordLineHeight
@@ -203,14 +223,14 @@ export async function renderSongAsPdf(song, fontLoader, debug) {
     if (sectionWillExeedPage) {
       const leftTopCorner = pointer
         .nextPageAt("left", "top")
-        .moveDown(topMargin)
-        .moveRight(leftMargin);
+        .moveDown(layoutConfig.topMargin)
+        .moveRight(layoutConfig.leftMargin);
       const rightBottomCorner = pointer
         .onPage()
         .moveToBottomBorder()
         .moveToRightBorder()
-        .moveUp(topMargin)
-        .moveLeft(rightMargin);
+        .moveUp(layoutConfig.topMargin)
+        .moveLeft(layoutConfig.rightMargin);
       const lyricBox = leftTopCorner.spanBox(rightBottomCorner);
       pointer = lyricBox.getPointerAt("left", "top");
     }
@@ -223,7 +243,12 @@ export async function renderSongAsPdf(song, fontLoader, debug) {
         if (!yOffset) continue;
         pointer
           .pointerRight(yOffset)
-          .setText("right", "bottom", chord.chord, chordTextStyle);
+          .setText(
+            "right",
+            "bottom",
+            chord.chord,
+            layoutConfig.chordTextConfig
+          );
       }
       pointer.moveDown(chordLineHeight.mul(0.9));
       pointer.attachTextBox("right", "bottom", lyricLine);
@@ -248,20 +273,25 @@ export async function renderSongAsPdf(song, fontLoader, debug) {
     if (sectionWillExeedPage) {
       const leftTopCorner = pointer
         .nextPageAt("left", "top")
-        .moveDown(topMargin)
-        .moveRight(leftMargin);
+        .moveDown(layoutConfig.topMargin)
+        .moveRight(layoutConfig.leftMargin);
       const rightBottomCorner = pointer
         .onPage()
         .moveToBottomBorder()
         .moveToRightBorder()
-        .moveUp(topMargin)
-        .moveLeft(rightMargin);
+        .moveUp(layoutConfig.topMargin)
+        .moveLeft(layoutConfig.rightMargin);
       const lyricBox = leftTopCorner.spanBox(rightBottomCorner);
       pointer = lyricBox.getPointerAt("left", "top");
     }
     for (const line of songLines) {
       const lineString = title + line.chords.map((c) => c.chord).join(" ");
-      pointer.setText("right", "bottom", lineString, chordTextStyle);
+      pointer.setText(
+        "right",
+        "bottom",
+        lineString,
+        layoutConfig.chordTextConfig
+      );
       pointer.moveDown(chordLineHeight);
     }
     return pointer;
@@ -272,16 +302,23 @@ export async function renderSongAsPdf(song, fontLoader, debug) {
    * @param {Page} page
    */
   function drawTitle(song, page) {
-    const pointer = page.getPointerAt("center", "top").moveDown(topMargin);
-    return pointer.setText("center", "bottom", song.heading, titleTextStyle);
+    const pointer = page
+      .getPointerAt("center", "top")
+      .moveDown(layoutConfig.topMargin);
+    return pointer.setText(
+      "center",
+      "bottom",
+      song.heading,
+      layoutConfig.titleTextConfig
+    );
   }
 }
 
 /**
  * @param {Song} _song
- * @param {import("./Page.js").TextStyle} style
+ * @param {LayoutConfig} config
  * @param {Length} width
  */
-function reshapeSongWithSchema(_song, style, width) {
-  return new SchemaWrapper(_song, width, style).process();
+function reshapeSongWithSchema(_song, config, width) {
+  return new SchemaWrapper(_song, width, config).process();
 }

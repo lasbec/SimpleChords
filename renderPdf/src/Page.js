@@ -304,7 +304,7 @@ export class DebugBox {
 export class DetachedTextBox {
   /**@type {string}*/
   text;
-  /**@type {TextStyle}*/
+  /**@type {TextConfig}*/
   style;
   /**@type {Lenght}*/
   width;
@@ -313,7 +313,7 @@ export class DetachedTextBox {
 
   /**
    * @param {string} text
-   * @param {TextStyle} style
+   * @param {TextConfig} style
    */
   constructor(text, style) {
     this.text = text;
@@ -343,7 +343,7 @@ export class DetachedTextBox {
 export class TextBox {
   /**@type {string}*/
   text;
-  /**@type {TextStyle}*/
+  /**@type {TextConfig}*/
   style;
   /**@type {Lenght}*/
   width;
@@ -357,7 +357,7 @@ export class TextBox {
   /**
    * @param {Point} leftBottomCorner
    * @param {string} text
-   * @param {TextStyle} style
+   * @param {TextConfig} style
    * @param {IBox} parent
    */
   constructor(leftBottomCorner, text, style, parent) {
@@ -401,7 +401,6 @@ export class TextBox {
       y: this.leftBottomCorner.y.in("pt"),
       font: this.style.font,
       size: this.style.fontSize.in("pt"),
-
     });
   }
 }
@@ -428,7 +427,7 @@ export class TextBox {
  */
 
 /**
- * @typedef {object} TextStyle
+ * @typedef {object} TextConfig
  * @property {PDFFont} font
  * @property {Lenght} fontSize
  *
