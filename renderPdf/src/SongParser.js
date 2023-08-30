@@ -117,15 +117,15 @@ class SongParser {
     let result = [];
     while (this.currentChar() !== "`") {
       const section = this.readSection();
-      this.log("Section parsed", section.sectionHeading);
+      this.log("Section parsed", section.type);
       result.push(section);
     }
     this.readBodyEnd();
     return result;
   }
 
-  readSectionHeading() {
-    if (this.currentChar() != "[") {
+  readSectionType() {
+    if (this.currentChar() !== "[") {
       this.throwUnexpectedToken({
         actual: this.currentChar(),
         expected: "[",
@@ -144,10 +144,10 @@ class SongParser {
 
   readSection() {
     this.skipEmptyLines();
-    let sectionHeading = "";
+    let type = "";
     if (this.currentChar() === "[") {
-      sectionHeading = this.readSectionHeading();
-      this.log("section heading parsed", sectionHeading);
+      type = this.readSectionType();
+      this.log("section heading parsed", type);
     } else {
       this.log("no section heading");
     }
@@ -167,7 +167,7 @@ class SongParser {
       this.skipEmptyLines();
     }
     return {
-      sectionHeading,
+      type,
       lines,
     };
   }
@@ -306,7 +306,7 @@ class SongParser {
 
 /**
  * @typedef {object} SongSectionNode
- * @property {string} sectionHeading
+ * @property {string} type
  * @property {SongLineNode[]} lines
  */
 

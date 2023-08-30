@@ -2,7 +2,7 @@
   "heading": "Alles",
   "sections": [
     {
-      "sectionHeading": "",
+      "type": "",
       "lines": [
         {
           "chords": [
@@ -44,7 +44,7 @@
       ]
     },
     {
-      "sectionHeading": "ref",
+      "type": "ref",
       "lines": [
         {
           "chords": [
@@ -114,7 +114,7 @@
       ]
     },
     {
-      "sectionHeading": "verse",
+      "type": "verse",
       "lines": [
         {
           "chords": [
@@ -156,7 +156,7 @@
       ]
     },
     {
-      "sectionHeading": "verse",
+      "type": "verse",
       "lines": [
         {
           "chords": [

@@ -4,9 +4,22 @@
  * @typedef {import("./SongParser.js").SongSectionNode} SongSectionNode
  */
 
+export const WellKnownSectionType = {
+  Interlude: "interlude",
+  Ref: "ref",
+  Chorus: "chorus",
+  Bridge: "bridge",
+  Verse: "verse",
+  Intro: "intro",
+  Outro: "outro"
+}
+
 /** @param {SongAst} ast  */
 export function checkSongAst(ast) {
   for (const section of ast.sections) {
+    if(!Object.values(WellKnownSectionType).includes(section.type)){
+      console.warn(`Unknown section type '${section.type}'`);
+    }
     for (const line of section.lines) {
       for (const chord of line.chords) {
         if (!isChord(chord.chord) && !isSpecialSign(chord.chord)) {
@@ -20,7 +33,7 @@ export function checkSongAst(ast) {
   const chordSchemas = new Map();
 
   for (const section of ast.sections) {
-    const sectionType = section.sectionHeading.trim().toLowerCase();
+    const sectionType = section.type.trim().toLowerCase();
     const schema = chordSchemas.get(sectionType);
     if (schema) {
       validateSectionAgainstSchema(section, schema);
@@ -50,7 +63,7 @@ export function validateSectionAgainstSchema(section, schema) {
     lineIndex += 1;
     const warning =
       "line schemas are differing for sections " +
-      section.sectionHeading +
+      section.type +
       " near:\n" +
       line.lyric;
     if (line.chords.length !== schema[lineIndex]?.length) {

@@ -26,7 +26,7 @@ export class Song {
   static fromAst(ast) {
     /** @type {SongSection[]} */
     const sections = ast.sections.map((s) => ({
-      sectionHeading: s.sectionHeading,
+      type: s.type.trim().toLowerCase(),
       lines: s.lines.map(SongLine.fromSongLineNode),
     }));
     return new Song(ast.heading, sections);
@@ -35,7 +35,7 @@ export class Song {
 
 /**
  * @typedef {object} SongSection
- * @property {string} sectionHeading
+ * @property {string} type
  * @property {SongLine[]} lines
  */
 

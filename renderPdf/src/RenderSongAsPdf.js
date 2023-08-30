@@ -209,7 +209,7 @@ function reshapeSongWithLineBreaks(song, style, width) {
   return {
     heading: song.heading,
     sections: song.sections.map((s) => ({
-      sectionHeading: s.sectionHeading,
+      type: s.type,
       lines: wrapLines(s.lines, style, width),
     })),
   };
@@ -227,7 +227,7 @@ function reshapeSongWithSchema(_song, style, width) {
   // return {
   //   heading: song.heading,
   //   sections: song.sections.map((s) => ({
-  //     sectionHeading: s.sectionHeading,
+  //     type: s.type,
   //     lines: wrapLinesToSchema(s.lines, firstSchema, style, width),
   //   })),
   // };
@@ -327,7 +327,7 @@ class SchemaWrapper {
     this.song = song
     this.results = song.sections.map((s) => ({
       toBeProcessed: BreakableText.fromPrefferdLineUp(SongLine, s.lines),
-      sectionHeading: s.sectionHeading,
+      type: s.type,
       lines: []
     }))
     this.style = style;
@@ -382,7 +382,7 @@ class SchemaWrapper {
     return {
       heading: this.song.heading,
       sections: this.results.map((r) =>( {
-        sectionHeading: r.sectionHeading,
+        type: r.type,
         lines: r.lines
       }))
     };
