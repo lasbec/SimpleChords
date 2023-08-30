@@ -264,20 +264,6 @@ export async function renderSongAsPdf(song, fontLoader, debug) {
   }
 }
 
-/**
- * @param {Song} song
- * @param {import("./Page.js").TextStyle} style
- * @param {Length} width
- */
-function reshapeSongWithLineBreaks(song, style, width) {
-  return {
-    heading: song.heading,
-    sections: song.sections.map((s) => ({
-      type: s.type,
-      lines: wrapLines(s.lines, style, width),
-    })),
-  };
-}
 
 /**
  * @param {Song} _song

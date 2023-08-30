@@ -30,7 +30,7 @@ export function checkSongAst(ast) {
     }
   }
 
-  /**@type {Map<string, string[][]>} */
+  /**@type {Map<string, string[]>} */
   const chordSchemas = new Map();
 
   for (const section of ast.sections) {
