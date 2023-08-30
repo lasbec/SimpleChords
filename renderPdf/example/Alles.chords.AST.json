@@ -2,7 +2,7 @@
   "heading": "Alles",
   "sections": [
     {
-      "type": "verse",
+      "type": "",
       "lines": [
         {
           "chords": [
@@ -114,7 +114,7 @@
       ]
     },
     {
-      "type": "verse",
+      "type": "Verse",
       "lines": [
         {
           "chords": [
@@ -156,7 +156,7 @@
       ]
     },
     {
-      "type": "verse",
+      "type": "",
       "lines": [
         {
           "chords": [

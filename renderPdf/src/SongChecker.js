@@ -17,7 +17,8 @@ export const WellKnownSectionType = {
 /** @param {SongAst} ast  */
 export function checkSongAst(ast) {
   for (const section of ast.sections) {
-    if(!Object.values(WellKnownSectionType).includes(section.type) && section.type !== ""){
+    let sectionType = section.type.trim().toLowerCase();
+    if(!Object.values(WellKnownSectionType).includes(sectionType) && sectionType !== ""){
       console.warn(`Unknown section type '${section.type}'`);
     }
     for (const line of section.lines) {
