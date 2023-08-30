@@ -1,5 +1,5 @@
 /**
- * @typedef {import("./Lenght.js").Lenght} Lenght
+ * @typedef {import("././Length.js").Length} Lenght
  * @typedef {import("./Page.js").IBox} IBox
  * @typedef {import("./Page.js").Dimesions}  Dimesions
  * @typedef {import("./Page.js").XStartPosition} XStartPosition
@@ -7,7 +7,7 @@
  * @typedef {import("./Page.js").Point} Point
  * @typedef {import("./Page.js").TextStyle} TextStyle
  */
-import { LEN } from "./Lenght.js";
+import { LEN } from "./Length.js";
 import { Box, DebugBox, DetachedTextBox, Document, TextBox } from "./Page.js";
 
 /**

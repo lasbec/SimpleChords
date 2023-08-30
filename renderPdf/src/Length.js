@@ -3,13 +3,13 @@
 /**
  * @param {number} value
  * @param {UnitName} unit
- * @returns {Lenght}
+ * @returns {Length}
  */
 export function LEN(value, unit) {
-  return new Lenght(value, unit);
+  return new Length(value, unit);
 }
 
-export class Lenght {
+export class Length {
   /**
    * @private
    * @readonly
@@ -53,8 +53,8 @@ export class Lenght {
 
   /**
    *
-   * @param {Lenght} other
-   * @return {Lenght}
+   * @param {Length} other
+   * @return {Length}
    */
   sub(other) {
     if (this.unit === other.unit) {
@@ -64,8 +64,8 @@ export class Lenght {
   }
 
   /**
-   * @param {Lenght} other
-   * @return {Lenght}
+   * @param {Length} other
+   * @return {Length}
    */
   add(other) {
     if (this.unit === other.unit) {
@@ -76,18 +76,18 @@ export class Lenght {
 
   /**
    * @param {number} scalar
-   * @return {Lenght}
+   * @return {Length}
    */
   mul(scalar) {
     return LEN(this.value * scalar, this.unit);
   }
 
-  /** @param {Lenght} other */
+  /** @param {Length} other */
   lt(other) {
     return this.in("pt") < other.in("pt");
   }
 
-  /** @param {Lenght} other */
+  /** @param {Length} other */
   gt(other) {
     return this.in("pt") > other.in("pt");
   }
@@ -97,25 +97,25 @@ export class Lenght {
   }
 
   abs() {
-    return new Lenght(Math.abs(this.value), this.unit);
+    return new Length(Math.abs(this.value), this.unit);
   }
 
   isZero() {
     return this.value === 0;
   }
 
-  static zero = new Lenght(0, "pt");
+  static zero = new Length(0, "pt");
 
   atLeastZero() {
     if (this.value < 0) {
-      return Lenght.zero;
+      return Length.zero;
     }
     return this;
   }
 
   maximumZero() {
     if (this.value > 0) {
-      return Lenght.zero;
+      return Length.zero;
     }
     return this;
   }

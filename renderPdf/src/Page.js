@@ -1,10 +1,10 @@
 /**
- * @typedef {import("./Lenght.js").Lenght} Lenght
+ * @typedef {import("././Length.js").Length} Lenght
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("pdf-lib").PDFFont} PDFFont
  * @typedef {import("pdf-lib").Color}  Color
  */
-import { LEN } from "./Lenght.js";
+import { LEN } from "./Length.js";
 import { BoxPointer } from "./BoxPointer.js";
 import { PDFDocument, rgb } from "pdf-lib";
 

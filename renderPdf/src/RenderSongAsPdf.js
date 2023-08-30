@@ -5,7 +5,7 @@
  */
 import { PDFDocument, StandardFonts } from "pdf-lib";
 import { FontLoader } from "./FontLoader.js";
-import { LEN, Lenght } from "./Lenght.js";
+import { LEN, Length } from "./Length.js";
 import { DetachedTextBox, Document, Page } from "./Page.js";
 import { BoxPointer } from "./BoxPointer.js";
 import { parseSongAst } from "./SongParser.js";
@@ -203,7 +203,7 @@ export async function renderSongAsPdf(song, fontLoader, debug) {
 /**
  * @param {Song} song
  * @param {import("./Page.js").TextStyle} style
- * @param {Lenght} width
+ * @param {Length} width
  */
 function reshapeSongWithLineBreaks(song, style, width) {
   return {
@@ -218,7 +218,7 @@ function reshapeSongWithLineBreaks(song, style, width) {
 /**
  * @param {Song} _song
  * @param {import("./Page.js").TextStyle} style
- * @param {Lenght} width
+ * @param {Length} width
  */
 function reshapeSongWithSchema(_song, style, width) {
   const song = reshapeSongWithLineBreaks(_song, style, width);
@@ -236,7 +236,7 @@ function reshapeSongWithSchema(_song, style, width) {
 /**
  * @param {string} str
  * @param {import("./Page.js").TextStyle} style
- * @param {Lenght} width
+ * @param {Length} width
  */
 function fitsWidth(str, style, width) {
   return (
@@ -247,7 +247,7 @@ function fitsWidth(str, style, width) {
 /**
  * @param {SongLine} line
  * @param {import("./Page.js").TextStyle} style
- * @param {Lenght} width
+ * @param {Length} width
  */
 function getMaxLenToFitWidth(line, style, width) {
   let str = line.lyric;
@@ -261,7 +261,7 @@ function getMaxLenToFitWidth(line, style, width) {
  * @param {SongLine[]} lines
  * @param {string[][]} _schema
  * @param {TextStyle} style
- * @param {Lenght} width
+ * @param {Length} width
  * @returns {SongLine[]}
  */
 function wrapLinesToSchema(lines, _schema, style, width) {
@@ -309,7 +309,7 @@ function wrapLinesToSchema(lines, _schema, style, width) {
 class SchemaWrapper {
   /** @type {Song}*/
   song;
-  /** @type {Lenght}*/
+  /** @type {Length}*/
   width;
   /** @type {TextStyle}*/
   style;
@@ -320,7 +320,7 @@ class SchemaWrapper {
 
   /**
    * @param {Song} song
-   * @param {Lenght} width
+   * @param {Length} width
    * @param {TextStyle} style
    */
   constructor(song, width, style) {
@@ -395,7 +395,7 @@ class SchemaWrapper {
 /**
  * @param {SongLine[]} lines
  * @param {TextStyle} style
- * @param {Lenght} width
+ * @param {Length} width
  * @returns {SongLine[]}
  */
 function wrapLines(lines, style, width) {
