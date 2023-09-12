@@ -1,3 +1,5 @@
-/node_modules
-/type-builds
-/example
+/node_modules/*
+/type-builds/*
+/example/*
+.prettierrc
+.pnpm-lock.yaml
