@@ -1,5 +1,10 @@
 {
-	"type": "module",
+	"name": "simple-chords",
+	"version": "0.0.1",
+	"description": "Print your songs for your song book.",
+	"main": "index.js",
+	"license": "ISC",
+	"author": "Lasse Becker",
 	"scripts": {
 		"type-check": "tsc --project jsconfig.json",
 		"build-typedef": "tsc ./src/Main.js --declaration --emitDeclarationOnly --allowJs --removeComments --outdir type-builds",
@@ -7,6 +12,22 @@
 		"example": "node ./src/Main.js ./example/Alles.chords.md --log-ast",
 		"test": "vitest"	
 	},
+
+
+	"repository": {
+	  "type": "git",
+	  "url": "git+https://github.com/lasbec/SimpleChords.git"
+	},
+	"keywords": [
+	  "pdf",
+	  "chords",
+	  "print"
+	],
+	"bugs": {
+	  "url": "https://github.com/lasbec/SimpleChords/issues"
+	},
+	"homepage": "https://github.com/lasbec/SimpleChords#readme",
+	"type": "module",
 	"dependencies": {
 		"@pdf-lib/fontkit": "^1.1.1",
 		"pdf-lib": "^1.17.1"
