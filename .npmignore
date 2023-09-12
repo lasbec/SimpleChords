@@ -1,5 +1,7 @@
-/node_modules/*
-/type-builds/*
-/example/*
+/type-builds
+/fonts
+/example
 .prettierrc
-.pnpm-lock.yaml
+
+simple-chords-?.?.?.tgz
+*test.js
