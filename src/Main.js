@@ -2,7 +2,7 @@ import * as fs from "fs/promises";
 import * as Path from "path";
 import { renderAllInSingleFile, renderSingleFile } from "./RenderSongAsPdf.js";
 
-const [nodePath, scriptPath, inputPath, outPath] = process.argv;
+const [nodePath, scriptPath, inputPath, _outPath] = process.argv;
 
 /**
  *
@@ -17,9 +17,9 @@ function getCorrespondingOutPutPath(path) {
 
 async function main() {
   const debug = process.argv.includes("--debug");
-
+  const outPath = _outPath === "--debug" ? undefined : _outPath;
   if (inputPath.endsWith(".chords.md")) {
-    const pdfOutputPath = await renderSingleFile(
+    await renderSingleFile(
       inputPath,
       outPath || getCorrespondingOutPutPath(inputPath),
       debug

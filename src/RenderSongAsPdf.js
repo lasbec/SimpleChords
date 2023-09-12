@@ -116,39 +116,40 @@ export async function renderSongAsPdf(songs, fontLoader, debug) {
     width: LEN(148.5, "mm"),
     height: LEN(210, "mm"),
   };
+  const stdFontSize = LEN(11, "pt");
   /**@type {LayoutConfig} */
   const layoutConfig = {
     pageHeight: A5.height,
     pageWidth: A5.width,
 
     lyricTextConfig: {
-      font: await pdfDoc.embedFont(StandardFonts.TimesRoman),
-      fontSize: LEN(10, "pt"),
+      font: await pdfDoc.embedFont(StandardFonts.Helvetica),
+      fontSize: stdFontSize,
     },
     refTextConfig: {
-      font: await pdfDoc.embedFont(StandardFonts.TimesRomanBold),
-      fontSize: LEN(10, "pt"),
+      font: await pdfDoc.embedFont(StandardFonts.HelveticaBold),
+      fontSize: stdFontSize,
     },
     chorusTextConfig: {
-      font: await pdfDoc.embedFont(StandardFonts.TimesRomanItalic),
-      fontSize: LEN(10, "pt"),
+      font: await pdfDoc.embedFont(StandardFonts.HelveticaOblique),
+      fontSize: stdFontSize,
     },
     titleTextConfig: {
-      fontSize: LEN(14, "pt"),
-      font: await pdfDoc.embedFont(StandardFonts.TimesRoman),
+      fontSize: stdFontSize.mul(1.3),
+      font: await pdfDoc.embedFont(StandardFonts.Helvetica),
     },
     chordTextConfig: {
       font: await fontLoader.loadFontIntoDoc(
         pdfDoc,
         "CarterOne/CarterOne-Regular.ttf"
       ),
-      fontSize: LEN(8, "pt"),
+      fontSize: LEN(9, "pt"),
     },
-    leftMargin: A5.width.mul(0.07),
-    rightMargin: A5.width.mul(0.07),
-    topMargin: A5.width.mul(0.02),
-    bottomMargin: A5.width.mul(0.02),
-    sectionDistance: LEN(6, "mm"),
+    leftMargin: A5.width.mul(0.08),
+    rightMargin: A5.width.mul(0),
+    topMargin: A5.width.mul(0.0),
+    bottomMargin: A5.width.mul(0.0),
+    sectionDistance: stdFontSize.mul(1.3),
   };
 
   const doc = new Document({
