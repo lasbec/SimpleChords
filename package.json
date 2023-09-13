@@ -1,6 +1,6 @@
 {
 	"name": "simple-chords",
-	"version": "4.3.2",
+	"version": "0.0.0",
 	"description": "Print your songs for your song book.",
 	"main": "Index.js",
 	"license": "ISC",
