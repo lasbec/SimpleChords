@@ -1,6 +1,7 @@
 /type-builds
 /fonts
 /example
+/release-tools
 .prettierrc
 
 simple-chords-?.?.?.tgz
