@@ -1,46 +1,31 @@
-# What is it for
+# Synopsis
 
-This Project is meant to serve a simple subset of Markdown to write songs with guitar chords.
-Of course the core bit is to translate such files into Html or other richer formats.
-The style should editable separatedly independet of the content.
+Convert your guitar chords stored in a textfile (`.chords.md`) into a formated PDF.
+
+# What is it about?
+
+Songs with guitar chords are often stored in text files or at least monofonts are used to display them.
+This is because, if any character takes the same space it is pretty easy to position the chords, just by using space characters.
+
+But when this text is copied into another program like Word the chords are likely to slide to the wrong position, because the font and format changes the spacing.
+Therefore it is non trivial to format songs with chord information well.
+
+So the idea of this project is to provide a tool that parses a text file
+and outputs a well formated version of the provided song.
+
+## Notes
 
 I'm still looking for fonts that make it easy to distinguish guitar chords:
 
 a e c C G b h
 
-Candidates are:
-Barricito
-Macondo
-Carter One
-Shantell Sans
+# Syntax
 
-Making my onwn font with fontstruct
-
-# Usage
-
-## CLI
-
-You can run this package from the commandline: `npx simple-chords <input_path> [<output_path>] [--debug]`
-
-The **input_path** can be a path to a `.chords.md` file or a directory path.
-If the path leads to a directory every file in it ending with `.chords.md` will be printed as Pdf.
-
-The **output_path** is set a single pdf file with all songs will be printed.
-Otherwise each file will be printed to it's own pdf file, the pdfs will be in the same directory as the input file.
-
-Setting the debug flag will print the parsed ASTs, allow overflows and will draw Debugging Boxes into the output.
-
-## As module
-
-The `printPdfFiles` is the main exported funktion. It takes like the CLI Tool a parameterobject with three arguments:
-
-```
-printPdfFiles({
-  inputPath: "~/my_songs/",
-  outPath: "./Songs_for_the_bonfire.pdf",
-  debug: false,
-})
-```
+The syntax matches a subset of markdown,
+such that everything is still readable and nice looking when opening with a markdown or text editor.
+Therefore the File has to start with a `#` followed by the song title.
+And the song itself must start and and with three ticks ` ``` ` (to tell markdown the block should be formatted as with a mono font)
+Different sections are separated by bracets containing the type of the section.
 
 # Example Inputfile
 
@@ -82,3 +67,29 @@ fat an de Klink!
 \```
 
 ````
+
+# Usage
+
+## As module
+
+The `printPdfFiles` is the main exported funktion. It takes like the CLI Tool a parameterobject with three arguments:
+
+```
+printPdfFiles({
+  inputPath: "~/my_songs/",
+  outPath: "./Songs_for_the_bonfire.pdf",
+  debug: false,
+})
+```
+
+The **inputPath** can be a path to a `.chords.md` file or a directory path.
+If the path leads to a directory every file in it ending with `.chords.md` will be printed as Pdf.
+
+The **outPath** is set a single pdf file with all songs will be printed.
+Otherwise each file will be printed to it's own pdf file, the pdfs will be in the same directory as the input file.
+
+Setting the **debug** flag will print the parsed ASTs, allow overflows and will draw Debugging Boxes into the output.
+
+## CLI
+
+You can run this package from the commandline too: `npx simple-chords <input_path> [<output_path>] [--debug]`
