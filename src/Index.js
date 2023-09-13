@@ -20,7 +20,7 @@ function getCorrespondingOutPutPath(inputPath) {
 /**
  * @param {MainArgs} args
  */
-export async function main({ inputPath, outPath, debug }) {
+export async function printPdfFiles({ inputPath, outPath, debug }) {
   if (inputPath.endsWith(".chords.md")) {
     await renderSingleFile(
       inputPath,

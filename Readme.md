@@ -30,6 +30,18 @@ Otherwise each file will be printed to it's own pdf file, the pdfs will be in th
 
 Setting the debug flag will print the parsed ASTs, allow overflows and will draw Debugging Boxes into the output.
 
+## As module
+
+The `printPdfFiles` is the main exported funktion. It takes like the CLI Tool a parameterobject with three arguments:
+
+```
+printPdfFiles({
+  inputPath: "~/my_songs/",
+  outPath: "./Songs_for_the_bonfire.pdf",
+  debug: false,
+})
+```
+
 # Example Inputfile
 
 ````

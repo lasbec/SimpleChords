@@ -1,8 +1,8 @@
 #! /usr/bin/env node
-import { main } from "./Index.js";
+import { printPdfFiles } from "./Index.js";
 const [nodePath, scriptPath, inputPath, _outPath] = process.argv;
 
-main({
+printPdfFiles({
   inputPath,
   outPath: _outPath === "--debug" ? undefined : _outPath,
   debug: process.argv.includes("--debug"),
