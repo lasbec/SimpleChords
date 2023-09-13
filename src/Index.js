@@ -2,22 +2,25 @@ import * as fs from "fs/promises";
 import * as Path from "path";
 import { renderAllInSingleFile, renderSingleFile } from "./RenderSongAsPdf.js";
 
-const [nodePath, scriptPath, inputPath, _outPath] = process.argv;
-
-/**
- *
- * @param {string} path
- */
-function getCorrespondingOutPutPath(path) {
+/** @param {string} inputPath */
+function getCorrespondingOutPutPath(inputPath) {
   const pointSplit = inputPath.split(".");
   return pointSplit
     .map((e, i) => (i === pointSplit.length - 1 ? "pdf" : e))
     .join(".");
 }
 
-async function main() {
-  const debug = process.argv.includes("--debug");
-  const outPath = _outPath === "--debug" ? undefined : _outPath;
+/**
+ * @typedef {object} MainArgs
+ * @property {string} inputPath
+ * @property {string | undefined} outPath
+ * @property {boolean} debug
+ */
+
+/**
+ * @param {MainArgs} args
+ */
+export async function main({ inputPath, outPath, debug }) {
   if (inputPath.endsWith(".chords.md")) {
     await renderSingleFile(
       inputPath,
@@ -41,7 +44,3 @@ async function main() {
     );
   }
 }
-
-main().catch((error) => {
-  console.error("Main method failed with", error);
-});

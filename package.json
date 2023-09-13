@@ -6,11 +6,16 @@
 	"license": "ISC",
 	"author": "Lasse Becker",
 	"scripts": {
-		"type-check": "tsc --project jsconfig.json",
-		"build-typedef": "tsc ./src/Main.js --declaration --emitDeclarationOnly --allowJs --removeComments --outdir type-builds",
-		"type-check:watch": "tsc --watch --project jsconfig.json",
 		"example": "node ./src/Main.js ./example/Alles.chords.md --log-ast",
+		"type-check": "tsc --project jsconfig.json",
+		"build-typedef": "tsc ./src/Index.js --declaration --emitDeclarationOnly --allowJs --removeComments --outdir type-builds",
+		"type-check:watch": "tsc --watch --project jsconfig.json",
 		"test": "vitest"	
+	},
+
+
+	"bin": {
+		"simple-chords":"./src/Index.js"
 	},
 
 
