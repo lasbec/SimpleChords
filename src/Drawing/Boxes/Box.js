@@ -61,14 +61,10 @@ export class Box {
   }
 
   /**@param {PDFPage} pdfPage */
-  drawToPdfPage(pdfPage) {
-    drawDebugBox(pdfPage, this);
-  }
+  drawToPdfPage(pdfPage) {}
   /**
    * @param {PDFPage} pdfPage
    * @param {Point} leftBottomCorner
    */
-  _drawToPdfPage(pdfPage, leftBottomCorner) {
-    drawDebugBox(pdfPage, this);
-  }
+  _drawToPdfPage(pdfPage, leftBottomCorner) {}
 }

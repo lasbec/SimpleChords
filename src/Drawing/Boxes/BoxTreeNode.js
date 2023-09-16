@@ -60,6 +60,7 @@ export class BoxTreeNode {
    * @param {PDFPage} page
    */
   drawToPdfPage(page) {
+    drawDebugBox(page, this);
     this.ownBox._drawToPdfPage(page, this.leftBottomCorner);
   }
 
@@ -68,7 +69,7 @@ export class BoxTreeNode {
    * @param {Point} leftBottomCorner
    */
   _drawToPdfPage(page, leftBottomCorner) {
-    this.ownBox._drawToPdfPage(page, this.leftBottomCorner);
+    this.drawToPdfPage(page);
   }
 
   /** @return {number} */

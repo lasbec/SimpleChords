@@ -78,7 +78,6 @@ export class TextBox {
    * @param {Point} leftBottomCorner
    */
   _drawToPdfPage(pdfPage, leftBottomCorner) {
-    drawDebugBox(pdfPage, this);
     pdfPage.drawText(this.text, {
       x: leftBottomCorner.x.in("pt"),
       y: leftBottomCorner.y.in("pt"),
