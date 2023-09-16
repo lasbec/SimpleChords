@@ -1,0 +1,78 @@
+{
+  "heading": "Die Weber",
+  "sections": [
+    {
+      "type": "",
+      "lines": [
+        {
+          "chords": [
+            {
+              "chord": "e",
+              "startIndex": 3
+            },
+            {
+              "chord": "D",
+              "startIndex": 12
+            },
+            {
+              "chord": "e",
+              "startIndex": 24
+            }
+          ],
+          "lyric": "Im düstern Auge keine Träne"
+        },
+        {
+          "chords": [
+            {
+              "chord": "e",
+              "startIndex": 4
+            },
+            {
+              "chord": "D",
+              "startIndex": 15
+            },
+            {
+              "chord": "e",
+              "startIndex": 43
+            }
+          ],
+          "lyric": "Sie sitzen am Webstuhl und fletschen die Zähne:"
+        },
+        {
+          "chords": [
+            {
+              "chord": "e",
+              "startIndex": 1
+            },
+            {
+              "chord": "D",
+              "startIndex": 18
+            },
+            {
+              "chord": "G",
+              "startIndex": 36
+            }
+          ],
+          "lyric": "Deutschland, wir weben dein Leichentuch,"
+        },
+        {
+          "chords": [
+            {
+              "chord": "e",
+              "startIndex": 1
+            },
+            {
+              "chord": "D",
+              "startIndex": 13
+            },
+            {
+              "chord": "G",
+              "startIndex": 33
+            }
+          ],
+          "lyric": "Wir weben hinein den dreifachen Fluch -"
+        }
+      ]
+    }
+  ]
+}
