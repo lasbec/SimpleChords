@@ -1,9 +1,9 @@
 /**
  * @typedef {import("./Song.js").SongSection} SongSection
  * @typedef {import("./Song.js").Song} Song
- * @typedef {import("./Page.js").TextConfig} TextConfig
  * @typedef {import("./Length.js").Length} Length
  * @typedef {import("./RenderSongAsPdf.js").LayoutConfig} LayoutConfig
+ * @typedef {import("./Drawing/Types.ts").TextConfig} TextConfig
  */
 import { BreakableText } from "./BreakableText.js";
 import { SongLine } from "./Song.js";
@@ -11,7 +11,7 @@ import { WellKnownSectionType } from "./SongChecker.js";
 
 /**
  * @param {string} str
- * @param {import("./Page.js").TextConfig} style
+ * @param {TextConfig} style
  * @param {Length} width
  */
 function fitsWidth(str, style, width) {
@@ -22,7 +22,7 @@ function fitsWidth(str, style, width) {
 
 /**
  * @param {SongLine} line
- * @param {import("./Page.js").TextConfig} style
+ * @param {TextConfig} style
  * @param {Length} width
  */
 function getMaxLenToFitWidth(line, style, width) {

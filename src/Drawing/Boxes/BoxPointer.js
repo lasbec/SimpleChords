@@ -1,20 +1,23 @@
+import { LEN, Length } from "../../Length.js";
+import { Document } from "../Document.js";
+import { TextBox } from "./TextBox.js";
+import { DetachedTextBox } from "./DetachedTextBox.js";
+import { DebugBox } from "./DebugBox.js";
+import { Box } from "./Box.js";
 /**
- * @typedef {import("././Length.js").Length} Lenght
- * @typedef {import("./Page.js").IBox} IBox
- * @typedef {import("./Page.js").Dimesions}  Dimesions
- * @typedef {import("./Page.js").XStartPosition} XStartPosition
- * @typedef {import("./Page.js").YStartPosition} YStartPosition
- * @typedef {import("./Page.js").Point} Point
- * @typedef {import("./Page.js").TextConfig} TextStyle
+ * @typedef {import("./Geometry.js").Point} Point
+ * @typedef {import("./Geometry.js").XStartPosition} XStartPosition
+ * @typedef {import("./Geometry.js").YStartPosition} YStartPosition
+ * @typedef {import("./Geometry.js").IBox} IBox
+ * @typedef {import("./Geometry.js").Dimensions} Dimesions
+ * @typedef {import("../Types.js").TextConfig} TextConfig
  */
-import { LEN } from "./Length.js";
-import { Box, DebugBox, DetachedTextBox, Document, TextBox } from "./Page.js";
 
 /**
  * @typedef {object} BoxStruct
  * @property {Point} leftBottomCorner
- * @property {Lenght} width
- * @property {Lenght} height
+ * @property {Length} width
+ * @property {Length} height
  */
 
 /**
@@ -25,19 +28,19 @@ import { Box, DebugBox, DetachedTextBox, Document, TextBox } from "./Page.js";
 
 /**
  * @typedef {object} BoxOverflowsConstructorArgs
- * @property {Lenght} left
- * @property {Lenght} right
- * @property {Lenght} bottom
- * @property {Lenght} top
+ * @property {Length} left
+ * @property {Length} right
+ * @property {Length} bottom
+ * @property {Length} top
  */
 export class BoxOverflows {
-  /** @type {Lenght}*/
+  /** @type {Length}*/
   left;
-  /** @type {Lenght}*/
+  /** @type {Length}*/
   right;
-  /** @type {Lenght}*/
+  /** @type {Length}*/
   bottom;
-  /** @type {Lenght}*/
+  /** @type {Length}*/
   top;
 
   /**
@@ -109,11 +112,11 @@ function assertBoxIsInsideParent(box) {
 
 export class BoxPointer {
   /**
-   * @type {Lenght}
+   * @type {Length}
    */
   x;
   /**
-   * @type {Lenght}
+   * @type {Length}
    */
   y;
   /** @type {IBox} */
@@ -128,8 +131,8 @@ export class BoxPointer {
 
   /**
    *
-   * @param {Lenght} x
-   * @param {Lenght} y
+   * @param {Length} x
+   * @param {Length} y
    * @param {IBox} page
    * @private
    */
@@ -182,7 +185,7 @@ export class BoxPointer {
 
   /**
    * @param {XStartPosition} x
-   * @param {Lenght} width
+   * @param {Length} width
    * @private
    */
   xPositionRelativeToThis(x, width) {
@@ -194,7 +197,7 @@ export class BoxPointer {
 
   /**
    * @param {YStartPosition} y
-   * @param {Lenght} height
+   * @param {Length} height
    * @private
    */
   yPositionRelativeToThis(y, height) {
@@ -208,25 +211,25 @@ export class BoxPointer {
     return new BoxPointer(this.x, this.y, this.box);
   }
 
-  /** @param {Lenght} offset  */
+  /** @param {Length} offset  */
   moveRight(offset) {
     this.x = this.x.add(offset);
     return this;
   }
 
-  /** @param {Lenght} offset  */
+  /** @param {Length} offset  */
   moveLeft(offset) {
     this.x = this.x.sub(offset);
     return this;
   }
 
-  /** @param {Lenght} offset  */
+  /** @param {Length} offset  */
   moveUp(offset) {
     this.y = this.y.add(offset);
     return this;
   }
 
-  /** @param {Lenght} offset  */
+  /** @param {Length} offset  */
   moveDown(offset) {
     this.y = this.y.sub(offset);
     return this;
@@ -262,22 +265,22 @@ export class BoxPointer {
     return this;
   }
 
-  /** @param {Lenght} offset  */
+  /** @param {Length} offset  */
   pointerRight(offset) {
     return this.clone().moveRight(offset);
   }
 
-  /** @param {Lenght} offset  */
+  /** @param {Length} offset  */
   pointerLeft(offset) {
     return this.clone().moveLeft(offset);
   }
 
-  /** @param {Lenght} offset  */
+  /** @param {Length} offset  */
   pointerUp(offset) {
     return this.clone().moveUp(offset);
   }
 
-  /** @param {Lenght} offset  */
+  /** @param {Length} offset  */
   pointerDown(offset) {
     return this.clone().moveDown(offset);
   }
@@ -384,7 +387,7 @@ export class BoxPointer {
    * @param {XStartPosition} x
    * @param {YStartPosition} y
    * @param {string} text
-   * @param {TextStyle} style
+   * @param {TextConfig} style
    */
   setText(x, y, text, style) {
     const { font, fontSize } = style;

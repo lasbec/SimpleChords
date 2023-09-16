@@ -1,13 +1,16 @@
 /**
  * @typedef {import("pdf-lib").PDFPage} PDFPage
- * @typedef {import("./Page.js").TextConfig} TextConfig
+ * @typedef {import("./Drawing/Types.ts").TextConfig} TextConfig
+ * @typedef {import("./Drawing/Boxes/Geometry.ts").Dimensions} Dimensions
  * @typedef {import("./Song.js").SongSection} SongSection
  */
 import { PDFDocument, StandardFonts } from "pdf-lib";
-import { FontLoader } from "./FontLoader.js";
+import { FontLoader } from "./Drawing/FontLoader.js";
 import { LEN, Length } from "./Length.js";
-import { DetachedTextBox, Document, Page } from "./Page.js";
-import { BoxPointer } from "./BoxPointer.js";
+import { Document } from "./Drawing/Document.js";
+import { DetachedTextBox } from "./Drawing/Boxes/DetachedTextBox.js";
+import { PageBox } from "./Drawing/Boxes/PageBox.js";
+import { BoxPointer } from "./Drawing/Boxes/BoxPointer.js";
 import { parseSongAst } from "./SongParser.js";
 import * as Path from "path";
 import * as fs from "fs/promises";
@@ -110,7 +113,7 @@ export async function renderSongAsPdf(songs, fontLoader, debug) {
   Document.debug = debug;
   const pdfDoc = await PDFDocument.create();
 
-  /** @type {import("./Page.js").Dimesions} */
+  /** @type {Dimensions} */
   const A5 = {
     width: LEN(148.5, "mm"),
     height: LEN(210, "mm"),
@@ -351,7 +354,7 @@ function drawSongSectionLinesOnlyChords(
 
 /**
  * @param {Song} song
- * @param {Page} page
+ * @param {PageBox} page
  * @param {Length} topMargin
  * @param {TextConfig} textConfig
  */

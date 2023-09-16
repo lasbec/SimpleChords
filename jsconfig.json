@@ -1,6 +1,7 @@
 {
     "compilerOptions": {
       "allowJs": true,
+      "allowImportingTsExtensions": true,
       "checkJs": true,
       "maxNodeModuleJsDepth": 5,
       "lib": ["es2020"],
