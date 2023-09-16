@@ -2,7 +2,7 @@
 	"name": "simple-chords",
 	"version": "0.0.0",
 	"description": "Print your songs for your song book.",
-	"main": "Index.js",
+	"main": "./src/Index.js",
 	"license": "ISC",
 	"author": "Lasse Becker",
 	"scripts": {
