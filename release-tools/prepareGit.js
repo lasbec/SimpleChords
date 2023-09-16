@@ -29,9 +29,9 @@ async function assertGitHubAuthentication() {
 async function assertNoUncommitedChanges() {
   const { stdout: status } = await execShellCmd("git status");
   const validGitStatus = `Auf Branch master
-  Ihr Branch ist auf demselben Stand wie 'origin/master'.
-  
-  nichts zu committen, Arbeitsverzeichnis unverändert`;
+Ihr Branch ist auf demselben Stand wie 'origin/master'.
+
+nichts zu committen, Arbeitsverzeichnis unverändert`;
   if (status !== validGitStatus) {
     console.error(
       "Current git status:\n",
