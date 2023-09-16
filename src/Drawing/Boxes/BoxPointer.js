@@ -4,11 +4,14 @@ import { TextBox } from "./TextBox.js";
 import { DetachedTextBox } from "./DetachedTextBox.js";
 import { DebugBox } from "./DebugBox.js";
 import { Box } from "./Box.js";
+import { PageBox } from "./PageBox.js";
+import { PDFPage } from "pdf-lib";
 /**
  * @typedef {import("./Geometry.js").Point} Point
  * @typedef {import("./Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("./Geometry.js").YStartPosition} YStartPosition
  * @typedef {import("./Geometry.js").IBox} IBox
+ * @typedef {import("./Geometry.js").DetachedBox} DetachedBox
  * @typedef {import("./Geometry.js").Dimensions} Dimesions
  * @typedef {import("../Types.js").TextConfig} TextConfig
  */
@@ -107,6 +110,51 @@ function assertBoxIsInsideParent(box) {
   const overflows = BoxOverflows.from({ child: box, parent: box.parent });
   if (!overflows.isEmpty()) {
     throw new Error(overflows.toString());
+  }
+}
+
+export class BoxTreeNode {
+  /** @type {Point} */
+  leftBottomCorner;
+  /** @type {DetachedBox} */
+  ownBox;
+  /** @type {BoxTreeNode} */
+  parentNode;
+
+  /**
+   *
+   * @param {Point} leftBottomCorner
+   * @param {DetachedBox} ownBox
+   * @param {BoxTreeNode} parentNode
+   */
+  constructor(leftBottomCorner, ownBox, parentNode) {
+    this.leftBottomCorner = leftBottomCorner;
+    this.ownBox = ownBox;
+    this.parentNode = parentNode;
+  }
+
+  /** @returns {PageBox} */
+  get rootPage() {
+    if (this.ownBox instanceof PageBox) {
+      return this.ownBox;
+    }
+    return this.parentNode.rootPage;
+  }
+
+  /**
+   *
+   * @param {PDFPage} page
+   */
+  drawToPdfPage(page) {
+    this.ownBox.drawToPdfPage(page, this.leftBottomCorner);
+  }
+
+  /** @return {number} */
+  level() {
+    if (this.ownBox instanceof PageBox) {
+      return 0;
+    }
+    return 1 + this.parentNode.level();
   }
 }
 
@@ -402,15 +450,11 @@ export class BoxPointer {
       "\n"
     );
 
-    const textBox = new TextBox(
-      {
-        x: xToDraw,
-        y: yToDraw,
-      },
-      text,
-      style,
-      this.box
-    );
+    const leftBottomCorner = {
+      x: xToDraw,
+      y: yToDraw,
+    };
+    const textBox = new TextBox(leftBottomCorner, text, style, this.box);
     this.box.rootPage().setBox(textBox);
     this.doOverflowManagement(textBox);
     return textBox;
