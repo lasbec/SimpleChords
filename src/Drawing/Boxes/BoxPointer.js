@@ -2,8 +2,8 @@ import { LEN, Length } from "../../Length.js";
 import { Document } from "../Document.js";
 import { TextBox } from "./TextBox.js";
 import { DebugBox } from "./DebugBox.js";
-import { Box } from "./Box.js";
-import { BoxTreeChildNode, BoxTreeRoot } from "./BoxTreeNode.js";
+import { PlainBox } from "./PlainBox.js";
+import { BoxTreeChildNode } from "./BoxTreeNode.js";
 /**
  * @typedef {import("./Geometry.js").Point} Point
  * @typedef {import("./Geometry.js").XStartPosition} XStartPosition
@@ -342,7 +342,7 @@ export class BoxPointer {
    * @param {XStartPosition} x
    * @param {YStartPosition} y
    * @param {Dimesions} dims
-   * @returns {Box | BoxOverflows}
+   * @returns {PlainBox | BoxOverflows}
    */
   trySetBox(x, y, dims) {
     const { width, height } = dims;
@@ -393,7 +393,7 @@ export class BoxPointer {
    * @param {Dimesions} dims
    */
   setBox(x, y, dims) {
-    const box = new Box(dims);
+    const box = new PlainBox(dims);
     return this._setBox(x, y, box);
   }
 

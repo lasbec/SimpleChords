@@ -12,7 +12,7 @@ import { Length } from "../../Length.js";
 /**
  * @implements {DetachedBox}
  */
-export class Box {
+export class PlainBox {
   /**@type {Length}*/
   width;
   /**@type {Length}*/
