@@ -14,6 +14,7 @@ export async function pushReleaseCommit(commitMsg) {
   const expectdStderrRegex =
     /To github.com:lasbec\/SimpleChords.git[\r\n]+.*master -> master/;
   if (!expectdStderrRegex.exec(pushResult.stderr)) {
+    // 'git push' sends some string to stderr even on sucess
     throw new Error(`Unexpected stderr for 'git push': ${pushResult.stderr}`);
   }
 }
