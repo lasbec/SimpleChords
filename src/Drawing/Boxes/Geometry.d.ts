@@ -15,16 +15,8 @@ export type Dimensions = {
 export type XStartPosition = "left" | "center" | "right";
 export type YStartPosition = "top" | "center" | "bottom";
 
-export type IBox = DetachedBox & {
-  leftBottomCorner: Point;
-  rootPage: PageBox;
-  drawToPdfPage(page: PDFPage): void;
-  level(): number;
-  parent: IBox;
-};
-
 export type DetachedBox = {
-  _drawToPdfPage(page: PDFPage, leftBottomCorner: Point): void;
+  drawToPdfPage(page: PDFPage, leftBottomCorner: Point): void;
   width: Length;
   height: Length;
 };

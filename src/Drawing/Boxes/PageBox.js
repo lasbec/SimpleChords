@@ -59,7 +59,7 @@ export class PageBox {
    * @param {PDFPage} pdfPage
    * @param {Point} leftBottomCorner
    */
-  _drawToPdfPage(pdfPage, leftBottomCorner) {
+  drawToPdfPage(pdfPage, leftBottomCorner) {
     for (const child of this.children) {
       child.drawToPdfPage(pdfPage);
     }

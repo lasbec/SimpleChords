@@ -8,7 +8,6 @@ import { PageBox } from "./PageBox.js";
  * @typedef {import("./Geometry.js").Point} Point
  * @typedef {import("./Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("./Geometry.js").YStartPosition} YStartPosition
- * @typedef {import("./Geometry.js").IBox} IBox
  * @typedef {import("./Geometry.js").Dimensions} Dimensions
  * @typedef {import("./Geometry.js").DetachedBox} DetachedBox
  */
@@ -44,7 +43,7 @@ export class TextBox {
    * @param {PDFPage} pdfPage
    * @param {Point} leftBottomCorner
    */
-  _drawToPdfPage(pdfPage, leftBottomCorner) {
+  drawToPdfPage(pdfPage, leftBottomCorner) {
     pdfPage.drawText(this.text, {
       x: leftBottomCorner.x.in("pt"),
       y: leftBottomCorner.y.in("pt"),

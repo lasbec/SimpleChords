@@ -3,6 +3,7 @@
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("pdf-lib").PDFFont} PDFFont
  * @typedef {import("pdf-lib").Color}  Color
+ * @typedef {import("./BoxTreeNode.js").BoxTreeNode} BoxTreeNode
  */
 import { rgb } from "pdf-lib";
 import { Document } from "../Document.js";
@@ -14,9 +15,10 @@ const debugLevelColorMap = new Map([
   [2, rgb(0.9, 0.5, 0.1)],
   [3, rgb(0.5, 0.5, 0.5)],
 ]);
+
 /**
  * @param {PDFPage} pdfPage
- * @param {import("./BoxTreeNode.js").BoxTreeNode} box
+ * @param {BoxTreeNode} box
  * */
 export function drawDebugBox(pdfPage, box) {
   if (Document.debug) {

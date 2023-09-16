@@ -5,7 +5,6 @@ import { LEN, Length } from "../../Length.js";
  * @typedef {import("./Geometry.js").Point} Point
  * @typedef {import("./Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("./Geometry.js").YStartPosition} YStartPosition
- * @typedef {import("./Geometry.js").IBox} IBox
  * @typedef {import("./Geometry.js").Dimensions} Dimesions
  * @typedef {import("../Types.js").TextConfig} TextConfig
  */

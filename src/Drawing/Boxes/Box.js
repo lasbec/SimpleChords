@@ -5,7 +5,6 @@ import { Length } from "../../Length.js";
  * @typedef {import("./Geometry.js").Point} Point
  * @typedef {import("./Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("./Geometry.js").YStartPosition} YStartPosition
- * @typedef {import("./Geometry.js").IBox} IBox
  * @typedef {import("./Geometry.js").DetachedBox} DetachedBox
  * @typedef {import("./Geometry.js").Dimensions} Dimensions
  */
@@ -32,5 +31,5 @@ export class Box {
    * @param {PDFPage} pdfPage
    * @param {Point} leftBottomCorner
    */
-  _drawToPdfPage(pdfPage, leftBottomCorner) {}
+  drawToPdfPage(pdfPage, leftBottomCorner) {}
 }
