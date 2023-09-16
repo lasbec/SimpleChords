@@ -237,7 +237,7 @@ export class BoxPointer {
 
   setDebug() {
     if (Document.debug) {
-      const result = new DebugBox({ x: this.x, y: this.y });
+      const result = new DebugBox(this);
       return this.setBox("center", "center", result);
     }
   }
