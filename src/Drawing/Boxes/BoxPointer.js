@@ -1,7 +1,6 @@
 import { LEN, Length } from "../../Length.js";
 import { Document } from "../Document.js";
 import { TextBox } from "./TextBox.js";
-import { DetachedTextBox } from "./DetachedTextBox.js";
 import { DebugBox } from "./DebugBox.js";
 import { Box } from "./Box.js";
 import { BoxTreeChildNode, BoxTreeRoot } from "./BoxTreeNode.js";
@@ -415,14 +414,5 @@ export class BoxPointer {
     const overflows = BoxOverflows.from({ child: box, parent: box.parent });
     if (overflows.isEmpty()) return;
     console.error("Overflow detecded", overflows.toString());
-  }
-
-  /**
-   * @param {XStartPosition} x
-   * @param {YStartPosition} y
-   * @param {DetachedTextBox} textBox
-   */
-  attachTextBox(x, y, textBox) {
-    return this.setText(x, y, textBox.text, textBox.style);
   }
 }
