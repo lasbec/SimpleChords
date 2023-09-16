@@ -42,7 +42,7 @@ async function execShellCmdRequireSuccess(command) {
   }
   if (result.stderr) {
     throw new Error(
-      `Execution of ${command} failed (stderro): ${result.stderr}`
+      `Execution of ${command} failed (stderr): ${result.stderr}`
     );
   }
   return result.stdout;
