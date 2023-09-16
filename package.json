@@ -10,7 +10,8 @@
 		"type-check": "tsc --project jsconfig.json",
 		"build-typedef": "tsc ./src/Index.js --declaration --emitDeclarationOnly --allowJs --removeComments --outdir type-builds",
 		"type-check:watch": "tsc --watch --project jsconfig.json",
-		"test": "vitest"
+		"test:watch": "vitest",
+		"test": "vitest run"
 	},
 	"bin": {
 		"simple-chords": "./src/Index.js"

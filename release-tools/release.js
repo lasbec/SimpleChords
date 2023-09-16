@@ -1,27 +1,26 @@
 #! /usr/bin/env node
-import * as path from "path";
-import { updateVersionNumberPackageJson } from "./update-version-number.js";
+
 import {
   assertRepositoryIsReleaseReady,
   pushReleaseCommit,
 } from "./git-for-release.js";
-import { execShellCmd, execShellCmdRequireSuccess } from "./exec-shell.js";
+import { execShellCmdRequireSuccess } from "./exec-shell.js";
 /**
  * @typedef {"patch" | "minor" | "major"} ReleaseType
  */
 
 async function main() {
-  const { releaseType, thisDir: thisScriptPath } = collectArguments();
-  const packageJsonPath = path.join(thisScriptPath, "..", "..", "package.json");
+  const { releaseType } = collectArguments();
   await assertRepositoryIsReleaseReady();
-  const newVersion = await updateVersionNumberPackageJson(
-    packageJsonPath,
-    releaseType
+  await execShellCmdRequireSuccess("npm run type-check");
+  await execShellCmdRequireSuccess("npm run test");
+
+  await execShellCmdRequireSuccess(
+    `npm version ${releaseType} -m "release ${releaseType} %s"`
   );
-  console.log(`Updated package.json 'versio' to ${newVersion}`);
-  const commitMsg = `release ${releaseType} ${newVersion}`;
-  await pushReleaseCommit(commitMsg);
-  console.log("Pushed release commit.");
+  console.log("Updated package.json and commited release.");
+  await pushReleaseCommit();
+  console.log("Pushed release.");
   await execShellCmdRequireSuccess("npm release");
   console.log("Successfuly releasd package");
 }

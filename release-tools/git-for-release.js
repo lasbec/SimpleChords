@@ -1,11 +1,6 @@
-import { execShellCmd, execShellCmdRequireSuccess } from "./exec-shell.js";
+import { execShellCmd } from "./exec-shell.js";
 
-/**
- * @param {string} commitMsg
- */
-export async function pushReleaseCommit(commitMsg) {
-  await execShellCmdRequireSuccess("git add .");
-  await execShellCmdRequireSuccess(`git commit -m "${commitMsg}"`);
+export async function pushReleaseCommit() {
   const pushResult = await execShellCmd("git push");
   if (pushResult.error) throw pushResult.error;
   const expectdStderrRegex =
