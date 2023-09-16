@@ -113,7 +113,7 @@ class SongParser {
       });
     }
     this.stepOn();
-    return this.readLine().trim();
+    return this.readLineIgnoreComments().trim();
   }
 
   readBody() {
@@ -136,7 +136,7 @@ class SongParser {
       });
     }
     this.stepOn();
-    const line = this.readLine().trim();
+    const line = this.readLineIgnoreComments().trim();
     if (line[line.length - 1] !== "]") {
       this.throwUnexpectedToken({
         actual: this.currentChar(),
@@ -162,7 +162,7 @@ class SongParser {
     while (!["`", "["].includes(this.currentChar())) {
       const chords = this.readChordsLine();
       this.log("parsed chords line", chords);
-      const lyric = this.readLine();
+      const lyric = this.readLineIgnoreComments();
       this.log("parsed lyric line", lyric);
       lines.push({
         chords,
@@ -188,7 +188,7 @@ class SongParser {
   }
 
   readThreeTick() {
-    const line = this.readLine();
+    const line = this.readLineIgnoreComments();
     this.log("Read three ticks", line);
     if (line.trim() !== "```") {
       this.throwUnexpectedToken({
@@ -239,6 +239,30 @@ class SongParser {
     while (![" ", "\n", "\t", "\r"].includes(this.currentChar())) {
       result += this.stepOn();
     }
+    return result;
+  }
+
+  tryReadLineComment() {
+    if (this.currentChar() === "\\") {
+      const cp = this.setCheckpoint();
+      this.stepOn();
+      if (this.currentChar() === "\\") {
+        return this.readLine();
+      }
+      cp.jumpToCheckpoint();
+    }
+  }
+
+  readLineIgnoreComments() {
+    let result = "";
+    while (this.currentChar() !== "\n" && this.currentChar() !== undefined) {
+      const lineComment = this.tryReadLineComment();
+      if (lineComment !== undefined) {
+        return result;
+      }
+      result += this.stepOn();
+    }
+    this.stepOn(true); // skip linebreak but it's  ok when end of file is reached
     return result;
   }
 

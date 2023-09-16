@@ -16,44 +16,45 @@ import { checkSongAst, WellKnownSectionType } from "./SongChecker.js";
 import { SchemaWrapper } from "./SchemaWrapper.js";
 
 /**
- *  @param {string} path
- *  @param {string} outPath
+ * @param {string} path
+ * @param {string} outPath
  * @param {boolean} debug
  */
 export async function renderSingleFile(path, outPath, debug) {
-  console.log("Process", Path.parse(path).name);
-  const contentToParse = (await fs.readFile(path, "utf8")).replace(/\r/g, ""); // ensure linebreaks are \n and not \r\n;
-  const ast = parseSongAst(contentToParse);
-  if (!ast) {
-    console.log("Parsing AST failed.");
-    return;
-  }
-  checkSongAst(ast);
+  return renderAllInSingleFile([path], outPath, debug);
+}
 
-  const pointSplit = path.split(".");
-  const astOutputPath = pointSplit
-    .map((e, i) => (i === pointSplit.length - 1 ? "AST.json" : e))
-    .join(".");
-
-  if (debug) {
-    fs.writeFile(astOutputPath, JSON.stringify(ast, null, 2));
-    console.log("AST result written to", Path.resolve(astOutputPath));
-  }
-  const song = Song.fromAst(ast);
-
-  const fontLoader = new FontLoader("./fonts");
-  const pdfBytes = await renderSongAsPdf([song], fontLoader, debug);
+/**
+ * @param {string[]} paths
+ * @param {string} outPath
+ * @param {boolean} debug
+ */
+export async function renderAllInSingleFile(paths, outPath, debug) {
+  const pdfBytes = await renderToSinglePdfBuffer(paths, debug);
 
   await fs.writeFile(outPath, pdfBytes);
   console.log("Pdf Result written to", Path.resolve(outPath), "\n");
 }
 
 /**
- *  @param {string[]} paths
- *  @param {string} outPath
+ * @param {string[]} paths
  * @param {boolean} debug
  */
-export async function renderAllInSingleFile(paths, outPath, debug) {
+async function renderToSinglePdfBuffer(paths, debug) {
+  let asts = await parseASTs(paths, debug);
+
+  const songs = asts.map(Song.fromAst);
+
+  const fontLoader = new FontLoader("./fonts");
+  const pdfBytes = await renderSongAsPdf(songs, fontLoader, debug);
+  return pdfBytes;
+}
+
+/**
+ * @param {string[]} paths
+ * @param {boolean} debug
+ */
+async function parseASTs(paths, debug) {
   let asts = [];
   for (const path of paths) {
     console.log("Process", Path.parse(path).name);
@@ -69,18 +70,16 @@ export async function renderAllInSingleFile(paths, outPath, debug) {
       .map((e, i) => (i === pointSplit.length - 1 ? "AST.json" : e))
       .join(".");
     if (debug) {
-      fs.writeFile(astOutputPath, JSON.stringify(ast, null, 2));
-      console.log("AST result written to", Path.resolve(astOutputPath));
+      fs.writeFile(astOutputPath, JSON.stringify(ast, null, 2))
+        .catch((e) => {
+          console.warn("AST debug file could not be written", e);
+        })
+        .then(() => {
+          console.log("AST result written to", Path.resolve(astOutputPath));
+        });
     }
   }
-
-  const songs = asts.map(Song.fromAst);
-
-  const fontLoader = new FontLoader("./fonts");
-  const pdfBytes = await renderSongAsPdf(songs, fontLoader, debug);
-
-  await fs.writeFile(outPath, pdfBytes);
-  console.log("Pdf Result written to", Path.resolve(outPath), "\n");
+  return asts;
 }
 
 /**
