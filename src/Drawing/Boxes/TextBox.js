@@ -38,9 +38,10 @@ export class TextBox {
 
   /**
    * @param {PDFPage} pdfPage
-   * @param {Point} leftBottomCorner
+   * @param {import("./Geometry.js").BoxCoordinates} coordinates
    */
-  drawToPdfPage(pdfPage, leftBottomCorner) {
+  drawToPdfPage(pdfPage, coordinates) {
+    const leftBottomCorner = coordinates.getCoordinates("left", "bottom");
     pdfPage.drawText(this.text, {
       x: leftBottomCorner.x.in("pt"),
       y: leftBottomCorner.y.in("pt"),

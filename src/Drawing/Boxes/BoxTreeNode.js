@@ -62,16 +62,30 @@ export class BoxTreeRoot {
    */
   drawToPdfPage(page) {
     drawDebugBox(page, this);
-    this.ownBox.drawToPdfPage(page, this.leftBottomCorner);
+    this.ownBox.drawToPdfPage(page, this);
   }
 
   /**
    *
    * @param {XStartPosition} x
    * @param {YStartPosition} y
+   * @returns {BoxPointer}
    */
   getPointerAt(x, y) {
     return BoxPointer.atBox(x, y, this);
+  }
+
+  /**
+   * @param {XStartPosition} x
+   * @param {YStartPosition} y
+   * @returns {Point}
+   */
+  getCoordinates(x, y) {
+    const pointer = this.getPointerAt(x, y);
+    return {
+      x: pointer.x,
+      y: pointer.y,
+    };
   }
 }
 
@@ -118,7 +132,7 @@ export class BoxTreeChildNode {
    */
   drawToPdfPage(page) {
     drawDebugBox(page, this);
-    this.ownBox.drawToPdfPage(page, this.leftBottomCorner);
+    this.ownBox.drawToPdfPage(page, this);
   }
 
   /** @return {number} */
@@ -127,6 +141,18 @@ export class BoxTreeChildNode {
       return 0;
     }
     return 1 + this.parent.level();
+  }
+
+  /**
+   * @param {XStartPosition} x
+   * @param {YStartPosition} y
+   */
+  getCoordinates(x, y) {
+    const pointer = this.getPointerAt(x, y);
+    return {
+      x: pointer.x,
+      y: pointer.y,
+    };
   }
 
   /**

@@ -57,9 +57,9 @@ export class PageBox {
 
   /**
    * @param {PDFPage} pdfPage
-   * @param {Point} leftBottomCorner
+   * @param {import("./Geometry.js").BoxCoordinates} coordinates
    */
-  drawToPdfPage(pdfPage, leftBottomCorner) {
+  drawToPdfPage(pdfPage, coordinates) {
     for (const child of this.children) {
       child.drawToPdfPage(pdfPage);
     }
