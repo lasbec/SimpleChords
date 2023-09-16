@@ -7,12 +7,10 @@ import { exec as execCallback } from "child_process";
  * @param {string} commitMsg
  */
 export async function pushReleaseCommit(commitMsg) {
-  const addResult = await execShellCmd("git add .");
-  assertShellCmdSuccess(addResult);
-  const commitResult = await execShellCmd(`git commit -m "${commitMsg}"`);
-  assertShellCmdSuccess(commitResult);
-  const pushResult = await execShellCmd("git push");
-  assertShellCmdSuccess(pushResult);
+  await execShellCmdRequireSuccess("git add .");
+
+  await execShellCmdRequireSuccess(`git commit -m "${commitMsg}"`);
+  await execShellCmdRequireSuccess("git push");
 }
 
 export async function assertRepositoryIsReleaseReady() {
@@ -34,16 +32,20 @@ async function execShellCmd(command) {
 }
 
 /**
- *
- * @param {ShellCmdExecutionResult} execResult
+ * @param {string} command
+ * @returns {Promise<string>}
  */
-function assertShellCmdSuccess(execResult) {
-  if (execResult.error) {
-    throw execResult.error;
+async function execShellCmdRequireSuccess(command) {
+  const result = await execShellCmd(command);
+  if (result.error) {
+    throw new Error(`Execution of ${command} failed: ${result.error.message}`);
   }
-  if (execResult.stderr) {
-    throw new Error(`Not empty stderr: ${execResult.stderr}`);
+  if (result.stderr) {
+    throw new Error(
+      `Execution of ${command} failed (stderro): ${result.stderr}`
+    );
   }
+  return result.stdout;
 }
 
 /** Return the name of user logged in */
