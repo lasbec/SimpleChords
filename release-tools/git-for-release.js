@@ -1,0 +1,80 @@
+import { exec as execCallback } from "child_process";
+/**
+ * @typedef {import("child_process").ExecException} ExecException
+ */
+
+/**
+ * @param {string} commitMsg
+ */
+export async function pushReleaseCommit(commitMsg) {
+  const addResult = await execShellCmd("git add .");
+  assertShellCmdSuccess(addResult);
+  const commitResult = await execShellCmd(`git commit -m "${commitMsg}"`);
+  assertShellCmdSuccess(commitResult);
+  const pushResult = await execShellCmd("git push");
+  assertShellCmdSuccess(pushResult);
+}
+
+export async function assertRepositoryIsReleaseReady() {
+  const githubUser = await assertGitHubAuthentication();
+  console.log(`GitHub user logged in: ${githubUser}.`);
+  await checkGitStatus();
+}
+
+/**
+ * @param {string} command
+ * @returns {Promise<ShellCmdExecutionResult>}
+ */
+async function execShellCmd(command) {
+  return new Promise((resolve, reject) => {
+    execCallback(command, (error, stdout, stderr) => {
+      resolve({ error, stdout, stderr });
+    });
+  });
+}
+
+/**
+ *
+ * @param {ShellCmdExecutionResult} execResult
+ */
+function assertShellCmdSuccess(execResult) {
+  if (execResult.error) {
+    throw execResult.error;
+  }
+  if (execResult.stderr) {
+    throw new Error(`Not empty stderr: ${execResult.stderr}`);
+  }
+}
+
+/** Return the name of user logged in */
+async function assertGitHubAuthentication() {
+  const { error, stdout, stderr } = await execShellCmd("ssh -T git@github.com");
+  const githubLoginCheckRegex =
+    /Hi (?<username>.*)! You've successfully authenticated, but GitHub does not provide shell access./;
+  const parseResult = githubLoginCheckRegex.exec(stderr);
+  if (!parseResult) {
+    throw new Error(
+      `Unexpected stderr from 'ssh -T git@github.com' ${stderr}.`
+    );
+  }
+  return parseResult.groups?.username;
+}
+
+async function checkGitStatus() {
+  const { stdout: status } = await execShellCmd("git status");
+  const validGitStatus = `Auf Branch master
+Ihr Branch ist auf demselben Stand wie 'origin/master'.
+
+nichts zu committen, Arbeitsverzeichnis unverändert
+`;
+  if (status !== validGitStatus) {
+    throw new Error(`Current git stauts is not release ready.`);
+  }
+}
+
+/**
+ * @typedef {object} ShellCmdExecutionResult
+ * @property {ExecException | null} error
+ * @property {string} stdout
+ * @property {string} stderr
+ */

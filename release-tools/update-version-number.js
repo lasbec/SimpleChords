@@ -1,33 +1,25 @@
 #! /usr/bin/env node
 import * as fs from "fs";
-import * as path from "path";
+
 /**
  * @typedef {"patch" | "minor" | "major"} ReleaseType
  * @typedef {[number, number, number]} VersionNumber
  */
 
-async function main() {
-  const { releaseType, thisDir: thisScriptPath } = collectArguments();
-  console.error(thisScriptPath);
-  const packageJsonPath = path.join(thisScriptPath, "..", "..", "package.json");
+/**
+ *
+ * @param {string} packageJsonPath
+ * @param {ReleaseType} releaseType
+ * @returns
+ */
+export async function updateVersionNumberPackageJson(
+  packageJsonPath,
+  releaseType
+) {
   const oldVersion = await getOldVersionFromFile(packageJsonPath);
   const newVersion = await nextVersion(oldVersion, releaseType);
   await replaceVersionNumberWith(packageJsonPath, newVersion);
-  await console.log(newVersion.join("."));
-}
-
-function collectArguments() {
-  const [nodePath, scriptPath, releaseType] = process.argv;
-  if (
-    releaseType !== "patch" &&
-    releaseType !== "minor" &&
-    releaseType !== "major"
-  ) {
-    throw Error(`Invalid release type '${releaseType}'.`);
-  }
-  /**@type {ReleaseType} */
-  const helpTheTypeChecker = releaseType;
-  return { releaseType: helpTheTypeChecker, thisDir: scriptPath };
+  return newVersion.join(".");
 }
 
 /**
@@ -83,5 +75,3 @@ async function replaceVersionNumberWith(path, newVersion) {
   );
   await fs.promises.writeFile(path, newContent);
 }
-
-main();
