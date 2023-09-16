@@ -156,6 +156,7 @@ export async function renderSongAsPdf(songs, fontLoader, debug) {
     height: layoutConfig.pageHeight,
   });
   for (const song of songs) {
+    console.log(`Drawing '${song.heading}'`);
     await layOutSongOnNewPage(
       reshapeSongWithSchema(
         song,
