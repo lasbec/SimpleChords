@@ -8,9 +8,12 @@ import { exec as execCallback } from "child_process";
  */
 export async function pushReleaseCommit(commitMsg) {
   await execShellCmdRequireSuccess("git add .");
-
   await execShellCmdRequireSuccess(`git commit -m "${commitMsg}"`);
-  await execShellCmdRequireSuccess("git push");
+  const pushResult = await execShellCmd("git push");
+  if (pushResult.error) throw pushResult.error;
+  if (pushResult.stderr !== "To github.com:lasbec/SimpleChords.git") {
+    throw new Error(`Unexpected stderr for 'git push': ${pushResult.stderr}`);
+  }
 }
 
 export async function assertRepositoryIsReleaseReady() {
