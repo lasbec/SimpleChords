@@ -31,10 +31,14 @@ async function assertNoUncommitedChanges() {
   const validGitStatus = `Auf Branch master
   Ihr Branch ist auf demselben Stand wie 'origin/master'.
   
-  nichts zu committen, Arbeitsverzeichnis unverändert
-  `;
+  nichts zu committen, Arbeitsverzeichnis unverändert`;
   if (status !== validGitStatus) {
-    console.error("Current git status:", status);
+    console.error(
+      "Current git status:\n",
+      status,
+      "Only exceptable status for releasing:\n",
+      validGitStatus
+    );
     throw new Error(`Current git stauts is not release ready.`);
   }
 }
