@@ -1,7 +1,4 @@
 import { LEN, Length } from "../../Length.js";
-import { BoxPointer } from "./BoxPointer.js";
-import { drawDebugBox } from "./BoxDrawingUtils.js";
-import { PageBox } from "./PageBox.js";
 /**
  * @typedef {import("../Types.js").TextConfig} TextConfig
  * @typedef {import("pdf-lib").PDFPage} PDFPage
@@ -50,5 +47,19 @@ export class TextBox {
       font: this.style.font,
       size: this.style.fontSize.in("pt"),
     });
+  }
+
+  partialWidths() {
+    const result = [];
+    let partial = "";
+    for (const char of this.text) {
+      const widthPt = this.style.font.widthOfTextAtSize(
+        partial,
+        this.style.fontSize.in("pt")
+      );
+      result.push(LEN(widthPt, "pt"));
+      partial += char;
+    }
+    return result;
   }
 }

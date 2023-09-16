@@ -8,8 +8,6 @@ import { PDFDocument, StandardFonts } from "pdf-lib";
 import { FontLoader } from "./Drawing/FontLoader.js";
 import { LEN, Length } from "./Length.js";
 import { Document } from "./Drawing/Document.js";
-import { DetachedTextBox } from "./Drawing/Boxes/DetachedTextBox.js";
-import { PageBox } from "./Drawing/Boxes/PageBox.js";
 import { BoxPointer } from "./Drawing/Boxes/BoxPointer.js";
 import { parseSongAst } from "./SongParser.js";
 import * as Path from "path";
@@ -18,6 +16,7 @@ import { Song, SongLine } from "./Song.js";
 import { checkSongAst, WellKnownSectionType } from "./SongChecker.js";
 import { SchemaWrapper } from "./SchemaWrapper.js";
 import { BoxTreeRoot } from "./Drawing/Boxes/BoxTreeNode.js";
+import { TextBox } from "./Drawing/Boxes/TextBox.js";
 
 /**
  * @param {string} path
@@ -285,7 +284,7 @@ function drawSongSectionLines(pointer, songLines, sectionType, layoutConfig) {
     pointer = lyricBox.getPointerAt("left", "top");
   }
   for (const line of songLines) {
-    const lyricLine = new DetachedTextBox(line.lyric, lyricStyle);
+    const lyricLine = new TextBox(line.lyric, lyricStyle);
 
     const partialWidths = lyricLine.partialWidths();
     for (const chord of line.chords) {
@@ -296,7 +295,7 @@ function drawSongSectionLines(pointer, songLines, sectionType, layoutConfig) {
         .setText("right", "bottom", chord.chord, layoutConfig.chordTextConfig);
     }
     pointer.moveDown(chordLineHeight);
-    pointer.attachTextBox("right", "bottom", lyricLine);
+    pointer._setBox("right", "bottom", lyricLine);
     pointer.moveDown(lyricLineHeight.mul(0.75));
   }
   return pointer;
