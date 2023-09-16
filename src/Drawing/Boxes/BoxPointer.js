@@ -213,7 +213,7 @@ export class BoxPointer {
     const otherRelYPos = other.isLowerThan(this) ? "bottom" : "top";
     const width = this.x.sub(other.x).abs();
     const height = this.y.sub(other.y).abs();
-    return this.setBox(otherRelXPos, otherRelYPos, { width, height });
+    return this.setPlainBox(otherRelXPos, otherRelYPos, { width, height });
   }
 
   /** @param {BoxPointer} other  */
@@ -238,26 +238,8 @@ export class BoxPointer {
   setDebug() {
     if (Document.debug) {
       const result = new DebugBox({ x: this.x, y: this.y });
-      return this._setBox("center", "center", result);
+      return this.setBox("center", "center", result);
     }
-  }
-
-  /**
-   * @param {XStartPosition} x
-   * @param {YStartPosition} y
-   * @param {Dimesions} dims
-   * @returns {PlainBox | BoxOverflows}
-   */
-  trySetBox(x, y, dims) {
-    const { width, height } = dims;
-    const xToDraw = this.xPositionRelativeToThis(x, width);
-    const yToDraw = this.yPositionRelativeToThis(y, height);
-
-    const overflows = BoxOverflows.from({
-      child: { leftBottomCorner: { x: xToDraw, y: yToDraw }, width, height },
-      parent: this.box,
-    });
-    return overflows.isEmpty() ? this.setBox(x, y, dims) : overflows;
   }
 
   /**
@@ -265,7 +247,7 @@ export class BoxPointer {
    * @param {YStartPosition} y
    * @param {DetachedBox} box
    */
-  _setBox(x, y, box) {
+  setBox(x, y, box) {
     const xToDraw = this.xPositionRelativeToThis(x, box.width);
     const yToDraw = this.yPositionRelativeToThis(y, box.height);
     const result = new BoxTreeChildNode(
@@ -296,9 +278,9 @@ export class BoxPointer {
    * @param {YStartPosition} y
    * @param {Dimesions} dims
    */
-  setBox(x, y, dims) {
+  setPlainBox(x, y, dims) {
     const box = new PlainBox(dims);
-    return this._setBox(x, y, box);
+    return this.setBox(x, y, box);
   }
 
   /**
@@ -309,7 +291,7 @@ export class BoxPointer {
    */
   setText(x, y, text, style) {
     const textBox = new TextBox(text, style);
-    return this._setBox(x, y, textBox);
+    return this.setBox(x, y, textBox);
   }
 
   /** @param {BoxTreeNode} box*/

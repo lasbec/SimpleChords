@@ -295,7 +295,7 @@ function drawSongSectionLines(pointer, songLines, sectionType, layoutConfig) {
         .setText("right", "bottom", chord.chord, layoutConfig.chordTextConfig);
     }
     pointer.moveDown(chordLineHeight);
-    pointer._setBox("right", "bottom", lyricLine);
+    pointer.setBox("right", "bottom", lyricLine);
     pointer.moveDown(lyricLineHeight.mul(0.75));
   }
   return pointer;
