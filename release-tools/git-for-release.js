@@ -11,7 +11,9 @@ export async function pushReleaseCommit(commitMsg) {
   await execShellCmdRequireSuccess(`git commit -m "${commitMsg}"`);
   const pushResult = await execShellCmd("git push");
   if (pushResult.error) throw pushResult.error;
-  if (pushResult.stderr !== "To github.com:lasbec/SimpleChords.git") {
+  const expectdStderrRegex =
+    /To github.com:lasbec\/SimpleChords.git[\r\n]+.*master -> master/;
+  if (!expectdStderrRegex.exec(pushResult.stderr)) {
     throw new Error(`Unexpected stderr for 'git push': ${pushResult.stderr}`);
   }
 }
