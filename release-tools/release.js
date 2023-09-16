@@ -21,7 +21,7 @@ async function main() {
   console.log("Updated package.json and commited release.");
   await pushReleaseCommit();
   console.log("Pushed release.");
-  await execShellCmdRequireSuccess("npm release");
+  await execShellCmdRequireSuccess("npm publish");
   console.log("Successfuly releasd package");
 }
 
