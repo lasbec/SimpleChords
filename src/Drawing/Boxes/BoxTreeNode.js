@@ -1,11 +1,18 @@
 import { PDFPage } from "pdf-lib";
 import { PageBox } from "./PageBox.js";
+import { drawDebugBox } from "./BoxDrawingUtils.js";
 
 /**
  * @typedef {import("./Geometry.js").Point} Point
  * @typedef {import("./Geometry.js").DetachedBox} DetachedBox
+ * @typedef {import("./Geometry.js").IBox} IBox
+ *
  */
 
+/**
+ * @implements {IBox}
+ * @implements {DetachedBox}
+ */
 export class BoxTreeNode {
   /** @type {Point} */
   leftBottomCorner;
@@ -26,6 +33,21 @@ export class BoxTreeNode {
     this.parentNode = parentNode;
   }
 
+  /**
+   * @returns {IBox}
+   */
+  get parent() {
+    return this.parentNode;
+  }
+
+  get width() {
+    return this.ownBox.width;
+  }
+
+  get height() {
+    return this.ownBox.height;
+  }
+
   /** @returns {PageBox} */
   get rootPage() {
     if (this.ownBox instanceof PageBox) {
@@ -35,10 +57,17 @@ export class BoxTreeNode {
   }
 
   /**
-   *
    * @param {PDFPage} page
    */
   drawToPdfPage(page) {
+    this.ownBox._drawToPdfPage(page, this.leftBottomCorner);
+  }
+
+  /**
+   * @param {PDFPage} page
+   * @param {Point} leftBottomCorner
+   */
+  _drawToPdfPage(page, leftBottomCorner) {
     this.ownBox._drawToPdfPage(page, this.leftBottomCorner);
   }
 
