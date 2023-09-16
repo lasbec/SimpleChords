@@ -1,4 +1,5 @@
 import { exec as execCallback } from "child_process";
+import { stat } from "fs";
 
 /**
  * @param {string} command
@@ -27,8 +28,14 @@ async function assertGitHubAuthentication() {
 
 async function assertNoUncommitedChanges() {
   const { stdout: status } = await execShellCmd("git status");
-  for (const l of status.split("\n")) {
-    console.log(l);
+  const validGitStatus = `Auf Branch master
+  Ihr Branch ist auf demselben Stand wie 'origin/master'.
+  
+  nichts zu committen, Arbeitsverzeichnis unverändert
+  `;
+  if (status !== validGitStatus) {
+    console.error("Current git status:", status);
+    throw new Error(`Current git stauts is not release ready.`);
   }
 }
 
