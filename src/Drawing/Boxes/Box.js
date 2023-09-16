@@ -9,9 +9,14 @@ import { PageBox } from "./PageBox.js";
  * @typedef {import("./Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("./Geometry.js").YStartPosition} YStartPosition
  * @typedef {import("./Geometry.js").IBox} IBox
+ * @typedef {import("./Geometry.js").DetachedBox} DetachedBox
  * @typedef {import("./Geometry.js").Dimensions} Dimensions
  */
 
+/**
+ * @implements {IBox}
+ * @implements {DetachedBox}
+ */
 export class Box {
   /**@type {Length}*/
   width;
@@ -57,6 +62,13 @@ export class Box {
 
   /**@param {PDFPage} pdfPage */
   drawToPdfPage(pdfPage) {
+    drawDebugBox(pdfPage, this);
+  }
+  /**
+   * @param {PDFPage} pdfPage
+   * @param {Point} leftBottomCorner
+   */
+  _drawToPdfPage(pdfPage, leftBottomCorner) {
     drawDebugBox(pdfPage, this);
   }
 }

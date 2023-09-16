@@ -24,7 +24,7 @@ export type IBox = DetachedBox & {
 };
 
 export type DetachedBox = {
-  drawToPdfPage(page: PDFPage, leftBottomCorner: Point): void;
+  _drawToPdfPage(page: PDFPage, leftBottomCorner: Point): void;
   width: Length;
   height: Length;
 };

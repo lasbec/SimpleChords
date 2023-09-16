@@ -16,6 +16,9 @@ import { BoxPointer } from "./BoxPointer.js";
  * @property {PageBox | null} next
  */
 
+/**
+ * @implements {IBox}
+ */
 export class PageBox {
   /** @type {Length}*/
   width;
@@ -87,6 +90,16 @@ export class PageBox {
 
   /** @param {PDFPage} pdfPage */
   drawToPdfPage(pdfPage) {
+    for (const child of this.children) {
+      child.drawToPdfPage(pdfPage);
+    }
+  }
+
+  /**
+   * @param {PDFPage} pdfPage
+   * @param {Point} leftBottomCorner
+   */
+  _drawToPdfPage(pdfPage, leftBottomCorner) {
     for (const child of this.children) {
       child.drawToPdfPage(pdfPage);
     }

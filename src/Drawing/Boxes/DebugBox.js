@@ -7,10 +7,14 @@ import { rgb } from "pdf-lib";
  * @typedef {import("./Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("./Geometry.js").YStartPosition} YStartPosition
  * @typedef {import("./Geometry.js").IBox} IBox
+ * @typedef {import("./Geometry.js").DetachedBox} DetachedBox
  * @typedef {import("./Geometry.js").Dimensions} Dimesions
  * @typedef {import("./PageBox.js").PageBox} PageBox
  */
 
+/**
+ * @implements {IBox}
+ */
 export class DebugBox {
   /**@type {Length}*/
   width;
@@ -65,40 +69,51 @@ export class DebugBox {
     return BoxPointer.atBox(x, y, this);
   }
 
-  /**@param {PDFPage} pdfPage */
+  /**
+   * @param {PDFPage} pdfPage
+   */
   drawToPdfPage(pdfPage) {
+    return this._drawToPdfPage(pdfPage, this.leftBottomCorner);
+  }
+
+  /**
+   * @param {PDFPage} pdfPage
+   * @param {Point} leftBottomCorner
+   */
+  _drawToPdfPage(pdfPage, leftBottomCorner) {
+    const center = this.center;
     pdfPage.drawCircle({
-      x: this.center.x.in("pt"),
-      y: this.center.y.in("pt"),
+      x: center.x.in("pt"),
+      y: center.y.in("pt"),
       size: 5,
       borderColor: rgb(1, 0, 0),
       borderWidth: 1,
       opacity: 1,
     });
     pdfPage.drawText(`${this.constructCount}`, {
-      x: this.leftBottomCorner.x.in("pt"),
-      y: this.leftBottomCorner.y.in("pt"),
+      x: leftBottomCorner.x.in("pt"),
+      y: leftBottomCorner.y.in("pt"),
       size: 6,
     });
     pdfPage.drawLine({
       start: {
-        x: this.center.x.sub(this.width).in("pt"),
-        y: this.center.y.in("pt"),
+        x: center.x.sub(this.width).in("pt"),
+        y: center.y.in("pt"),
       },
       end: {
-        x: this.center.x.add(this.width).in("pt"),
-        y: this.center.y.in("pt"),
+        x: center.x.add(this.width).in("pt"),
+        y: center.y.in("pt"),
       },
       thickness: 0.1,
     });
     pdfPage.drawLine({
       start: {
-        x: this.center.x.in("pt"),
-        y: this.center.y.sub(this.height).in("pt"),
+        x: center.x.in("pt"),
+        y: center.y.sub(this.height).in("pt"),
       },
       end: {
-        x: this.center.x.in("pt"),
-        y: this.center.y.add(this.height).in("pt"),
+        x: center.x.in("pt"),
+        y: center.y.add(this.height).in("pt"),
       },
       thickness: 0.1,
     });

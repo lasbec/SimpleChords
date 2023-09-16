@@ -39,7 +39,7 @@ export class BoxTreeNode {
    * @param {PDFPage} page
    */
   drawToPdfPage(page) {
-    this.ownBox.drawToPdfPage(page, this.leftBottomCorner);
+    this.ownBox._drawToPdfPage(page, this.leftBottomCorner);
   }
 
   /** @return {number} */

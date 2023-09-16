@@ -12,6 +12,9 @@ import { PageBox } from "./PageBox.js";
  * @typedef {import("./Geometry.js").Dimensions} Dimensions
  */
 
+/**
+ * @implements {IBox}
+ */
 export class TextBox {
   /**@type {string}*/
   text;
@@ -67,10 +70,18 @@ export class TextBox {
 
   /**@param {PDFPage} pdfPage*/
   drawToPdfPage(pdfPage) {
+    this._drawToPdfPage(pdfPage, this.leftBottomCorner);
+  }
+
+  /**
+   * @param {PDFPage} pdfPage
+   * @param {Point} leftBottomCorner
+   */
+  _drawToPdfPage(pdfPage, leftBottomCorner) {
     drawDebugBox(pdfPage, this);
     pdfPage.drawText(this.text, {
-      x: this.leftBottomCorner.x.in("pt"),
-      y: this.leftBottomCorner.y.in("pt"),
+      x: leftBottomCorner.x.in("pt"),
+      y: leftBottomCorner.y.in("pt"),
       font: this.style.font,
       size: this.style.fontSize.in("pt"),
     });
