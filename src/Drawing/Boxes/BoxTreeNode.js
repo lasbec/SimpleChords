@@ -1,4 +1,10 @@
+import { PDFPage } from "pdf-lib";
 import { PageBox } from "./PageBox.js";
+
+/**
+ * @typedef {import("./Geometry.js").Point} Point
+ * @typedef {import("./Geometry.js").DetachedBox} DetachedBox
+ */
 
 export class BoxTreeNode {
   /** @type {Point} */
