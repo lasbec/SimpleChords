@@ -17,6 +17,7 @@ import * as fs from "fs/promises";
 import { Song, SongLine } from "./Song.js";
 import { checkSongAst, WellKnownSectionType } from "./SongChecker.js";
 import { SchemaWrapper } from "./SchemaWrapper.js";
+import { BoxTreeRoot } from "./Drawing/Boxes/BoxTreeNode.js";
 
 /**
  * @param {string} path
@@ -354,7 +355,7 @@ function drawSongSectionLinesOnlyChords(
 
 /**
  * @param {Song} song
- * @param {PageBox} page
+ * @param {BoxTreeRoot} page
  * @param {Length} topMargin
  * @param {TextConfig} textConfig
  */

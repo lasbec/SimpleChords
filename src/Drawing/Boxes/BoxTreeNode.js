@@ -1,43 +1,37 @@
 import { PDFPage } from "pdf-lib";
 import { PageBox } from "./PageBox.js";
 import { drawDebugBox } from "./BoxDrawingUtils.js";
-
+import { Length } from "../../Length.js";
+import { BoxPointer } from "./BoxPointer.js";
 /**
  * @typedef {import("./Geometry.js").Point} Point
  * @typedef {import("./Geometry.js").DetachedBox} DetachedBox
- * @typedef {import("./Geometry.js").IBox} IBox
- *
+ * @typedef {import("./Geometry.js").XStartPosition} XStartPosition
+ * @typedef {import("./Geometry.js").YStartPosition} YStartPosition
  */
 
 /**
- * @implements {IBox}
- * @implements {DetachedBox}
+ * @typedef {BoxTreeChildNode | BoxTreeRoot} BoxTreeNode
  */
-export class BoxTreeNode {
+
+export class BoxTreeRoot {
   /** @type {Point} */
   leftBottomCorner;
-  /** @type {DetachedBox} */
+  /** @type {PageBox} */
   ownBox;
   /** @type {BoxTreeNode} */
-  parentNode;
+  parent;
 
   /**
-   *
-   * @param {Point} leftBottomCorner
-   * @param {DetachedBox} ownBox
-   * @param {BoxTreeNode} parentNode
+   * @param {PageBox} ownBox
    */
-  constructor(leftBottomCorner, ownBox, parentNode) {
-    this.leftBottomCorner = leftBottomCorner;
+  constructor(ownBox) {
+    this.leftBottomCorner = {
+      x: Length.zero,
+      y: Length.zero,
+    };
     this.ownBox = ownBox;
-    this.parentNode = parentNode;
-  }
-
-  /**
-   * @returns {IBox}
-   */
-  get parent() {
-    return this.parentNode;
+    this.parent = this;
   }
 
   get width() {
@@ -48,12 +42,75 @@ export class BoxTreeNode {
     return this.ownBox.height;
   }
 
+  /** @return {BoxTreeRoot} */
+  get root() {
+    return this;
+  }
+
   /** @returns {PageBox} */
   get rootPage() {
-    if (this.ownBox instanceof PageBox) {
-      return this.ownBox;
-    }
-    return this.parentNode.rootPage;
+    return this.ownBox;
+  }
+
+  /** @return {number} */
+  level() {
+    return 0;
+  }
+
+  /**
+   * @param {PDFPage} page
+   */
+  drawToPdfPage(page) {
+    drawDebugBox(page, this);
+    this.ownBox._drawToPdfPage(page, this.leftBottomCorner);
+  }
+
+  /**
+   *
+   * @param {XStartPosition} x
+   * @param {YStartPosition} y
+   */
+  getPointerAt(x, y) {
+    return BoxPointer.atBox(x, y, this);
+  }
+}
+
+export class BoxTreeChildNode {
+  /** @type {Point} */
+  leftBottomCorner;
+  /** @type {DetachedBox} */
+  ownBox;
+  /** @type {BoxTreeNode} */
+  parent;
+
+  /**
+   *
+   * @param {Point} leftBottomCorner
+   * @param {DetachedBox} ownBox
+   * @param {BoxTreeNode} parentNode
+   */
+  constructor(leftBottomCorner, ownBox, parentNode) {
+    this.leftBottomCorner = leftBottomCorner;
+    this.ownBox = ownBox;
+    this.parent = parentNode;
+  }
+
+  get width() {
+    return this.ownBox.width;
+  }
+
+  get height() {
+    return this.ownBox.height;
+  }
+
+  /** @return {BoxTreeRoot} */
+  get root() {
+    return this.parent.root;
+  }
+
+  /** @returns {PageBox} */
+  get rootPage() {
+    return this.root.ownBox;
   }
 
   /**
@@ -77,6 +134,14 @@ export class BoxTreeNode {
     if (this.ownBox instanceof PageBox) {
       return 0;
     }
-    return 1 + this.parentNode.level();
+    return 1 + this.parent.level();
+  }
+
+  /**
+   * @param {XStartPosition} x
+   * @param {YStartPosition} y
+   */
+  getPointerAt(x, y) {
+    return BoxPointer.atBox(x, y, this);
   }
 }

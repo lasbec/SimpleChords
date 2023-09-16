@@ -1,5 +1,6 @@
 import { PDFDocument } from "pdf-lib";
 import { PageBox as Page } from "./Boxes/PageBox.js";
+import { BoxTreeRoot } from "./Boxes/BoxTreeNode.js";
 
 /**
  * @typedef {import("./Boxes/Geometry.js").Dimensions} Dimensions
@@ -11,7 +12,7 @@ export class Document {
   /**
    * @private
    * @readonly
-   * @type {Page[]}
+   * @type {BoxTreeRoot[]}
    */
   pages;
 
@@ -28,7 +29,7 @@ export class Document {
   }
 
   appendNewPage() {
-    const result = new Page(this.defaultPageDims, this);
+    const result = new BoxTreeRoot(new Page(this.defaultPageDims, this));
     this.pages.push(result);
     return result;
   }

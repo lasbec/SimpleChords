@@ -10,10 +10,11 @@ import { PageBox } from "./PageBox.js";
  * @typedef {import("./Geometry.js").YStartPosition} YStartPosition
  * @typedef {import("./Geometry.js").IBox} IBox
  * @typedef {import("./Geometry.js").Dimensions} Dimensions
+ * @typedef {import("./Geometry.js").DetachedBox} DetachedBox
  */
 
 /**
- * @implements {IBox}
+ * @implements {DetachedBox}
  */
 export class TextBox {
   /**@type {string}*/
@@ -24,18 +25,12 @@ export class TextBox {
   width;
   /**@type {Length}*/
   height;
-  /** @type {Point} */
-  leftBottomCorner;
-  /** @type {IBox} */
-  parent;
 
   /**
-   * @param {Point} leftBottomCorner
    * @param {string} text
    * @param {TextConfig} style
-   * @param {IBox} parent
    */
-  constructor(leftBottomCorner, text, style, parent) {
+  constructor(text, style) {
     this.text = text;
     this.style = style;
     this.width = LEN(
@@ -43,34 +38,6 @@ export class TextBox {
       "pt"
     );
     this.height = LEN(style.font.heightAtSize(style.fontSize.in("pt")), "pt");
-    this.leftBottomCorner = leftBottomCorner;
-    this.parent = parent;
-  }
-
-  /** @returns {number} */
-  level() {
-    return 1 + this.parent.level();
-  }
-
-  /**
-   * @returns {PageBox}
-   */
-  rootPage() {
-    return this.parent.rootPage();
-  }
-
-  /**
-   * @param {XStartPosition} x
-   * @param {YStartPosition} y
-   * @returns {BoxPointer}
-   */
-  getPointerAt(x, y) {
-    return BoxPointer.atBox(x, y, this);
-  }
-
-  /**@param {PDFPage} pdfPage*/
-  drawToPdfPage(pdfPage) {
-    this._drawToPdfPage(pdfPage, this.leftBottomCorner);
   }
 
   /**

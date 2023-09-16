@@ -6,14 +6,13 @@ import { rgb } from "pdf-lib";
  * @typedef {import("./Geometry.js").Point} Point
  * @typedef {import("./Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("./Geometry.js").YStartPosition} YStartPosition
- * @typedef {import("./Geometry.js").IBox} IBox
  * @typedef {import("./Geometry.js").DetachedBox} DetachedBox
  * @typedef {import("./Geometry.js").Dimensions} Dimesions
  * @typedef {import("./PageBox.js").PageBox} PageBox
  */
 
 /**
- * @implements {IBox}
+ * @implements {DetachedBox}
  */
 export class DebugBox {
   /**@type {Length}*/
@@ -27,8 +26,6 @@ export class DebugBox {
       y: this.center.y.sub(this.width.mul(1 / 2)),
     };
   }
-  /** @type {IBox} */
-  parent;
 
   /** @type {number} */
   constructCount;
@@ -37,36 +34,13 @@ export class DebugBox {
 
   /**
    * @param {Point} center
-   * @param {IBox} parent
    */
-  constructor(center, parent) {
+  constructor(center) {
     this.width = LEN(3, "mm");
     this.height = LEN(3, "mm");
     this.center = center;
-    this.parent = parent;
     this.constructCount = DebugBox.constructionCounter;
     DebugBox.constructionCounter += 1;
-  }
-
-  /** @returns {number} */
-  level() {
-    return 1 + this.parent.level();
-  }
-
-  /**
-   * @returns {PageBox}
-   */
-  rootPage() {
-    return this.parent.rootPage();
-  }
-
-  /**
-   * @param {XStartPosition} x
-   * @param {YStartPosition} y
-   * @returns {BoxPointer}
-   */
-  getPointerAt(x, y) {
-    return BoxPointer.atBox(x, y, this);
   }
 
   /**

@@ -4,12 +4,12 @@ import { TextBox } from "./TextBox.js";
 import { DetachedTextBox } from "./DetachedTextBox.js";
 import { DebugBox } from "./DebugBox.js";
 import { Box } from "./Box.js";
-import { PDFPage } from "pdf-lib";
+import { BoxTreeChildNode, BoxTreeRoot } from "./BoxTreeNode.js";
 /**
  * @typedef {import("./Geometry.js").Point} Point
  * @typedef {import("./Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("./Geometry.js").YStartPosition} YStartPosition
- * @typedef {import("./Geometry.js").IBox} IBox
+ * @typedef {import("./BoxTreeNode.js").BoxTreeNode} BoxTreeNode
  * @typedef {import("./Geometry.js").DetachedBox} DetachedBox
  * @typedef {import("./Geometry.js").Dimensions} Dimesions
  * @typedef {import("../Types.js").TextConfig} TextConfig
@@ -104,7 +104,7 @@ export class BoxOverflows {
   }
 }
 
-/** @param {IBox} box */
+/** @param {BoxTreeNode} box */
 function assertBoxIsInsideParent(box) {
   const overflows = BoxOverflows.from({ child: box, parent: box.parent });
   if (!overflows.isEmpty()) {
@@ -121,7 +121,7 @@ export class BoxPointer {
    * @type {Length}
    */
   y;
-  /** @type {IBox} */
+  /** @type {BoxTreeNode} */
   box;
 
   /** @param {unknown[]} args  */
@@ -135,7 +135,7 @@ export class BoxPointer {
    *
    * @param {Length} x
    * @param {Length} y
-   * @param {IBox} page
+   * @param {BoxTreeNode} page
    * @private
    */
   constructor(x, y, page) {
@@ -147,7 +147,7 @@ export class BoxPointer {
   /**
    * @param {XStartPosition} x
    * @param {YStartPosition} y
-   * @param {IBox} box
+   * @param {BoxTreeNode} box
    */
   static atBox(x, y, box) {
     return new BoxPointer(
@@ -159,7 +159,7 @@ export class BoxPointer {
 
   /**
    * @param {XStartPosition} xRelative
-   * @param {IBox} box
+   * @param {BoxTreeNode} box
    * @private
    */
   static xPositionOnPage(xRelative, box) {
@@ -173,7 +173,7 @@ export class BoxPointer {
 
   /**
    * @param {YStartPosition} yRelative
-   * @param {IBox} box
+   * @param {BoxTreeNode} box
    * @private
    */
   static yPositionOnPage(yRelative, box) {
@@ -291,7 +291,7 @@ export class BoxPointer {
    * @returns {BoxPointer}
    */
   onPage() {
-    return new BoxPointer(this.x, this.y, this.box.rootPage());
+    return new BoxPointer(this.x, this.y, this.box.root);
   }
 
   /**
@@ -303,7 +303,7 @@ export class BoxPointer {
 
   /**
    * @param {BoxPointer} other
-   * @returns {Box}
+   * @returns {BoxTreeChildNode}
    */
   spanBox(other) {
     const otherRelXPos = other.isLeftFrom(this) ? "left" : "right";
@@ -328,14 +328,14 @@ export class BoxPointer {
    * @param {YStartPosition} y
    */
   nextPageAt(x, y) {
-    return this.box.rootPage().appendNewPage().getPointerAt(x, y);
+    const nextPage = this.box.rootPage.appendNewPage();
+    return BoxPointer.atBox(x, y, nextPage);
   }
 
   setDebug() {
     if (Document.debug) {
-      const result = new DebugBox({ x: this.x, y: this.y }, this.box);
-      this.box.rootPage().setBox(result);
-      return result;
+      const result = new DebugBox({ x: this.x, y: this.y });
+      return this._setBox("center", "center", result);
     }
   }
 
@@ -360,20 +360,24 @@ export class BoxPointer {
   /**
    * @param {XStartPosition} x
    * @param {YStartPosition} y
-   * @param {Dimesions} dims
+   * @param {DetachedBox} box
    */
-  setBox(x, y, dims) {
-    const xToDraw = this.xPositionRelativeToThis(x, dims.width);
-    const yToDraw = this.yPositionRelativeToThis(y, dims.height);
-    const result = new Box({ x: xToDraw, y: yToDraw }, dims, this.box);
-    this.box.rootPage().setBox(result);
+  _setBox(x, y, box) {
+    const xToDraw = this.xPositionRelativeToThis(x, box.width);
+    const yToDraw = this.yPositionRelativeToThis(y, box.height);
+    const result = new BoxTreeChildNode(
+      { x: xToDraw, y: yToDraw },
+      box,
+      this.box
+    );
+    this.box.rootPage.setBox(result);
     this.log(
       "Set Box at:",
       {
         x: xToDraw.in("mm"),
         y: yToDraw.in("mm"),
-        width: dims.width.in("mm"),
-        heigh: dims.height.in("mm"),
+        width: box.width.in("mm"),
+        heigh: box.height.in("mm"),
         wa: result.width.in("mm"),
         hb: result.height.in("mm"),
         xa: result.leftBottomCorner.x.in("mm"),
@@ -384,6 +388,15 @@ export class BoxPointer {
     this.doOverflowManagement(result);
     return result;
   }
+  /**
+   * @param {XStartPosition} x
+   * @param {YStartPosition} y
+   * @param {Dimesions} dims
+   */
+  setBox(x, y, dims) {
+    const box = new Box(dims);
+    return this._setBox(x, y, box);
+  }
 
   /**
    * @param {XStartPosition} x
@@ -392,29 +405,11 @@ export class BoxPointer {
    * @param {TextConfig} style
    */
   setText(x, y, text, style) {
-    const { font, fontSize } = style;
-    const height = LEN(font.heightAtSize(fontSize.in("pt")), "pt");
-    const width = LEN(font.widthOfTextAtSize(text, fontSize.in("pt")), "pt");
-    const xToDraw = this.xPositionRelativeToThis(x, width);
-    const yToDraw = this.yPositionRelativeToThis(y, height);
-
-    this.log(
-      "Set Text at:",
-      { x: xToDraw.in("mm"), y: yToDraw.in("mm"), text },
-      "\n"
-    );
-
-    const leftBottomCorner = {
-      x: xToDraw,
-      y: yToDraw,
-    };
-    const textBox = new TextBox(leftBottomCorner, text, style, this.box);
-    this.box.rootPage().setBox(textBox);
-    this.doOverflowManagement(textBox);
-    return textBox;
+    const textBox = new TextBox(text, style);
+    return this._setBox(x, y, textBox);
   }
 
-  /** @param {IBox} box*/
+  /** @param {BoxTreeNode} box*/
   doOverflowManagement(box) {
     if (!Document.debug) assertBoxIsInsideParent(box);
     const overflows = BoxOverflows.from({ child: box, parent: box.parent });

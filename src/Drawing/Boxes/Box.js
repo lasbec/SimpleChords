@@ -1,7 +1,4 @@
-import { BoxPointer } from "./BoxPointer.js";
-import { drawDebugBox } from "./BoxDrawingUtils.js";
 import { Length } from "../../Length.js";
-import { PageBox } from "./PageBox.js";
 
 /**
  * @typedef {import("pdf-lib").PDFPage} PDFPage
@@ -14,7 +11,6 @@ import { PageBox } from "./PageBox.js";
  */
 
 /**
- * @implements {IBox}
  * @implements {DetachedBox}
  */
 export class Box {
@@ -23,46 +19,16 @@ export class Box {
   /**@type {Length}*/
   height;
 
-  /** @type {Point} */
-  leftBottomCorner;
-  /** @type {IBox} */
-  parent;
-
   /**
-   * @param {Point} leftBottomCorner
    * @param {Dimensions} dims
-   * @param {IBox} parent
    */
-  constructor(leftBottomCorner, dims, parent) {
+  constructor(dims) {
     this.width = dims.width;
     this.height = dims.height;
-    this.leftBottomCorner = leftBottomCorner;
-    this.parent = parent;
-  }
-
-  /** @returns {number} */
-  level() {
-    return 1 + this.parent.level();
   }
 
   /**
-   * @returns {PageBox}
-   */
-  rootPage() {
-    return this.parent.rootPage();
-  }
-
-  /**
-   * @param {XStartPosition} x
-   * @param {YStartPosition} y
-   */
-  getPointerAt(x, y) {
-    return BoxPointer.atBox(x, y, this);
-  }
-
-  /**@param {PDFPage} pdfPage */
-  drawToPdfPage(pdfPage) {}
-  /**
+   *
    * @param {PDFPage} pdfPage
    * @param {Point} leftBottomCorner
    */
