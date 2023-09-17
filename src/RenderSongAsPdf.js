@@ -18,6 +18,7 @@ import { BoxTreeRoot } from "./Drawing/Boxes/BoxTreeNode.js";
 import { TextBox } from "./Drawing/Boxes/TextBox.js";
 import { TextConfig } from "./Drawing/TextConfig.js";
 import { SongLineBox } from "./Drawing/Boxes/SongLineBox.js";
+import { SongSectionBox } from "./Drawing/Boxes/SongSectionBox.js";
 
 /**
  * @param {string} path
@@ -250,9 +251,19 @@ function drawSongSectionLines(pointer, songLines, sectionType, layoutConfig) {
 
   const chordTextConfig = layoutConfig.chordTextConfig;
   const chordLineHeight = chordTextConfig.lineHeight;
-  const heightOfSection = chordLineHeight
-    .add(lyricLineHeight)
-    .mul(songLines.length);
+
+  const sectionBox = new SongSectionBox(
+    {
+      type: sectionType,
+      lines: songLines,
+    },
+    {
+      chordsConfig: chordTextConfig,
+      lyricConfig: lyricStyle,
+    }
+  );
+
+  const heightOfSection = sectionBox.height;
 
   const lowerEndOfSection = pointer.clone().moveToBottomBorder();
 
