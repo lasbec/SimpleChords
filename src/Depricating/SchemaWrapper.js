@@ -1,13 +1,13 @@
 /**
- * @typedef {import("./Song.js").SongSection} SongSection
- * @typedef {import("./Song.js").Song} Song
- * @typedef {import("./Length.js").Length} Length
- * @typedef {import("./RenderSongAsPdf.js").LayoutConfig} LayoutConfig
- * @typedef {import("./Drawing/TextConfig.js").TextConfig} TextConfig
+ * @typedef {import("../Song.js").SongSection} SongSection
+ * @typedef {import("../Song.js").Song} Song
+ * @typedef {import("../Length.js").Length} Length
+ * @typedef {import("../RenderSongAsPdf.js").LayoutConfig} LayoutConfig
+ * @typedef {import("../Drawing/TextConfig.js").TextConfig} TextConfig
  */
 import { BreakableText } from "./BreakableText.js";
-import { SongLine } from "./Song.js";
-import { WellKnownSectionType } from "./SongChecker.js";
+import { SongLine } from "../Song.js";
+import { WellKnownSectionType } from "../SongChecker.js";
 
 /**
  * @param {string} str

@@ -98,8 +98,6 @@ export class BreakableText {
     if (recursionDepth > 10_000) {
       throw Error("Max Recursion Depth exceeded");
     }
-    /** @type {StrLike[]} */
-    let result = [];
 
     const breakRange = predicate(this.text);
     if (!breakRange) {
