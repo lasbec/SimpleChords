@@ -35,6 +35,21 @@ export class Length {
 
   /**
    *
+   * @param {Length} arg0
+   * @param  {...Length} args
+   */
+  static max(arg0, ...args) {
+    let currMax = arg0;
+    for (const l of args) {
+      if (l.gt(currMax)) {
+        currMax = l;
+      }
+    }
+    return currMax;
+  }
+
+  /**
+   *
    * @param {UnitName} unit
    * @return {number}
    */

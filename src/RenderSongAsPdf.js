@@ -274,19 +274,12 @@ function drawSongSectionLines(pointer, songLines, sectionType, layoutConfig) {
     pointer = lyricBox.getPointerAt("left", "top");
   }
   for (const line of songLines) {
-    const lyricLine = new TextBox(line.lyric, lyricStyle);
-
-    const partialWidths = lyricLine.partialWidths();
-    for (const chord of line.chords) {
-      const yOffset = partialWidths[chord.startIndex];
-      if (!yOffset) continue;
-      pointer
-        .pointerRight(yOffset)
-        .setText("right", "bottom", chord.chord, layoutConfig.chordTextConfig);
-    }
-    pointer.moveDown(chordLineHeight);
-    pointer.setBox("right", "bottom", lyricLine);
-    pointer.moveDown(lyricLineHeight.mul(0.75));
+    const songlineBox = new SongLineBox(line, {
+      lyricConfig: lyricStyle,
+      chordsConfig: chordTextConfig,
+    });
+    pointer.setBox("right", "bottom", songlineBox);
+    pointer.moveDown(songlineBox.height);
   }
   return pointer;
 }

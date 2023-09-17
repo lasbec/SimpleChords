@@ -1,5 +1,6 @@
 import { LEN, Length } from "../../Length.js";
 import { SongLine } from "../../Song.js";
+import { TextBox } from "./TextBox.js";
 /**
  * @typedef {import("../TextConfig.js").TextConfig} TextConfig
  * @typedef {import("pdf-lib").PDFPage} PDFPage
@@ -38,7 +39,13 @@ export class SongLineBox {
   }
 
   get width() {
-    return this.lyricConfig.widthOfText(this.line.lyric);
+    const lyricWidth = this.lyricConfig.widthOfText(this.line.lyric);
+    const lastChord = this.line.chords[this.line.chords.length - 1];
+    if (!lastChord) return lyricWidth;
+    const lastChordYOffset = this.partialWidths()[lastChord.startIndex];
+    if (!lastChordYOffset) return lyricWidth;
+    const lastChordWidth = this.chordsConfig.widthOfText(lastChord.chord);
+    return Length.max(lyricWidth, lastChordYOffset.add(lastChordWidth));
   }
 
   get height() {
@@ -48,9 +55,8 @@ export class SongLineBox {
   }
 
   lyricLineHeight() {
-    return this.lyricConfig.lineHeight.mul(0.75);
+    return this.lyricConfig.lineHeight;
   }
-
   /**
    * @param {PDFPage} pdfPage
    * @param {import("./Geometry.js").BoxPosition} position
