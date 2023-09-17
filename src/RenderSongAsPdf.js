@@ -247,10 +247,7 @@ function drawSongSectionLines(pointer, songLines, sectionType, layoutConfig) {
       : sectionType === WellKnownSectionType.Ref
       ? layoutConfig.refTextConfig
       : layoutConfig.lyricTextConfig;
-  const lyricLineHeight = lyricStyle.lineHeight;
-
   const chordTextConfig = layoutConfig.chordTextConfig;
-  const chordLineHeight = chordTextConfig.lineHeight;
 
   const sectionBox = new SongSectionBox(
     {
@@ -284,15 +281,8 @@ function drawSongSectionLines(pointer, songLines, sectionType, layoutConfig) {
     const lyricBox = leftTopCorner.span(rightBottomCorner);
     pointer = lyricBox.getPointerAt("left", "top");
   }
-  for (const line of songLines) {
-    const songlineBox = new SongLineBox(line, {
-      lyricConfig: lyricStyle,
-      chordsConfig: chordTextConfig,
-    });
-    pointer.setBox("right", "bottom", songlineBox);
-    pointer.moveDown(songlineBox.height);
-  }
-  return pointer;
+  pointer.setBox("right", "bottom", sectionBox);
+  return pointer.moveDown(sectionBox.height);
 }
 
 /**
