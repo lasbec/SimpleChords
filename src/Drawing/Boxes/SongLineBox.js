@@ -40,7 +40,13 @@
 //   get width() {}
 
 //   get height() {
-//     this.chordsConfig.font.heightAtSize(this.chordsConfig.fontSize.in("pt"));
+//     const chordsLineHeight = this.chordsConfig.lineHeight;
+//     const lyricLineHeight = this.lyricLineHeight();
+//     return chordsLineHeight.add(lyricLineHeight);
+//   }
+
+//   lyricLineHeight() {
+//     return this.lyricConfig.lineHeight.mul(0.75);
 //   }
 
 //   /**
@@ -48,21 +54,25 @@
 //    * @param {import("./Geometry.js").BoxCoordinates} coordinates
 //    */
 //   drawToPdfPage(pdfPage, coordinates) {
-//     const leftBottomCorner = coordinates.getCoordinates("left", "bottom");
+//     const leftBottomCornerChordsLine = coordinates.getCoordinates("left", "bottom");
 
-//     const lyricLine = new TextBox(this.line.lyric, this.lyricConfig);
-
+//     const leftBottomCornerLyricLine = coordinates.getCoordinates("left", "bottom");
 //     const partialWidths = this.partialWidths();
-//     for (const chord of line.chords) {
+//     for (const chord of this.line.chords) {
 //       const yOffset = partialWidths[chord.startIndex];
 //       if (!yOffset) continue;
 //       pointer
 //         .pointerRight(yOffset)
 //         .setText("right", "bottom", chord.chord, layoutConfig.chordTextConfig);
 //     }
-//     pointer.moveDown(chordLineHeight);
 
-//     pointer.moveDown(lyricLineHeight.mul(0.75));
+//     pdfPage.drawText({
+
+//     });
+
+//     pointer.moveDown(this.chordsConfig.lineHeight);
+
+//     pointer.moveDown(this.lyricLineHeight());
 //   }
 
 //   /**

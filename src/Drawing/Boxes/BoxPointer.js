@@ -5,6 +5,7 @@ import { DebugBox } from "./DebugBox.js";
 import { PlainBox } from "./PlainBox.js";
 import { BoxTreeChildNode } from "./BoxTreeNode.js";
 import { BoxOverflows } from "./BoxOverflow.js";
+import { FreePointer } from "../FreePointer.js";
 /**
  * @typedef {import("./Geometry.js").Point} Point
  * @typedef {import("./Geometry.js").XStartPosition} XStartPosition
@@ -17,13 +18,19 @@ import { BoxOverflows } from "./BoxOverflow.js";
 
 export class BoxPointer {
   /**
-   * @type {Length}
+   * @type {FreePointer}
+   * @private
    */
-  x;
-  /**
-   * @type {Length}
-   */
-  y;
+  freePointer;
+
+  get x() {
+    return this.freePointer.x;
+  }
+
+  get y() {
+    return this.freePointer.y;
+  }
+
   /** @type {BoxTreeNode} */
   box;
 
@@ -42,8 +49,7 @@ export class BoxPointer {
    * @private
    */
   constructor(x, y, page) {
-    this.x = x;
-    this.y = y;
+    this.freePointer = new FreePointer(x, y);
     this.box = page;
   }
 
@@ -116,57 +122,57 @@ export class BoxPointer {
     return new BoxPointer(this.x, this.y, this.box);
   }
 
+  moveToRightBorder() {
+    this.freePointer.x = BoxPointer.xPositionOnPage("right", this.box);
+    return this;
+  }
+
+  moveToLeftBorder() {
+    this.freePointer.x = BoxPointer.xPositionOnPage("left", this.box);
+    return this;
+  }
+
+  moveToTopBorder() {
+    this.freePointer.y = BoxPointer.yPositionOnPage("top", this.box);
+    return this;
+  }
+
+  moveToBottomBorder() {
+    this.freePointer.y = BoxPointer.yPositionOnPage("bottom", this.box);
+    return this;
+  }
+
+  moveHorizontalCenter() {
+    this.freePointer.x = BoxPointer.xPositionOnPage("center", this.box);
+    return this;
+  }
+
+  moveVerticalCenter() {
+    this.freePointer.y = BoxPointer.yPositionOnPage("center", this.box);
+    return this;
+  }
+
   /** @param {Length} offset  */
   moveRight(offset) {
-    this.x = this.x.add(offset);
+    this.freePointer.moveRight(offset);
     return this;
   }
 
   /** @param {Length} offset  */
   moveLeft(offset) {
-    this.x = this.x.sub(offset);
+    this.freePointer.moveLeft(offset);
     return this;
   }
 
   /** @param {Length} offset  */
   moveUp(offset) {
-    this.y = this.y.add(offset);
+    this.freePointer.moveUp(offset);
     return this;
   }
 
   /** @param {Length} offset  */
   moveDown(offset) {
-    this.y = this.y.sub(offset);
-    return this;
-  }
-
-  moveToRightBorder() {
-    this.x = BoxPointer.xPositionOnPage("right", this.box);
-    return this;
-  }
-
-  moveToLeftBorder() {
-    this.x = BoxPointer.xPositionOnPage("left", this.box);
-    return this;
-  }
-
-  moveToTopBorder() {
-    this.y = BoxPointer.yPositionOnPage("top", this.box);
-    return this;
-  }
-
-  moveToBottomBorder() {
-    this.y = BoxPointer.yPositionOnPage("bottom", this.box);
-    return this;
-  }
-
-  moveHorizontalCenter() {
-    this.x = BoxPointer.xPositionOnPage("center", this.box);
-    return this;
-  }
-
-  moveVerticalCenter() {
-    this.y = BoxPointer.yPositionOnPage("center", this.box);
+    this.freePointer.moveDown(offset);
     return this;
   }
 
