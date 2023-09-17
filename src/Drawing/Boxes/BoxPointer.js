@@ -12,7 +12,7 @@ import { BoxOverflows } from "./BoxOverflow.js";
  * @typedef {import("./BoxTreeNode.js").BoxTreeNode} BoxTreeNode
  * @typedef {import("./Geometry.js").DetachedBox} DetachedBox
  * @typedef {import("./Geometry.js").Dimensions} Dimesions
- * @typedef {import("../Types.js").TextConfig} TextConfig
+ * @typedef {import("../TextConfig.js").TextConfig} TextConfig
  */
 
 export class BoxPointer {

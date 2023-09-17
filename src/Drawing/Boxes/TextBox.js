@@ -1,6 +1,6 @@
 import { LEN, Length } from "../../Length.js";
 /**
- * @typedef {import("../Types.js").TextConfig} TextConfig
+ * @typedef {import("../TextConfig.js").TextConfig} TextConfig
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("./Geometry.js").Point} Point
  * @typedef {import("./Geometry.js").XStartPosition} XStartPosition
@@ -29,11 +29,8 @@ export class TextBox {
   constructor(text, style) {
     this.text = text;
     this.style = style;
-    this.width = LEN(
-      style.font.widthOfTextAtSize(text, style.fontSize.in("pt")),
-      "pt"
-    );
-    this.height = LEN(style.font.heightAtSize(style.fontSize.in("pt")), "pt");
+    this.width = style.widthOfText(text);
+    this.height = style.lineHeight;
   }
 
   /**
@@ -54,11 +51,8 @@ export class TextBox {
     const result = [];
     let partial = "";
     for (const char of this.text) {
-      const widthPt = this.style.font.widthOfTextAtSize(
-        partial,
-        this.style.fontSize.in("pt")
-      );
-      result.push(LEN(widthPt, "pt"));
+      const width = this.style.widthOfText(partial);
+      result.push(width);
       partial += char;
     }
     return result;

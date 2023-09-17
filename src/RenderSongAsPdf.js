@@ -1,6 +1,5 @@
 /**
  * @typedef {import("pdf-lib").PDFPage} PDFPage
- * @typedef {import("./Drawing/Types.ts").TextConfig} TextConfig
  * @typedef {import("./Drawing/Boxes/Geometry.ts").Dimensions} Dimensions
  * @typedef {import("./Song.js").SongSection} SongSection
  */
@@ -17,6 +16,7 @@ import { checkSongAst, WellKnownSectionType } from "./SongChecker.js";
 import { SchemaWrapper } from "./SchemaWrapper.js";
 import { BoxTreeRoot } from "./Drawing/Boxes/BoxTreeNode.js";
 import { TextBox } from "./Drawing/Boxes/TextBox.js";
+import { TextConfig } from "./Drawing/TextConfig.js";
 
 /**
  * @param {string} path
@@ -124,29 +124,29 @@ export async function renderSongAsPdf(songs, fontLoader, debug) {
     pageHeight: A5.height,
     pageWidth: A5.width,
 
-    lyricTextConfig: {
+    lyricTextConfig: new TextConfig({
       font: await pdfDoc.embedFont(StandardFonts.Helvetica),
       fontSize: stdFontSize,
-    },
-    refTextConfig: {
+    }),
+    refTextConfig: new TextConfig({
       font: await pdfDoc.embedFont(StandardFonts.HelveticaBold),
       fontSize: stdFontSize,
-    },
-    chorusTextConfig: {
+    }),
+    chorusTextConfig: new TextConfig({
       font: await pdfDoc.embedFont(StandardFonts.HelveticaOblique),
       fontSize: stdFontSize,
-    },
-    titleTextConfig: {
+    }),
+    titleTextConfig: new TextConfig({
       fontSize: stdFontSize.mul(1.3),
       font: await pdfDoc.embedFont(StandardFonts.Helvetica),
-    },
-    chordTextConfig: {
+    }),
+    chordTextConfig: new TextConfig({
       font: await fontLoader.loadFontIntoDoc(
         pdfDoc,
         "CarterOne/CarterOne-Regular.ttf"
       ),
       fontSize: LEN(9, "pt"),
-    },
+    }),
     leftMargin: A5.width.mul(0.08),
     rightMargin: A5.width.mul(0),
     topMargin: A5.width.mul(0.0),
@@ -184,12 +184,7 @@ export async function renderSongAsPdf(songs, fontLoader, debug) {
  * @returns {Promise<Document>}
  */
 async function layOutSongOnNewPage(song, layoutConfig, doc) {
-  const lyricLineHeight = LEN(
-    layoutConfig.lyricTextConfig.font.heightAtSize(
-      layoutConfig.lyricTextConfig.fontSize.in("pt")
-    ),
-    "pt"
-  );
+  const lyricLineHeight = layoutConfig.lyricTextConfig.lineHeight;
   const titleBox = drawTitle(
     song,
     doc.appendNewPage(),
@@ -250,16 +245,10 @@ function drawSongSectionLines(pointer, songLines, sectionType, layoutConfig) {
       : sectionType === WellKnownSectionType.Ref
       ? layoutConfig.refTextConfig
       : layoutConfig.lyricTextConfig;
-  const lyricLineHeight = LEN(
-    lyricStyle.font.heightAtSize(lyricStyle.fontSize.in("pt")),
-    "pt"
-  );
+  const lyricLineHeight = lyricStyle.lineHeight;
 
   const chordTextConfig = layoutConfig.chordTextConfig;
-  const chordLineHeight = LEN(
-    chordTextConfig.font.heightAtSize(chordTextConfig.fontSize.in("pt")),
-    "pt"
-  );
+  const chordLineHeight = chordTextConfig.lineHeight;
   const heightOfSection = chordLineHeight
     .add(lyricLineHeight)
     .mul(songLines.length);
@@ -314,10 +303,7 @@ function drawSongSectionLinesOnlyChords(
   layoutConfig
 ) {
   const chordTextConfig = layoutConfig.chordTextConfig;
-  const chordLineHeight = LEN(
-    chordTextConfig.font.heightAtSize(chordTextConfig.fontSize.in("pt")),
-    "pt"
-  );
+  const chordLineHeight = chordTextConfig.lineHeight;
   const heightOfSection = chordLineHeight.mul(songLines.length);
 
   const lowerEndOfSection = pointer.clone().moveToBottomBorder();

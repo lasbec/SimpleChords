@@ -3,7 +3,7 @@
  * @typedef {import("./Song.js").Song} Song
  * @typedef {import("./Length.js").Length} Length
  * @typedef {import("./RenderSongAsPdf.js").LayoutConfig} LayoutConfig
- * @typedef {import("./Drawing/Types.ts").TextConfig} TextConfig
+ * @typedef {import("./Drawing/TextConfig.js").TextConfig} TextConfig
  */
 import { BreakableText } from "./BreakableText.js";
 import { SongLine } from "./Song.js";

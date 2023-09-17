@@ -3,7 +3,7 @@
  * @typedef {import("./SongParser.js").ChordsLineElement} ChordsLineElement
  * @typedef {import("./SongParser.js").SongLineNode}  SongLineNode
  */
-import {WellKnownSectionType} from "./SongChecker.js";
+import { WellKnownSectionType } from "./SongChecker.js";
 
 export class Song {
   /**@type {string}*/
