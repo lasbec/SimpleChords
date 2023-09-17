@@ -17,6 +17,7 @@ import { SchemaWrapper } from "./SchemaWrapper.js";
 import { BoxTreeRoot } from "./Drawing/Boxes/BoxTreeNode.js";
 import { TextBox } from "./Drawing/Boxes/TextBox.js";
 import { TextConfig } from "./Drawing/TextConfig.js";
+import { SongLineBox } from "./Drawing/Boxes/SongLineBox.js";
 
 /**
  * @param {string} path

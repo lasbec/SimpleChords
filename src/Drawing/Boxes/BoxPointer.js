@@ -152,6 +152,13 @@ export class BoxPointer {
     return this;
   }
 
+  /**
+   * @param {import("../../Length.js").UnitName} unit
+   */
+  rawPointIn(unit) {
+    return this.freePointer.rawPointIn(unit);
+  }
+
   /** @param {Length} offset  */
   moveRight(offset) {
     this.freePointer.moveRight(offset);
