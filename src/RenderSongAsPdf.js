@@ -203,7 +203,7 @@ async function layOutSongOnNewPage(song, layoutConfig, doc) {
     .moveToRightBorder()
     .moveUp(layoutConfig.bottomMargin)
     .moveLeft(layoutConfig.rightMargin);
-  const lyricBox = pointer.spanBox(rightBottomPointer);
+  const lyricBox = pointer.span(rightBottomPointer);
   let lyricPointer = lyricBox.getPointerAt("left", "top");
 
   for (const section of song.sections) {
@@ -270,7 +270,7 @@ function drawSongSectionLines(pointer, songLines, sectionType, layoutConfig) {
       .moveToRightBorder()
       .moveUp(layoutConfig.topMargin)
       .moveLeft(layoutConfig.rightMargin);
-    const lyricBox = leftTopCorner.spanBox(rightBottomCorner);
+    const lyricBox = leftTopCorner.span(rightBottomCorner);
     pointer = lyricBox.getPointerAt("left", "top");
   }
   for (const line of songLines) {
@@ -316,7 +316,7 @@ function drawSongSectionLinesOnlyChords(
       .moveToRightBorder()
       .moveUp(layoutConfig.topMargin)
       .moveLeft(layoutConfig.rightMargin);
-    const lyricBox = leftTopCorner.spanBox(rightBottomCorner);
+    const lyricBox = leftTopCorner.span(rightBottomCorner);
     pointer = lyricBox.getPointerAt("left", "top");
   }
   for (const line of songLines) {

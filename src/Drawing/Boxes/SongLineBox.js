@@ -45,7 +45,7 @@ export class SongLineBox {
     const lastChordYOffset = this.partialWidths()[lastChord.startIndex];
     if (!lastChordYOffset) return lyricWidth;
     const lastChordWidth = this.chordsConfig.widthOfText(lastChord.chord);
-    return Length.max(lyricWidth, lastChordYOffset.add(lastChordWidth));
+    return Length.safeMax(lyricWidth, lastChordYOffset.add(lastChordWidth));
   }
 
   get height() {

@@ -34,12 +34,25 @@ export class Length {
   }
 
   /**
-   *
    * @param {Length} arg0
    * @param  {...Length} args
    */
-  static max(arg0, ...args) {
+  static safeMax(arg0, ...args) {
     let currMax = arg0;
+    for (const l of args) {
+      if (l.gt(currMax)) {
+        currMax = l;
+      }
+    }
+    return currMax;
+  }
+  /**
+   * @param  {Array<Length>} args
+   * @returns {Length | undefined}
+   */
+  static max(args) {
+    /** @type {Length} */
+    let currMax = args[0];
     for (const l of args) {
       if (l.gt(currMax)) {
         currMax = l;

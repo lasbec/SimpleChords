@@ -221,7 +221,7 @@ export class BoxPointer {
    * @param {BoxPointer} other
    * @returns {BoxTreeChildNode}
    */
-  spanBox(other) {
+  span(other) {
     const otherRelXPos = other.isLeftFrom(this) ? "left" : "right";
     const otherRelYPos = other.isLowerThan(this) ? "bottom" : "top";
     const width = this.x.sub(other.x).abs();
@@ -231,12 +231,12 @@ export class BoxPointer {
 
   /** @param {BoxPointer} other  */
   isLeftFrom(other) {
-    return this.x.lt(other.x);
+    return this.freePointer.isLeftFrom(other);
   }
 
   /** @param {BoxPointer} other  */
   isLowerThan(other) {
-    return this.y.lt(other.y);
+    return this.freePointer.isLowerThan(other);
   }
 
   /**
