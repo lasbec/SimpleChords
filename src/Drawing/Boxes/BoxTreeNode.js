@@ -62,7 +62,7 @@ export class BoxTreeRoot {
    */
   drawToPdfPage(page) {
     drawDebugBox(page, this);
-    this.ownBox.drawToPdfPage(page, this);
+    this.ownBox.drawToPdfPage(page);
   }
 
   /**
@@ -141,18 +141,6 @@ export class BoxTreeChildNode {
       return 0;
     }
     return 1 + this.parent.level();
-  }
-
-  /**
-   * @param {XStartPosition} x
-   * @param {YStartPosition} y
-   */
-  getCoordinates(x, y) {
-    const pointer = this.getPointerAt(x, y);
-    return {
-      x: pointer.x,
-      y: pointer.y,
-    };
   }
 
   /**

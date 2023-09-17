@@ -45,11 +45,11 @@ export class DebugBox {
 
   /**
    * @param {PDFPage} pdfPage
-   * @param {import("./Geometry.js").BoxCoordinates} coordinates
+   * @param {import("./Geometry.js").BoxPosition} position
    */
-  drawToPdfPage(pdfPage, coordinates) {
-    const center = coordinates.getCoordinates("center", "center");
-    const leftBottomCorner = coordinates.getCoordinates("left", "bottom");
+  drawToPdfPage(pdfPage, position) {
+    const center = position.getPointerAt("center", "center");
+    const leftBottomCorner = position.getPointerAt("left", "bottom");
     pdfPage.drawCircle({
       x: center.x.in("pt"),
       y: center.y.in("pt"),

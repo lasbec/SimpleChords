@@ -1,6 +1,7 @@
 import { PDFPage } from "pdf-lib";
 import { Length } from "../../Length.js";
 import { Page as PageBox } from "./PageBox.js";
+import { FreePointer } from "../FreePointer.js";
 
 export type Point = {
   x: Length;
@@ -15,12 +16,12 @@ export type Dimensions = {
 export type XStartPosition = "left" | "center" | "right";
 export type YStartPosition = "top" | "center" | "bottom";
 
-export type BoxCoordinates = {
-  getCoordinates(x: XStartPosition, y: YStartPosition): Point;
+export type BoxPosition = {
+  getPointerAt(x: XStartPosition, y: YStartPosition): FreePointer;
 };
 
 export type DetachedBox = {
-  drawToPdfPage(page: PDFPage, coordinates: BoxCoordinates): void;
+  drawToPdfPage(page: PDFPage, position: BoxPosition): void;
   width: Length;
   height: Length;
 };

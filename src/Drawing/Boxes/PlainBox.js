@@ -28,7 +28,7 @@ export class PlainBox {
 
   /**
    * @param {PDFPage} pdfPage
-   * @param {import("./Geometry.js").BoxCoordinates} coordinates
+   * @param {import("./Geometry.js").BoxPosition} position
    */
-  drawToPdfPage(pdfPage, coordinates) {}
+  drawToPdfPage(pdfPage, position) {}
 }
