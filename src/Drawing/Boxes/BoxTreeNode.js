@@ -1,8 +1,11 @@
-import { PDFPage } from "pdf-lib";
+import { PDFPage, rgb } from "pdf-lib";
 import { PageBox } from "./PageBox.js";
 import { drawDebugBox } from "./BoxDrawingUtils.js";
 import { Length } from "../../Length.js";
 import { BoxPointer } from "./BoxPointer.js";
+import { Document } from "../Document.js";
+import { BoxOverflows } from "./BoxOverflow.js";
+import { FreeBoxPosition } from "../FreeBoxPosition.js";
 /**
  * @typedef {import("./Geometry.js").Point} Point
  * @typedef {import("./Geometry.js").DetachedBox} DetachedBox
@@ -131,6 +134,7 @@ export class BoxTreeChildNode {
    * @param {PDFPage} page
    */
   drawToPdfPage(page) {
+    this.doOverflowManagement(page, this);
     drawDebugBox(page, this);
     this.ownBox.drawToPdfPage(page, this);
   }
@@ -149,5 +153,83 @@ export class BoxTreeChildNode {
    */
   getPointerAt(x, y) {
     return BoxPointer.atBox(x, y, this);
+  }
+
+  /**
+   * @param {PDFPage} page
+   * @param {BoxTreeNode} box
+   * */
+  doOverflowManagement(page, box) {
+    if (!Document.debug) BoxOverflows.assertBoxIsInsideParent(box);
+    const overflows = BoxOverflows.from({ child: box, parent: box.parent });
+    if (overflows.isEmpty()) return;
+    this.drawOverflowMarker(page, overflows);
+    console.error("Overflow detecded", overflows.toString());
+  }
+
+  /**
+   * @param {PDFPage} page
+   * @param {BoxOverflows} overflow
+   */
+  drawOverflowMarker(page, overflow) {
+    page.drawRectangle({
+      ...this.getPointerAt("left", "bottom").rawPointIn("pt"),
+      width: this.width.in("pt"),
+      height: this.height.in("pt"),
+      color: rgb(1, 0, 1),
+      opacity: 0.5,
+    });
+
+    if (overflow.left) {
+      const leftBottom = this.getPointerAt("left", "bottom");
+      const height = this.height;
+      const width = overflow.left;
+      page.drawRectangle({
+        ...leftBottom.rawPointIn("pt"),
+        width: width.in("pt"),
+        height: height.in("pt"),
+        color: rgb(0, 1, 0),
+      });
+    }
+
+    if (overflow.right) {
+      const leftBottom = this.getPointerAt("right", "bottom").moveLeft(
+        overflow.right
+      );
+      const height = this.height;
+      const width = overflow.right;
+      page.drawRectangle({
+        ...leftBottom.rawPointIn("pt"),
+        width: width.in("pt"),
+        height: height.in("pt"),
+        color: rgb(0, 1, 0),
+      });
+    }
+
+    if (overflow.top) {
+      const leftBottom = this.getPointerAt("left", "top").moveDown(
+        overflow.top
+      );
+      const height = overflow.top;
+      const width = this.width;
+      page.drawRectangle({
+        ...leftBottom.rawPointIn("pt"),
+        width: width.in("pt"),
+        height: height.in("pt"),
+        color: rgb(0, 1, 0),
+      });
+    }
+
+    if (overflow.bottom) {
+      const leftBottom = this.getPointerAt("left", "bottom");
+      const heigth = overflow.bottom;
+      const width = this.width;
+      page.drawRectangle({
+        ...leftBottom.rawPointIn("pt"),
+        width: width.in("pt"),
+        height: heigth.in("pt"),
+        color: rgb(0, 1, 0),
+      });
+    }
   }
 }

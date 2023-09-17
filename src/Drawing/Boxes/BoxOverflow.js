@@ -1,4 +1,4 @@
-import { Length } from "../../Length.js";
+import { LEN, Length } from "../../Length.js";
 /**
  * @typedef {import("./Geometry.js").Point} Point
  * @typedef {import("./Geometry.js").XStartPosition} XStartPosition
@@ -50,11 +50,12 @@ export class BoxOverflows {
   }
 
   isEmpty() {
+    const tolerance = LEN(1, "pt");
     return (
-      this.top.isZero() &&
-      this.bottom.isZero() &&
-      this.left.isZero() &&
-      this.right.isZero()
+      this.top.lt(tolerance) &&
+      this.bottom.lt(tolerance) &&
+      this.left.lt(tolerance) &&
+      this.right.lt(tolerance)
     );
   }
 
@@ -83,16 +84,16 @@ export class BoxOverflows {
   toString() {
     let result = [];
     if (this.bottom.gtz()) {
-      result.push("bottom");
+      result.push(`bottom ${this.bottom.toString("mm")}`);
     }
     if (this.top.gtz()) {
-      result.push("top");
+      result.push(`top ${this.top.toString("mm")}`);
     }
     if (this.left.gtz()) {
-      result.push("left");
+      result.push(`left ${this.left.toString("mm")}`);
     }
     if (this.right.gtz()) {
-      result.push("right");
+      result.push(`right ${this.right.toString("mm")}`);
     }
     return `BoxOverflow at: ` + result.join(", ") + ".";
   }

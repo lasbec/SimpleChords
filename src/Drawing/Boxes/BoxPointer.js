@@ -4,7 +4,6 @@ import { TextBox } from "./TextBox.js";
 import { DebugBox } from "./DebugBox.js";
 import { PlainBox } from "./PlainBox.js";
 import { BoxTreeChildNode } from "./BoxTreeNode.js";
-import { BoxOverflows } from "./BoxOverflow.js";
 import { FreePointer } from "../FreePointer.js";
 /**
  * @typedef {import("./Geometry.js").Point} Point
@@ -269,21 +268,6 @@ export class BoxPointer {
       this.box
     );
     this.box.rootPage.setBox(result);
-    this.log(
-      "Set Box at:",
-      {
-        x: xToDraw.in("mm"),
-        y: yToDraw.in("mm"),
-        width: box.width.in("mm"),
-        heigh: box.height.in("mm"),
-        wa: result.width.in("mm"),
-        hb: result.height.in("mm"),
-        xa: result.leftBottomCorner.x.in("mm"),
-        xb: result.leftBottomCorner.y.in("mm"),
-      },
-      "\n"
-    );
-    this.doOverflowManagement(result);
     return result;
   }
   /**
@@ -305,13 +289,5 @@ export class BoxPointer {
   setText(x, y, text, style) {
     const textBox = new TextBox(text, style);
     return this.setBox(x, y, textBox);
-  }
-
-  /** @param {BoxTreeNode} box*/
-  doOverflowManagement(box) {
-    if (!Document.debug) BoxOverflows.assertBoxIsInsideParent(box);
-    const overflows = BoxOverflows.from({ child: box, parent: box.parent });
-    if (overflows.isEmpty()) return;
-    console.error("Overflow detecded", overflows.toString());
   }
 }
