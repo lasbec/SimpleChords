@@ -38,14 +38,27 @@ export class SongLineBox {
     this.chordsConfig = args.chordsConfig;
   }
 
+  /**
+   * @type {Length | undefined}
+   * @private
+   */
+  _width;
+
   get width() {
+    if (this._width) return this._width;
+
     const lyricWidth = this.lyricConfig.widthOfText(this.line.lyric);
     const lastChord = this.line.chords[this.line.chords.length - 1];
     if (!lastChord) return lyricWidth;
     const lastChordYOffset = this.partialWidths()[lastChord.startIndex];
     if (!lastChordYOffset) return lyricWidth;
     const lastChordWidth = this.chordsConfig.widthOfText(lastChord.chord);
-    return Length.safeMax(lyricWidth, lastChordYOffset.add(lastChordWidth));
+    const result = Length.safeMax(
+      lyricWidth,
+      lastChordYOffset.add(lastChordWidth)
+    );
+    this._width = result;
+    return result;
   }
 
   get height() {
