@@ -17,6 +17,18 @@
             {
               "chord": "e",
               "startIndex": 24
+            },
+            {
+              "chord": "C",
+              "startIndex": 27
+            },
+            {
+              "chord": "D",
+              "startIndex": 29
+            },
+            {
+              "chord": "e",
+              "startIndex": 31
             }
           ],
           "lyric": "Im düstern Auge keine Träne"
@@ -34,6 +46,18 @@
             {
               "chord": "e",
               "startIndex": 43
+            },
+            {
+              "chord": "C",
+              "startIndex": 47
+            },
+            {
+              "chord": "D",
+              "startIndex": 49
+            },
+            {
+              "chord": "e",
+              "startIndex": 51
             }
           ],
           "lyric": "Sie sitzen am Webstuhl und fletschen die Zähne:"
@@ -71,6 +95,420 @@
             }
           ],
           "lyric": "Wir weben hinein den dreifachen Fluch -"
+        }
+      ]
+    },
+    {
+      "type": "Ref",
+      "lines": [
+        {
+          "chords": [
+            {
+              "chord": "H7",
+              "startIndex": 5
+            },
+            {
+              "chord": "G",
+              "startIndex": 15
+            },
+            {
+              "chord": "D",
+              "startIndex": 17
+            },
+            {
+              "chord": "G",
+              "startIndex": 19
+            }
+          ],
+          "lyric": "Wir weben, wir weben!"
+        }
+      ]
+    },
+    {
+      "type": "",
+      "lines": [
+        {
+          "chords": [
+            {
+              "chord": "e",
+              "startIndex": 5
+            },
+            {
+              "chord": "D",
+              "startIndex": 14
+            },
+            {
+              "chord": "e",
+              "startIndex": 33
+            },
+            {
+              "chord": "C",
+              "startIndex": 39
+            },
+            {
+              "chord": "D",
+              "startIndex": 41
+            },
+            {
+              "chord": "e",
+              "startIndex": 43
+            }
+          ],
+          "lyric": "Ein Fluch dem Gotte, zu dem wir gebeten"
+        },
+        {
+          "chords": [
+            {
+              "chord": "e",
+              "startIndex": 3
+            },
+            {
+              "chord": "D",
+              "startIndex": 11
+            },
+            {
+              "chord": "e",
+              "startIndex": 28
+            },
+            {
+              "chord": "C",
+              "startIndex": 33
+            },
+            {
+              "chord": "D",
+              "startIndex": 35
+            },
+            {
+              "chord": "e",
+              "startIndex": 37
+            }
+          ],
+          "lyric": "in Winterskälte und Hungersnöten."
+        },
+        {
+          "chords": [
+            {
+              "chord": "e",
+              "startIndex": 1
+            },
+            {
+              "chord": "D",
+              "startIndex": 14
+            },
+            {
+              "chord": "G",
+              "startIndex": 35
+            }
+          ],
+          "lyric": "Wir haben vergebens gehofft und geharrt -"
+        },
+        {
+          "chords": [
+            {
+              "chord": "e",
+              "startIndex": 1
+            },
+            {
+              "chord": "D",
+              "startIndex": 13
+            },
+            {
+              "chord": "G",
+              "startIndex": 34
+            }
+          ],
+          "lyric": "Er hat uns geäfft, gefoppt und genarrt -"
+        }
+      ]
+    },
+    {
+      "type": "",
+      "lines": [
+        {
+          "chords": [
+            {
+              "chord": "e",
+              "startIndex": 5
+            },
+            {
+              "chord": "D",
+              "startIndex": 14
+            },
+            {
+              "chord": "e",
+              "startIndex": 36
+            },
+            {
+              "chord": "C",
+              "startIndex": 43
+            },
+            {
+              "chord": "D",
+              "startIndex": 45
+            },
+            {
+              "chord": "e",
+              "startIndex": 47
+            }
+          ],
+          "lyric": "Ein Fluch dem König, dem König der Reichen,"
+        },
+        {
+          "chords": [
+            {
+              "chord": "e",
+              "startIndex": 5
+            },
+            {
+              "chord": "D",
+              "startIndex": 10
+            },
+            {
+              "chord": "e",
+              "startIndex": 32
+            },
+            {
+              "chord": "C",
+              "startIndex": 39
+            },
+            {
+              "chord": "D",
+              "startIndex": 41
+            },
+            {
+              "chord": "e",
+              "startIndex": 43
+            }
+          ],
+          "lyric": "Den unser Elend nicht konnte erweichen"
+        },
+        {
+          "chords": [
+            {
+              "chord": "e",
+              "startIndex": 1
+            },
+            {
+              "chord": "D",
+              "startIndex": 18
+            },
+            {
+              "chord": "G",
+              "startIndex": 35
+            }
+          ],
+          "lyric": "Der den letzten Groschen von uns erpreßt"
+        },
+        {
+          "chords": [
+            {
+              "chord": "e",
+              "startIndex": 1
+            },
+            {
+              "chord": "D",
+              "startIndex": 13
+            },
+            {
+              "chord": "G",
+              "startIndex": 29
+            }
+          ],
+          "lyric": "und uns wie Hunde erschißen lässt -"
+        }
+      ]
+    },
+    {
+      "type": "",
+      "lines": [
+        {
+          "chords": [
+            {
+              "chord": "e",
+              "startIndex": 5
+            },
+            {
+              "chord": "D",
+              "startIndex": 15
+            },
+            {
+              "chord": "e",
+              "startIndex": 29
+            },
+            {
+              "chord": "C",
+              "startIndex": 35
+            },
+            {
+              "chord": "D",
+              "startIndex": 37
+            },
+            {
+              "chord": "e",
+              "startIndex": 39
+            }
+          ],
+          "lyric": "Ein Fluch dem falschen Vaterlande,"
+        },
+        {
+          "chords": [
+            {
+              "chord": "e",
+              "startIndex": 4
+            },
+            {
+              "chord": "D",
+              "startIndex": 10
+            },
+            {
+              "chord": "e",
+              "startIndex": 28
+            },
+            {
+              "chord": "C",
+              "startIndex": 36
+            },
+            {
+              "chord": "D",
+              "startIndex": 38
+            },
+            {
+              "chord": "e",
+              "startIndex": 40
+            }
+          ],
+          "lyric": "Wo nur gedeihen Schmach und Schande,"
+        },
+        {
+          "chords": [
+            {
+              "chord": "e",
+              "startIndex": 1
+            },
+            {
+              "chord": "D",
+              "startIndex": 9
+            },
+            {
+              "chord": "G",
+              "startIndex": 22
+            }
+          ],
+          "lyric": "Wo jede Blume früh geknickt,"
+        },
+        {
+          "chords": [
+            {
+              "chord": "e",
+              "startIndex": 1
+            },
+            {
+              "chord": "D",
+              "startIndex": 15
+            },
+            {
+              "chord": "G",
+              "startIndex": 32
+            }
+          ],
+          "lyric": "Wo Fäulnis und Moder den Wurm erquickt -"
+        }
+      ]
+    },
+    {
+      "type": "",
+      "lines": [
+        {
+          "chords": [
+            {
+              "chord": "e",
+              "startIndex": 4
+            },
+            {
+              "chord": "D",
+              "startIndex": 16
+            },
+            {
+              "chord": "e",
+              "startIndex": 38
+            },
+            {
+              "chord": "C",
+              "startIndex": 43
+            },
+            {
+              "chord": "D",
+              "startIndex": 45
+            },
+            {
+              "chord": "e",
+              "startIndex": 47
+            }
+          ],
+          "lyric": "Das Schiffchen fliegt, der Webstuhl kracht,"
+        },
+        {
+          "chords": [
+            {
+              "chord": "e",
+              "startIndex": 4
+            },
+            {
+              "chord": "D",
+              "startIndex": 11
+            },
+            {
+              "chord": "e",
+              "startIndex": 24
+            },
+            {
+              "chord": "C",
+              "startIndex": 30
+            },
+            {
+              "chord": "D",
+              "startIndex": 32
+            },
+            {
+              "chord": "e",
+              "startIndex": 34
+            }
+          ],
+          "lyric": "Wir weben emsig Tag und Nacht -"
+        },
+        {
+          "chords": [
+            {
+              "chord": "e",
+              "startIndex": 4
+            },
+            {
+              "chord": "D",
+              "startIndex": 21
+            },
+            {
+              "chord": "G",
+              "startIndex": 38
+            }
+          ],
+          "lyric": "Altdeutschland, wir weben dein Leichentuch,"
+        },
+        {
+          "chords": [
+            {
+              "chord": "e",
+              "startIndex": 1
+            },
+            {
+              "chord": "D",
+              "startIndex": 13
+            },
+            {
+              "chord": "G",
+              "startIndex": 33
+            }
+          ],
+          "lyric": "Wir weben hinein den dreifachen Fluch,"
         }
       ]
     }

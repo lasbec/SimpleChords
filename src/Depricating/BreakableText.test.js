@@ -32,6 +32,18 @@ describe("BreakableText", () => {
       const [str, rest] = text.break({ before: 10, after: 0 });
       expect([str, rest.text]).toEqual(["", ""]);
     });
+    it("weber bug", () => {
+      const text = BreakableText.fromString(
+        StrLikeImplOnString,
+        "sitzen am Webstuhl und fletschen die Zähne:     Deutschland, wir weben dein Leichentuch, Wir weben hinein den dreifachen Fluch -"
+      );
+      const [str, rest] = text.break({ after: 48, before: 49 });
+      expect([str, rest.text]).toEqual([
+        "sitzen am Webstuhl und fletschen die Zähne:     ",
+        "Deutschland, wir weben dein Leichentuch, Wir weben hinein den dreifachen Fluch -",
+      ]);
+    });
+
     it("simple", () => {
       const text = BreakableText.fromString(
         StrLikeImplOnString,

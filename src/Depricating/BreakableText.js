@@ -143,12 +143,15 @@ export class BreakableText {
     const favoriteBreakpoints = this.favoriteBreakingIndices.filter(
       (i) => i < beforeIndex && i >= afterIndex
     );
+    const lastResortBreakPoints = range(beforeIndex, afterIndex);
     const candidateBreakPoints =
       favoriteBreakpoints.length > 0
         ? favoriteBreakpoints
         : veryGoodBreakPoints.length > 0
         ? veryGoodBreakPoints
-        : okBreakPoints;
+        : okBreakPoints.length > 0
+        ? okBreakPoints
+        : lastResortBreakPoints;
 
     const prefferdTarget =
       this.favor === "middle"
@@ -176,6 +179,18 @@ export class BreakableText {
       ),
     ];
   }
+}
+
+/**
+ *
+ * @param {number} start
+ * @param {number} end
+ * @returns
+ */
+function range(start, end) {
+  return Array(start - end)
+    .fill(0)
+    .map((_, i) => end + i);
 }
 
 /**
