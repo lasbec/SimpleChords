@@ -13,7 +13,7 @@ import * as Path from "path";
 import * as fs from "fs/promises";
 import { Song, SongLine } from "./Song.js";
 import { checkSongAst, WellKnownSectionType } from "./SongChecker.js";
-import { SchemaWrapper } from "./Depricating/SchemaWrapper.js";
+import { SchemaWrapper } from "./SchemaWrapper.js";
 import { BoxTreeRoot } from "./Drawing/Boxes/BoxTreeNode.js";
 import { TextBox } from "./Drawing/Boxes/TextBox.js";
 import { TextConfig } from "./Drawing/TextConfig.js";

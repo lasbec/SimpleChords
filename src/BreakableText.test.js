@@ -1,9 +1,9 @@
 import { describe, it, expect } from "vitest";
 import { BreakableText } from "./BreakableText.js";
-import { SongLine } from "../Song.js";
+import { SongLine } from "./Song.js";
 /**
  * @typedef  {import("./BreakableText.js").StrLikeImpl<string>} StrLikeImpl
- * @typedef  {import("../Song.js").SongLineNode} SongLineNode
+ * @typedef  {import("./Song.js").SongLineNode} SongLineNode
  */
 
 /** @type {StrLikeImpl} */
