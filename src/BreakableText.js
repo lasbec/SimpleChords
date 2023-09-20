@@ -110,22 +110,20 @@ export class BreakableText {
   }
 
   /**
-   * @param {BeforAfter} beforeAfter
+   * @param {BeforAfter} indices
    * @returns {[StrLike, BreakableText<StrLike>]}
    */
-  break(beforeAfter) {
-    const { before: _beforeIndex, after: afterIndex } = beforeAfter;
-    const beforeIndex = Math.min(_beforeIndex, this.text.length);
-    const newIndices = {
-      before: beforeIndex,
-      after: afterIndex,
+  break(indices) {
+    const saveIndices = {
+      before: Math.min(indices.before, this.text.length),
+      after: indices.after,
     };
     const candidateBreakPoints =
-      this.getMostPreferrableBreakpointsInRange(newIndices);
+      this.getMostPreferrableBreakpointsInRange(saveIndices);
 
     const prefferdTarget =
       this.favor === "middle"
-        ? (beforeIndex - afterIndex) / 2
+        ? (saveIndices.before - saveIndices.after) / 2
         : this.text.length;
     const closestBreakPoint = findClosestTo(
       candidateBreakPoints,
@@ -134,7 +132,7 @@ export class BreakableText {
 
     const indexToBreakAfter =
       closestBreakPoint === undefined
-        ? afterIndex + Math.floor(prefferdTarget)
+        ? saveIndices.after + Math.floor(prefferdTarget)
         : closestBreakPoint;
 
     return [
