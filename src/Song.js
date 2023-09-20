@@ -66,6 +66,10 @@ export class SongLine {
     return this.lyric.length;
   }
 
+  toString() {
+    return `<SongLine ${this.lyric}>`;
+  }
+
   /**
    *
    * @param {number} index

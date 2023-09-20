@@ -84,7 +84,7 @@ export class SchemaWrapper {
    */
   possibleChordsAInLine(line, textConfig) {
     const maxLen = getMaxLenToFitWidth(line.text, textConfig, this.width);
-    const [x, _] = line.break({ before: maxLen + 1, after: 0 });
+    const [x, _] = line.break({ maxLineLen: maxLen + 1, minLineLen: 0 });
     return x.chords.length;
   }
 
@@ -109,8 +109,8 @@ export class SchemaWrapper {
       maxLen
     );
     const [newLine, rest] = result.toBeProcessed.break({
-      after: (c0?.startIndex || -1) + 1,
-      before,
+      minLineLen: (c0?.startIndex || -1) + 1,
+      maxLineLen: before,
     });
     if (newLine.length > 0) result.lines.push(newLine);
     result.toBeProcessed = rest;

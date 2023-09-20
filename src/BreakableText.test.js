@@ -29,7 +29,7 @@ describe("BreakableText", () => {
   describe("break", () => {
     it("empty", () => {
       const text = BreakableText.fromString(StrLikeImplOnString, "");
-      const [str, rest] = text.break({ before: 10, after: 0 });
+      const [str, rest] = text.break({ maxLineLen: 10, minLineLen: 0 });
       expect([str, rest.text]).toEqual(["", ""]);
     });
     it("weber bug", () => {
@@ -37,7 +37,7 @@ describe("BreakableText", () => {
         StrLikeImplOnString,
         "sitzen am Webstuhl und fletschen die Zähne:     Deutschland, wir weben dein Leichentuch, Wir weben hinein den dreifachen Fluch -"
       );
-      const [str, rest] = text.break({ after: 48, before: 49 });
+      const [str, rest] = text.break({ minLineLen: 48, maxLineLen: 49 });
       expect([str, rest.text]).toEqual([
         "sitzen am Webstuhl und fletschen die Zähne:     ",
         "Deutschland, wir weben dein Leichentuch, Wir weben hinein den dreifachen Fluch -",
@@ -50,7 +50,7 @@ describe("BreakableText", () => {
         "simple test should breake before this",
         "middle"
       );
-      const [str, rest] = text.break({ before: 35, after: 0 });
+      const [str, rest] = text.break({ maxLineLen: 35, minLineLen: 0 });
       expect([str, rest.text]).toEqual([
         "simple test should ",
         "breake before this",
@@ -62,7 +62,7 @@ describe("BreakableText", () => {
         "simple test should breake before this",
         "middle"
       );
-      const [str, rest] = text.break({ before: 35, after: 33 });
+      const [str, rest] = text.break({ maxLineLen: 35, minLineLen: 33 });
       expect([str, rest.text]).toEqual([
         "simple test should breake before th",
         "is",
@@ -74,7 +74,7 @@ describe("BreakableText", () => {
         "simple test should breake before this",
         "middle"
       );
-      const [str, rest] = text.break({ before: 35, after: 19 });
+      const [str, rest] = text.break({ maxLineLen: 35, minLineLen: 19 });
       expect([str, rest.text]).toEqual([
         "simple test should breake ",
         "before this",
@@ -86,7 +86,7 @@ describe("BreakableText", () => {
         "Some simple sentence can be written down. Another Sentence too.",
         "middle"
       );
-      const [str, rest] = text.break({ before: 1000, after: 0 });
+      const [str, rest] = text.break({ maxLineLen: 1000, minLineLen: 0 });
       expect([str, rest.text]).toEqual([
         "Some simple sentence can be written down. ",
         "Another Sentence too.",
@@ -101,7 +101,7 @@ describe("BreakableText", () => {
     );
     expect(
       text.breakUntil((/** @type {string | any[]} */ str) =>
-        str.length > 100 ? { before: 100, after: 0 } : undefined
+        str.length > 100 ? { maxLineLen: 100, minLineLen: 0 } : undefined
       )
     ).toEqual([
       "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, ",
@@ -125,7 +125,7 @@ describe("BreakableText", () => {
     const text = BreakableText.fromPrefferdLineUp(StrLikeImplOnString, verse);
     expect(
       text.breakUntil((/** @type {string | any[]} */ str) =>
-        str.length > 100 ? { before: 100, after: 0 } : undefined
+        str.length > 100 ? { maxLineLen: 100, minLineLen: 0 } : undefined
       )
     ).toEqual(verse);
   });
@@ -139,7 +139,7 @@ describe("BreakableText", () => {
     const text = BreakableText.fromPrefferdLineUp(StrLikeImplOnString, verse);
     expect(
       text.breakUntil((/** @type {string | any[]} */ str) =>
-        str.length > 70 ? { before: 70, after: 0 } : undefined
+        str.length > 70 ? { maxLineLen: 70, minLineLen: 0 } : undefined
       )
     ).toEqual([
       "Staub, Staub und Steppenland,zwei alte Mulis am Wegesrand",
@@ -155,7 +155,7 @@ describe("BreakableText", () => {
     expect(
       text
         .breakUntil((str) =>
-          str.length > 70 ? { before: 70, after: 0 } : undefined
+          str.length > 70 ? { maxLineLen: 70, minLineLen: 0 } : undefined
         )
         .map((l) => l.lyric)
     ).toEqual([

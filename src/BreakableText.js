@@ -13,7 +13,7 @@ import { range } from "./ArrayUtils.js";
  * @template StrLike
  * @callback BreakUntilPredicate
  * @param {StrLike} str
- * @returns {BeforAfter | undefined}
+ * @returns {LineBreakingArgs | undefined}
  */
 
 const punctuation = [".", ",", ":", "!", "?", ";"];
@@ -110,20 +110,20 @@ export class BreakableText {
   }
 
   /**
-   * @param {BeforAfter} indices
+   * @param {LineBreakingArgs} indices
    * @returns {[StrLike, BreakableText<StrLike>]}
    */
   break(indices) {
     const saveIndices = {
-      before: Math.min(indices.before, this.text.length),
-      after: indices.after,
+      maxLineLen: Math.min(indices.maxLineLen, this.text.length),
+      minLineLen: indices.minLineLen,
     };
     const candidateBreakPoints =
       this.getMostPreferrableBreakpointsInRange(saveIndices);
 
     const prefferdTarget =
       this.favor === "middle"
-        ? (saveIndices.before - saveIndices.after) / 2
+        ? (saveIndices.maxLineLen - saveIndices.minLineLen) / 2
         : this.text.length;
     const closestBreakPoint = findClosestTo(
       candidateBreakPoints,
@@ -132,7 +132,7 @@ export class BreakableText {
 
     const indexToBreakAfter =
       closestBreakPoint === undefined
-        ? saveIndices.after + Math.floor(prefferdTarget)
+        ? saveIndices.minLineLen + Math.floor(prefferdTarget)
         : closestBreakPoint;
 
     return [
@@ -150,7 +150,7 @@ export class BreakableText {
 
   /**
    *
-   * @param {BeforAfter} indices
+   * @param {LineBreakingArgs} indices
    * @returns
    */
   getMostPreferrableBreakpointsInRange(indices) {
@@ -161,25 +161,26 @@ export class BreakableText {
     const prio3 = this.prio3Breakpoints(indices);
     if (prio3.length > 0) return prio3;
     const prioLast = this.prioLastBreakpoints(indices);
+    // console.log(this.text.toString(), "\n", indices);
     // if (prioLast.length === 0) throw Error("No linebreak possible.");
     return prioLast;
   }
 
   /**
-   * @param {BeforAfter} indices
+   * @param {LineBreakingArgs} indices
    * @returns {Array<number>}
    */
   prioLastBreakpoints(indices) {
-    return range(indices.after, indices.before);
+    return range(indices.minLineLen, indices.maxLineLen);
   }
 
   /**
-   * @param {BeforAfter} indices
+   * @param {LineBreakingArgs} indices
    * @returns {Array<number>}
    */
   prio3Breakpoints(indices) {
-    const beforeIndex = indices.before;
-    const afterIndex = indices.after;
+    const beforeIndex = indices.maxLineLen;
+    const afterIndex = indices.minLineLen;
     return findIndicesOf({
       findIn: this.strImpl.slice(this.text, afterIndex, beforeIndex),
       searchFor: [" "],
@@ -187,16 +188,20 @@ export class BreakableText {
   }
 
   /**
-   * @param {BeforAfter} indices
+   * @param {LineBreakingArgs} indices
    * @returns {Array<number>}
    */
   prio2Breakpoints(indices) {
     return findIndicesOf({
-      findIn: this.strImpl.slice(this.text, indices.after, indices.before),
+      findIn: this.strImpl.slice(
+        this.text,
+        indices.minLineLen,
+        indices.maxLineLen
+      ),
       searchFor: punctuation,
     })
       .map((i) => {
-        return i + indices.after;
+        return i + indices.minLineLen;
       })
       .filter((i) => {
         // we dont want breaks after |: or :|
@@ -208,18 +213,18 @@ export class BreakableText {
         // don't break after dot and bring following space to next line.
         const maybeBetterCandidate = i + 1;
         return this.text.charAt(maybeBetterCandidate) === " " &&
-          indices.before > maybeBetterCandidate
+          indices.maxLineLen > maybeBetterCandidate
           ? maybeBetterCandidate
           : i;
       });
   }
   /**
-   * @param {BeforAfter} indices
+   * @param {LineBreakingArgs} indices
    * @returns {Array<number>}
    */
   prio1Breakpoints(indices) {
     return this.favoriteBreakingIndices.filter(
-      (i) => i < indices.before && i >= indices.after
+      (i) => i < indices.maxLineLen && i >= indices.minLineLen
     );
   }
 }
@@ -263,7 +268,7 @@ function findClosestTo(arr, i) {
 }
 
 /**
- * @typedef {object} BeforAfter
- * @property {number} before excluding
- * @property {number} after including
+ * @typedef {object} LineBreakingArgs
+ * @property {number} maxLineLen meant is the gap before the index [including]
+ * @property {number} minLineLen meant is the gap before the index [including]
  */
