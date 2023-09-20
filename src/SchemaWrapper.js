@@ -15,9 +15,7 @@ import { WellKnownSectionType } from "./SongChecker.js";
  * @param {Length} width
  */
 function fitsWidth(str, style, width) {
-  return (
-    style.font.widthOfTextAtSize(str, style.fontSize.in("pt")) <= width.in("pt")
-  );
+  return style.widthOfText(str).lt(width);
 }
 
 /**
