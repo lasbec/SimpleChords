@@ -111,7 +111,7 @@ export class SchemaWrapper {
       result.toBeProcessed.text.length <= 1
     ) {
       if (result.toBeProcessed.text.length > 1) {
-        result.lines.push(result.toBeProcessed.text);
+        result.lines.push(result.toBeProcessed.text.trim());
       }
       result.toBeProcessed = BreakableText.fromString(
         SongLine,
@@ -126,7 +126,7 @@ export class SchemaWrapper {
       minLineLen,
       maxLineLen,
     });
-    if (newLine.length > 0) result.lines.push(newLine);
+    if (newLine.length > 0) result.lines.push(newLine.trim());
     result.toBeProcessed = rest;
   }
 

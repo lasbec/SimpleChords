@@ -15,9 +15,7 @@ import { Song, SongLine } from "./Song.js";
 import { checkSongAst, WellKnownSectionType } from "./SongChecker.js";
 import { SchemaWrapper } from "./SchemaWrapper.js";
 import { BoxTreeRoot } from "./Drawing/Boxes/BoxTreeNode.js";
-import { TextBox } from "./Drawing/Boxes/TextBox.js";
 import { TextConfig } from "./Drawing/TextConfig.js";
-import { SongLineBox } from "./Drawing/Boxes/SongLineBox.js";
 import { SongSectionBox } from "./Drawing/Boxes/SongSectionBox.js";
 
 /**
@@ -127,20 +125,20 @@ export async function renderSongAsPdf(songs, fontLoader, debug) {
     pageWidth: A5.width,
 
     lyricTextConfig: new TextConfig({
-      font: await pdfDoc.embedFont(StandardFonts.Helvetica),
+      font: await pdfDoc.embedFont(StandardFonts.TimesRoman),
       fontSize: stdFontSize,
     }),
     refTextConfig: new TextConfig({
-      font: await pdfDoc.embedFont(StandardFonts.HelveticaBold),
+      font: await pdfDoc.embedFont(StandardFonts.TimesRomanBold),
       fontSize: stdFontSize,
     }),
     chorusTextConfig: new TextConfig({
-      font: await pdfDoc.embedFont(StandardFonts.HelveticaOblique),
+      font: await pdfDoc.embedFont(StandardFonts.TimesRomanItalic),
       fontSize: stdFontSize,
     }),
     titleTextConfig: new TextConfig({
-      fontSize: stdFontSize.mul(1.3),
-      font: await pdfDoc.embedFont(StandardFonts.Helvetica),
+      fontSize: stdFontSize.mul(1.2),
+      font: await pdfDoc.embedFont(StandardFonts.TimesRoman),
     }),
     chordTextConfig: new TextConfig({
       font: await fontLoader.loadFontIntoDoc(
@@ -150,10 +148,10 @@ export async function renderSongAsPdf(songs, fontLoader, debug) {
       fontSize: LEN(9, "pt"),
     }),
     leftMargin: A5.width.mul(0.08),
-    rightMargin: A5.width.mul(0),
-    topMargin: A5.width.mul(0.0),
-    bottomMargin: A5.width.mul(0.0),
-    sectionDistance: stdFontSize.mul(1.3),
+    rightMargin: A5.width.mul(0.08),
+    topMargin: A5.width.mul(0.08),
+    bottomMargin: A5.width.mul(0.08),
+    sectionDistance: stdFontSize.mul(1.1),
   };
 
   const doc = new Document({

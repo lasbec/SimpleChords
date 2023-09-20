@@ -166,6 +166,19 @@ export class SongLine {
     return SongLine.slice(this, start, stop);
   }
 
+  trim() {
+    const firstNotEmptyIndex = this.chars.findIndex(
+      (c) => c.char === " " && !c.chord
+    );
+    let lastNotEmptyIndex = 0;
+    this.chars.forEach((c, i) => {
+      if (c.char !== " " || !!c.chord) {
+        lastNotEmptyIndex = i;
+      }
+    });
+    return this.slice(firstNotEmptyIndex, lastNotEmptyIndex + 1);
+  }
+
   isEmpty() {
     return this.chars.length === 0;
   }
