@@ -141,10 +141,11 @@ export async function renderSongAsPdf(songs, fontLoader, debug) {
       font: await pdfDoc.embedFont(StandardFonts.TimesRoman),
     }),
     chordTextConfig: new TextConfig({
-      font: await fontLoader.loadFontIntoDoc(
-        pdfDoc,
-        "CarterOne/CarterOne-Regular.ttf"
-      ),
+      font: await pdfDoc.embedFont(StandardFonts.HelveticaBoldOblique),
+      // font: await fontLoader.loadFontIntoDoc(
+      //   pdfDoc,
+      //   "CarterOne/CarterOne-Regular.ttf"
+      // ),
       fontSize: LEN(9, "pt"),
     }),
     leftMargin: A5.width.mul(0.08),

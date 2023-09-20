@@ -127,6 +127,7 @@ export class SchemaWrapper {
       maxLineLen,
     });
     if (newLine.length > 0) result.lines.push(newLine.trim());
+
     result.toBeProcessed = rest;
   }
 

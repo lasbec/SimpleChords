@@ -168,7 +168,7 @@ export class SongLine {
 
   trim() {
     const firstNotEmptyIndex = this.chars.findIndex(
-      (c) => c.char === " " && !c.chord
+      (c) => c.char !== " " || !!c.chord
     );
     let lastNotEmptyIndex = 0;
     this.chars.forEach((c, i) => {
