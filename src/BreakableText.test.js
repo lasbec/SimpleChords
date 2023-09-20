@@ -26,20 +26,64 @@ const StrLikeImplOnString = {
 };
 
 describe("BreakableText", () => {
-  describe("break", () => {
-    it("empty", () => {
-      const text = BreakableText.fromString(StrLikeImplOnString, "");
-      const [str, rest] = text.break({ maxLineLen: 10, minLineLen: 0 });
-      expect([str, rest.text]).toEqual(["", ""]);
+  describe("prio lenght", () => {
+    it("WhitespacePrio", () => {
+      const text = BreakableText.fromString(
+        StrLikeImplOnString,
+        "Hallo Welt, mir geht es gut!"
+      );
+      expect(text.prio3Length({ minLineLen: 5, maxLineLen: 24 })).toEqual([
+        6, 12, 16, 21, 24,
+      ]);
+      expect(text.prio3Length({ minLineLen: 6, maxLineLen: 23 })).toEqual([
+        6, 12, 16, 21,
+      ]);
     });
+    it("weber bug whitespace", () => {
+      const text = BreakableText.fromString(
+        StrLikeImplOnString,
+        " Zähne:     Deutschland"
+      );
+      const args = { minLineLen: 12, maxLineLen: 13 };
+      expect(text.prio3Length(args)).toEqual([12]);
+    });
+    it("multi whitespace", () => {
+      const text = BreakableText.fromString(
+        StrLikeImplOnString,
+        " Zähne:     Deutschland"
+      );
+      const args = { minLineLen: 0, maxLineLen: 20 };
+      expect(text.prio3Length(args)).toEqual([12]);
+    });
+    it("multi whitespace any", () => {
+      const text = BreakableText.fromString(
+        StrLikeImplOnString,
+        " Zähne:     Deutschland"
+      );
+      const args = { minLineLen: 0, maxLineLen: 20 };
+      expect(text.prio4Length(args)).toEqual([7, 8, 9, 10, 11, 12]);
+    });
+    it("PunctuationPrio", () => {
+      const text = BreakableText.fromString(
+        StrLikeImplOnString,
+        "Begin |: Hallo, mir-geht es gut :| Ende"
+      );
+      expect(text.prio2Length({ minLineLen: 0, maxLineLen: 39 })).toEqual([
+        16, 20, 35,
+      ]);
+    });
+  });
+
+  describe("break", () => {
     it("weber bug", () => {
       const text = BreakableText.fromString(
         StrLikeImplOnString,
-        "sitzen am Webstuhl und fletschen die Zähne:     Deutschland, wir weben dein Leichentuch, Wir weben hinein den dreifachen Fluch -"
+        "Zähne:     Deutschland, wir weben dein Leichentuch, Wir weben hinein den dreifachen Fluch -"
       );
-      const [str, rest] = text.break({ minLineLen: 48, maxLineLen: 49 });
+      const args = { minLineLen: 11, maxLineLen: 12 };
+      const [str, rest] = text.break(args);
       expect([str, rest.text]).toEqual([
-        "sitzen am Webstuhl und fletschen die Zähne:     ",
+        "Zähne:     ",
         "Deutschland, wir weben dein Leichentuch, Wir weben hinein den dreifachen Fluch -",
       ]);
     });
@@ -62,10 +106,10 @@ describe("BreakableText", () => {
         "simple test should breake before this",
         "middle"
       );
-      const [str, rest] = text.break({ maxLineLen: 35, minLineLen: 33 });
+      const [str, rest] = text.break({ maxLineLen: 37, minLineLen: 34 });
       expect([str, rest.text]).toEqual([
-        "simple test should breake before th",
-        "is",
+        "simple test should breake before t",
+        "his",
       ]);
     });
     it("use after", () => {
@@ -74,7 +118,7 @@ describe("BreakableText", () => {
         "simple test should breake before this",
         "middle"
       );
-      const [str, rest] = text.break({ maxLineLen: 35, minLineLen: 19 });
+      const [str, rest] = text.break({ maxLineLen: 35, minLineLen: 20 });
       expect([str, rest.text]).toEqual([
         "simple test should breake ",
         "before this",
@@ -86,157 +130,11 @@ describe("BreakableText", () => {
         "Some simple sentence can be written down. Another Sentence too.",
         "middle"
       );
-      const [str, rest] = text.break({ maxLineLen: 1000, minLineLen: 0 });
+      const [str, rest] = text.break({ maxLineLen: 1000, minLineLen: 1 });
       expect([str, rest.text]).toEqual([
         "Some simple sentence can be written down. ",
         "Another Sentence too.",
       ]);
     });
   });
-  it("breakeToMaxLen", () => {
-    const text = BreakableText.fromString(
-      StrLikeImplOnString,
-      "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
-      "middle"
-    );
-    expect(
-      text.breakUntil((/** @type {string | any[]} */ str) =>
-        str.length > 100 ? { maxLineLen: 100, minLineLen: 0 } : undefined
-      )
-    ).toEqual([
-      "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, ",
-      "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, ",
-      "sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. ",
-      "Stet clita kasd gubergren, ",
-      "no sea takimata sanctus est Lorem ipsum dolor sit amet. ",
-      "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, ",
-      "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, ",
-      "sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. ",
-      "Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
-    ]);
-  });
-  it("die Lunge verse 1", () => {
-    const verse = [
-      "Oj, joy, joy wo ist die Luft, die Luft in meiner Lunge,",
-      "zum Sprechen reicht sie lang nicht mehr, im Mund liegt lahm die Zunge. ",
-      "Mein Atem ist fast ausgelöscht und dennoch kann ich singen,",
-      "da ist noch was ganz tief in mir bringt mich manchmal zum Klingen.",
-    ];
-    const text = BreakableText.fromPrefferdLineUp(StrLikeImplOnString, verse);
-    expect(
-      text.breakUntil((/** @type {string | any[]} */ str) =>
-        str.length > 100 ? { maxLineLen: 100, minLineLen: 0 } : undefined
-      )
-    ).toEqual(verse);
-  });
-  it("Der Wagen verse 1", () => {
-    const verse = [
-      "Staub, Staub und Steppenland,",
-      "zwei alte Mulis am Wegesrand",
-      "ziehen den Wagen aus der Stadt,",
-      "weiter nach Osten dreht sich das Rad.",
-    ];
-    const text = BreakableText.fromPrefferdLineUp(StrLikeImplOnString, verse);
-    expect(
-      text.breakUntil((/** @type {string | any[]} */ str) =>
-        str.length > 70 ? { maxLineLen: 70, minLineLen: 0 } : undefined
-      )
-    ).toEqual([
-      "Staub, Staub und Steppenland,zwei alte Mulis am Wegesrand",
-      "ziehen den Wagen aus der Stadt,weiter nach Osten dreht sich das Rad.",
-    ]);
-  });
-
-  it("Der Wagen verse 1 Song lines", () => {
-    const verse = derWagenVerse1.map((l) => {
-      return SongLine.fromSongLineNode(l);
-    });
-    const text = BreakableText.fromPrefferdLineUp(SongLine, verse);
-    expect(
-      text
-        .breakUntil((str) =>
-          str.length > 70 ? { maxLineLen: 70, minLineLen: 0 } : undefined
-        )
-        .map((l) => l.lyric)
-    ).toEqual([
-      "Staub, Staub und Steppenland, zwei alte Mulis am Wegesrand ",
-      "ziehen den Wagen aus der Stadt, weiter nach Osten dreht sich das Rad. ",
-    ]);
-  });
 });
-
-/** @type {SongLineNode[]} */
-const derWagenVerse1 = [
-  {
-    chords: [
-      {
-        chord: "a",
-        startIndex: 2,
-      },
-      {
-        chord: "F",
-        startIndex: 9,
-      },
-      {
-        chord: "G",
-        startIndex: 12,
-      },
-      {
-        chord: "a",
-        startIndex: 26,
-      },
-    ],
-    lyric: "Staub, Staub und Steppenland,",
-  },
-  {
-    chords: [
-      {
-        chord: "F",
-        startIndex: 10,
-      },
-      {
-        chord: "G",
-        startIndex: 15,
-      },
-      {
-        chord: "a",
-        startIndex: 26,
-      },
-    ],
-    lyric: "zwei alte Mulis am Wegesrand",
-  },
-  {
-    chords: [
-      {
-        chord: "F",
-        startIndex: 11,
-      },
-      {
-        chord: "G",
-        startIndex: 16,
-      },
-      {
-        chord: "d",
-        startIndex: 28,
-      },
-    ],
-    lyric: "ziehen den Wagen aus der Stadt,",
-  },
-  {
-    chords: [
-      {
-        chord: "a",
-        startIndex: 12,
-      },
-      {
-        chord: "E",
-        startIndex: 17,
-      },
-      {
-        chord: "a",
-        startIndex: 34,
-      },
-    ],
-    lyric: "weiter nach Osten dreht sich das Rad.",
-  },
-];

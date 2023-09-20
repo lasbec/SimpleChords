@@ -16,7 +16,6 @@ import { range } from "./ArrayUtils.js";
  * @returns {LineBreakingArgs | undefined}
  */
 
-const punctuation = [".", ",", ":", "!", "?", ";"];
 /**
  * Class to wrap text.
  * Goal is to offer functionality to break a paragraph into lines.
@@ -71,77 +70,55 @@ export class BreakableText {
    */
   static fromPrefferdLineUp(strImpl, lines, favor = "right") {
     /** @type {number[]} */
-    const favoriteBreakingIndices = [];
+    const favoriteBreakingLengths = [];
     for (const line of lines) {
       if (line.length === 0) continue;
-      const lastIndex =
-        favoriteBreakingIndices[favoriteBreakingIndices.length - 1];
-      if (lastIndex == undefined) {
-        favoriteBreakingIndices.push(line.length - 1);
-        continue;
-      }
-      favoriteBreakingIndices.push(lastIndex + line.length);
+      const prevLen =
+        favoriteBreakingLengths[favoriteBreakingLengths.length - 1];
+      favoriteBreakingLengths.push((prevLen || 0) + line.length);
     }
     return new BreakableText(
       strImpl,
       strImpl.concat(lines),
-      favoriteBreakingIndices,
+      favoriteBreakingLengths,
       favor
     );
   }
 
   /**
-   *
-   * @param {BreakUntilPredicate<StrLike>} predicate
-   * @param {number} recursionDepth
-   * @returns {StrLike[]}
-   */
-  breakUntil(predicate, recursionDepth = 0) {
-    if (recursionDepth > 10_000) {
-      throw Error("Max Recursion Depth exceeded");
-    }
-
-    const breakRange = predicate(this.text);
-    if (!breakRange) {
-      return [this.text];
-    }
-    const [newLine, rest] = this.break(breakRange);
-    return [newLine, ...rest.breakUntil(predicate, recursionDepth + 1)];
-  }
-
-  /**
-   * @param {LineBreakingArgs} indices
+   * @param {LineBreakingArgs} _args
    * @returns {[StrLike, BreakableText<StrLike>]}
    */
-  break(indices) {
-    const saveIndices = {
-      maxLineLen: Math.min(indices.maxLineLen, this.text.length),
-      minLineLen: indices.minLineLen,
+  break(_args) {
+    // Allow only true linebreaks such that the results get shorter
+    const args = {
+      minLineLen: Math.max(1, _args.minLineLen),
+      maxLineLen: Math.min(this.text.length - 1, _args.maxLineLen),
     };
-    const candidateBreakPoints =
-      this.getMostPreferrableBreakpointsInRange(saveIndices);
+    if (this.text.length <= 1) {
+      throw new Error("Not allowed to break empty or one character line.");
+    }
+    if (args.maxLineLen < args.minLineLen) {
+      throw new Error("MaxLineLen must not be smaller than MinLineLen");
+    }
+    const candidateLineLengths = this.getMostPreferrableLineLengths(args);
 
     const prefferdTarget =
       this.favor === "middle"
-        ? (saveIndices.maxLineLen - saveIndices.minLineLen) / 2
+        ? (args.maxLineLen - args.minLineLen) / 2
         : this.text.length;
-    const closestBreakPoint = findClosestTo(
-      candidateBreakPoints,
-      prefferdTarget
-    );
+    const breakingLen = findClosestTo(candidateLineLengths, prefferdTarget);
+    if (!breakingLen) throw new Error("No breaking length found.");
 
-    const indexToBreakAfter =
-      closestBreakPoint === undefined
-        ? saveIndices.minLineLen + Math.floor(prefferdTarget)
-        : closestBreakPoint;
-
+    const topLine = this.strImpl.slice(this.text, 0, breakingLen);
+    const restLine = this.strImpl.slice(this.text, breakingLen);
     return [
-      this.strImpl.slice(this.text, 0, indexToBreakAfter + 1),
+      topLine,
       new BreakableText(
         this.strImpl,
-        this.strImpl.slice(this.text, indexToBreakAfter + 1),
+        restLine,
         this.favoriteBreakingIndices
-          .map((i) => i - indexToBreakAfter - 1)
+          .map((i) => i - breakingLen)
           .filter((i) => 0 < i),
         this.favor
       ),
@@ -150,81 +127,125 @@ export class BreakableText {
 
   /**
    *
-   * @param {LineBreakingArgs} indices
+   * @param {LineBreakingArgs} args
    * @returns
    */
-  getMostPreferrableBreakpointsInRange(indices) {
-    const prio1 = this.prio1Breakpoints(indices);
+  getMostPreferrableLineLengths(args) {
+    const prio1 = this.prio1Length(args);
     if (prio1.length > 0) return prio1;
-    const prio2 = this.prio2Breakpoints(indices);
+
+    const prio2 = this.prio2Length(args);
     if (prio2.length > 0) return prio2;
-    const prio3 = this.prio3Breakpoints(indices);
+
+    const prio3 = this.prio3Length(args);
     if (prio3.length > 0) return prio3;
-    const prioLast = this.prioLastBreakpoints(indices);
-    // console.log(this.text.toString(), "\n", indices);
-    // if (prioLast.length === 0) throw Error("No linebreak possible.");
-    return prioLast;
+
+    const prio4 = this.prio4Length(args);
+    if (prio4.length > 0) return prio4;
+
+    return this.prioLastLength(args);
   }
 
   /**
-   * @param {LineBreakingArgs} indices
+   * Any index is ok.
+   * @param {LineBreakingArgs} args
    * @returns {Array<number>}
    */
-  prioLastBreakpoints(indices) {
-    return range(indices.minLineLen, indices.maxLineLen);
+  prioLastLength(args) {
+    return range(args.minLineLen, args.maxLineLen + 1);
   }
 
   /**
-   * @param {LineBreakingArgs} indices
+   * Prioritize linebreaks where last spaces are.
+   * @param {LineBreakingArgs} args
    * @returns {Array<number>}
    */
-  prio3Breakpoints(indices) {
-    const beforeIndex = indices.maxLineLen;
-    const afterIndex = indices.minLineLen;
-    return findIndicesOf({
-      findIn: this.strImpl.slice(this.text, afterIndex, beforeIndex),
-      searchFor: [" "],
-    }).map((i) => i + afterIndex);
+  prio3Length(args) {
+    /** @type {number[]} */
+    const result = [];
+    const r = range(
+      // don't allow line breaks resulting in empty lines
+      Math.max(args.minLineLen - 1, 1),
+      args.maxLineLen
+    );
+    for (const i of r) {
+      const char = this.text.charAt(i);
+      const consecutive = this.text.charAt(i + 1);
+      if (char === " ") {
+        if (consecutive === " ") {
+          continue;
+        }
+        result.push(i + 1);
+      }
+    }
+    return result;
   }
 
   /**
-   * @param {LineBreakingArgs} indices
+   * Prioritize linebreaks where any spaces are.
+   * @param {LineBreakingArgs} args
    * @returns {Array<number>}
    */
-  prio2Breakpoints(indices) {
-    return findIndicesOf({
-      findIn: this.strImpl.slice(
-        this.text,
-        indices.minLineLen,
-        indices.maxLineLen
-      ),
-      searchFor: punctuation,
-    })
-      .map((i) => {
-        return i + indices.minLineLen;
-      })
-      .filter((i) => {
-        // we dont want breaks after |: or :|
-        return (
-          this.text.charAt(i - 1) !== "|" && this.text.charAt(i + 1) !== "|"
-        );
-      })
-      .map((i) => {
-        // don't break after dot and bring following space to next line.
-        const maybeBetterCandidate = i + 1;
-        return this.text.charAt(maybeBetterCandidate) === " " &&
-          indices.maxLineLen > maybeBetterCandidate
-          ? maybeBetterCandidate
-          : i;
-      });
+  prio4Length(args) {
+    /** @type {number[]} */
+    const result = [];
+    const r = range(
+      // don't allow line breaks resulting in empty lines
+      Math.max(args.minLineLen - 1, 1),
+      args.maxLineLen + 1
+    );
+    //  123456789   (substr len)
+    //  012345768  (index)
+    // " ab   fgh"
+    for (const i of r) {
+      const char = this.text.charAt(i);
+      const consecutive = this.text.charAt(i + 1);
+      if (char === " ") {
+        result.push(i);
+        if (consecutive !== " ") {
+          result.push(i + 1);
+        }
+      }
+    }
+    return result;
+  }
+
+  /**
+   * Prioritize breakes after punctuation
+   * @param {LineBreakingArgs} args
+   * @returns {Array<number>}
+   */
+  prio2Length(args) {
+    const punctuation = [".", ",", ":", "!", "?", ";", "-", "|"];
+    /** @type {number[]} */
+    const result = [];
+    for (const i of range(args.minLineLen, args.maxLineLen + 1)) {
+      const previous = this.text.charAt(i - 1);
+      const char = this.text.charAt(i);
+      const consecutive = this.text.charAt(i + 1);
+      if (punctuation.includes(char)) {
+        if (punctuation.includes(consecutive)) {
+          continue;
+        }
+        if (previous === "|" && char === ":") {
+          continue; // Don't break after repetion begin sign
+        }
+        if (consecutive === " ") {
+          result.push(i + 2);
+          continue;
+        }
+        result.push(i + 1);
+      }
+    }
+    return result;
   }
   /**
-   * @param {LineBreakingArgs} indices
+   * @param {LineBreakingArgs} args
    * @returns {Array<number>}
    */
-  prio1Breakpoints(indices) {
+  prio1Length(args) {
     return this.favoriteBreakingIndices.filter(
-      (i) => i < indices.maxLineLen && i >= indices.minLineLen
+      (i) => i <= args.maxLineLen && i >= args.minLineLen
     );
   }
 }
@@ -269,6 +290,6 @@ function findClosestTo(arr, i) {
 
 /**
  * @typedef {object} LineBreakingArgs
- * @property {number} maxLineLen meant is the gap before the index [including]
- * @property {number} minLineLen meant is the gap before the index [including]
+ * @property {number} maxLineLen the maximum length the new first part of the linebreaking will have
+ * @property {number} minLineLen the minimum length the new first part of the linebreaking will have
  */

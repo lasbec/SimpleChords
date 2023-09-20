@@ -84,8 +84,12 @@ export class SchemaWrapper {
    */
   possibleChordsAInLine(line, textConfig) {
     const maxLen = getMaxLenToFitWidth(line.text, textConfig, this.width);
-    const [x, _] = line.break({ maxLineLen: maxLen + 1, minLineLen: 0 });
-    return x.chords.length;
+    const args = { maxLineLen: maxLen, minLineLen: 0 };
+    if (maxLen > 1) {
+      const [x, _] = line.break(args);
+      return x.chords.length;
+    }
+    return line.text.chords.length;
   }
 
   /**
@@ -96,21 +100,31 @@ export class SchemaWrapper {
    */
   breakLineAfterChord(result, chordIndex, textConfig) {
     const c0 = result.toBeProcessed.text.chords[chordIndex];
-    const c1 = result.toBeProcessed.text.chords[chordIndex + 1];
-    const maxLen = getMaxLenToFitWidth(
+    const maxLineLen = getMaxLenToFitWidth(
       result.toBeProcessed.text,
       textConfig,
       this.width
     );
-    const before = Math.min(
-      c1?.startIndex !== undefined
-        ? c1.startIndex
-        : result.toBeProcessed.lenght + 1,
-      maxLen
-    );
+    const minLineLen = (c0?.startIndex ?? -1) + 1;
+    if (
+      result.toBeProcessed.text.length <= maxLineLen ||
+      result.toBeProcessed.text.length <= 1
+    ) {
+      if (result.toBeProcessed.text.length) {
+        result.lines.push(result.toBeProcessed.text);
+      }
+      result.toBeProcessed = BreakableText.fromString(
+        SongLine,
+        SongLine.fromSongLineNode({
+          lyric: "",
+          chords: [],
+        })
+      );
+      return;
+    }
     const [newLine, rest] = result.toBeProcessed.break({
-      minLineLen: (c0?.startIndex || -1) + 1,
-      maxLineLen: before,
+      minLineLen,
+      maxLineLen,
     });
     if (newLine.length > 0) result.lines.push(newLine);
     result.toBeProcessed = rest;
@@ -141,7 +155,7 @@ export class SchemaWrapper {
   }
 
   isDone() {
-    return this.results.every((v) => v.toBeProcessed.lenght === 0);
+    return this.results.every((v) => v.toBeProcessed.lenght <= 1);
   }
 
   /** @returns {Song} */
