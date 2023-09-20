@@ -220,15 +220,19 @@ export class BreakableText {
 }
 
 /**
- *
  * @param {number} start
  * @param {number} end
- * @returns
+ * @returns {Array<number>}
  */
 function range(start, end) {
-  return Array(start - end)
-    .fill(0)
-    .map((_, i) => end + i);
+  /** @type {Array<number>} */
+  const result = [];
+  let curr = start;
+  while (curr < end) {
+    result.push(curr);
+    curr += 1;
+  }
+  return result;
 }
 
 /**
