@@ -37,10 +37,14 @@ export async function printPdfFiles({ inputPath, outPath, debug }) {
     return;
   }
   for (const filePath of chordFiles) {
-    await renderSingleFile(
-      filePath,
-      getCorrespondingOutPutPath(filePath),
-      debug
-    );
+    try {
+      await renderSingleFile(
+        filePath,
+        getCorrespondingOutPutPath(filePath),
+        debug
+      );
+    } catch (e) {
+      console.error(`Faild to print ${filePath} with error`, e);
+    }
   }
 }

@@ -110,7 +110,7 @@ export class SchemaWrapper {
       result.toBeProcessed.text.length <= maxLineLen ||
       result.toBeProcessed.text.length <= 1
     ) {
-      if (result.toBeProcessed.text.length) {
+      if (result.toBeProcessed.text.length > 1) {
         result.lines.push(result.toBeProcessed.text);
       }
       result.toBeProcessed = BreakableText.fromString(
