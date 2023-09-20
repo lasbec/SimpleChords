@@ -3,6 +3,8 @@
  * @typedef {{slice(s:StrLike, start:number, stop?:number):StrLike, concat(s:StrLike[]):StrLike}} StrLikeImpl
  */
 
+import { range } from "./ArrayUtils.js";
+
 /**
  * @typedef {Iterable<string> & {length:number; charAt(index:number):string; toString():string}} StrLikeConstraint
  */
@@ -163,7 +165,7 @@ export class BreakableText {
    * @returns {Array<number>}
    */
   prioLastBreakpoints(beforeIndex, afterIndex) {
-    return range(beforeIndex, afterIndex);
+    return range(afterIndex, beforeIndex);
   }
 
   /**
@@ -217,22 +219,6 @@ export class BreakableText {
           : i;
       });
   }
-}
-
-/**
- * @param {number} start
- * @param {number} end
- * @returns {Array<number>}
- */
-function range(start, end) {
-  /** @type {Array<number>} */
-  const result = [];
-  let curr = start;
-  while (curr < end) {
-    result.push(curr);
-    curr += 1;
-  }
-  return result;
 }
 
 /**
