@@ -120,18 +120,8 @@ export class BreakableText {
       before: beforeIndex,
       after: afterIndex,
     };
-    const favoriteBreakpoints = this.prio1Breakpoints(newIndices);
-    const veryGoodBreakPoints = this.prio2Breakpoints(newIndices);
-    const okBreakPoints = this.prio3Breakpoints(newIndices);
-    const lastResortBreakPoints = this.prioLastBreakpoints(newIndices);
     const candidateBreakPoints =
-      favoriteBreakpoints.length > 0
-        ? favoriteBreakpoints
-        : veryGoodBreakPoints.length > 0
-        ? veryGoodBreakPoints
-        : okBreakPoints.length > 0
-        ? okBreakPoints
-        : lastResortBreakPoints;
+      this.getMostPreferrableBreakpointsInRange(newIndices);
 
     const prefferdTarget =
       this.favor === "middle"
@@ -158,6 +148,23 @@ export class BreakableText {
         this.favor
       ),
     ];
+  }
+
+  /**
+   *
+   * @param {BeforAfter} indices
+   * @returns
+   */
+  getMostPreferrableBreakpointsInRange(indices) {
+    const prio1 = this.prio1Breakpoints(indices);
+    if (prio1.length > 0) return prio1;
+    const prio2 = this.prio2Breakpoints(indices);
+    if (prio2.length > 0) return prio2;
+    const prio3 = this.prio3Breakpoints(indices);
+    if (prio3.length > 0) return prio3;
+    const prioLast = this.prioLastBreakpoints(indices);
+    // if (prioLast.length === 0) throw Error("No linebreak possible.");
+    return prioLast;
   }
 
   /**
