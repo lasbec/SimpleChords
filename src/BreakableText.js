@@ -116,13 +116,14 @@ export class BreakableText {
   break(beforeAfter) {
     const { before: _beforeIndex, after: afterIndex } = beforeAfter;
     const beforeIndex = Math.min(_beforeIndex, this.text.length);
-    const favoriteBreakpoints = this.prio1Breakpoints(beforeIndex, afterIndex);
-    const veryGoodBreakPoints = this.prio2Breakpoints(afterIndex, beforeIndex);
-    const okBreakPoints = this.prio3Breakpoints(afterIndex, beforeIndex);
-    const lastResortBreakPoints = this.prioLastBreakpoints(
-      beforeIndex,
-      afterIndex
-    );
+    const newIndices = {
+      before: beforeIndex,
+      after: afterIndex,
+    };
+    const favoriteBreakpoints = this.prio1Breakpoints(newIndices);
+    const veryGoodBreakPoints = this.prio2Breakpoints(newIndices);
+    const okBreakPoints = this.prio3Breakpoints(newIndices);
+    const lastResortBreakPoints = this.prioLastBreakpoints(newIndices);
     const candidateBreakPoints =
       favoriteBreakpoints.length > 0
         ? favoriteBreakpoints
@@ -160,31 +161,20 @@ export class BreakableText {
   }
 
   /**
-   * @param {number} afterIndex
-   * @param {number} beforeIndex
+   * @param {BeforAfter} indices
    * @returns {Array<number>}
    */
-  prioLastBreakpoints(beforeIndex, afterIndex) {
-    return range(afterIndex, beforeIndex);
+  prioLastBreakpoints(indices) {
+    return range(indices.after, indices.before);
   }
 
   /**
-   * @param {number} afterIndex
-   * @param {number} beforeIndex
+   * @param {BeforAfter} indices
    * @returns {Array<number>}
    */
-  prio1Breakpoints(beforeIndex, afterIndex) {
-    return this.favoriteBreakingIndices.filter(
-      (i) => i < beforeIndex && i >= afterIndex
-    );
-  }
-
-  /**
-   * @param {number} afterIndex
-   * @param {number} beforeIndex
-   * @returns {Array<number>}
-   */
-  prio3Breakpoints(afterIndex, beforeIndex) {
+  prio3Breakpoints(indices) {
+    const beforeIndex = indices.before;
+    const afterIndex = indices.after;
     return findIndicesOf({
       findIn: this.strImpl.slice(this.text, afterIndex, beforeIndex),
       searchFor: [" "],
@@ -192,17 +182,16 @@ export class BreakableText {
   }
 
   /**
-   * @param {number} afterIndex
-   * @param {number} beforeIndex
+   * @param {BeforAfter} indices
    * @returns {Array<number>}
    */
-  prio2Breakpoints(afterIndex, beforeIndex) {
+  prio2Breakpoints(indices) {
     return findIndicesOf({
-      findIn: this.strImpl.slice(this.text, afterIndex, beforeIndex),
+      findIn: this.strImpl.slice(this.text, indices.after, indices.before),
       searchFor: punctuation,
     })
       .map((i) => {
-        return i + afterIndex;
+        return i + indices.after;
       })
       .filter((i) => {
         // we dont want breaks after |: or :|
@@ -214,10 +203,19 @@ export class BreakableText {
         // don't break after dot and bring following space to next line.
         const maybeBetterCandidate = i + 1;
         return this.text.charAt(maybeBetterCandidate) === " " &&
-          beforeIndex > maybeBetterCandidate
+          indices.before > maybeBetterCandidate
           ? maybeBetterCandidate
           : i;
       });
+  }
+  /**
+   * @param {BeforAfter} indices
+   * @returns {Array<number>}
+   */
+  prio1Breakpoints(indices) {
+    return this.favoriteBreakingIndices.filter(
+      (i) => i < indices.before && i >= indices.after
+    );
   }
 }
 
