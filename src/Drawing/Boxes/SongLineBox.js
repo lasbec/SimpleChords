@@ -1,5 +1,5 @@
 import { LEN, Length } from "../../Length.js";
-import { SongLine } from "../../Song.js";
+import { SongLine } from "../../SongLine.js";
 import { TextBox } from "./TextBox.js";
 /**
  * @typedef {import("../TextConfig.js").TextConfig} TextConfig

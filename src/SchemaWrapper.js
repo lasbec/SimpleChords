@@ -6,7 +6,7 @@
  * @typedef {import("./Drawing/TextConfig.js").TextConfig} TextConfig
  */
 import { BreakableText } from "./BreakableText.js";
-import { SongLine } from "./Song.js";
+import { SongLine } from "./SongLine.js";
 import { WellKnownSectionType } from "./SongChecker.js";
 
 /**
@@ -15,10 +15,6 @@ import { WellKnownSectionType } from "./SongChecker.js";
  * @param {Length} width
  */
 function fitsWidth(str, style, width) {
-  if (str.startsWith("Bursch, ")) {
-    console.log(style.widthOfText(str));
-    console.log(width);
-  }
   return style.widthOfText(str).lt(width);
 }
 
