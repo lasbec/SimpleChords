@@ -115,8 +115,8 @@ export async function renderSongAsPdf(songs, fontLoader, debug) {
 
   /** @type {Dimensions} */
   const A5 = {
-    width: LEN(148.5, "mm"),
-    height: LEN(210, "mm"),
+    width: LEN(148.5 * 2.8346456693, "pt"),
+    height: LEN(210 * 2.8346456693, "pt"),
   };
   const stdFontSize = LEN(11, "pt");
   /**@type {LayoutConfig} */

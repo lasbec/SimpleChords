@@ -15,6 +15,10 @@ import { WellKnownSectionType } from "./SongChecker.js";
  * @param {Length} width
  */
 function fitsWidth(str, style, width) {
+  if (str.startsWith("Bursch, ")) {
+    console.log(style.widthOfText(str));
+    console.log(width);
+  }
   return style.widthOfText(str).lt(width);
 }
 
