@@ -49,8 +49,7 @@ async function renderToSinglePdfBuffer(paths, debug) {
 
   const songs = asts.map(Song.fromAst);
 
-  const fontLoader = new FontLoader("./fonts");
-  const pdfBytes = await renderSongAsPdf(songs, fontLoader, debug);
+  const pdfBytes = await renderSongAsPdf(songs, debug);
   return pdfBytes;
 }
 
@@ -107,10 +106,9 @@ async function parseASTs(paths, debug) {
 
 /**
  * @param {Song[]} songs
- * @param {FontLoader} fontLoader
  * @param {boolean} debug
  */
-export async function renderSongAsPdf(songs, fontLoader, debug) {
+export async function renderSongAsPdf(songs, debug) {
   Document.debug = debug;
   const pdfDoc = await PDFDocument.create();
 
