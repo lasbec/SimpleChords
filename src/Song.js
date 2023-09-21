@@ -29,7 +29,9 @@ export class Song {
     /** @type {SongSection[]} */
     const sections = ast.sections.map((s) => ({
       type: s.type.trim().toLowerCase() || WellKnownSectionType.Verse,
-      lines: s.lines.map(SongLine.fromSongLineNode),
+      lines: s.lines
+        .map(SongLine.fromSongLineNode)
+        .map(SongLine.ensureSpaceAtEnd),
     }));
     return new Song(ast.heading, sections);
   }

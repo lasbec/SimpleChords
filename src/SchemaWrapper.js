@@ -104,11 +104,8 @@ export class SchemaWrapper {
       this.width
     );
     const minLineLen = (c0?.startIndex ?? -1) + 1;
-    if (
-      result.toBeProcessed.text.length <= maxLineLen ||
-      result.toBeProcessed.text.length <= 1
-    ) {
-      if (result.toBeProcessed.text.length > 1) {
+    if (result.toBeProcessed.text.length <= maxLineLen) {
+      if (result.toBeProcessed.text.length > 0) {
         result.lines.push(result.toBeProcessed.text.trim());
       }
       result.toBeProcessed = BreakableText.fromString(
@@ -154,7 +151,7 @@ export class SchemaWrapper {
   }
 
   isDone() {
-    return this.results.every((v) => v.toBeProcessed.lenght <= 1);
+    return this.results.every((v) => v.toBeProcessed.lenght <= 0);
   }
 
   /** @returns {Song} */

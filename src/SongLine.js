@@ -84,7 +84,7 @@ export class SongLine {
       const lyricChar = result[chord.startIndex];
       lyricChar.chord = chord.chord;
     }
-    return new SongLine(SongLine.ensureSpaceAtEnd(result));
+    return new SongLine(result);
   }
 
   /** @returns {Iterator<string>} */
@@ -103,14 +103,15 @@ export class SongLine {
 
   /**
    *
-   * @param {LyricChar[]} chars
-   * @returns {LyricChar[]}
+   * @param {SongLine} line
+   * @returns {SongLine}
    */
-  static ensureSpaceAtEnd(chars) {
+  static ensureSpaceAtEnd(line) {
+    const chars = line.chars;
     if (chars[chars.length - 1]?.char === " ") {
-      return chars;
+      return new SongLine(chars);
     }
-    return [...chars, { char: " ", chord: null }];
+    return new SongLine([...chars, { char: " ", chord: null }]);
   }
 
   /** @param {SongLine[]} lines*/
