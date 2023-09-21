@@ -110,10 +110,7 @@ export class SchemaWrapper {
       }
       result.toBeProcessed = BreakableText.fromString(
         SongLine,
-        SongLine.fromSongLineNode({
-          lyric: "",
-          chords: [],
-        })
+        SongLine.empty()
       );
       return;
     }

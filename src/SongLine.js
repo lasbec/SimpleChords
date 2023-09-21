@@ -65,6 +65,13 @@ export class SongLine {
     return result;
   }
 
+  static empty() {
+    return SongLine.fromSongLineNode({
+      lyric: "",
+      chords: [],
+    });
+  }
+
   /**
    * @param {SongLineNode} node
    * @returns {SongLine}
