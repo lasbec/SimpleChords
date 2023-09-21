@@ -1,4 +1,11 @@
 /** @typedef {"mm" | "pt"} UnitName */
+/**
+ * @param {string} str
+ * @returns {str is UnitName}
+ */
+function isValidUnitName(str) {
+  return ["mm", "pt"].includes(str);
+}
 
 /**
  * @param {number} value
@@ -68,6 +75,36 @@ export class Length {
   toString(unit) {
     const _unit = unit || this.unit;
     return `${this.in(_unit)}${_unit}`;
+  }
+
+  /**
+   * @param {string} str
+   */
+  static fromString(str) {
+    const digits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+    let i = 0;
+    let char = str[i];
+    while (digits.includes(char)) {
+      i += 1;
+      char = str[i];
+    }
+    if (!i) throw new Error(`Unexpected '${str[0]}' at start of string.`);
+    if (char === ".") {
+      i += 1;
+      char = str[i];
+      if (!digits.includes(char))
+        throw new Error(`Unexpected '${char}' after '.'`);
+      while (digits.includes(char)) {
+        i += 1;
+        char = str[i];
+      }
+    }
+    const valueStr = str.slice(0, i);
+    const unitStr = str.slice(i);
+    if (!isValidUnitName(unitStr)) {
+      throw new Error(`Invalid unit '${unitStr}'.`);
+    }
+    return LEN(parseFloat(valueStr), unitStr);
   }
 
   /**
