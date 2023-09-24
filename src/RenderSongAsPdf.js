@@ -176,12 +176,14 @@ export async function renderSongAsPdf(songs, debug, layoutConfig, pdfDoc) {
   return await pdfDoc.save();
 }
 
+/** @type {Array<string>} */
+const StdFontNames = Object.values(StandardFonts);
 /**
  * @param {PDFDocument} pdfDoc
  * @param {string} font
  */
 async function embedFont(pdfDoc, font) {
-  if (font in StandardFonts) {
+  if (StdFontNames.includes(font)) {
     return await pdfDoc.embedFont(font);
   }
   const fontLoader = new FontLoader("./fonts");
