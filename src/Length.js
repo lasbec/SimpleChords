@@ -7,6 +7,8 @@ function isValidUnitName(str) {
   return ["mm", "pt"].includes(str);
 }
 
+/** @typedef {`${number}${UnitName}`} LengthDto */
+
 /**
  * @param {number} value
  * @param {UnitName} unit

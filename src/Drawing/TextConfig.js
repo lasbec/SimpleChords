@@ -2,6 +2,16 @@ import { PDFFont } from "pdf-lib";
 import { Length, LEN } from "../Length.js";
 
 /**
+ * @typedef {import("../Length.js").LengthDto} LengthDto
+ */
+
+/**
+ * @typedef {object} TextConfigDto
+ * @property {LengthDto} fontSize
+ * @property {string} font
+ */
+
+/**
  * @typedef {object }TextConfigArgs
  * @property {Length} fontSize
  * @property {PDFFont} font
@@ -10,7 +20,9 @@ import { Length, LEN } from "../Length.js";
 export class TextConfig {
   /** @type {Length} */
   fontSize;
-  /** @type {PDFFont} */
+  /**
+   * @type {PDFFont}
+   */
   font;
 
   /**

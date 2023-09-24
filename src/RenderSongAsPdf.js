@@ -22,19 +22,35 @@ import { SongSectionBox } from "./Drawing/Boxes/SongSectionBox.js";
 /**
  * @param {string} path
  * @param {string} outPath
+ * @param {LayoutConfigDto} layoutConfigDto
  * @param {boolean} debug
  */
-export async function renderSingleFile(path, outPath, debug) {
-  return renderAllInSingleFile([path], outPath, debug);
+export async function renderSingleFile(path, outPath, layoutConfigDto, debug) {
+  return renderAllInSingleFile([path], outPath, layoutConfigDto, debug);
 }
 
 /**
  * @param {string[]} paths
  * @param {string} outPath
+ * @param {LayoutConfigDto} layoutConfigDto
  * @param {boolean} debug
  */
-export async function renderAllInSingleFile(paths, outPath, debug) {
-  const pdfBytes = await renderToSinglePdfBuffer(paths, debug);
+export async function renderAllInSingleFile(
+  paths,
+  outPath,
+  layoutConfigDto,
+  debug
+) {
+  const pdfDoc = await PDFDocument.create();
+
+  /**@type {LayoutConfig} */
+  const layoutConfig = await layoutConfigFromDto(layoutConfigDto, pdfDoc);
+  const pdfBytes = await renderToSinglePdfBuffer(
+    paths,
+    debug,
+    layoutConfig,
+    pdfDoc
+  );
 
   await fs.writeFile(outPath, pdfBytes);
   console.log("Pdf Result written to", Path.resolve(outPath), "\n");
@@ -43,13 +59,15 @@ export async function renderAllInSingleFile(paths, outPath, debug) {
 /**
  * @param {string[]} paths
  * @param {boolean} debug
+ * @param {LayoutConfig} layoutConfig
+ * @param {PDFDocument} pdfDoc
  */
-async function renderToSinglePdfBuffer(paths, debug) {
+async function renderToSinglePdfBuffer(paths, debug, layoutConfig, pdfDoc) {
   let asts = await parseASTs(paths, debug);
 
   const songs = asts.map(Song.fromAst);
 
-  const pdfBytes = await renderSongAsPdf(songs, debug);
+  const pdfBytes = await renderSongAsPdf(songs, debug, layoutConfig, pdfDoc);
   return pdfBytes;
 }
 
@@ -86,7 +104,29 @@ async function parseASTs(paths, debug) {
 }
 
 /**
- * @typedef LayoutConfig
+ * @typedef {import("./Length.js").LengthDto} LengthDto
+ * @typedef {import("./Drawing/TextConfig.js").TextConfigDto} TextConfigDto
+ */
+
+/**
+ * @typedef {object} LayoutConfigDto
+ * @property {TextConfigDto} lyricTextConfig
+ * @property {TextConfigDto} chorusTextConfig
+ * @property {TextConfigDto} refTextConfig
+ * @property {TextConfigDto} titleTextConfig
+ * @property {TextConfigDto} chordTextConfig
+ *
+ * @property {LengthDto} leftMargin
+ * @property {LengthDto} rightMargin
+ * @property {LengthDto} topMargin
+ * @property {LengthDto} bottomMargin
+ * @property {LengthDto} pageWidth
+ * @property {LengthDto} pageHeight
+ * @property {LengthDto} sectionDistance
+ */
+
+/**
+ * @typedef {object} LayoutConfig
  * @property {TextConfig} lyricTextConfig
  * @property {TextConfig} chorusTextConfig
  * @property {TextConfig} refTextConfig
@@ -107,52 +147,11 @@ async function parseASTs(paths, debug) {
 /**
  * @param {Song[]} songs
  * @param {boolean} debug
+ * @param {LayoutConfig} layoutConfig
+ * @param {PDFDocument} pdfDoc
  */
-export async function renderSongAsPdf(songs, debug) {
+export async function renderSongAsPdf(songs, debug, layoutConfig, pdfDoc) {
   Document.debug = debug;
-  const pdfDoc = await PDFDocument.create();
-
-  /** @type {Dimensions} */
-  const A5 = {
-    width: LEN(148.5 * 2.8346456693, "pt"),
-    height: LEN(210 * 2.8346456693, "pt"),
-  };
-  const stdFontSize = LEN(11, "pt");
-  /**@type {LayoutConfig} */
-  const layoutConfig = {
-    pageHeight: A5.height,
-    pageWidth: A5.width,
-
-    lyricTextConfig: new TextConfig({
-      font: await pdfDoc.embedFont(StandardFonts.TimesRoman),
-      fontSize: stdFontSize,
-    }),
-    refTextConfig: new TextConfig({
-      font: await pdfDoc.embedFont(StandardFonts.TimesRomanBold),
-      fontSize: stdFontSize,
-    }),
-    chorusTextConfig: new TextConfig({
-      font: await pdfDoc.embedFont(StandardFonts.TimesRomanItalic),
-      fontSize: stdFontSize,
-    }),
-    titleTextConfig: new TextConfig({
-      fontSize: stdFontSize.mul(1.2),
-      font: await pdfDoc.embedFont(StandardFonts.TimesRoman),
-    }),
-    chordTextConfig: new TextConfig({
-      font: await pdfDoc.embedFont(StandardFonts.HelveticaBoldOblique),
-      // font: await fontLoader.loadFontIntoDoc(
-      //   pdfDoc,
-      //   "CarterOne/CarterOne-Regular.ttf"
-      // ),
-      fontSize: LEN(9, "pt"),
-    }),
-    leftMargin: A5.width.mul(0.08),
-    rightMargin: A5.width.mul(0.08),
-    topMargin: A5.width.mul(0.08),
-    bottomMargin: A5.width.mul(0.08),
-    sectionDistance: stdFontSize.mul(1.1),
-  };
 
   const doc = new Document({
     width: layoutConfig.pageWidth,
@@ -175,6 +174,61 @@ export async function renderSongAsPdf(songs, debug) {
   doc.drawToPdfDoc(pdfDoc);
 
   return await pdfDoc.save();
+}
+
+/**
+ * @param {PDFDocument} pdfDoc
+ * @param {string} font
+ */
+async function embedFont(pdfDoc, font) {
+  if (font in StandardFonts) {
+    return await pdfDoc.embedFont(font);
+  }
+  const fontLoader = new FontLoader("./fonts");
+  return await fontLoader.loadFontIntoDoc(
+    pdfDoc,
+    "CarterOne/CarterOne-Regular.ttf"
+  );
+}
+
+/**
+ *
+ * @param {LayoutConfigDto} configDto
+ * @param {PDFDocument} pdfDoc
+ * @returns
+ */
+async function layoutConfigFromDto(configDto, pdfDoc) {
+  return {
+    pageHeight: Length.fromString(configDto.pageHeight),
+    pageWidth: Length.fromString(configDto.pageWidth),
+
+    leftMargin: Length.fromString(configDto.leftMargin),
+    rightMargin: Length.fromString(configDto.rightMargin),
+    topMargin: Length.fromString(configDto.topMargin),
+    bottomMargin: Length.fromString(configDto.bottomMargin),
+    sectionDistance: Length.fromString(configDto.sectionDistance),
+
+    lyricTextConfig: new TextConfig({
+      font: await embedFont(pdfDoc, configDto.lyricTextConfig.font),
+      fontSize: Length.fromString(configDto.lyricTextConfig.fontSize),
+    }),
+    refTextConfig: new TextConfig({
+      font: await embedFont(pdfDoc, configDto.refTextConfig.font),
+      fontSize: Length.fromString(configDto.refTextConfig.fontSize),
+    }),
+    chorusTextConfig: new TextConfig({
+      font: await embedFont(pdfDoc, configDto.chorusTextConfig.font),
+      fontSize: Length.fromString(configDto.chorusTextConfig.fontSize),
+    }),
+    titleTextConfig: new TextConfig({
+      font: await embedFont(pdfDoc, configDto.titleTextConfig.font),
+      fontSize: Length.fromString(configDto.titleTextConfig.fontSize),
+    }),
+    chordTextConfig: new TextConfig({
+      font: await embedFont(pdfDoc, configDto.chordTextConfig.font),
+      fontSize: Length.fromString(configDto.chordTextConfig.fontSize),
+    }),
+  };
 }
 
 /**

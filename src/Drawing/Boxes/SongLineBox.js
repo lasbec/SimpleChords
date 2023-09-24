@@ -68,7 +68,7 @@ export class SongLineBox {
   }
 
   lyricLineHeight() {
-    return this.lyricConfig.lineHeight;
+    return this.lyricConfig.lineHeight.mul(0.9);
   }
   /**
    * @param {PDFPage} pdfPage
