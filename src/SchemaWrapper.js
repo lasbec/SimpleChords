@@ -127,7 +127,7 @@ export class SchemaWrapper {
   sectionTextConfig(type) {
     if (type === WellKnownSectionType.Chorus)
       return this.style.chorusTextConfig;
-    if (type === WellKnownSectionType.Ref) return this.style.refTextConfig;
+    if (type === WellKnownSectionType.Refrain) return this.style.refTextConfig;
     return this.style.lyricTextConfig;
   }
 
