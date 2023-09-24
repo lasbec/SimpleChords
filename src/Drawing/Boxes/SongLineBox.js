@@ -51,7 +51,10 @@ export class SongLineBox {
     const lastChord = this.line.chords[this.line.chords.length - 1];
     if (!lastChord) return lyricWidth;
     const lastChordYOffset = this.partialWidths()[lastChord.startIndex];
-    if (!lastChordYOffset) return lyricWidth;
+    if (!lastChordYOffset)
+      throw Error(
+        `No y-offset found for chord '${lastChord.chord}' (index = ${lastChord.startIndex})`
+      );
     const lastChordWidth = this.chordsConfig.widthOfText(lastChord.chord);
     const result = Length.safeMax(
       lyricWidth,

@@ -8,28 +8,25 @@
 import { BreakableText } from "./BreakableText.js";
 import { SongLine } from "./SongLine.js";
 import { WellKnownSectionType } from "./SongChecker.js";
-
-/**
- * @param {string} str
- * @param {TextConfig} style
- * @param {Length} width
- */
-function fitsWidth(str, style, width) {
-  return style.widthOfText(str).lt(width);
-}
+import { SongLineBox } from "./Drawing/Boxes/SongLineBox.js";
 
 /**
  * @param {SongLine} line
- * @param {TextConfig} style
+ * @param {SongLineConfig} style
  * @param {Length} width
  */
 function getMaxLenToFitWidth(line, style, width) {
-  let str = line.lyric;
-  while (!fitsWidth(str, style, width)) {
-    str = str.slice(0, -1);
+  let box = new SongLineBox(line, style);
+  while (box.width.gt(width)) {
+    line = line.slice(0, -1);
+    box = new SongLineBox(line, style);
   }
-  return str.length;
+  return line.length;
 }
+
+/**
+ * @typedef {import("./Drawing/Boxes/SongLineBox.js").SongLineBoxConfig} SongLineConfig
+ */
 
 /**
  * @typedef {SongSection & {toBeProcessed:BreakableText<SongLine> }} Result
@@ -77,31 +74,34 @@ export class SchemaWrapper {
 
   /**
    * @param {BreakableText<SongLine>} line
-   * @param {TextConfig} textConfig
+   * @param {SongLineConfig} textConfig
    * @returns {number}
    */
   possibleChordsAInLine(line, textConfig) {
-    const maxLen = getMaxLenToFitWidth(line.text, textConfig, this.width);
-    const args = { maxLineLen: maxLen, minLineLen: 0 };
-    if (maxLen > 1) {
-      const [x, _] = line.break(args);
-      return x.chords.length;
+    let currMax = 0;
+    for (const chord of line.text.chords) {
+      const box = new SongLineBox(
+        line.text.slice(0, chord.startIndex + 1),
+        textConfig
+      );
+      if (box.width.gt(this.width)) return currMax;
+      currMax += 1;
     }
-    return line.text.chords.length;
+    return currMax;
   }
 
   /**
    *
    * @param {Result} result
    * @param {number} chordIndex
-   * @param {TextConfig} textConfig
+   * @param {SongLineConfig} songLineConf
    */
-  breakLineAfterChord(result, chordIndex, textConfig) {
+  breakLineAfterChord(result, chordIndex, songLineConf) {
     const c0 = result.toBeProcessed.text.chords[chordIndex];
     const c1 = result.toBeProcessed.text.chords[chordIndex + 1];
     const maxLineLen =
       c1?.startIndex ||
-      getMaxLenToFitWidth(result.toBeProcessed.text, textConfig, this.width);
+      getMaxLenToFitWidth(result.toBeProcessed.text, songLineConf, this.width);
     const minLineLen = (c0?.startIndex ?? -1) + 1;
     if (result.toBeProcessed.text.length <= maxLineLen) {
       if (result.toBeProcessed.text.length > 0) {
@@ -123,7 +123,7 @@ export class SchemaWrapper {
   }
 
   /**@param {string} type */
-  sectionTextConfig(type) {
+  sectionConfig(type) {
     if (type === WellKnownSectionType.Chorus)
       return this.style.chorusTextConfig;
     if (type === WellKnownSectionType.Refrain) return this.style.refTextConfig;
@@ -134,14 +134,18 @@ export class SchemaWrapper {
     for (const [sectionType, results] of Object.entries(
       this.resultsBySectionType
     )) {
-      const textConfig = this.sectionTextConfig(sectionType);
+      const lyricConf = this.sectionConfig(sectionType);
+      const lineConf = {
+        lyricConfig: lyricConf,
+        chordsConfig: this.style.chordTextConfig,
+      };
       const min = Math.min(
         ...results.map((r) =>
-          this.possibleChordsAInLine(r.toBeProcessed, textConfig)
+          this.possibleChordsAInLine(r.toBeProcessed, lineConf)
         )
       );
       results.forEach((r) => {
-        this.breakLineAfterChord(r, min - 1, textConfig);
+        this.breakLineAfterChord(r, min - 1, lineConf);
       });
     }
   }
