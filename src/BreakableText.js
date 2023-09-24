@@ -92,8 +92,8 @@ export class BreakableText {
   break(_args) {
     // Allow only true linebreaks such that the results get shorter
     const args = {
-      minLineLen: Math.max(1, _args.minLineLen),
-      maxLineLen: Math.min(this.text.length - 1, _args.maxLineLen),
+      minLineLen: Math.min(Math.max(1, _args.minLineLen), this.text.length - 1),
+      maxLineLen: Math.max(Math.min(this.text.length - 1, _args.maxLineLen), 1),
     };
     if (this.text.length <= 1) {
       throw new Error("Not allowed to break empty or one character line.");
