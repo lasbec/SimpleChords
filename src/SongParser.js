@@ -143,7 +143,9 @@ class SongParser {
         expected: "]",
       });
     }
-    return line.slice(0, -1);
+    const sectionType = line.slice(0, -1).trim().toLocaleLowerCase();
+    if (sectionType === "ref") return "refrain";
+    return sectionType || "verse";
   }
 
   readSection() {

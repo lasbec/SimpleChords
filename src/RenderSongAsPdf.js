@@ -298,7 +298,7 @@ function drawSongSectionLines(pointer, songLines, sectionType, layoutConfig) {
   const lyricStyle =
     sectionType === WellKnownSectionType.Chorus
       ? layoutConfig.chorusTextConfig
-      : sectionType === WellKnownSectionType.Ref
+      : sectionType === WellKnownSectionType.Refrain
       ? layoutConfig.refTextConfig
       : layoutConfig.lyricTextConfig;
   const chordTextConfig = layoutConfig.chordTextConfig;

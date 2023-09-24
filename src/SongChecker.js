@@ -6,19 +6,22 @@
 
 export const WellKnownSectionType = {
   Interlude: "interlude",
-  Ref: "ref",
+  Refrain: "refrain",
   Chorus: "chorus",
   Bridge: "bridge",
   Verse: "verse",
   Intro: "intro",
-  Outro: "outro"
-}
+  Outro: "outro",
+};
 
 /** @param {SongAst} ast  */
 export function checkSongAst(ast) {
   for (const section of ast.sections) {
     let sectionType = section.type.trim().toLowerCase();
-    if(!Object.values(WellKnownSectionType).includes(sectionType) && sectionType !== ""){
+    if (
+      !Object.values(WellKnownSectionType).includes(sectionType) &&
+      sectionType !== ""
+    ) {
       console.warn(`Unknown section type '${section.type}'`);
     }
     for (const line of section.lines) {
@@ -58,16 +61,15 @@ export function parseSchema(lines) {
  *  * @param {string[]} _schema
  */
 export function validateSectionAgainstSchema(section, _schema) {
-  const schema = [..._schema]
+  const schema = [..._schema];
   const lines = section.lines;
   let lineIndex = -1;
   for (const line of lines) {
     lineIndex += 1;
-    const warning =
-      `line schemas are differing for '${section.type}' sections near:\n${line.lyric}`;
-    for(const chord of line.chords){
+    const warning = `line schemas are differing for '${section.type}' sections near:\n${line.lyric}`;
+    for (const chord of line.chords) {
       const schemaChord = schema.shift();
-      if(schemaChord !== chord.chord){
+      if (schemaChord !== chord.chord) {
         console.warn(warning);
       }
     }
