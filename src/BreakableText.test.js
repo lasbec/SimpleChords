@@ -75,6 +75,19 @@ describe("BreakableText", () => {
   });
 
   describe("break", () => {
+    it("albatros bug", () => {
+      const text = BreakableText.fromString(
+        StrLikeImplOnString,
+        "Und sollten wir uns einmal trennen, dann bleibt die Erinnerund and Stunden bestehn. An Stunden des Glücks und an Stunden der Not und die Hoffnung auf ein Wiedersehn."
+      );
+      const args = { minLineLen: 83, maxLineLen: 123 };
+      const [str, rest] = text.break(args);
+      expect([str, rest.text]).toEqual([
+        "Und sollten wir uns einmal trennen, dann bleibt die Erinnerund and Stunden bestehn. ",
+        "An Stunden des Glücks und an Stunden der Not und die Hoffnung auf ein Wiedersehn.",
+      ]);
+    });
+
     it("weber bug", () => {
       const text = BreakableText.fromString(
         StrLikeImplOnString,

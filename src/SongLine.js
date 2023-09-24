@@ -86,7 +86,7 @@ export class SongLine {
     const result = node.lyric
       .padEnd(startIndexOfLastChord, " ")
       .split("")
-      .map((c, i) => ({ char: c, chord: null, index: i }));
+      .map((c, i) => ({ char: c, chord: null }));
     for (const chord of node.chords) {
       const lyricChar = result[chord.startIndex];
       lyricChar.chord = chord.chord;

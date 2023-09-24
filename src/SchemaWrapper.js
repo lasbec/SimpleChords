@@ -98,11 +98,10 @@ export class SchemaWrapper {
    */
   breakLineAfterChord(result, chordIndex, textConfig) {
     const c0 = result.toBeProcessed.text.chords[chordIndex];
-    const maxLineLen = getMaxLenToFitWidth(
-      result.toBeProcessed.text,
-      textConfig,
-      this.width
-    );
+    const c1 = result.toBeProcessed.text.chords[chordIndex + 1];
+    const maxLineLen =
+      c1?.startIndex ||
+      getMaxLenToFitWidth(result.toBeProcessed.text, textConfig, this.width);
     const minLineLen = (c0?.startIndex ?? -1) + 1;
     if (result.toBeProcessed.text.length <= maxLineLen) {
       if (result.toBeProcessed.text.length > 0) {
@@ -114,6 +113,15 @@ export class SchemaWrapper {
       );
       return;
     }
+    // if (result.toBeProcessed.text.lyric.startsWith("Und")) {
+    console.error(result.toBeProcessed.text.lyric);
+    console.error(result.toBeProcessed.text.chords);
+    console.error("min", minLineLen);
+    console.error("max", maxLineLen);
+    console.error("C0,", c0);
+    console.error("CI,", chordIndex);
+    console.error("------------------");
+    // }
     const [newLine, rest] = result.toBeProcessed.break({
       minLineLen,
       maxLineLen,
@@ -141,6 +149,7 @@ export class SchemaWrapper {
           this.possibleChordsAInLine(r.toBeProcessed, textConfig)
         )
       );
+      console.error("r", sectionType, " rr", min);
       results.forEach((r) => {
         this.breakLineAfterChord(r, min - 1, textConfig);
       });
