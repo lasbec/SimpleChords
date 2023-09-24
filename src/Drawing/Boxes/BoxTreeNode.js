@@ -24,6 +24,13 @@ export class BoxTreeRoot {
   ownBox;
   /** @type {BoxTreeNode} */
   parent;
+  /** @type {BoxTreeNode[]} */
+  children;
+
+  /** @param {BoxTreeChildNode} box */
+  appendChild(box) {
+    this.children.push(box);
+  }
 
   /**
    * @param {PageBox} ownBox
@@ -35,6 +42,7 @@ export class BoxTreeRoot {
     };
     this.ownBox = ownBox;
     this.parent = this;
+    this.children = [];
   }
 
   get width() {
@@ -99,6 +107,13 @@ export class BoxTreeChildNode {
   ownBox;
   /** @type {BoxTreeNode} */
   parent;
+  /** @type {BoxTreeNode[]} */
+  children;
+
+  /** @param {BoxTreeChildNode} box */
+  appendChild(box) {
+    this.children.push(box);
+  }
 
   /**
    *
@@ -110,6 +125,7 @@ export class BoxTreeChildNode {
     this.leftBottomCorner = leftBottomCorner;
     this.ownBox = ownBox;
     this.parent = parentNode;
+    this.children = [];
   }
 
   get width() {
