@@ -113,15 +113,6 @@ export class SchemaWrapper {
       );
       return;
     }
-    // if (result.toBeProcessed.text.lyric.startsWith("Und")) {
-    console.error(result.toBeProcessed.text.lyric);
-    console.error(result.toBeProcessed.text.chords);
-    console.error("min", minLineLen);
-    console.error("max", maxLineLen);
-    console.error("C0,", c0);
-    console.error("CI,", chordIndex);
-    console.error("------------------");
-    // }
     const [newLine, rest] = result.toBeProcessed.break({
       minLineLen,
       maxLineLen,
@@ -149,7 +140,6 @@ export class SchemaWrapper {
           this.possibleChordsAInLine(r.toBeProcessed, textConfig)
         )
       );
-      console.error("r", sectionType, " rr", min);
       results.forEach((r) => {
         this.breakLineAfterChord(r, min - 1, textConfig);
       });
