@@ -72,6 +72,7 @@ export class SongBodyBox {
     for (const l of this.sections) {
       const rightBottom = pointer.pointerDown(l.height).pointerRight(l.width);
       l.setPosition(pointer.span(rightBottom));
+      l.drawToPdfPage(pdfPage);
       pointer.moveDown(l.height);
     }
   }
