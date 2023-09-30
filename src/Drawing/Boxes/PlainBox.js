@@ -24,22 +24,20 @@ export class PlainBox {
   constructor(dims) {
     this.width = dims.width;
     this.height = dims.height;
-    this.leftTopPointer = null;
+    /** @type {DetachedBox[]} */
+    this.children = [];
   }
   /**
    * @param {import("../Geometry.js").BoxPosition} position
    */
-  setPosition(position) {
-    this.leftTopPointer = position.getPointerAt("left", "top");
-  }
+  setPosition(position) {}
 
   /**
    * @param {PDFPage} pdfPage
    */
   drawToPdfPage(pdfPage) {
-    const pointer = this.leftTopPointer;
-    if (!pointer) {
-      throw Error("Position not set.");
+    for (const child of this.children) {
+      child.drawToPdfPage(pdfPage);
     }
   }
 }

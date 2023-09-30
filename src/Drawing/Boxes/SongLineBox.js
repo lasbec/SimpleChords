@@ -36,19 +36,14 @@ export class SongLineBox {
     this.line = line;
     this.lyricConfig = args.lyricConfig;
     this.chordsConfig = args.chordsConfig;
-    this.leftTopPointer = null;
+    /**@type {DetachedBox[]} */
+    this.children = [];
   }
   /**
    * @param {import("../Geometry.js").BoxPosition} position
    */
   setPosition(position) {
     this.leftTopPointer = position.getPointerAt("left", "top");
-  }
-
-  /**
-   * @param {PDFPage} pdfPage
-   */
-  drawToPdfPage(pdfPage) {
     const pointer = this.leftTopPointer;
     if (!pointer) {
       throw Error("Position not set.");
@@ -60,18 +55,23 @@ export class SongLineBox {
       const yOffset = partialWidths[chord.startIndex];
       if (!yOffset) continue;
       const bottomLeftOfChord = pointer.pointerRight(yOffset);
-      pdfPage.drawText(chord.chord, {
-        ...bottomLeftOfChord.rawPointIn("pt"),
-        font: this.chordsConfig.font,
-        size: this.chordsConfig.fontSize.in("pt"),
-      });
+      const chordBox = new TextBox(chord.chord, this.chordsConfig);
+      chordBox.setPosition(bottomLeftOfChord.span(bottomLeftOfChord));
+      this.children.push(chordBox);
     }
     pointer.moveDown(this.lyricLineHeight());
-    pdfPage.drawText(this.line.lyric, {
-      ...pointer.rawPointIn("pt"),
-      font: this.lyricConfig.font,
-      size: this.lyricConfig.fontSize.in("pt"),
-    });
+    const lyricBox = new TextBox(this.line.lyric, this.lyricConfig);
+    lyricBox.setPosition(pointer.span(pointer));
+    this.children.push(lyricBox);
+  }
+
+  /**
+   * @param {PDFPage} pdfPage
+   */
+  drawToPdfPage(pdfPage) {
+    for (const child of this.children) {
+      child.drawToPdfPage(pdfPage);
+    }
   }
   /**
    * @type {Length | undefined}

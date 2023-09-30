@@ -7,7 +7,7 @@ import { rgb } from "pdf-lib";
  * @typedef {import("../Geometry.js").YStartPosition} YStartPosition
  * @typedef {import("../Geometry.js").DetachedBox} DetachedBox
  * @typedef {import("../Geometry.js").Dimensions} Dimesions
- * @typedef {import("./PageBox.js").PageBox} PageBox
+ * @typedef {import("../Boxes/PageBox.js").PageBox} PageBox
  */
 
 /**

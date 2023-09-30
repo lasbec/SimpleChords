@@ -1,7 +1,7 @@
 import { Length } from "../Length.js";
 import { Document } from "./Document.js";
 import { TextBox } from "./PrimitiveBoxes/TextBox.js";
-import { DebugBox } from "./Boxes/DebugBox.js";
+import { DebugBox } from "./PrimitiveBoxes/DebugBox.js";
 import { PlainBox } from "./Boxes/PlainBox.js";
 import { BoxTreeChildNode } from "./BoxTreeNode.js";
 import { FreePointer } from "./FreePointer.js";
