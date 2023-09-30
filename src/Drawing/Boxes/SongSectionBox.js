@@ -37,10 +37,10 @@ export class SongSectionBox {
   constructor(section, config) {
     this.section = section;
     this.config = config;
-    this.lines = section.lines.map((l) => new SongLineBox(l, this.config));
-    this.width = Length.max(this.lines.map((l) => l.width)) || Length.zero;
-    this.singleLineHeight = this.lines[0]?.height || Length.zero;
-    this.height = this.singleLineHeight.mul(this.lines.length);
+    this.children = section.lines.map((l) => new SongLineBox(l, this.config));
+    this.width = Length.max(this.children.map((l) => l.width)) || Length.zero;
+    this.singleLineHeight = this.children[0]?.height || Length.zero;
+    this.height = this.singleLineHeight.mul(this.children.length);
     this.leftTopPointer = null;
   }
   /**
@@ -48,21 +48,23 @@ export class SongSectionBox {
    */
   setPosition(position) {
     this.leftTopPointer = position.getPointerAt("left", "top");
+    const pointer = this.leftTopPointer;
+    if (!pointer) {
+      throw Error("Position not set.");
+    }
+    for (const l of this.children) {
+      const rightBottom = pointer.pointerDown(l.height).pointerRight(l.width);
+      l.setPosition(pointer.span(rightBottom));
+      pointer.moveDown(l.height);
+    }
   }
 
   /**
    * @param {PDFPage} pdfPage
    */
   drawToPdfPage(pdfPage) {
-    const pointer = this.leftTopPointer;
-    if (!pointer) {
-      throw Error("Position not set.");
-    }
-    for (const l of this.lines) {
-      const rightBottom = pointer.pointerDown(l.height).pointerRight(l.width);
-      l.setPosition(pointer.span(rightBottom));
-      l.drawToPdfPage(pdfPage);
-      pointer.moveDown(l.height);
+    for (const child of this.children) {
+      child.drawToPdfPage(pdfPage);
     }
   }
 }

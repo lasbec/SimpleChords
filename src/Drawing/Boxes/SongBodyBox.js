@@ -41,39 +41,40 @@ export class SongBodyBox {
   constructor(song, config) {
     this.song = song;
     this.config = config;
-    this.sections = song.sections.map(
+    this.children = song.sections.map(
       (l) => new SongSectionBox(l, this.config)
     );
-    this.width = Length.max(this.sections.map((l) => l.width)) || Length.zero;
+    this.width = Length.max(this.children.map((l) => l.width)) || Length.zero;
 
     let height = Length.zero;
-    for (const s of this.sections) {
+    for (const s of this.children) {
       height = height.add(s.height).add(this.config.sectionDistance);
     }
 
     this.height = height;
-    this.leftTopPointer = null;
   }
   /**
    * @param {import("../Geometry.js").BoxPosition} position
    */
   setPosition(position) {
     this.leftTopPointer = position.getPointerAt("left", "top");
+    const pointer = this.leftTopPointer;
+    if (!pointer) {
+      throw Error("Position not set.");
+    }
+    for (const l of this.children) {
+      const rightBottom = pointer.pointerDown(l.height).pointerRight(l.width);
+      l.setPosition(pointer.span(rightBottom));
+      pointer.moveDown(l.height);
+    }
   }
 
   /**
    * @param {PDFPage} pdfPage
    */
   drawToPdfPage(pdfPage) {
-    const pointer = this.leftTopPointer;
-    if (!pointer) {
-      throw Error("Position not set.");
-    }
-    for (const l of this.sections) {
-      const rightBottom = pointer.pointerDown(l.height).pointerRight(l.width);
-      l.setPosition(pointer.span(rightBottom));
-      l.drawToPdfPage(pdfPage);
-      pointer.moveDown(l.height);
+    for (const child of this.children) {
+      child.drawToPdfPage(pdfPage);
     }
   }
 }
