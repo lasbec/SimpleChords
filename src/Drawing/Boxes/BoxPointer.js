@@ -1,6 +1,6 @@
 import { Length } from "../../Length.js";
 import { Document } from "../Document.js";
-import { TextBox } from "./TextBox.js";
+import { TextBox } from "../PrimitiveBoxes/TextBox.js";
 import { DebugBox } from "./DebugBox.js";
 import { PlainBox } from "./PlainBox.js";
 import { BoxTreeChildNode } from "./BoxTreeNode.js";

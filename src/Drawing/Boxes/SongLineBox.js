@@ -1,6 +1,6 @@
 import { LEN, Length } from "../../Length.js";
 import { SongLine } from "../../SongLine.js";
-import { TextBox } from "./TextBox.js";
+import { TextBox } from "../PrimitiveBoxes/TextBox.js";
 /**
  * @typedef {import("../TextConfig.js").TextConfig} TextConfig
  * @typedef {import("pdf-lib").PDFPage} PDFPage
