@@ -1,7 +1,7 @@
 import { PDFPage } from "pdf-lib";
-import { Length } from "../../Length.js";
-import { Page as PageBox } from "./PageBox.js";
-import { FreePointer } from "../FreePointer.js";
+import { Length } from "../Length.js";
+import { Page as PageBox } from "./Boxes/PageBox.js";
+import { FreePointer } from "./FreePointer.js";
 
 export type Point = {
   x: Length;

@@ -1,14 +1,14 @@
 import { LEN, Length } from "../../Length.js";
 import { Document } from "../Document.js";
-import { BoxTreeRoot } from "./BoxTreeNode.js";
+import { BoxTreeRoot } from "../BoxTreeNode.js";
 /**
  * @typedef {import("pdf-lib").PDFPage} PDFPage
- * @typedef {import("./Geometry.js").Point} Point
- * @typedef {import("./Geometry.js").XStartPosition} XStartPosition
- * @typedef {import("./Geometry.js").YStartPosition} YStartPosition
- * @typedef {import("./Geometry.js").DetachedBox} DetachedBox
- * @typedef {import("./Geometry.js").Dimensions} Dimesions
- * @typedef {import("./BoxTreeNode.js").BoxTreeNode} BoxTreeNode
+ * @typedef {import("../Geometry.js").Point} Point
+ * @typedef {import("../Geometry.js").XStartPosition} XStartPosition
+ * @typedef {import("../Geometry.js").YStartPosition} YStartPosition
+ * @typedef {import("../Geometry.js").DetachedBox} DetachedBox
+ * @typedef {import("../Geometry.js").Dimensions} Dimesions
+ * @typedef {import("../BoxTreeNode.js").BoxTreeNode} BoxTreeNode
  */
 
 /**

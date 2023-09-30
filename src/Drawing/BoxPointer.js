@@ -1,10 +1,10 @@
-import { Length } from "../../Length.js";
-import { Document } from "../Document.js";
-import { TextBox } from "../PrimitiveBoxes/TextBox.js";
-import { DebugBox } from "./DebugBox.js";
-import { PlainBox } from "./PlainBox.js";
+import { Length } from "../Length.js";
+import { Document } from "./Document.js";
+import { TextBox } from "./PrimitiveBoxes/TextBox.js";
+import { DebugBox } from "./Boxes/DebugBox.js";
+import { PlainBox } from "./Boxes/PlainBox.js";
 import { BoxTreeChildNode } from "./BoxTreeNode.js";
-import { FreePointer } from "../FreePointer.js";
+import { FreePointer } from "./FreePointer.js";
 /**
  * @typedef {import("./Geometry.js").Point} Point
  * @typedef {import("./Geometry.js").XStartPosition} XStartPosition
@@ -12,7 +12,7 @@ import { FreePointer } from "../FreePointer.js";
  * @typedef {import("./BoxTreeNode.js").BoxTreeNode} BoxTreeNode
  * @typedef {import("./Geometry.js").DetachedBox} DetachedBox
  * @typedef {import("./Geometry.js").Dimensions} Dimesions
- * @typedef {import("../TextConfig.js").TextConfig} TextConfig
+ * @typedef {import("./TextConfig.js").TextConfig} TextConfig
  */
 
 export class BoxPointer {
@@ -152,7 +152,7 @@ export class BoxPointer {
   }
 
   /**
-   * @param {import("../../Length.js").UnitName} unit
+   * @param {import("../Length.js").UnitName} unit
    */
   rawPointIn(unit) {
     return this.freePointer.rawPointIn(unit);

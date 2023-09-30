@@ -1,13 +1,12 @@
 import { LEN, Length } from "../../Length.js";
-import { BoxPointer } from "./BoxPointer.js";
 import { rgb } from "pdf-lib";
 /**
  * @typedef {import("pdf-lib").PDFPage} PDFPage
- * @typedef {import("./Geometry.js").Point} Point
- * @typedef {import("./Geometry.js").XStartPosition} XStartPosition
- * @typedef {import("./Geometry.js").YStartPosition} YStartPosition
- * @typedef {import("./Geometry.js").DetachedBox} DetachedBox
- * @typedef {import("./Geometry.js").Dimensions} Dimesions
+ * @typedef {import("../Geometry.js").Point} Point
+ * @typedef {import("../Geometry.js").XStartPosition} XStartPosition
+ * @typedef {import("../Geometry.js").YStartPosition} YStartPosition
+ * @typedef {import("../Geometry.js").DetachedBox} DetachedBox
+ * @typedef {import("../Geometry.js").Dimensions} Dimesions
  * @typedef {import("./PageBox.js").PageBox} PageBox
  */
 
@@ -45,7 +44,7 @@ export class DebugBox {
 
   /**
    * @param {PDFPage} pdfPage
-   * @param {import("./Geometry.js").BoxPosition} position
+   * @param {import("../Geometry.js").BoxPosition} position
    */
   drawToPdfPage(pdfPage, position) {
     const center = position.getPointerAt("center", "center");

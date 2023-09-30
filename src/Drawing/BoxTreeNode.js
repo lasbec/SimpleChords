@@ -1,11 +1,11 @@
 import { PDFPage, rgb } from "pdf-lib";
-import { PageBox } from "./PageBox.js";
+import { PageBox } from "./Boxes/PageBox.js";
 import { drawDebugBox } from "./BoxDrawingUtils.js";
-import { Length } from "../../Length.js";
+import { Length } from "../Length.js";
 import { BoxPointer } from "./BoxPointer.js";
-import { Document } from "../Document.js";
+import { Document } from "./Document.js";
 import { BoxOverflows } from "./BoxOverflow.js";
-import { FreeBoxPosition } from "../FreeBoxPosition.js";
+import { FreeBoxPosition } from "./FreeBoxPosition.js";
 /**
  * @typedef {import("./Geometry.js").Point} Point
  * @typedef {import("./Geometry.js").DetachedBox} DetachedBox

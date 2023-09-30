@@ -1,5 +1,5 @@
 /**
- * @typedef {import("./Boxes/Geometry.js").BoxPosition} BoxPosition
+ * @typedef {import("./Geometry.js").BoxPosition} BoxPosition
  */
 
 import { FreeBoxPosition } from "./FreeBoxPosition.js";

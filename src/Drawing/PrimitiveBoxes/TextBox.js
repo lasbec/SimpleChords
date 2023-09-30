@@ -2,11 +2,11 @@ import { LEN, Length } from "../../Length.js";
 /**
  * @typedef {import("../TextConfig.js").TextConfig} TextConfig
  * @typedef {import("pdf-lib").PDFPage} PDFPage
- * @typedef {import("../Boxes/Geometry.js").Point} Point
- * @typedef {import("../Boxes/Geometry.js").XStartPosition} XStartPosition
- * @typedef {import("../Boxes/Geometry.js").YStartPosition} YStartPosition
- * @typedef {import("../Boxes/Geometry.js").Dimensions} Dimensions
- * @typedef {import("../Boxes/Geometry.js").DetachedBox} DetachedBox
+ * @typedef {import("../Geometry.js").Point} Point
+ * @typedef {import("../Geometry.js").XStartPosition} XStartPosition
+ * @typedef {import("../Geometry.js").YStartPosition} YStartPosition
+ * @typedef {import("../Geometry.js").Dimensions} Dimensions
+ * @typedef {import("../Geometry.js").DetachedBox} DetachedBox
  */
 
 /**
@@ -35,7 +35,7 @@ export class TextBox {
 
   /**
    * @param {PDFPage} pdfPage
-   * @param {import("../Boxes/Geometry.js").BoxPosition} position
+   * @param {import("../Geometry.js").BoxPosition} position
    */
   drawToPdfPage(pdfPage, position) {
     const leftBottomCorner = position.getPointerAt("left", "bottom");

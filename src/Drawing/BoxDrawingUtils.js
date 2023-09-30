@@ -1,12 +1,12 @@
 /**
- * @typedef {import("../../Length.js").Length} Lenght
+ * @typedef {import("../Length.js").Length} Lenght
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("pdf-lib").PDFFont} PDFFont
  * @typedef {import("pdf-lib").Color}  Color
  * @typedef {import("./BoxTreeNode.js").BoxTreeNode} BoxTreeNode
  */
 import { rgb } from "pdf-lib";
-import { Document } from "../Document.js";
+import { Document } from "./Document.js";
 
 /** @type {Map<number, Color>} */
 const debugLevelColorMap = new Map([

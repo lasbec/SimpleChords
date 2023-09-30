@@ -1,8 +1,8 @@
 /**
- * @typedef {import("./Boxes/Geometry.js").XStartPosition} XStartPosition
- * @typedef {import("./Boxes/Geometry.js").YStartPosition} YStartPosition
- * @typedef {import("./Boxes/Geometry.js").Point} Point
- * @typedef {import("./Boxes/Geometry.js").BoxPosition} BoxPosition
+ * @typedef {import("./Geometry.js").XStartPosition} XStartPosition
+ * @typedef {import("./Geometry.js").YStartPosition} YStartPosition
+ * @typedef {import("./Geometry.js").Point} Point
+ * @typedef {import("./Geometry.js").BoxPosition} BoxPosition
  */
 
 import { Length } from "../Length.js";

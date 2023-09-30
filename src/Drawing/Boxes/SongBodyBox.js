@@ -6,11 +6,11 @@ import { SongSectionBox } from "./SongSectionBox.js";
  * @typedef {import("../../Song.js").SongSection} SongSection
  * @typedef {import("../TextConfig.js").TextConfig} TextConfig
  * @typedef {import("pdf-lib").PDFPage} PDFPage
- * @typedef {import("./Geometry.js").Point} Point
- * @typedef {import("./Geometry.js").XStartPosition} XStartPosition
- * @typedef {import("./Geometry.js").YStartPosition} YStartPosition
- * @typedef {import("./Geometry.js").Dimensions} Dimensions
- * @typedef {import("./Geometry.js").DetachedBox} DetachedBox
+ * @typedef {import("../Geometry.js").Point} Point
+ * @typedef {import("../Geometry.js").XStartPosition} XStartPosition
+ * @typedef {import("../Geometry.js").YStartPosition} YStartPosition
+ * @typedef {import("../Geometry.js").Dimensions} Dimensions
+ * @typedef {import("../Geometry.js").DetachedBox} DetachedBox
  */
 
 /**
@@ -56,7 +56,7 @@ export class SongBodyBox {
 
   /**
    * @param {PDFPage} pdfPage
-   * @param {import("./Geometry.js").BoxPosition} position
+   * @param {import("../Geometry.js").BoxPosition} position
    */
   drawToPdfPage(pdfPage, position) {
     const pointer = position.getPointerAt("left", "top");

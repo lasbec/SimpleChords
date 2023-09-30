@@ -1,13 +1,13 @@
 /**
  * @typedef {import("pdf-lib").PDFPage} PDFPage
- * @typedef {import("./Drawing/Boxes/Geometry.ts").Dimensions} Dimensions
+ * @typedef {import("./Drawing/Geometry.js").Dimensions} Dimensions
  * @typedef {import("./Song.js").SongSection} SongSection
  */
 import { PDFDocument, StandardFonts } from "pdf-lib";
 import { FontLoader } from "./Drawing/FontLoader.js";
 import { LEN, Length } from "./Length.js";
 import { Document } from "./Drawing/Document.js";
-import { BoxPointer } from "./Drawing/Boxes/BoxPointer.js";
+import { BoxPointer } from "./Drawing/BoxPointer.js";
 import { parseSongAst } from "./SongParser.js";
 import * as Path from "path";
 import * as fs from "fs/promises";
@@ -15,7 +15,7 @@ import { Song } from "./Song.js";
 import { SongLine } from "./SongLine.js";
 import { checkSongAst, WellKnownSectionType } from "./SongChecker.js";
 import { SchemaWrapper } from "./SchemaWrapper.js";
-import { BoxTreeRoot } from "./Drawing/Boxes/BoxTreeNode.js";
+import { BoxTreeRoot } from "./Drawing/BoxTreeNode.js";
 import { TextConfig } from "./Drawing/TextConfig.js";
 import { SongSectionBox } from "./Drawing/Boxes/SongSectionBox.js";
 
