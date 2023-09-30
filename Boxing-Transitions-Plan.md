@@ -28,8 +28,7 @@ Statt einer Umbruchstrategie kann eine Box auch mit einem Overflowhandling geset
 ## ToDo's
 
 - Remove width and hight attributes from Boxes (they are dynamically caclulated)
-
-### Folder structure
-
+- Build a mechanism to measure the hight and width of a HOB by it's children
+- extract drawToPdfPage for HOB's
+- ~~Split placeing and drawing~~
 - ~~Make PrimitveDir~~
-- BuildInBoxes (Breaking Text etc.)
