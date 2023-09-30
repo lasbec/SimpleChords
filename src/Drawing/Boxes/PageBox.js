@@ -8,6 +8,7 @@ import { BoxTreeRoot } from "../BoxTreeNode.js";
  * @typedef {import("../Geometry.js").YStartPosition} YStartPosition
  * @typedef {import("../Geometry.js").DetachedBox} DetachedBox
  * @typedef {import("../Geometry.js").Dimensions} Dimesions
+ * @typedef {import("../Geometry.js").BoxPosition} BoxPosition
  * @typedef {import("../BoxTreeNode.js").BoxTreeNode} BoxTreeNode
  */
 
@@ -54,6 +55,11 @@ export class PageBox {
   setBox(box) {
     this.children.push(box);
   }
+
+  /**
+   *@param {BoxPosition} position
+   */
+  setPosition(position) {}
 
   /**
    * @param {PDFPage} pdfPage

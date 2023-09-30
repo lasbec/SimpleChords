@@ -24,11 +24,22 @@ export class PlainBox {
   constructor(dims) {
     this.width = dims.width;
     this.height = dims.height;
+    this.leftTopPointer = null;
+  }
+  /**
+   * @param {import("../Geometry.js").BoxPosition} position
+   */
+  setPosition(position) {
+    this.leftTopPointer = position.getPointerAt("left", "top");
   }
 
   /**
    * @param {PDFPage} pdfPage
-   * @param {import("../Geometry.js").BoxPosition} position
    */
-  drawToPdfPage(pdfPage, position) {}
+  drawToPdfPage(pdfPage) {
+    const pointer = this.leftTopPointer;
+    if (!pointer) {
+      throw Error("Position not set.");
+    }
+  }
 }

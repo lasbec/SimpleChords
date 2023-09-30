@@ -21,7 +21,8 @@ export type BoxPosition = {
 };
 
 export type DetachedBox = {
-  drawToPdfPage(page: PDFPage, position: BoxPosition): void;
+  setPosition(position: BoxPosition): void;
+  drawToPdfPage(page: PDFPage): void;
   width: Length;
   height: Length;
 };

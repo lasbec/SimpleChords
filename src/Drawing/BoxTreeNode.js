@@ -152,7 +152,8 @@ export class BoxTreeChildNode {
   drawToPdfPage(page) {
     this.doOverflowManagement(page, this);
     drawDebugBox(page, this);
-    this.ownBox.drawToPdfPage(page, this);
+    this.ownBox.setPosition(this);
+    this.ownBox.drawToPdfPage(page);
   }
 
   /** @return {number} */

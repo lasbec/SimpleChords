@@ -36,8 +36,43 @@ export class SongLineBox {
     this.line = line;
     this.lyricConfig = args.lyricConfig;
     this.chordsConfig = args.chordsConfig;
+    this.leftTopPointer = null;
+  }
+  /**
+   * @param {import("../Geometry.js").BoxPosition} position
+   */
+  setPosition(position) {
+    this.leftTopPointer = position.getPointerAt("left", "top");
   }
 
+  /**
+   * @param {PDFPage} pdfPage
+   */
+  drawToPdfPage(pdfPage) {
+    const pointer = this.leftTopPointer;
+    if (!pointer) {
+      throw Error("Position not set.");
+    }
+    pointer.moveDown(this.chordsConfig.lineHeight);
+
+    const partialWidths = this.partialWidths();
+    for (const chord of this.line.chords) {
+      const yOffset = partialWidths[chord.startIndex];
+      if (!yOffset) continue;
+      const bottomLeftOfChord = pointer.pointerRight(yOffset);
+      pdfPage.drawText(chord.chord, {
+        ...bottomLeftOfChord.rawPointIn("pt"),
+        font: this.chordsConfig.font,
+        size: this.chordsConfig.fontSize.in("pt"),
+      });
+    }
+    pointer.moveDown(this.lyricLineHeight());
+    pdfPage.drawText(this.line.lyric, {
+      ...pointer.rawPointIn("pt"),
+      font: this.lyricConfig.font,
+      size: this.lyricConfig.fontSize.in("pt"),
+    });
+  }
   /**
    * @type {Length | undefined}
    * @private
@@ -72,32 +107,6 @@ export class SongLineBox {
 
   lyricLineHeight() {
     return this.lyricConfig.lineHeight.mul(0.9);
-  }
-  /**
-   * @param {PDFPage} pdfPage
-   * @param {import("../Geometry.js").BoxPosition} position
-   */
-  drawToPdfPage(pdfPage, position) {
-    const pointer = position.getPointerAt("left", "top");
-    pointer.moveDown(this.chordsConfig.lineHeight);
-
-    const partialWidths = this.partialWidths();
-    for (const chord of this.line.chords) {
-      const yOffset = partialWidths[chord.startIndex];
-      if (!yOffset) continue;
-      const bottomLeftOfChord = pointer.pointerRight(yOffset);
-      pdfPage.drawText(chord.chord, {
-        ...bottomLeftOfChord.rawPointIn("pt"),
-        font: this.chordsConfig.font,
-        size: this.chordsConfig.fontSize.in("pt"),
-      });
-    }
-    pointer.moveDown(this.lyricLineHeight());
-    pdfPage.drawText(this.line.lyric, {
-      ...pointer.rawPointIn("pt"),
-      font: this.lyricConfig.font,
-      size: this.lyricConfig.fontSize.in("pt"),
-    });
   }
 
   /**

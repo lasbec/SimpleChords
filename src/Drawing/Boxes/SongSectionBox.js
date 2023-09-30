@@ -41,17 +41,26 @@ export class SongSectionBox {
     this.width = Length.max(this.lines.map((l) => l.width)) || Length.zero;
     this.singleLineHeight = this.lines[0]?.height || Length.zero;
     this.height = this.singleLineHeight.mul(this.lines.length);
+    this.leftTopPointer = null;
+  }
+  /**
+   * @param {import("../Geometry.js").BoxPosition} position
+   */
+  setPosition(position) {
+    this.leftTopPointer = position.getPointerAt("left", "top");
   }
 
   /**
    * @param {PDFPage} pdfPage
-   * @param {import("../Geometry.js").BoxPosition} position
    */
-  drawToPdfPage(pdfPage, position) {
-    const pointer = position.getPointerAt("left", "top");
+  drawToPdfPage(pdfPage) {
+    const pointer = this.leftTopPointer;
+    if (!pointer) {
+      throw Error("Position not set.");
+    }
     for (const l of this.lines) {
       const rightBottom = pointer.pointerDown(l.height).pointerRight(l.width);
-      l.drawToPdfPage(pdfPage, pointer.span(rightBottom));
+      l.setPosition(pointer.span(rightBottom));
       pointer.moveDown(l.height);
     }
   }

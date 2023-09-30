@@ -31,14 +31,25 @@ export class TextBox {
     this.style = style;
     this.width = style.widthOfText(text);
     this.height = style.lineHeight;
+    this.leftBottomCorner = null;
+  }
+
+  /**
+   *
+   * @param {import("../Geometry.js").BoxPosition} position
+   */
+  setPosition(position) {
+    this.leftBottomCorner = position.getPointerAt("left", "bottom");
   }
 
   /**
    * @param {PDFPage} pdfPage
-   * @param {import("../Geometry.js").BoxPosition} position
    */
-  drawToPdfPage(pdfPage, position) {
-    const leftBottomCorner = position.getPointerAt("left", "bottom");
+  drawToPdfPage(pdfPage) {
+    const leftBottomCorner = this.leftBottomCorner;
+    if (!leftBottomCorner) {
+      throw Error("Position not set.");
+    }
     pdfPage.drawText(this.text, {
       x: leftBottomCorner.x.in("pt"),
       y: leftBottomCorner.y.in("pt"),

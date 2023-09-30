@@ -40,15 +40,25 @@ export class DebugBox {
     this.center = center;
     this.constructCount = DebugBox.constructionCounter;
     DebugBox.constructionCounter += 1;
+
+    this.position = null;
+  }
+  /**
+   * @param {import("../Geometry.js").BoxPosition} position
+   */
+  setPosition(position) {
+    this.position = position;
   }
 
   /**
    * @param {PDFPage} pdfPage
-   * @param {import("../Geometry.js").BoxPosition} position
    */
-  drawToPdfPage(pdfPage, position) {
-    const center = position.getPointerAt("center", "center");
-    const leftBottomCorner = position.getPointerAt("left", "bottom");
+  drawToPdfPage(pdfPage) {
+    if (!this.position) {
+      throw Error("Position not set.");
+    }
+    const center = this.position.getPointerAt("center", "center");
+    const leftBottomCorner = this.position.getPointerAt("left", "bottom");
     pdfPage.drawCircle({
       x: center.x.in("pt"),
       y: center.y.in("pt"),
