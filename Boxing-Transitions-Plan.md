@@ -27,7 +27,7 @@ Statt einer Umbruchstrategie kann eine Box auch mit einem Overflowhandling geset
 
 ## ToDo's
 
--
+- Remove width and hight attributes from Boxes (they are dynamically caclulated)
 
 ### Folder structure
 
