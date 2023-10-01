@@ -1,5 +1,4 @@
-import { LEN, Length } from "../../Length.js";
-import { SongLineBox } from "./SongLineBox.js";
+import { Length } from "../../Length.js";
 import { Song } from "../../Song.js";
 import { SongSectionBox } from "./SongSectionBox.js";
 /**
@@ -62,15 +61,6 @@ export class SongBodyBox {
       const rightBottom = pointer.pointerDown(l.height).pointerRight(l.width);
       l.setPosition(pointer.span(rightBottom));
       pointer.moveDown(l.height);
-    }
-  }
-
-  /**
-   * @param {PDFPage} pdfPage
-   */
-  drawToPdfPage(pdfPage) {
-    for (const child of this.children) {
-      child.drawToPdfPage(pdfPage);
     }
   }
 }

@@ -1,14 +1,13 @@
 import { PDFPage, rgb } from "pdf-lib";
 import { PageBox } from "./Boxes/PageBox.js";
-import { drawDebugBox } from "./BoxDrawingUtils.js";
+import { drawDebugBox, drawToPdfPage } from "./BoxDrawingUtils.js";
 import { Length } from "../Length.js";
 import { BoxPointer } from "./BoxPointer.js";
 import { Document } from "./Document.js";
 import { BoxOverflows } from "./BoxOverflow.js";
-import { FreeBoxPosition } from "./FreeBoxPosition.js";
 /**
  * @typedef {import("./Geometry.js").Point} Point
- * @typedef {import("./Geometry.js").PrimitiveBox} PrimitiveBox
+ * @typedef {import("./Geometry.js").Box} Box
  * @typedef {import("./Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("./Geometry.js").YStartPosition} YStartPosition
  */
@@ -73,7 +72,7 @@ export class BoxTreeRoot {
    */
   drawToPdfPage(page) {
     drawDebugBox(page, this);
-    this.ownBox.drawToPdfPage(page);
+    drawToPdfPage(page, this.ownBox);
   }
 
   /**
@@ -103,7 +102,7 @@ export class BoxTreeRoot {
 export class BoxTreeChildNode {
   /** @type {Point} */
   leftBottomCorner;
-  /** @type {PrimitiveBox} */
+  /** @type {Box} */
   ownBox;
   /** @type {BoxTreeNode} */
   parent;
@@ -118,7 +117,7 @@ export class BoxTreeChildNode {
   /**
    *
    * @param {Point} leftBottomCorner
-   * @param {PrimitiveBox} ownBox
+   * @param {Box} ownBox
    * @param {BoxTreeNode} parentNode
    */
   constructor(leftBottomCorner, ownBox, parentNode) {
@@ -153,7 +152,7 @@ export class BoxTreeChildNode {
     this.doOverflowManagement(page, this);
     drawDebugBox(page, this);
     this.ownBox.setPosition(this);
-    this.ownBox.drawToPdfPage(page);
+    drawToPdfPage(page, this.ownBox);
   }
 
   /** @return {number} */

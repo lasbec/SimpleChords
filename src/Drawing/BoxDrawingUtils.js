@@ -4,6 +4,8 @@
  * @typedef {import("pdf-lib").PDFFont} PDFFont
  * @typedef {import("pdf-lib").Color}  Color
  * @typedef {import("./BoxTreeNode.js").BoxTreeNode} BoxTreeNode
+ * @typedef {import("./Geometry.js").DetachedBox} DetachedBox
+ * @typedef {import("./Geometry.js").Printable} Printable
  */
 import { rgb } from "pdf-lib";
 import { Document } from "./Document.js";
@@ -33,5 +35,18 @@ export function drawDebugBox(pdfPage, box) {
       borderColor,
     };
     pdfPage.drawRectangle(args);
+  }
+}
+
+/**
+ * @param {PDFPage} page
+ * @param {Printable | DetachedBox} box
+ */
+export function drawToPdfPage(page, box) {
+  if ("drawToPdfPage" in box) {
+    return box.drawToPdfPage(page);
+  }
+  for (const child of box.children) {
+    drawToPdfPage(page, child);
   }
 }

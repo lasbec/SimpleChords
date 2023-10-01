@@ -60,13 +60,4 @@ export class PageBox {
    *@param {BoxPosition} position
    */
   setPosition(position) {}
-
-  /**
-   * @param {PDFPage} pdfPage
-   */
-  drawToPdfPage(pdfPage) {
-    for (const child of this.children) {
-      child.drawToPdfPage(pdfPage);
-    }
-  }
 }

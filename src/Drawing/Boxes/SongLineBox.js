@@ -63,14 +63,6 @@ export class SongLineBox {
   }
 
   /**
-   * @param {PDFPage} pdfPage
-   */
-  drawToPdfPage(pdfPage) {
-    for (const child of this.children) {
-      child.drawToPdfPage(pdfPage);
-    }
-  }
-  /**
    * @type {Length | undefined}
    * @private
    */

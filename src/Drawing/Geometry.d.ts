@@ -33,8 +33,9 @@ export type Printable = {
 
 export type DetachedBox = {
   setPosition(position: BoxPosition): void;
-  drawToPdfPage(page: PDFPage): void;
-  children: Printable[];
+  children: (Printable | DetachedBox)[];
   width: Length;
   height: Length;
 };
+
+export type Box = DetachedBox | PrimitiveBox;

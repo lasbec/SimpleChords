@@ -31,13 +31,4 @@ export class PlainBox {
    * @param {import("../Geometry.js").BoxPosition} position
    */
   setPosition(position) {}
-
-  /**
-   * @param {PDFPage} pdfPage
-   */
-  drawToPdfPage(pdfPage) {
-    for (const child of this.children) {
-      child.drawToPdfPage(pdfPage);
-    }
-  }
 }
