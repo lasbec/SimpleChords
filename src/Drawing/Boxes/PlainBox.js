@@ -5,12 +5,12 @@ import { Length } from "../../Length.js";
  * @typedef {import("../Geometry.js").Point} Point
  * @typedef {import("../Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("../Geometry.js").YStartPosition} YStartPosition
- * @typedef {import("../Geometry.js").DetachedBox} DetachedBox
+ * @typedef {import("../Geometry.js").HOBox} HOBox
  * @typedef {import("../Geometry.js").Dimensions} Dimensions
  */
 
 /**
- * @implements {DetachedBox}
+ * @implements {HOBox}
  */
 export class PlainBox {
   /**@type {Length}*/
@@ -24,7 +24,7 @@ export class PlainBox {
   constructor(dims) {
     this.width = dims.width;
     this.height = dims.height;
-    /** @type {DetachedBox[]} */
+    /** @type {HOBox[]} */
     this.children = [];
   }
   /**
