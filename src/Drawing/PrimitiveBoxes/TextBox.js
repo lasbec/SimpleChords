@@ -6,11 +6,11 @@ import { LEN, Length } from "../../Length.js";
  * @typedef {import("../Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("../Geometry.js").YStartPosition} YStartPosition
  * @typedef {import("../Geometry.js").Dimensions} Dimensions
- * @typedef {import("../Geometry.js").DetachedBox} DetachedBox
+ * @typedef {import("../Geometry.js").PrimitiveBox} PrimitiveBox
  */
 
 /**
- * @implements {DetachedBox}
+ * @implements {PrimitiveBox}
  */
 export class TextBox {
   /**@type {string}*/

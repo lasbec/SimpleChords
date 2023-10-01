@@ -20,9 +20,21 @@ export type BoxPosition = {
   getPointerAt(x: XStartPosition, y: YStartPosition): FreePointer;
 };
 
+export type PrimitiveBox = {
+  setPosition(position: BoxPosition): void;
+  drawToPdfPage(page: PDFPage): void;
+  width: Length;
+  height: Length;
+};
+
+export type Printable = {
+  drawToPdfPage(page: PDFPage): void;
+};
+
 export type DetachedBox = {
   setPosition(position: BoxPosition): void;
   drawToPdfPage(page: PDFPage): void;
+  children: Printable[];
   width: Length;
   height: Length;
 };

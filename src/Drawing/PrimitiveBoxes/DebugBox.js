@@ -5,13 +5,13 @@ import { rgb } from "pdf-lib";
  * @typedef {import("../Geometry.js").Point} Point
  * @typedef {import("../Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("../Geometry.js").YStartPosition} YStartPosition
- * @typedef {import("../Geometry.js").DetachedBox} DetachedBox
+ * @typedef {import("../Geometry.js").PrimitiveBox} PrimitiveBox
  * @typedef {import("../Geometry.js").Dimensions} Dimesions
  * @typedef {import("../Boxes/PageBox.js").PageBox} PageBox
  */
 
 /**
- * @implements {DetachedBox}
+ * @implements {PrimitiveBox}
  */
 export class DebugBox {
   /**@type {Length}*/

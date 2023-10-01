@@ -10,7 +10,7 @@ import { FreePointer } from "./FreePointer.js";
  * @typedef {import("./Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("./Geometry.js").YStartPosition} YStartPosition
  * @typedef {import("./BoxTreeNode.js").BoxTreeNode} BoxTreeNode
- * @typedef {import("./Geometry.js").DetachedBox} DetachedBox
+ * @typedef {import("./Geometry.js").PrimitiveBox} PrimitiveBox
  * @typedef {import("./Geometry.js").Dimensions} Dimesions
  * @typedef {import("./TextConfig.js").TextConfig} TextConfig
  */
@@ -257,7 +257,7 @@ export class BoxPointer {
   /**
    * @param {XStartPosition} x
    * @param {YStartPosition} y
-   * @param {DetachedBox} box
+   * @param {PrimitiveBox} box
    */
   setBox(x, y, box) {
     const xToDraw = this.xPositionRelativeToThis(x, box.width);

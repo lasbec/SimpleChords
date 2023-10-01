@@ -8,7 +8,7 @@ import { BoxOverflows } from "./BoxOverflow.js";
 import { FreeBoxPosition } from "./FreeBoxPosition.js";
 /**
  * @typedef {import("./Geometry.js").Point} Point
- * @typedef {import("./Geometry.js").DetachedBox} DetachedBox
+ * @typedef {import("./Geometry.js").PrimitiveBox} PrimitiveBox
  * @typedef {import("./Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("./Geometry.js").YStartPosition} YStartPosition
  */
@@ -103,7 +103,7 @@ export class BoxTreeRoot {
 export class BoxTreeChildNode {
   /** @type {Point} */
   leftBottomCorner;
-  /** @type {DetachedBox} */
+  /** @type {PrimitiveBox} */
   ownBox;
   /** @type {BoxTreeNode} */
   parent;
@@ -118,7 +118,7 @@ export class BoxTreeChildNode {
   /**
    *
    * @param {Point} leftBottomCorner
-   * @param {DetachedBox} ownBox
+   * @param {PrimitiveBox} ownBox
    * @param {BoxTreeNode} parentNode
    */
   constructor(leftBottomCorner, ownBox, parentNode) {
