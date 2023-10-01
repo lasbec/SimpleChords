@@ -1,4 +1,4 @@
-import { LEN, Length } from "../../Length.js";
+import { Length } from "../../Length.js";
 import { SongLineBox } from "./SongLineBox.js";
 /**
  * @typedef {import("../../Song.js").SongSection} SongSection
