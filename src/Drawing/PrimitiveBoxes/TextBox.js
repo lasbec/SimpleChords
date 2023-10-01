@@ -1,4 +1,6 @@
 import { LEN, Length } from "../../Length.js";
+import { BoxPointer } from "../BoxPointer.js";
+import { FreePointer } from "../FreePointer.js";
 /**
  * @typedef {import("../TextConfig.js").TextConfig} TextConfig
  * @typedef {import("pdf-lib").PDFPage} PDFPage
@@ -31,7 +33,7 @@ export class TextBox {
     this.style = style;
     this.width = style.widthOfText(text);
     this.height = style.lineHeight;
-    this.leftBottomCorner = null;
+    this.leftBottomCorner = new FreePointer(Length.zero, Length.zero);
   }
 
   /**
