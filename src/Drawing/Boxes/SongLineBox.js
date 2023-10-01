@@ -43,11 +43,7 @@ export class SongLineBox {
    * @param {import("../Geometry.js").BoxPosition} position
    */
   setPosition(position) {
-    this.leftTopPointer = position.getPointerAt("left", "top");
-    const pointer = this.leftTopPointer;
-    if (!pointer) {
-      throw Error("Position not set.");
-    }
+    const pointer = position.getPointerAt("left", "top");
     pointer.moveDown(this.chordsConfig.lineHeight);
 
     const partialWidths = this.partialWidths();

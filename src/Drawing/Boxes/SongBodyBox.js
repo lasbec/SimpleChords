@@ -57,11 +57,7 @@ export class SongBodyBox {
    * @param {import("../Geometry.js").BoxPosition} position
    */
   setPosition(position) {
-    this.leftTopPointer = position.getPointerAt("left", "top");
-    const pointer = this.leftTopPointer;
-    if (!pointer) {
-      throw Error("Position not set.");
-    }
+    const pointer = position.getPointerAt("left", "top");
     for (const l of this.children) {
       const rightBottom = pointer.pointerDown(l.height).pointerRight(l.width);
       l.setPosition(pointer.span(rightBottom));

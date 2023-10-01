@@ -41,17 +41,12 @@ export class SongSectionBox {
     this.width = Length.max(this.children.map((l) => l.width)) || Length.zero;
     this.singleLineHeight = this.children[0]?.height || Length.zero;
     this.height = this.singleLineHeight.mul(this.children.length);
-    this.leftTopPointer = null;
   }
   /**
    * @param {import("../Geometry.js").BoxPosition} position
    */
   setPosition(position) {
-    this.leftTopPointer = position.getPointerAt("left", "top");
-    const pointer = this.leftTopPointer;
-    if (!pointer) {
-      throw Error("Position not set.");
-    }
+    const pointer = position.getPointerAt("left", "top");
     for (const l of this.children) {
       const rightBottom = pointer.pointerDown(l.height).pointerRight(l.width);
       l.setPosition(pointer.span(rightBottom));
