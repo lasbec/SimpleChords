@@ -31,11 +31,11 @@ export type Printable = {
   drawToPdfPage(page: PDFPage): void;
 };
 
-export type DetachedBox = {
+export type HOBox = {
   setPosition(position: BoxPosition): void;
-  children: (Printable | DetachedBox)[];
+  children: (Printable | HOBox)[];
   width: Length;
   height: Length;
 };
 
-export type Box = DetachedBox | PrimitiveBox;
+export type Box = HOBox | PrimitiveBox;

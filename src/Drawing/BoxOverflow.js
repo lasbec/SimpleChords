@@ -4,7 +4,7 @@ import { LEN, Length } from "../Length.js";
  * @typedef {import("./Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("./Geometry.js").YStartPosition} YStartPosition
  * @typedef {import("./BoxTreeNode.js").BoxTreeNode} BoxTreeNode
- * @typedef {import("./Geometry.js").DetachedBox} DetachedBox
+ * @typedef {import("./Geometry.js").HOBox} HOBox
  * @typedef {import("./Geometry.js").Dimensions} Dimesions
  * @typedef {import("./TextConfig.js").TextConfig} TextConfig
  */

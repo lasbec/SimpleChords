@@ -8,7 +8,7 @@ import { TextBox } from "../PrimitiveBoxes/TextBox.js";
  * @typedef {import("../Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("../Geometry.js").YStartPosition} YStartPosition
  * @typedef {import("../Geometry.js").Dimensions} Dimensions
- * @typedef {import("../Geometry.js").DetachedBox} DetachedBox
+ * @typedef {import("../Geometry.js").HOBox} HOBox
  * @typedef {import("../Geometry.js").PrimitiveBox} PrimitiveBox
  */
 
@@ -19,7 +19,7 @@ import { TextBox } from "../PrimitiveBoxes/TextBox.js";
  */
 
 /**
- * @implements {DetachedBox}
+ * @implements {HOBox}
  */
 export class SongLineBox {
   /**@type {SongLine}*/
@@ -37,7 +37,7 @@ export class SongLineBox {
     this.line = line;
     this.lyricConfig = args.lyricConfig;
     this.chordsConfig = args.chordsConfig;
-    /**@type {(DetachedBox | PrimitiveBox)[]} */
+    /**@type {(HOBox | PrimitiveBox)[]} */
     this.children = [];
   }
   /**

@@ -6,7 +6,7 @@ import { BoxTreeRoot } from "../BoxTreeNode.js";
  * @typedef {import("../Geometry.js").Point} Point
  * @typedef {import("../Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("../Geometry.js").YStartPosition} YStartPosition
- * @typedef {import("../Geometry.js").DetachedBox} DetachedBox
+ * @typedef {import("../Geometry.js").HOBox} HOBox
  * @typedef {import("../Geometry.js").Dimensions} Dimesions
  * @typedef {import("../Geometry.js").BoxPosition} BoxPosition
  * @typedef {import("../BoxTreeNode.js").BoxTreeNode} BoxTreeNode
@@ -19,7 +19,7 @@ import { BoxTreeRoot } from "../BoxTreeNode.js";
  */
 
 /**
- * @implements {DetachedBox}
+ * @implements {HOBox}
  */
 export class PageBox {
   /** @type {Length}*/

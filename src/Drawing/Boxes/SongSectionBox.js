@@ -8,7 +8,7 @@ import { SongLineBox } from "./SongLineBox.js";
  * @typedef {import("../Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("../Geometry.js").YStartPosition} YStartPosition
  * @typedef {import("../Geometry.js").Dimensions} Dimensions
- * @typedef {import("../Geometry.js").DetachedBox} DetachedBox
+ * @typedef {import("../Geometry.js").HOBox} HOBox
  */
 
 /**
@@ -18,7 +18,7 @@ import { SongLineBox } from "./SongLineBox.js";
  */
 
 /**
- * @implements {DetachedBox}
+ * @implements {HOBox}
  */
 export class SongSectionBox {
   /**@type {SongSection}*/
