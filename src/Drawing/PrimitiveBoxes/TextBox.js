@@ -1,4 +1,4 @@
-import { AbstractBox } from "../BoxDrawingUtils.js";
+import { AbstractPrimitiveBox } from "../BoxDrawingUtils.js";
 /**
  * @typedef {import("../TextConfig.js").TextConfig} TextConfig
  * @typedef {import("pdf-lib").PDFPage} PDFPage
@@ -13,7 +13,7 @@ import { AbstractBox } from "../BoxDrawingUtils.js";
 /**
  * @implements {PrimitiveBox}
  */
-export class TextBox extends AbstractBox {
+export class TextBox extends AbstractPrimitiveBox {
   /**@type {string}*/
   text;
   /**@type {TextConfig}*/

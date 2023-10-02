@@ -1,5 +1,5 @@
 import { Length } from "../../Length.js";
-import { AbstractBox } from "../BoxDrawingUtils.js";
+import { AbstractPrimitiveBox } from "../BoxDrawingUtils.js";
 import { getPoint } from "../BoxMeasuringUtils.js";
 import { SongLineBox } from "./SongLineBox.js";
 /**
@@ -23,7 +23,7 @@ import { SongLineBox } from "./SongLineBox.js";
 /**
  * @implements {HOBox}
  */
-export class SongSectionBox extends AbstractBox {
+export class SongSectionBox extends AbstractPrimitiveBox {
   /**@type {SongSection}*/
   section;
   /**@type {SongSectionBoxConfig}*/

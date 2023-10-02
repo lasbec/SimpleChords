@@ -1,6 +1,6 @@
 import { LEN, Length } from "../../Length.js";
 import { SongLine } from "../../SongLine.js";
-import { AbstractBox } from "../BoxDrawingUtils.js";
+import { AbstractPrimitiveBox } from "../BoxDrawingUtils.js";
 import { getPoint } from "../BoxMeasuringUtils.js";
 import { TextBox } from "../PrimitiveBoxes/TextBox.js";
 /**
@@ -24,7 +24,7 @@ import { TextBox } from "../PrimitiveBoxes/TextBox.js";
 /**
  * @implements {HOBox}
  */
-export class SongLineBox extends AbstractBox {
+export class SongLineBox extends AbstractPrimitiveBox {
   /**@type {SongLine}*/
   line;
   /**@type {TextConfig}*/

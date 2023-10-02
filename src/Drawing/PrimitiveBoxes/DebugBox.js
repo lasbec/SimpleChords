@@ -2,7 +2,7 @@ import { LEN, Length } from "../../Length.js";
 import { rgb } from "pdf-lib";
 import { FreePointer } from "../FreePointer.js";
 import { getPoint } from "../BoxMeasuringUtils.js";
-import { AbstractBox } from "../BoxDrawingUtils.js";
+import { AbstractPrimitiveBox } from "../BoxDrawingUtils.js";
 /**
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("../Geometry.js").Point} Point
@@ -17,7 +17,7 @@ import { AbstractBox } from "../BoxDrawingUtils.js";
 /**
  * @implements {PrimitiveBox}
  */
-export class DebugBox extends AbstractBox {
+export class DebugBox extends AbstractPrimitiveBox {
   get leftBottomCorner() {
     return {
       x: this.center.x.sub(this.width.mul(1 / 2)),

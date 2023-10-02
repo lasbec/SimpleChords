@@ -1,7 +1,7 @@
 import { LEN, Length } from "../../Length.js";
 import { Document } from "../Document.js";
 import { BoxTreeRoot } from "../BoxTreeNode.js";
-import { AbstractBox } from "../BoxDrawingUtils.js";
+import { AbstractPrimitiveBox } from "../BoxDrawingUtils.js";
 /**
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("../Geometry.js").Point} Point
@@ -22,7 +22,7 @@ import { AbstractBox } from "../BoxDrawingUtils.js";
 /**
  * @implements {HOBox}
  */
-export class PageBox extends AbstractBox {
+export class PageBox extends AbstractPrimitiveBox {
   /** @type {BoxTreeNode[]} */
   children;
 

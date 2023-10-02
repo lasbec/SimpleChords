@@ -12,6 +12,7 @@ import { Document } from "./Document.js";
 import { FreePointer } from "./FreePointer.js";
 import { Length } from "../Length.js";
 import { getPoint } from "./BoxMeasuringUtils.js";
+import { FreeBox } from "./FreeBoxPosition.js";
 
 /** @type {Map<number, Color>} */
 const debugLevelColorMap = new Map([
@@ -62,7 +63,7 @@ export function drawToPdfPage(page, box) {
 /**
  * @typedef {import("./Geometry.js").BoxPlacement} BoxPlacement
  */
-export class AbstractBox {
+export class AbstractPrimitiveBox {
   /**@type {Length}*/
   width;
   /**@type {Length}*/
@@ -103,3 +104,70 @@ export class AbstractBox {
     });
   }
 }
+/**
+ */
+
+/**
+ * @typedef {import("./Geometry.js").Dimensions} Dimensions
+ * @typedef {import("./Geometry.js").Box} Box
+ */
+
+/**
+ * @param {Box[]} boxes
+ * @returns {FreeBox | undefined}
+ */
+function minimalBoundingBox(boxes) {
+  const fst = boxes[0];
+  if (!boxes) return;
+  let leftTop = fst.getPoint("left", "top");
+  let rightBottom = fst.getPoint("right", "bottom");
+  for (const box of boxes) {
+    leftTop = leftTop.span(box.getPoint("left", "top")).getPoint("left", "top");
+    rightBottom = rightBottom
+      .span(box.getPoint("right", "bottom"))
+      .getPoint("right", "bottom");
+  }
+  return FreeBox.fromCorners(leftTop, rightBottom);
+}
+
+// export class AbstractHOBox {
+//   /**@type {Length}*/
+//   width;
+//   /**@type {Length}*/
+//   height;
+
+//   /**
+//    * @param {Box[]} children
+//    */
+//   constructor(children) {
+//     this.width = children.width;
+//     this.height = children.height;
+//     /** @type {BoxPlacement} */
+//     this.position = {
+//       x: "left",
+//       y: "top",
+//       point: new FreePointer(Length.zero, Length.zero),
+//     };
+//   }
+
+//   /**
+//    * @param {BoxPlacement} position
+//    */
+//   setPosition(position) {
+//     this.position = position;
+//   }
+
+//   /**
+//    *@param {XRel} x
+//    *@param {YRel} y
+//    */
+//   getPoint(x, y) {
+//     return getPoint({
+//       targetX: x,
+//       targetY: y,
+//       corner: this.position,
+//       width: this.width,
+//       height: this.height,
+//     });
+//   }
+// }

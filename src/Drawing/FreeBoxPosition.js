@@ -79,7 +79,7 @@ export class FreeBox {
    * @param {XStartPosition} x
    * @param {YStartPosition} y
    */
-  getPointerAt(x, y) {
+  getPoint(x, y) {
     return new FreePointer(this.xPositionFor(x), this.yPositionFor(y));
   }
 }

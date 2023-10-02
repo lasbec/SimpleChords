@@ -1,5 +1,5 @@
 import { Length } from "../../Length.js";
-import { AbstractBox } from "../BoxDrawingUtils.js";
+import { AbstractPrimitiveBox } from "../BoxDrawingUtils.js";
 
 /**
  * @typedef {import("../Geometry.js").BoxPlacement} BoxPlacement
@@ -14,7 +14,7 @@ import { AbstractBox } from "../BoxDrawingUtils.js";
 /**
  * @implements {HOBox}
  */
-export class PlainBox extends AbstractBox {
+export class PlainBox extends AbstractPrimitiveBox {
   /**
    * @param {Dimensions} dims
    */
