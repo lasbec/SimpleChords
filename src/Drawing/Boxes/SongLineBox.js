@@ -1,7 +1,9 @@
+import { loadavg } from "os";
 import { LEN, Length } from "../../Length.js";
 import { SongLine } from "../../SongLine.js";
 import { AbstractPrimitiveBox } from "../BoxDrawingUtils.js";
 import { getPoint } from "../BoxMeasuringUtils.js";
+import { FreePointer } from "../FreePointer.js";
 import { TextBox } from "../PrimitiveBoxes/TextBox.js";
 /**
  * @typedef {import("../Geometry.js").BoxPlacement} BoxPlacement
@@ -44,42 +46,72 @@ export class SongLineBox extends AbstractPrimitiveBox {
       width: SongLineBox.initWidth(line, args),
     });
 
+    /**@type {(HOBox | PrimitiveBox)[]} */
+    this.children = SongLineBox.initChildren(
+      line,
+      args,
+      new FreePointer(Length.zero, Length.zero)
+    );
     this.line = line;
     this.lyricConfig = args.lyricConfig;
     this.chordsConfig = args.chordsConfig;
-    /**@type {(HOBox | PrimitiveBox)[]} */
-    this.children = [];
   }
+
   /**
-   * @param {BoxPlacement} position
+   * @param {SongLine} line
+   * @param {SongLineBoxConfig} args
+   * @param {FreePointer} topLeft
    */
-  setPosition(position) {
-    super.setPosition(position);
-    const pointer = this.getPoint("left", "top");
+  static initChildren(line, args, topLeft) {
+    /**@type {import("../Geometry.js").Box[]} */
+    const children = [];
+    const pointer = topLeft.clone();
+    pointer.moveDown(args.chordsConfig.lineHeight);
 
-    pointer.moveDown(this.chordsConfig.lineHeight);
-
-    const partialWidths = this.partialWidths();
-    for (const chord of this.line.chords) {
+    const partialWidths = this.partialWidths(line, args.lyricConfig);
+    for (const chord of line.chords) {
       const yOffset = partialWidths[chord.startIndex];
       if (!yOffset) continue;
       const bottomLeftOfChord = pointer.pointerRight(yOffset);
-      const chordBox = new TextBox(chord.chord, this.chordsConfig);
+      const chordBox = new TextBox(chord.chord, args.chordsConfig);
       chordBox.setPosition({
         x: "left",
         y: "bottom",
         point: bottomLeftOfChord,
       });
-      this.children.push(chordBox);
+      children.push(chordBox);
     }
-    pointer.moveDown(this.lyricConfig.lineHeight);
-    const lyricBox = new TextBox(this.line.lyric, this.lyricConfig);
+    pointer.moveDown(args.lyricConfig.lineHeight);
+    const lyricBox = new TextBox(line.lyric, args.lyricConfig);
     lyricBox.setPosition({
       x: "left",
       y: "bottom",
       point: pointer,
     });
-    this.children.push(lyricBox);
+    children.push(lyricBox);
+    return children;
+  }
+
+  /**
+   * @param {BoxPlacement} position
+   */
+  setPosition(position) {
+    const oldCenter = this.getPoint("center", "center");
+    super.setPosition(position);
+    const newCenter = this.getPoint("center", "center");
+    const xMove = newCenter.x.sub(oldCenter.x);
+    const yMove = newCenter.y.sub(oldCenter.y);
+
+    for (const child of this.children) {
+      const newChildCenter = child.getPoint("center", "center");
+      newChildCenter.x = newChildCenter.x.add(xMove);
+      newChildCenter.y = newChildCenter.y.add(yMove);
+      child.setPosition({
+        x: "center",
+        y: "center",
+        point: newChildCenter,
+      });
+    }
   }
 
   /**

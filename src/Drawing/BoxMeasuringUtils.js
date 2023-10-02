@@ -47,7 +47,7 @@ const xMovementMap = {
   },
   // from center
   center_to_left(width, pointer) {
-    pointer.moveLeft(width);
+    pointer.moveLeft(width.mul(1 / 2));
   },
   center_to_center(width, pointer) {},
   center_to_right(width, pointer) {
