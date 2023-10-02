@@ -5,6 +5,7 @@ import { Length } from "../Length.js";
 import { BoxPointer } from "./BoxPointer.js";
 import { Document } from "./Document.js";
 import { BoxOverflows } from "./BoxOverflow.js";
+import { FreePointer } from "./FreePointer.js";
 /**
  * @typedef {import("./Geometry.js").Point} Point
  * @typedef {import("./Geometry.js").Box} Box
@@ -151,7 +152,11 @@ export class BoxTreeChildNode {
   drawToPdfPage(page) {
     this.doOverflowManagement(page, this);
     drawDebugBox(page, this);
-    this.ownBox.setPosition(this);
+    this.ownBox.setPosition({
+      x: "left",
+      y: "bottom",
+      point: new FreePointer(this.leftBottomCorner.x, this.leftBottomCorner.y),
+    });
     drawToPdfPage(page, this.ownBox);
   }
 

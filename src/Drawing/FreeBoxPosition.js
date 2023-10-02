@@ -2,16 +2,12 @@
  * @typedef {import("./Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("./Geometry.js").YStartPosition} YStartPosition
  * @typedef {import("./Geometry.js").Point} Point
- * @typedef {import("./Geometry.js").BoxPosition} BoxPosition
  */
 
 import { Length } from "../Length.js";
 import { FreePointer } from "./FreePointer.js";
 
-/**
- * @implements {BoxPosition}
- */
-export class FreeBoxPosition {
+export class FreeBox {
   /**
    * @param {FreePointer} c0
    * @param {FreePointer} c1
@@ -21,7 +17,7 @@ export class FreeBoxPosition {
     const right = c0.isLeftFrom(c1) ? c1.x : c0.x;
     const top = c0.isLowerThan(c1) ? c1.y : c0.y;
     const bottom = c0.isLowerThan(c1) ? c0.y : c1.y;
-    return new FreeBoxPosition(left, right, top, bottom);
+    return new FreeBox(left, right, top, bottom);
   }
 
   /**

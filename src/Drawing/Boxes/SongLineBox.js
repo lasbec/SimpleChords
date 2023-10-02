@@ -1,7 +1,9 @@
 import { LEN, Length } from "../../Length.js";
 import { SongLine } from "../../SongLine.js";
+import { getPoint } from "../BoxMeasuringUtils.js";
 import { TextBox } from "../PrimitiveBoxes/TextBox.js";
 /**
+ * @typedef {import("../Geometry.js").BoxPlacement} BoxPlacement
  * @typedef {import("../TextConfig.js").TextConfig} TextConfig
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("../Geometry.js").Point} Point
@@ -41,10 +43,17 @@ export class SongLineBox {
     this.children = [];
   }
   /**
-   * @param {import("../Geometry.js").BoxPosition} position
+   * @param {BoxPlacement} position
    */
   setPosition(position) {
-    const pointer = position.getPointerAt("left", "top");
+    const pointer = getPoint({
+      targetX: "left",
+      targetY: "top",
+      corner: position,
+      width: this.width,
+      height: this.height,
+    });
+
     pointer.moveDown(this.chordsConfig.lineHeight);
 
     const partialWidths = this.partialWidths();
@@ -53,12 +62,20 @@ export class SongLineBox {
       if (!yOffset) continue;
       const bottomLeftOfChord = pointer.pointerRight(yOffset);
       const chordBox = new TextBox(chord.chord, this.chordsConfig);
-      chordBox.setPosition(bottomLeftOfChord.span(bottomLeftOfChord));
+      chordBox.setPosition({
+        x: "left",
+        y: "bottom",
+        point: bottomLeftOfChord,
+      });
       this.children.push(chordBox);
     }
     pointer.moveDown(this.lyricLineHeight());
     const lyricBox = new TextBox(this.line.lyric, this.lyricConfig);
-    lyricBox.setPosition(pointer.span(pointer));
+    lyricBox.setPosition({
+      x: "left",
+      y: "bottom",
+      point: pointer,
+    });
     this.children.push(lyricBox);
   }
 

@@ -1,6 +1,7 @@
 import { Length } from "../../Length.js";
 
 /**
+ * @typedef {import("../Geometry.js").BoxPlacement} BoxPlacement
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("../Geometry.js").Point} Point
  * @typedef {import("../Geometry.js").XStartPosition} XStartPosition
@@ -28,7 +29,7 @@ export class PlainBox {
     this.children = [];
   }
   /**
-   * @param {import("../Geometry.js").BoxPosition} position
+   * @param {BoxPlacement} position
    */
   setPosition(position) {}
 }

@@ -1,8 +1,11 @@
 import { LEN, Length } from "../../Length.js";
 import { rgb } from "pdf-lib";
+import { FreePointer } from "../FreePointer.js";
+import { getPoint } from "../BoxMeasuringUtils.js";
 /**
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("../Geometry.js").Point} Point
+ * @typedef {import("../Geometry.js").BoxPlacement} BoxPlacement
  * @typedef {import("../Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("../Geometry.js").YStartPosition} YStartPosition
  * @typedef {import("../Geometry.js").PrimitiveBox} PrimitiveBox
@@ -41,10 +44,15 @@ export class DebugBox {
     this.constructCount = DebugBox.constructionCounter;
     DebugBox.constructionCounter += 1;
 
-    this.position = null;
+    /** @type {BoxPlacement} */
+    this.position = {
+      x: "center",
+      y: "center",
+      point: new FreePointer(Length.zero, Length.zero),
+    };
   }
   /**
-   * @param {import("../Geometry.js").BoxPosition} position
+   * @param {BoxPlacement} position
    */
   setPosition(position) {
     this.position = position;
@@ -54,11 +62,20 @@ export class DebugBox {
    * @param {PDFPage} pdfPage
    */
   drawToPdfPage(pdfPage) {
-    if (!this.position) {
-      throw Error("Position not set.");
-    }
-    const center = this.position.getPointerAt("center", "center");
-    const leftBottomCorner = this.position.getPointerAt("left", "bottom");
+    const center = getPoint({
+      targetX: "center",
+      targetY: "center",
+      corner: this.position,
+      width: this.width,
+      height: this.height,
+    });
+    const leftBottomCorner = getPoint({
+      targetX: "left",
+      targetY: "bottom",
+      corner: this.position,
+      width: this.width,
+      height: this.height,
+    });
     pdfPage.drawCircle({
       x: center.x.in("pt"),
       y: center.y.in("pt"),

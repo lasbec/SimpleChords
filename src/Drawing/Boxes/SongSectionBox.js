@@ -1,6 +1,8 @@
 import { Length } from "../../Length.js";
+import { getPoint } from "../BoxMeasuringUtils.js";
 import { SongLineBox } from "./SongLineBox.js";
 /**
+ * @typedef {import("../Geometry.js").BoxPlacement} BoxPlacement
  * @typedef {import("../../Song.js").SongSection} SongSection
  * @typedef {import("../TextConfig.js").TextConfig} TextConfig
  * @typedef {import("pdf-lib").PDFPage} PDFPage
@@ -43,13 +45,22 @@ export class SongSectionBox {
     this.height = this.singleLineHeight.mul(this.children.length);
   }
   /**
-   * @param {import("../Geometry.js").BoxPosition} position
+   * @param {BoxPlacement} position
    */
   setPosition(position) {
-    const pointer = position.getPointerAt("left", "top");
+    const pointer = getPoint({
+      targetX: "left",
+      targetY: "top",
+      corner: position,
+      width: this.width,
+      height: this.height,
+    });
     for (const l of this.children) {
-      const rightBottom = pointer.pointerDown(l.height).pointerRight(l.width);
-      l.setPosition(pointer.span(rightBottom));
+      l.setPosition({
+        x: "left",
+        y: "top",
+        point: pointer,
+      });
       pointer.moveDown(l.height);
     }
   }

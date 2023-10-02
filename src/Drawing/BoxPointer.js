@@ -230,12 +230,12 @@ export class BoxPointer {
 
   /** @param {BoxPointer} other  */
   isLeftFrom(other) {
-    return this.freePointer.isLeftFrom(other);
+    return this.freePointer.isLeftFrom(other.freePointer);
   }
 
   /** @param {BoxPointer} other  */
   isLowerThan(other) {
-    return this.freePointer.isLowerThan(other);
+    return this.freePointer.isLowerThan(other.freePointer);
   }
 
   /**

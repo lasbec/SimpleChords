@@ -1,8 +1,4 @@
-/**
- * @typedef {import("./Geometry.js").BoxPosition} BoxPosition
- */
-
-import { FreeBoxPosition } from "./FreeBoxPosition.js";
+import { FreeBox } from "./FreeBoxPosition.js";
 
 /**
  * @typedef {import("../Length.js").Length} Length
@@ -88,10 +84,10 @@ export class FreePointer {
 
   /**
    * @param {FreePointer} other
-   * @returns {BoxPosition}
+   * @returns {FreeBox}
    */
   span(other) {
-    return FreeBoxPosition.fromCorners(this.clone(), other.clone());
+    return FreeBox.fromCorners(this.clone(), other.clone());
   }
 
   /** @param {FreePointer} other  */

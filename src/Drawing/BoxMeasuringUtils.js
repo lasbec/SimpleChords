@@ -1,32 +1,33 @@
 import { Length } from "../Length.js";
 import { FreePointer } from "./FreePointer.js";
+
 /**
+ * @typedef {import("./Geometry.js").BoxPlacement} BoxPlacement
  * @typedef {import("./Geometry.js").XStartPosition} RelX
  * @typedef {import("./Geometry.js").YStartPosition} RelY
  */
 
 /**
  * @typedef {object} GetPointArgs
- * @property {RelX} relX
- * @property {RelY} relY
- * @property {FreePointer} corner
+ * @property {RelX} targetX
+ * @property {RelY} targetY
+ * @property {BoxPlacement} corner
  * @property {Length} width
  * @property {Length} height
- * @property {RelX} cornerX
- * @property {RelY} cornerY
- *
  */
 
 /**
  * @param {GetPointArgs} args
  */
 export function getPoint(args) {
-  const result = args.corner.clone();
+  const result = args.corner.point.clone();
 
-  const movePointerHorizontal = xMovementMap[`${args.cornerX}_to_${args.relX}`];
+  const movePointerHorizontal =
+    xMovementMap[`${args.corner.x}_to_${args.targetX}`];
   movePointerHorizontal(args.width, result);
 
-  const movePointerVertical = yMovementMap[`${args.cornerY}_to_${args.relY}`];
+  const movePointerVertical =
+    yMovementMap[`${args.corner.y}_to_${args.targetY}`];
   movePointerVertical(args.height, result);
 
   return result;
