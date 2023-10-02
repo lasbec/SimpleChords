@@ -2,6 +2,7 @@ import { LEN, Length } from "../../Length.js";
 import { Document } from "../Document.js";
 import { BoxTreeRoot } from "../BoxTreeNode.js";
 import { AbstractPrimitiveBox } from "../BoxDrawingUtils.js";
+import { FreePointer } from "../FreePointer.js";
 /**
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("../Geometry.js").Point} Point
@@ -37,7 +38,11 @@ export class PageBox extends AbstractPrimitiveBox {
    * @param {Document} doc
    */
   constructor(dims, doc) {
-    super(dims);
+    super(dims, {
+      x: "left",
+      y: "bottom",
+      point: FreePointer.origin(),
+    });
     this.doc = doc;
     this.children = [];
   }

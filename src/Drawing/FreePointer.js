@@ -1,8 +1,5 @@
+import { Length } from "../Length.js";
 import { FreeBox } from "./FreeBoxPosition.js";
-
-/**
- * @typedef {import("../Length.js").Length} Length
- */
 
 export class FreePointer {
   /**
@@ -22,6 +19,15 @@ export class FreePointer {
   constructor(x, y) {
     this.x = x;
     this.y = y;
+  }
+
+  static origin() {
+    return new FreePointer(Length.zero, Length.zero);
+  }
+
+  /** @param {import("./Geometry.js").Point} point  */
+  static fromPoint(point) {
+    return new FreePointer(point.x, point.y);
   }
 
   /**

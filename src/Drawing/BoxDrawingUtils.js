@@ -10,7 +10,7 @@
 import { rgb } from "pdf-lib";
 import { Document } from "./Document.js";
 import { FreePointer } from "./FreePointer.js";
-import { Length } from "../Length.js";
+import { LEN, Length } from "../Length.js";
 import { getPoint, minimalBoundingBox } from "./BoxMeasuringUtils.js";
 import { FreeBox } from "./FreeBoxPosition.js";
 
@@ -71,16 +71,12 @@ export class AbstractPrimitiveBox {
 
   /**
    * @param {import("./Geometry.js").Dimensions} dims
+   * @param {BoxPlacement} position
    */
-  constructor(dims) {
+  constructor(dims, position) {
     this.width = dims.width;
     this.height = dims.height;
-    /** @type {BoxPlacement} */
-    this.position = {
-      x: "left",
-      y: "top",
-      point: new FreePointer(Length.zero, Length.zero),
-    };
+    this.position = position;
   }
 
   /**
@@ -114,14 +110,20 @@ export class AbstractPrimitiveBox {
 
 export class AbstractHOBox extends AbstractPrimitiveBox {
   /**
-   * @param {Box[]} children
+   * @param {(startPoint: FreePointer)=>Box[]} initChildren
    */
-  constructor(children) {
-    const dims = minimalBoundingBox(children);
+  constructor(initChildren) {
+    const children = initChildren(new FreePointer(Length.zero, Length.zero));
+    const mbb = minimalBoundingBox(children);
     super(
-      dims || {
+      mbb || {
         width: Length.zero,
         height: Length.zero,
+      },
+      mbb?.getAnyPosition() || {
+        x: "left",
+        y: "top",
+        point: new FreePointer(Length.zero, Length.zero),
       }
     );
     this.children = children;

@@ -1,4 +1,3 @@
-import { Length } from "../../Length.js";
 import { AbstractHOBox } from "../BoxDrawingUtils.js";
 import { FreePointer } from "../FreePointer.js";
 import { SongLineBox } from "./SongLineBox.js";
@@ -29,17 +28,20 @@ export class SongSectionBox extends AbstractHOBox {
    * @param {SongSectionBoxConfig} config
    */
   constructor(section, config) {
-    const children = section.lines.map((l) => new SongLineBox(l, config));
-    const pointer = new FreePointer(Length.zero, Length.zero);
-    for (const l of children) {
-      l.setPosition({
-        x: "left",
-        y: "top",
-        point: pointer,
-      });
-      pointer.moveDown(l.height);
+    /** @param {FreePointer} startPoint  */
+    function initChildren(startPoint) {
+      const children = section.lines.map((l) => new SongLineBox(l, config));
+      for (const l of children) {
+        l.setPosition({
+          x: "left",
+          y: "top",
+          point: startPoint,
+        });
+        startPoint.moveDown(l.height);
+      }
+      return children;
     }
 
-    super(children);
+    super(initChildren);
   }
 }

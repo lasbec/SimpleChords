@@ -82,4 +82,13 @@ export class FreeBox {
   getPoint(x, y) {
     return new FreePointer(this.xPositionFor(x), this.yPositionFor(y));
   }
+
+  /** @returns {import("./Geometry.js").BoxPlacement} */
+  getAnyPosition() {
+    return {
+      x: "left",
+      y: "top",
+      point: this.getPoint("left", "top"),
+    };
+  }
 }

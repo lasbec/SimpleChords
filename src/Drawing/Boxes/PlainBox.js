@@ -1,5 +1,6 @@
 import { Length } from "../../Length.js";
 import { AbstractPrimitiveBox } from "../BoxDrawingUtils.js";
+import { FreePointer } from "../FreePointer.js";
 
 /**
  * @typedef {import("../Geometry.js").BoxPlacement} BoxPlacement
@@ -19,7 +20,11 @@ export class PlainBox extends AbstractPrimitiveBox {
    * @param {Dimensions} dims
    */
   constructor(dims) {
-    super(dims);
+    super(dims, {
+      x: "left",
+      y: "bottom",
+      point: FreePointer.origin(),
+    });
     /** @type {HOBox[]} */
     this.children = [];
   }

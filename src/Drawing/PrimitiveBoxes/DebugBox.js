@@ -18,13 +18,6 @@ import { AbstractPrimitiveBox } from "../BoxDrawingUtils.js";
  * @implements {PrimitiveBox}
  */
 export class DebugBox extends AbstractPrimitiveBox {
-  get leftBottomCorner() {
-    return {
-      x: this.center.x.sub(this.width.mul(1 / 2)),
-      y: this.center.y.sub(this.width.mul(1 / 2)),
-    };
-  }
-
   /** @type {number} */
   constructCount;
 
@@ -34,11 +27,17 @@ export class DebugBox extends AbstractPrimitiveBox {
    * @param {Point} center
    */
   constructor(center) {
-    super({
-      width: LEN(3, "mm"),
-      height: LEN(3, "mm"),
-    });
-    this.center = center;
+    super(
+      {
+        width: LEN(3, "mm"),
+        height: LEN(3, "mm"),
+      },
+      {
+        x: "center",
+        y: "center",
+        point: FreePointer.fromPoint(center),
+      }
+    );
     this.constructCount = DebugBox.constructionCounter;
     DebugBox.constructionCounter += 1;
   }

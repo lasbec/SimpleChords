@@ -1,8 +1,7 @@
 import { loadavg } from "os";
 import { LEN, Length } from "../../Length.js";
 import { SongLine } from "../../SongLine.js";
-import { AbstractHOBox, AbstractPrimitiveBox } from "../BoxDrawingUtils.js";
-import { getPoint } from "../BoxMeasuringUtils.js";
+import { AbstractHOBox } from "../BoxDrawingUtils.js";
 import { FreePointer } from "../FreePointer.js";
 import { TextBox } from "../PrimitiveBoxes/TextBox.js";
 /**
@@ -32,13 +31,10 @@ export class SongLineBox extends AbstractHOBox {
    * @param {SongLineBoxConfig} args
    */
   constructor(line, args) {
-    /**@type {(HOBox | PrimitiveBox)[]} */
-    const children = SongLineBox.initChildren(
-      line,
-      args,
-      new FreePointer(Length.zero, Length.zero)
+    super(
+      /** @param {FreePointer} p  */
+      (p) => SongLineBox.initChildren(line, args, p)
     );
-    super(children);
   }
 
   /**
@@ -74,31 +70,6 @@ export class SongLineBox extends AbstractHOBox {
     });
     children.push(lyricBox);
     return children;
-  }
-
-  /**
-   * @param {SongLine} line
-   * @param {SongLineBoxConfig} config
-   * @returns {Length}
-   */
-  static initWidth(line, config) {
-    const lyricWidth = config.lyricConfig.widthOfText(line.lyric);
-    const lastChord = line.chords[line.chords.length - 1];
-    if (!lastChord) return lyricWidth;
-    const lastChordYOffset = SongLineBox.partialWidths(
-      line,
-      config.lyricConfig
-    )[lastChord.startIndex];
-    if (!lastChordYOffset)
-      throw Error(
-        `No y-offset found for chord '${lastChord.chord}' (index = ${lastChord.startIndex})`
-      );
-    const lastChordWidth = config.chordsConfig.widthOfText(lastChord.chord);
-    const result = Length.safeMax(
-      lyricWidth,
-      lastChordYOffset.add(lastChordWidth)
-    );
-    return result;
   }
 
   /**

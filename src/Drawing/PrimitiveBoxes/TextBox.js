@@ -1,4 +1,5 @@
 import { AbstractPrimitiveBox } from "../BoxDrawingUtils.js";
+import { FreePointer } from "../FreePointer.js";
 /**
  * @typedef {import("../TextConfig.js").TextConfig} TextConfig
  * @typedef {import("pdf-lib").PDFPage} PDFPage
@@ -24,10 +25,17 @@ export class TextBox extends AbstractPrimitiveBox {
    * @param {TextConfig} style
    */
   constructor(text, style) {
-    super({
-      width: style.widthOfText(text),
-      height: style.lineHeight,
-    });
+    super(
+      {
+        width: style.widthOfText(text),
+        height: style.lineHeight,
+      },
+      {
+        x: "left",
+        y: "bottom",
+        point: FreePointer.origin(),
+      }
+    );
     this.text = text;
     this.style = style;
   }
