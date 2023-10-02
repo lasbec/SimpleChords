@@ -130,44 +130,18 @@ function minimalBoundingBox(boxes) {
   return FreeBox.fromCorners(leftTop, rightBottom);
 }
 
-// export class AbstractHOBox {
-//   /**@type {Length}*/
-//   width;
-//   /**@type {Length}*/
-//   height;
-
-//   /**
-//    * @param {Box[]} children
-//    */
-//   constructor(children) {
-//     this.width = children.width;
-//     this.height = children.height;
-//     /** @type {BoxPlacement} */
-//     this.position = {
-//       x: "left",
-//       y: "top",
-//       point: new FreePointer(Length.zero, Length.zero),
-//     };
-//   }
-
-//   /**
-//    * @param {BoxPlacement} position
-//    */
-//   setPosition(position) {
-//     this.position = position;
-//   }
-
-//   /**
-//    *@param {XRel} x
-//    *@param {YRel} y
-//    */
-//   getPoint(x, y) {
-//     return getPoint({
-//       targetX: x,
-//       targetY: y,
-//       corner: this.position,
-//       width: this.width,
-//       height: this.height,
-//     });
-//   }
-// }
+export class AbstractHOBox extends AbstractPrimitiveBox {
+  /**
+   * @param {Box[]} children
+   */
+  constructor(children) {
+    const dims = minimalBoundingBox(children);
+    super(
+      dims || {
+        width: Length.zero,
+        height: Length.zero,
+      }
+    );
+    this.children = children;
+  }
+}
