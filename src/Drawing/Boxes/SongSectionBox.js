@@ -1,4 +1,5 @@
 import { Length } from "../../Length.js";
+import { AbstractBox } from "../BoxDrawingUtils.js";
 import { getPoint } from "../BoxMeasuringUtils.js";
 import { SongLineBox } from "./SongLineBox.js";
 /**
@@ -22,27 +23,27 @@ import { SongLineBox } from "./SongLineBox.js";
 /**
  * @implements {HOBox}
  */
-export class SongSectionBox {
+export class SongSectionBox extends AbstractBox {
   /**@type {SongSection}*/
   section;
   /**@type {SongSectionBoxConfig}*/
   config;
-  /**@type {Length}*/
-  width;
-  /**@type {Length}*/
-  height;
 
   /**
    * @param {SongSection} section
    * @param {SongSectionBoxConfig} config
    */
   constructor(section, config) {
+    const children = section.lines.map((l) => new SongLineBox(l, this.config));
+    const singleLineHeight = children[0]?.height || Length.zero;
+    const height = singleLineHeight.mul(children.length);
+    super({
+      width: Length.max(children.map((l) => l.width)) || Length.zero,
+      height,
+    });
+    this.children = children;
     this.section = section;
     this.config = config;
-    this.children = section.lines.map((l) => new SongLineBox(l, this.config));
-    this.width = Length.max(this.children.map((l) => l.width)) || Length.zero;
-    this.singleLineHeight = this.children[0]?.height || Length.zero;
-    this.height = this.singleLineHeight.mul(this.children.length);
   }
   /**
    * @param {BoxPlacement} position
