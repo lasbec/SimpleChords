@@ -36,6 +36,11 @@ export class SongLineBox {
    * @param {SongLineBoxConfig} args
    */
   constructor(line, args) {
+    const chordsLineHeight = args.chordsConfig.lineHeight;
+    const lyricLineHeight = args.lyricConfig.lineHeight;
+    this.height = chordsLineHeight.add(lyricLineHeight);
+    this.width = SongLineBox.initWidth(line, args);
+
     this.line = line;
     this.lyricConfig = args.lyricConfig;
     this.chordsConfig = args.chordsConfig;
@@ -69,7 +74,7 @@ export class SongLineBox {
       });
       this.children.push(chordBox);
     }
-    pointer.moveDown(this.lyricLineHeight());
+    pointer.moveDown(this.lyricConfig.lineHeight);
     const lyricBox = new TextBox(this.line.lyric, this.lyricConfig);
     lyricBox.setPosition({
       x: "left",
@@ -80,56 +85,54 @@ export class SongLineBox {
   }
 
   /**
-   * @type {Length | undefined}
-   * @private
+   * @param {SongLine} line
+   * @param {SongLineBoxConfig} config
+   * @returns {Length}
    */
-  _width;
-
-  get width() {
-    if (this._width) return this._width;
-
-    const lyricWidth = this.lyricConfig.widthOfText(this.line.lyric);
-    const lastChord = this.line.chords[this.line.chords.length - 1];
+  static initWidth(line, config) {
+    const lyricWidth = config.lyricConfig.widthOfText(line.lyric);
+    const lastChord = line.chords[line.chords.length - 1];
     if (!lastChord) return lyricWidth;
-    const lastChordYOffset = this.partialWidths()[lastChord.startIndex];
+    const lastChordYOffset = SongLineBox.partialWidths(
+      line,
+      config.lyricConfig
+    )[lastChord.startIndex];
     if (!lastChordYOffset)
       throw Error(
         `No y-offset found for chord '${lastChord.chord}' (index = ${lastChord.startIndex})`
       );
-    const lastChordWidth = this.chordsConfig.widthOfText(lastChord.chord);
+    const lastChordWidth = config.chordsConfig.widthOfText(lastChord.chord);
     const result = Length.safeMax(
       lyricWidth,
       lastChordYOffset.add(lastChordWidth)
     );
-    this._width = result;
     return result;
-  }
-
-  get height() {
-    const chordsLineHeight = this.chordsConfig.lineHeight;
-    const lyricLineHeight = this.lyricLineHeight();
-    return chordsLineHeight.add(lyricLineHeight);
-  }
-
-  lyricLineHeight() {
-    return this.lyricConfig.lineHeight;
   }
 
   /**
    * @private
+   * @param {SongLine} line
+   * @param {TextConfig} lyricConfig
    * @returns {Array<Length>}
    */
-  partialWidths() {
+  static partialWidths(line, lyricConfig) {
     const result = [];
     let partial = "";
-    for (const char of this.line) {
-      const widthPt = this.lyricConfig.font.widthOfTextAtSize(
+    for (const char of line) {
+      const widthPt = lyricConfig.font.widthOfTextAtSize(
         partial,
-        this.lyricConfig.fontSize.in("pt")
+        lyricConfig.fontSize.in("pt")
       );
       result.push(LEN(widthPt, "pt"));
       partial += char;
     }
     return result;
+  }
+  /**
+   * @private
+   * @returns {Array<Length>}
+   */
+  partialWidths() {
+    return SongLineBox.partialWidths(this.line, this.lyricConfig);
   }
 }
