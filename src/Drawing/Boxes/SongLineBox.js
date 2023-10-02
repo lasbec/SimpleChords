@@ -27,13 +27,6 @@ import { TextBox } from "../PrimitiveBoxes/TextBox.js";
  * @implements {HOBox}
  */
 export class SongLineBox extends AbstractHOBox {
-  /**@type {SongLine}*/
-  line;
-  /**@type {TextConfig}*/
-  lyricConfig;
-  /**@type {TextConfig}*/
-  chordsConfig;
-
   /**
    * @param {SongLine} line
    * @param {SongLineBoxConfig} args
@@ -46,10 +39,6 @@ export class SongLineBox extends AbstractHOBox {
       new FreePointer(Length.zero, Length.zero)
     );
     super(children);
-
-    this.line = line;
-    this.lyricConfig = args.lyricConfig;
-    this.chordsConfig = args.chordsConfig;
   }
 
   /**
@@ -130,12 +119,5 @@ export class SongLineBox extends AbstractHOBox {
       partial += char;
     }
     return result;
-  }
-  /**
-   * @private
-   * @returns {Array<Length>}
-   */
-  partialWidths() {
-    return SongLineBox.partialWidths(this.line, this.lyricConfig);
   }
 }

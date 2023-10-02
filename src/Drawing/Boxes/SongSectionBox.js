@@ -1,6 +1,5 @@
 import { Length } from "../../Length.js";
 import { AbstractHOBox } from "../BoxDrawingUtils.js";
-import { minimalBoundingBox } from "../BoxMeasuringUtils.js";
 import { FreePointer } from "../FreePointer.js";
 import { SongLineBox } from "./SongLineBox.js";
 /**
@@ -25,11 +24,6 @@ import { SongLineBox } from "./SongLineBox.js";
  * @implements {HOBox}
  */
 export class SongSectionBox extends AbstractHOBox {
-  /**@type {SongSection}*/
-  section;
-  /**@type {SongSectionBoxConfig}*/
-  config;
-
   /**
    * @param {SongSection} section
    * @param {SongSectionBoxConfig} config
@@ -47,7 +41,5 @@ export class SongSectionBox extends AbstractHOBox {
     }
 
     super(children);
-    this.section = section;
-    this.config = config;
   }
 }
