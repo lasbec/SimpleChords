@@ -35,6 +35,7 @@ export type Printable = {
 
 export type HOBox = {
   setPosition(position: BoxPlacement): void;
+  getPoint(x: XStartPosition, y: YStartPosition): FreePointer;
   children: (Printable | HOBox)[];
   width: Length;
   height: Length;

@@ -1,4 +1,5 @@
 import { Length } from "../../Length.js";
+import { AbstractBox } from "../BoxDrawingUtils.js";
 
 /**
  * @typedef {import("../Geometry.js").BoxPlacement} BoxPlacement
@@ -13,23 +14,13 @@ import { Length } from "../../Length.js";
 /**
  * @implements {HOBox}
  */
-export class PlainBox {
-  /**@type {Length}*/
-  width;
-  /**@type {Length}*/
-  height;
-
+export class PlainBox extends AbstractBox {
   /**
    * @param {Dimensions} dims
    */
   constructor(dims) {
-    this.width = dims.width;
-    this.height = dims.height;
+    super(dims);
     /** @type {HOBox[]} */
     this.children = [];
   }
-  /**
-   * @param {BoxPlacement} position
-   */
-  setPosition(position) {}
 }

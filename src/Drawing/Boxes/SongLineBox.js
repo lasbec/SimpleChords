@@ -1,5 +1,6 @@
 import { LEN, Length } from "../../Length.js";
 import { SongLine } from "../../SongLine.js";
+import { AbstractBox } from "../BoxDrawingUtils.js";
 import { getPoint } from "../BoxMeasuringUtils.js";
 import { TextBox } from "../PrimitiveBoxes/TextBox.js";
 /**
@@ -23,7 +24,7 @@ import { TextBox } from "../PrimitiveBoxes/TextBox.js";
 /**
  * @implements {HOBox}
  */
-export class SongLineBox {
+export class SongLineBox extends AbstractBox {
   /**@type {SongLine}*/
   line;
   /**@type {TextConfig}*/
@@ -38,8 +39,10 @@ export class SongLineBox {
   constructor(line, args) {
     const chordsLineHeight = args.chordsConfig.lineHeight;
     const lyricLineHeight = args.lyricConfig.lineHeight;
-    this.height = chordsLineHeight.add(lyricLineHeight);
-    this.width = SongLineBox.initWidth(line, args);
+    super({
+      height: chordsLineHeight.add(lyricLineHeight),
+      width: SongLineBox.initWidth(line, args),
+    });
 
     this.line = line;
     this.lyricConfig = args.lyricConfig;
@@ -51,13 +54,8 @@ export class SongLineBox {
    * @param {BoxPlacement} position
    */
   setPosition(position) {
-    const pointer = getPoint({
-      targetX: "left",
-      targetY: "top",
-      corner: position,
-      width: this.width,
-      height: this.height,
-    });
+    super.setPosition(position);
+    const pointer = this.getPoint("left", "top");
 
     pointer.moveDown(this.chordsConfig.lineHeight);
 

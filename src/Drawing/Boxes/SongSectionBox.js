@@ -34,7 +34,7 @@ export class SongSectionBox extends AbstractBox {
    * @param {SongSectionBoxConfig} config
    */
   constructor(section, config) {
-    const children = section.lines.map((l) => new SongLineBox(l, this.config));
+    const children = section.lines.map((l) => new SongLineBox(l, config));
     const singleLineHeight = children[0]?.height || Length.zero;
     const height = singleLineHeight.mul(children.length);
     super({
@@ -49,13 +49,8 @@ export class SongSectionBox extends AbstractBox {
    * @param {BoxPlacement} position
    */
   setPosition(position) {
-    const pointer = getPoint({
-      targetX: "left",
-      targetY: "top",
-      corner: position,
-      width: this.width,
-      height: this.height,
-    });
+    super.setPosition(position);
+    const pointer = this.getPoint("left", "top");
     for (const l of this.children) {
       l.setPosition({
         x: "left",

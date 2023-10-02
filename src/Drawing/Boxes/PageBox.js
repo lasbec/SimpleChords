@@ -1,6 +1,7 @@
 import { LEN, Length } from "../../Length.js";
 import { Document } from "../Document.js";
 import { BoxTreeRoot } from "../BoxTreeNode.js";
+import { AbstractBox } from "../BoxDrawingUtils.js";
 /**
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("../Geometry.js").Point} Point
@@ -21,11 +22,7 @@ import { BoxTreeRoot } from "../BoxTreeNode.js";
 /**
  * @implements {HOBox}
  */
-export class PageBox {
-  /** @type {Length}*/
-  width;
-  /** @type {Length}*/
-  height;
+export class PageBox extends AbstractBox {
   /** @type {BoxTreeNode[]} */
   children;
 
@@ -40,10 +37,9 @@ export class PageBox {
    * @param {Document} doc
    */
   constructor(dims, doc) {
+    super(dims);
     this.doc = doc;
     this.children = [];
-    this.width = dims.width;
-    this.height = dims.height;
   }
 
   /** @returns {BoxTreeRoot} */
@@ -55,9 +51,4 @@ export class PageBox {
   setBox(box) {
     this.children.push(box);
   }
-
-  /**
-   *@param {BoxPlacement} position
-   */
-  setPosition(position) {}
 }
