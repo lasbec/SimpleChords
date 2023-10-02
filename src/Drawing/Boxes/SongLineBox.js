@@ -1,7 +1,7 @@
 import { loadavg } from "os";
 import { LEN, Length } from "../../Length.js";
 import { SongLine } from "../../SongLine.js";
-import { AbstractPrimitiveBox } from "../BoxDrawingUtils.js";
+import { AbstractHOBox, AbstractPrimitiveBox } from "../BoxDrawingUtils.js";
 import { getPoint } from "../BoxMeasuringUtils.js";
 import { FreePointer } from "../FreePointer.js";
 import { TextBox } from "../PrimitiveBoxes/TextBox.js";
@@ -26,7 +26,7 @@ import { TextBox } from "../PrimitiveBoxes/TextBox.js";
 /**
  * @implements {HOBox}
  */
-export class SongLineBox extends AbstractPrimitiveBox {
+export class SongLineBox extends AbstractHOBox {
   /**@type {SongLine}*/
   line;
   /**@type {TextConfig}*/
@@ -39,19 +39,14 @@ export class SongLineBox extends AbstractPrimitiveBox {
    * @param {SongLineBoxConfig} args
    */
   constructor(line, args) {
-    const chordsLineHeight = args.chordsConfig.lineHeight;
-    const lyricLineHeight = args.lyricConfig.lineHeight;
-    super({
-      height: chordsLineHeight.add(lyricLineHeight),
-      width: SongLineBox.initWidth(line, args),
-    });
-
     /**@type {(HOBox | PrimitiveBox)[]} */
-    this.children = SongLineBox.initChildren(
+    const children = SongLineBox.initChildren(
       line,
       args,
       new FreePointer(Length.zero, Length.zero)
     );
+    super(children);
+
     this.line = line;
     this.lyricConfig = args.lyricConfig;
     this.chordsConfig = args.chordsConfig;
@@ -90,28 +85,6 @@ export class SongLineBox extends AbstractPrimitiveBox {
     });
     children.push(lyricBox);
     return children;
-  }
-
-  /**
-   * @param {BoxPlacement} position
-   */
-  setPosition(position) {
-    const oldCenter = this.getPoint("center", "center");
-    super.setPosition(position);
-    const newCenter = this.getPoint("center", "center");
-    const xMove = newCenter.x.sub(oldCenter.x);
-    const yMove = newCenter.y.sub(oldCenter.y);
-
-    for (const child of this.children) {
-      const newChildCenter = child.getPoint("center", "center");
-      newChildCenter.x = newChildCenter.x.add(xMove);
-      newChildCenter.y = newChildCenter.y.add(yMove);
-      child.setPosition({
-        x: "center",
-        y: "center",
-        point: newChildCenter,
-      });
-    }
   }
 
   /**

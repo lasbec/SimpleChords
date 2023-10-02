@@ -144,4 +144,26 @@ export class AbstractHOBox extends AbstractPrimitiveBox {
     );
     this.children = children;
   }
+
+  /**
+   * @param {BoxPlacement} position
+   */
+  setPosition(position) {
+    const oldCenter = this.getPoint("center", "center");
+    super.setPosition(position);
+    const newCenter = this.getPoint("center", "center");
+    const xMove = newCenter.x.sub(oldCenter.x);
+    const yMove = newCenter.y.sub(oldCenter.y);
+
+    for (const child of this.children) {
+      const newChildCenter = child.getPoint("center", "center");
+      newChildCenter.x = newChildCenter.x.add(xMove);
+      newChildCenter.y = newChildCenter.y.add(yMove);
+      child.setPosition({
+        x: "center",
+        y: "center",
+        point: newChildCenter,
+      });
+    }
+  }
 }
