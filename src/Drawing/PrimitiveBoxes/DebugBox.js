@@ -2,6 +2,7 @@ import { LEN, Length } from "../../Length.js";
 import { rgb } from "pdf-lib";
 import { FreePointer } from "../FreePointer.js";
 import { getPoint } from "../BoxMeasuringUtils.js";
+import { AbstractBox } from "../BoxDrawingUtils.js";
 /**
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("../Geometry.js").Point} Point
@@ -16,12 +17,7 @@ import { getPoint } from "../BoxMeasuringUtils.js";
 /**
  * @implements {PrimitiveBox}
  */
-export class DebugBox {
-  /**@type {Length}*/
-  width;
-  /**@type {Length}*/
-  height;
-
+export class DebugBox extends AbstractBox {
   get leftBottomCorner() {
     return {
       x: this.center.x.sub(this.width.mul(1 / 2)),
@@ -38,44 +34,21 @@ export class DebugBox {
    * @param {Point} center
    */
   constructor(center) {
-    this.width = LEN(3, "mm");
-    this.height = LEN(3, "mm");
+    super({
+      width: LEN(3, "mm"),
+      height: LEN(3, "mm"),
+    });
     this.center = center;
     this.constructCount = DebugBox.constructionCounter;
     DebugBox.constructionCounter += 1;
-
-    /** @type {BoxPlacement} */
-    this.position = {
-      x: "center",
-      y: "center",
-      point: new FreePointer(Length.zero, Length.zero),
-    };
-  }
-  /**
-   * @param {BoxPlacement} position
-   */
-  setPosition(position) {
-    this.position = position;
   }
 
   /**
    * @param {PDFPage} pdfPage
    */
   drawToPdfPage(pdfPage) {
-    const center = getPoint({
-      targetX: "center",
-      targetY: "center",
-      corner: this.position,
-      width: this.width,
-      height: this.height,
-    });
-    const leftBottomCorner = getPoint({
-      targetX: "left",
-      targetY: "bottom",
-      corner: this.position,
-      width: this.width,
-      height: this.height,
-    });
+    const center = this.getPoint("center", "center");
+    const leftBottomCorner = this.getPoint("left", "bottom");
     pdfPage.drawCircle({
       x: center.x.in("pt"),
       y: center.y.in("pt"),

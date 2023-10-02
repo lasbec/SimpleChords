@@ -23,6 +23,7 @@ export type BoxPlacement = {
 };
 export type PrimitiveBox = {
   setPosition(position: BoxPlacement): void;
+  getPoint(x: XStartPosition, y: YStartPosition): FreePointer;
   drawToPdfPage(page: PDFPage): void;
   width: Length;
   height: Length;

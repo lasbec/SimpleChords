@@ -1,7 +1,4 @@
-import { LEN, Length } from "../../Length.js";
-import { getPoint } from "../BoxMeasuringUtils.js";
-import { BoxPointer } from "../BoxPointer.js";
-import { FreePointer } from "../FreePointer.js";
+import { AbstractBox } from "../BoxDrawingUtils.js";
 /**
  * @typedef {import("../TextConfig.js").TextConfig} TextConfig
  * @typedef {import("pdf-lib").PDFPage} PDFPage
@@ -16,51 +13,30 @@ import { FreePointer } from "../FreePointer.js";
 /**
  * @implements {PrimitiveBox}
  */
-export class TextBox {
+export class TextBox extends AbstractBox {
   /**@type {string}*/
   text;
   /**@type {TextConfig}*/
   style;
-  /**@type {Length}*/
-  width;
-  /**@type {Length}*/
-  height;
 
   /**
    * @param {string} text
    * @param {TextConfig} style
    */
   constructor(text, style) {
+    super({
+      width: style.widthOfText(text),
+      height: style.lineHeight,
+    });
     this.text = text;
     this.style = style;
-    this.width = style.widthOfText(text);
-    this.height = style.lineHeight;
-    /** @type {BoxPlacement} */
-    this.position = {
-      x: "left",
-      y: "top",
-      point: new FreePointer(Length.zero, Length.zero),
-    };
-  }
-
-  /**
-   * @param {BoxPlacement} position
-   */
-  setPosition(position) {
-    this.position = position;
   }
 
   /**
    * @param {PDFPage} pdfPage
    */
   drawToPdfPage(pdfPage) {
-    const leftBottomCorner = getPoint({
-      targetX: "left",
-      targetY: "bottom",
-      corner: this.position,
-      width: this.width,
-      height: this.height,
-    });
+    const leftBottomCorner = this.getPoint("left", "bottom");
     if (!leftBottomCorner) {
       throw Error("Position not set.");
     }

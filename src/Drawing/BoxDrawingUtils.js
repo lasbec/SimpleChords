@@ -9,6 +9,9 @@
  */
 import { rgb } from "pdf-lib";
 import { Document } from "./Document.js";
+import { FreePointer } from "./FreePointer.js";
+import { Length } from "../Length.js";
+import { getPoint } from "./BoxMeasuringUtils.js";
 
 /** @type {Map<number, Color>} */
 const debugLevelColorMap = new Map([
@@ -48,5 +51,55 @@ export function drawToPdfPage(page, box) {
   }
   for (const child of box.children) {
     drawToPdfPage(page, child);
+  }
+}
+
+/**
+ * @typedef {import("./Geometry.js").XStartPosition} XRel
+ * @typedef {import("./Geometry.js").YStartPosition} YRel
+ */
+
+/**
+ * @typedef {import("./Geometry.js").BoxPlacement} BoxPlacement
+ */
+export class AbstractBox {
+  /**@type {Length}*/
+  width;
+  /**@type {Length}*/
+  height;
+
+  /**
+   * @param {import("./Geometry.js").Dimensions} dims
+   */
+  constructor(dims) {
+    this.width = dims.width;
+    this.height = dims.height;
+    /** @type {BoxPlacement} */
+    this.position = {
+      x: "left",
+      y: "top",
+      point: new FreePointer(Length.zero, Length.zero),
+    };
+  }
+
+  /**
+   * @param {BoxPlacement} position
+   */
+  setPosition(position) {
+    this.position = position;
+  }
+
+  /**
+   *@param {XRel} x
+   *@param {YRel} y
+   */
+  getPoint(x, y) {
+    return getPoint({
+      targetX: x,
+      targetY: y,
+      corner: this.position,
+      width: this.width,
+      height: this.height,
+    });
   }
 }
