@@ -116,7 +116,7 @@ export class AbstractPrimitiveBox {
  * @param {Box[]} boxes
  * @returns {FreeBox | undefined}
  */
-function minimalBoundingBox(boxes) {
+export function minimalBoundingBox(boxes) {
   const fst = boxes[0];
   if (!boxes) return;
   let leftTop = fst.getPoint("left", "top");
