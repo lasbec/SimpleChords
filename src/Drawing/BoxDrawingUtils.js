@@ -11,7 +11,7 @@ import { rgb } from "pdf-lib";
 import { Document } from "./Document.js";
 import { FreePointer } from "./FreePointer.js";
 import { Length } from "../Length.js";
-import { getPoint } from "./BoxMeasuringUtils.js";
+import { getPoint, minimalBoundingBox } from "./BoxMeasuringUtils.js";
 import { FreeBox } from "./FreeBoxPosition.js";
 
 /** @type {Map<number, Color>} */
@@ -112,24 +112,6 @@ export class AbstractPrimitiveBox {
  * @typedef {import("./Geometry.js").Box} Box
  */
 
-/**
- * @param {Box[]} boxes
- * @returns {FreeBox | undefined}
- */
-export function minimalBoundingBox(boxes) {
-  const fst = boxes[0];
-  if (!boxes) return;
-  let leftTop = fst.getPoint("left", "top");
-  let rightBottom = fst.getPoint("right", "bottom");
-  for (const box of boxes) {
-    leftTop = leftTop.span(box.getPoint("left", "top")).getPoint("left", "top");
-    rightBottom = rightBottom
-      .span(box.getPoint("right", "bottom"))
-      .getPoint("right", "bottom");
-  }
-  return FreeBox.fromCorners(leftTop, rightBottom);
-}
-
 export class AbstractHOBox extends AbstractPrimitiveBox {
   /**
    * @param {Box[]} children
@@ -150,7 +132,10 @@ export class AbstractHOBox extends AbstractPrimitiveBox {
    */
   setPosition(position) {
     const oldCenter = this.getPoint("center", "center");
-    super.setPosition(position);
+    super.setPosition({
+      ...position,
+      point: position.point.clone(),
+    });
     const newCenter = this.getPoint("center", "center");
     const xMove = newCenter.x.sub(oldCenter.x);
     const yMove = newCenter.y.sub(oldCenter.y);

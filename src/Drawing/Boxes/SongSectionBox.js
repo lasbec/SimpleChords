@@ -1,8 +1,6 @@
 import { Length } from "../../Length.js";
-import {
-  AbstractPrimitiveBox,
-  minimalBoundingBox,
-} from "../BoxDrawingUtils.js";
+import { AbstractHOBox } from "../BoxDrawingUtils.js";
+import { minimalBoundingBox } from "../BoxMeasuringUtils.js";
 import { FreePointer } from "../FreePointer.js";
 import { SongLineBox } from "./SongLineBox.js";
 /**
@@ -26,7 +24,7 @@ import { SongLineBox } from "./SongLineBox.js";
 /**
  * @implements {HOBox}
  */
-export class SongSectionBox extends AbstractPrimitiveBox {
+export class SongSectionBox extends AbstractHOBox {
   /**@type {SongSection}*/
   section;
   /**@type {SongSectionBoxConfig}*/
@@ -38,26 +36,8 @@ export class SongSectionBox extends AbstractPrimitiveBox {
    */
   constructor(section, config) {
     const children = section.lines.map((l) => new SongLineBox(l, config));
-
-    const singleLineHeight = children[0]?.height || Length.zero;
-    const height = singleLineHeight.mul(children.length);
-    const width = Length.max(children.map((l) => l.width)) || Length.zero;
-
-    super({
-      width: width,
-      height,
-    });
-    this.children = children;
-    this.section = section;
-    this.config = config;
-  }
-  /**
-   * @param {BoxPlacement} position
-   */
-  setPosition(position) {
-    super.setPosition(position);
-    const pointer = this.getPoint("left", "top");
-    for (const l of this.children) {
+    const pointer = new FreePointer(Length.zero, Length.zero);
+    for (const l of children) {
       l.setPosition({
         x: "left",
         y: "top",
@@ -65,5 +45,9 @@ export class SongSectionBox extends AbstractPrimitiveBox {
       });
       pointer.moveDown(l.height);
     }
+
+    super(children);
+    this.section = section;
+    this.config = config;
   }
 }

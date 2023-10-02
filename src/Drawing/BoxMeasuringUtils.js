@@ -1,4 +1,5 @@
 import { Length } from "../Length.js";
+import { FreeBox } from "./FreeBoxPosition.js";
 import { FreePointer } from "./FreePointer.js";
 
 /**
@@ -92,3 +93,27 @@ const yMovementMap = {
   },
   top_to_top(height, pointer) {},
 };
+
+/**
+ * @typedef {import("./Geometry.js").Dimensions} Dimensions
+ * @typedef {import("./Geometry.js").Box} Box
+ */
+
+/**
+ * @param {Box[]} boxes
+ * @returns {FreeBox | undefined}
+ */
+export function minimalBoundingBox(boxes) {
+  const fst = boxes[0];
+  if (!boxes) return;
+  let leftTop = fst.getPoint("left", "top");
+  let rightBottom = fst.getPoint("right", "bottom");
+
+  for (const box of boxes) {
+    leftTop = leftTop.span(box.getPoint("left", "top")).getPoint("left", "top");
+    rightBottom = rightBottom
+      .span(box.getPoint("right", "bottom"))
+      .getPoint("right", "bottom");
+  }
+  return FreeBox.fromCorners(leftTop, rightBottom);
+}
