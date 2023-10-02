@@ -112,7 +112,7 @@ export class SongLineBox {
   }
 
   lyricLineHeight() {
-    return this.lyricConfig.lineHeight.mul(0.9);
+    return this.lyricConfig.lineHeight;
   }
 
   /**
