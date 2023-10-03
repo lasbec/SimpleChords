@@ -121,23 +121,13 @@ export class BoxPointer {
     return new BoxPointer(this.x, this.y, this.box);
   }
 
-  moveToRightBorder() {
-    this.freePointer.x = BoxPointer.xPositionOnPage("right", this.box);
-    return this;
-  }
-
-  moveToLeftBorder() {
-    this.freePointer.x = BoxPointer.xPositionOnPage("left", this.box);
-    return this;
-  }
-
-  moveToTopBorder() {
-    this.freePointer.y = BoxPointer.yPositionOnPage("top", this.box);
-    return this;
-  }
-
-  moveToBottomBorder() {
-    this.freePointer.y = BoxPointer.yPositionOnPage("bottom", this.box);
+  /** @param {import("./Geometry.js").BorderPosition} border*/
+  moveToBorder(border) {
+    if (border === "left" || border === "right") {
+      this.freePointer.x = this.box.getBorder(border);
+    } else {
+      this.freePointer.y = this.box.getBorder(border);
+    }
     return this;
   }
 

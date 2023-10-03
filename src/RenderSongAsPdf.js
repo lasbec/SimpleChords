@@ -251,12 +251,12 @@ async function layOutSongOnNewPage(song, layoutConfig, doc) {
   const pointer = titleBox.getBoxPointer("left", "bottom").onPage();
 
   pointer.moveDown(lyricLineHeight);
-  pointer.moveToLeftBorder().moveRight(layoutConfig.leftMargin);
+  pointer.moveToBorder("left").moveRight(layoutConfig.leftMargin);
 
   const rightBottomPointer = pointer
     .onPage()
-    .moveToBottomBorder()
-    .moveToRightBorder()
+    .moveToBorder("bottom")
+    .moveToBorder("right")
     .moveUp(layoutConfig.bottomMargin)
     .moveLeft(layoutConfig.rightMargin);
   const lyricBox = pointer.span(rightBottomPointer);
@@ -317,7 +317,7 @@ function drawSongSectionLines(pointer, songLines, sectionType, layoutConfig) {
 
   const heightOfSection = sectionBox.height;
 
-  const lowerEndOfSection = pointer.clone().moveToBottomBorder();
+  const lowerEndOfSection = pointer.clone().moveToBorder("bottom");
 
   const sectionWillExeedPage = pointer
     .pointerDown(heightOfSection)
@@ -329,8 +329,8 @@ function drawSongSectionLines(pointer, songLines, sectionType, layoutConfig) {
       .moveRight(layoutConfig.leftMargin);
     const rightBottomCorner = pointer
       .onPage()
-      .moveToBottomBorder()
-      .moveToRightBorder()
+      .moveToBorder("bottom")
+      .moveToBorder("right")
       .moveUp(layoutConfig.topMargin)
       .moveLeft(layoutConfig.rightMargin);
     const lyricBox = leftTopCorner.span(rightBottomCorner);
@@ -356,7 +356,7 @@ function drawSongSectionLinesOnlyChords(
   const chordLineHeight = chordTextConfig.lineHeight;
   const heightOfSection = chordLineHeight.mul(songLines.length);
 
-  const lowerEndOfSection = pointer.clone().moveToBottomBorder();
+  const lowerEndOfSection = pointer.clone().moveToBorder("bottom");
 
   const sectionWillExeedPage = pointer
     .pointerDown(heightOfSection)
@@ -368,8 +368,8 @@ function drawSongSectionLinesOnlyChords(
       .moveRight(layoutConfig.leftMargin);
     const rightBottomCorner = pointer
       .onPage()
-      .moveToBottomBorder()
-      .moveToRightBorder()
+      .moveToBorder("bottom")
+      .moveToBorder("right")
       .moveUp(layoutConfig.topMargin)
       .moveLeft(layoutConfig.rightMargin);
     const lyricBox = leftTopCorner.span(rightBottomCorner);

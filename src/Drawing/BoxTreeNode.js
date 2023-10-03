@@ -180,7 +180,7 @@ export class BoxTreeChildNode {
    */
   drawToPdfPage(page) {
     this.doOverflowManagement(page, this);
-    drawDebugBox(page, this);
+    drawDebugBox(page, this.ownBox);
     this.ownBox.setPosition({
       x: "left",
       y: "bottom",
