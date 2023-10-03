@@ -253,7 +253,10 @@ export class BoxPointer {
     );
     result.ownBox.setParent(this.box.ownBox);
     this.box.children.push(result);
-    this.box.rootPage.setBox(result);
+
+    const rootPage = this.box.rootPage;
+    result.ownBox.setParent(rootPage);
+    rootPage.children.push(result);
     return result;
   }
 }

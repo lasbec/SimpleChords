@@ -55,12 +55,6 @@ export class PageBox extends AbstractPrimitiveBox {
     throw new Error("Parent can't be set for PageBox.");
   }
 
-  /** @param {BoxTreeNode} box  */
-  setBox(box) {
-    box.ownBox.setParent(this);
-    this.children.push(box);
-  }
-
   /**
    *
    * @param {PDFPage} page
