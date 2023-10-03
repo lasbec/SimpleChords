@@ -31,7 +31,7 @@ export class PageBox extends AbstractPrimitiveBox {
    * @type {Document}
    * @readonly
    */
-  doc;
+  document;
 
   /**
    * @param {Dimesions} dims
@@ -43,14 +43,13 @@ export class PageBox extends AbstractPrimitiveBox {
       y: "bottom",
       point: FreePointer.origin(),
     });
-    this.doc = doc;
-    this.setDocument(doc);
+    this.document = doc;
     this.children = [];
   }
 
   /** @returns {BoxTreeRoot} */
   appendNewPage() {
-    return this.doc.appendNewPage();
+    return this.document.appendNewPage();
   }
 
   /** @param {BoxTreeNode} box  */
