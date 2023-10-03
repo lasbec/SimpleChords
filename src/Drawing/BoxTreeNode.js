@@ -145,7 +145,7 @@ export class BoxTreeChildNode {
 
   /** @param {BoxTreeChildNode} box */
   appendChild(box) {
-    this.ownBox.setParent(box.ownBox);
+    box.ownBox.setParent(this.ownBox);
     this.children.push(box);
   }
 
