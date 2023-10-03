@@ -25,6 +25,8 @@ export type BoxPlacement = {
 
 export type Box = {
   setPosition(position: BoxPlacement): void;
+  level(): number;
+  setParent(box: Box): void;
   getPoint(x: XStartPosition, y: YStartPosition): FreePointer;
   getBorder(border: BorderPosition): Length;
   drawToPdfPage(page: PDFPage): void;

@@ -27,6 +27,19 @@ export class AbstractPrimitiveBox {
     this.width = dims.width;
     this.height = dims.height;
     this.position = position;
+    this.parent = null;
+  }
+
+  /** @param {Box} box  */
+  setParent(box) {
+    this.parent = box;
+  }
+
+  level() {
+    if (this.parent === null) {
+      return 0;
+    }
+    return 1 + this.parent.level();
   }
 
   /**

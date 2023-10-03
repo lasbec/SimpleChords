@@ -74,6 +74,9 @@ export class BoxTreeRoot {
     return 0;
   }
 
+  /** @param {Box} box */
+  setParent(box) {}
+
   /**
    * @param {PDFPage} page
    */
@@ -186,6 +189,8 @@ export class BoxTreeChildNode {
     }
     return 1 + this.parent.level();
   }
+  /** @param {Box} box */
+  setParent(box) {}
 
   /**
    * @param {XStartPosition} x

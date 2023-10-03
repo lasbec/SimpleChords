@@ -28,6 +28,9 @@ export class AbstractHOBox extends AbstractPrimitiveBox {
       }
     );
     this.children = children;
+    for (const child of children) {
+      child.setParent(this);
+    }
   }
 
   /**
