@@ -19,14 +19,15 @@ const debugLevelColorMap = new Map([
 
 /**
  * @param {PDFPage} pdfPage
- * @param {BoxTreeNode} box
+ * @param {Box} box
  * */
 export function drawDebugBox(pdfPage, box) {
   if (Document.debug) {
     const borderColor = debugLevelColorMap.get(box.level()) || rgb(1, 0, 0);
+    const leftBottomCorner = box.getPoint("left", "bottom");
     const args = {
-      x: box.leftBottomCorner.x.in("pt"),
-      y: box.leftBottomCorner.y.in("pt"),
+      x: leftBottomCorner.x.in("pt"),
+      y: leftBottomCorner.y.in("pt"),
       width: box.width.in("pt"),
       height: box.height.in("pt"),
       opacity: 1,
