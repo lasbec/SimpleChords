@@ -51,6 +51,10 @@ export class PageBox extends AbstractPrimitiveBox {
     return 0;
   }
 
+  setParent() {
+    throw new Error("Parent can't be set for PageBox.");
+  }
+
   /** @returns {BoxTreeRoot} */
   appendNewPage() {
     return this.document.appendNewPage();
