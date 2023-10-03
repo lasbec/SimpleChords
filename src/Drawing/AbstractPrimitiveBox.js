@@ -36,7 +36,6 @@ export class AbstractPrimitiveBox {
   /** @param {Box} box  */
   setParent(box) {
     this.parent = box;
-    this.document = box.document;
   }
 
   /** @param {Document} doc */
