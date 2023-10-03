@@ -35,7 +35,7 @@ export class BoxTreeRoot {
 
   /** @returns {BoxTreeRoot} */
   appendNewPage() {
-    return this.appendNewPage();
+    return this.ownBox.appendNewPage();
   }
 
   /**
@@ -139,7 +139,7 @@ export class BoxTreeChildNode {
 
   /** @returns {BoxTreeRoot} */
   appendNewPage() {
-    return this.rootPage.appendNewPage();
+    return this.ownBox.appendNewPage();
   }
 
   /**
