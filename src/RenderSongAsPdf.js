@@ -18,6 +18,7 @@ import { SchemaWrapper } from "./SchemaWrapper.js";
 import { BoxTreeRoot } from "./Drawing/BoxTreeNode.js";
 import { TextConfig } from "./Drawing/TextConfig.js";
 import { SongSectionBox } from "./Drawing/Boxes/SongSectionBox.js";
+import { TextBox } from "./Drawing/PrimitiveBoxes/TextBox.js";
 
 /**
  * @param {string} path
@@ -375,13 +376,9 @@ function drawSongSectionLinesOnlyChords(
     pointer = lyricBox.getBoxPointer("left", "top");
   }
   for (const line of songLines) {
-    const lineString = title + line.chords.map((c) => c.chord).join(" ");
-    pointer.setText(
-      "right",
-      "bottom",
-      lineString,
-      layoutConfig.chordTextConfig
-    );
+    const text = title + line.chords.map((c) => c.chord).join(" ");
+    const textBox = new TextBox(text, layoutConfig.chordTextConfig);
+    pointer.setBox("right", "bottom", textBox);
     pointer.moveDown(chordLineHeight);
   }
   return pointer;
@@ -391,11 +388,15 @@ function drawSongSectionLinesOnlyChords(
  * @param {Song} song
  * @param {BoxTreeRoot} page
  * @param {Length} topMargin
- * @param {TextConfig} textConfig
+ * @param {TextConfig} style
  */
-function drawTitle(song, page, topMargin, textConfig) {
+function drawTitle(song, page, topMargin, style) {
   const pointer = page.getBoxPointer("center", "top").moveDown(topMargin);
-  return pointer.setText("center", "bottom", song.heading, textConfig);
+  const x = "center";
+  const y = "bottom";
+  const text = song.heading;
+  const textBox = new TextBox(text, style);
+  return pointer.setBox(x, y, textBox);
 }
 
 /**

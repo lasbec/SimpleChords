@@ -272,15 +272,4 @@ export class BoxPointer {
     this.box.rootPage.setBox(result);
     return result;
   }
-
-  /**
-   * @param {XStartPosition} x
-   * @param {YStartPosition} y
-   * @param {string} text
-   * @param {TextConfig} style
-   */
-  setText(x, y, text, style) {
-    const textBox = new TextBox(text, style);
-    return this.setBox(x, y, textBox);
-  }
 }
