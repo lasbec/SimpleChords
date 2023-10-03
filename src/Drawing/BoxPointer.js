@@ -234,7 +234,7 @@ export class BoxPointer {
    * @param {YStartPosition} y
    */
   nextPageAt(x, y) {
-    const nextPage = this.box.rootPage.appendNewPage();
+    const nextPage = this.box.appendNewPage();
     return BoxPointer.atBox(x, y, nextPage);
   }
 

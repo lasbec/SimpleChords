@@ -39,6 +39,11 @@ export class BoxTreeRoot {
     this.children.push(box);
   }
 
+  /** @returns {BoxTreeRoot} */
+  appendNewPage() {
+    return this.rootPage.appendNewPage();
+  }
+
   /**
    * @param {PageBox} ownBox
    */
@@ -140,6 +145,11 @@ export class BoxTreeChildNode {
   appendChild(box) {
     this.ownBox.setParent(box.ownBox);
     this.children.push(box);
+  }
+
+  /** @returns {BoxTreeRoot} */
+  appendNewPage() {
+    return this.rootPage.appendNewPage();
   }
 
   /**
