@@ -248,13 +248,6 @@ export class BoxPointer {
     return BoxPointer.atBox(x, y, nextPage);
   }
 
-  setDebug() {
-    if (Document.debug) {
-      const result = new DebugBox(this);
-      return this.setBox("center", "center", result);
-    }
-  }
-
   /**
    * @param {XStartPosition} x
    * @param {YStartPosition} y

@@ -148,6 +148,11 @@ export class BoxTreeChildNode {
   constructor(leftBottomCorner, ownBox, parentNode) {
     this.leftBottomCorner = leftBottomCorner;
     this.ownBox = ownBox;
+    this.ownBox.setPosition({
+      x: "left",
+      y: "bottom",
+      point: FreePointer.fromPoint(leftBottomCorner),
+    });
     this.parent = parentNode;
     this.children = [];
   }
