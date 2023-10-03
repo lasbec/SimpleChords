@@ -54,6 +54,7 @@ export class PageBox extends AbstractPrimitiveBox {
 
   /** @param {BoxTreeNode} box  */
   setBox(box) {
+    box.setParent(this);
     this.children.push(box);
   }
 

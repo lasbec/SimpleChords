@@ -40,7 +40,7 @@ export class AbstractPrimitiveBox {
 
   /** @param {Document} doc */
   setDocument(doc) {
-    this.document = this.document;
+    this.document = doc;
   }
 
   /** @returns {Box} */
