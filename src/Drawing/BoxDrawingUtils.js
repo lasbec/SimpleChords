@@ -5,7 +5,6 @@
  * @typedef {import("pdf-lib").Color}  Color
  * @typedef {import("./BoxTreeNode.js").BoxTreeNode} BoxTreeNode
  * @typedef {import("./Geometry.js").Box} Box
- * @typedef {import("./Geometry.js").Printable} Printable
  */
 import { rgb } from "pdf-lib";
 import { Document } from "./Document.js";
