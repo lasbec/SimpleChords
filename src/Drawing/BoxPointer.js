@@ -251,7 +251,8 @@ export class BoxPointer {
       box,
       this.box
     );
-    this.box.appendChild(result);
+    result.ownBox.setParent(this.box.ownBox);
+    this.box.children.push(result);
     this.box.rootPage.setBox(result);
     return result;
   }
