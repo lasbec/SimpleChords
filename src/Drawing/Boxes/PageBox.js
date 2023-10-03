@@ -47,6 +47,10 @@ export class PageBox extends AbstractPrimitiveBox {
     this.children = [];
   }
 
+  level() {
+    return 0;
+  }
+
   /** @returns {BoxTreeRoot} */
   appendNewPage() {
     return this.document.appendNewPage();
@@ -54,7 +58,7 @@ export class PageBox extends AbstractPrimitiveBox {
 
   /** @param {BoxTreeNode} box  */
   setBox(box) {
-    box.setParent(this);
+    box.ownBox.setParent(this);
     this.children.push(box);
   }
 

@@ -84,7 +84,9 @@ export class BoxTreeRoot {
   }
 
   /** @param {Box} box */
-  setParent(box) {}
+  setParent(box) {
+    console.error(box);
+  }
 
   /**
    * @param {PDFPage} page
@@ -166,7 +168,7 @@ export class BoxTreeChildNode {
       y: "bottom",
       point: FreePointer.fromPoint(leftBottomCorner),
     });
-    this.setParent(parentNode.ownBox);
+    this.ownBox.setParent(parentNode.ownBox);
     this.parent = parentNode;
     this.children = [];
   }
@@ -212,7 +214,9 @@ export class BoxTreeChildNode {
     return this.ownBox.level();
   }
   /** @param {Box} box */
-  setParent(box) {}
+  setParent(box) {
+    console.error(new Error("").stack);
+  }
 
   /**
    * @param {XStartPosition} x
