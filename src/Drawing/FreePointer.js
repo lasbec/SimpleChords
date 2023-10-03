@@ -1,5 +1,5 @@
 import { Length } from "../Length.js";
-import { FreeBox } from "./FreeBoxPosition.js";
+import { FreeBox } from "./FreeBox.js";
 
 export class FreePointer {
   /**
