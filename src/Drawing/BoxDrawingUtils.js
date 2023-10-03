@@ -9,9 +9,7 @@
  */
 import { rgb } from "pdf-lib";
 import { Document } from "./Document.js";
-import { FreePointer } from "./FreePointer.js";
-import { LEN, Length } from "../Length.js";
-import { getPoint, minimalBoundingBox } from "./BoxMeasuringUtils.js";
+import { LEN } from "../Length.js";
 import { FreeBox } from "./FreeBoxPosition.js";
 
 /** @type {Map<number, Color>} */
@@ -52,105 +50,5 @@ export function drawToPdfPage(page, box) {
   }
   for (const child of box.children) {
     drawToPdfPage(page, child);
-  }
-}
-
-/**
- * @typedef {import("./Geometry.js").XStartPosition} XRel
- * @typedef {import("./Geometry.js").YStartPosition} YRel
- */
-
-/**
- * @typedef {import("./Geometry.js").BoxPlacement} BoxPlacement
- */
-export class AbstractPrimitiveBox {
-  /**@type {Length}*/
-  width;
-  /**@type {Length}*/
-  height;
-
-  /**
-   * @param {import("./Geometry.js").Dimensions} dims
-   * @param {BoxPlacement} position
-   */
-  constructor(dims, position) {
-    this.width = dims.width;
-    this.height = dims.height;
-    this.position = position;
-  }
-
-  /**
-   * @param {BoxPlacement} position
-   */
-  setPosition(position) {
-    this.position = position;
-  }
-
-  /**
-   *@param {XRel} x
-   *@param {YRel} y
-   */
-  getPoint(x, y) {
-    return getPoint({
-      targetX: x,
-      targetY: y,
-      corner: this.position,
-      width: this.width,
-      height: this.height,
-    });
-  }
-}
-/**
- */
-
-/**
- * @typedef {import("./Geometry.js").Dimensions} Dimensions
- * @typedef {import("./Geometry.js").Box} Box
- */
-
-export class AbstractHOBox extends AbstractPrimitiveBox {
-  /**
-   * @param {(startPoint: FreePointer)=>Box[]} initChildren
-   */
-  constructor(initChildren) {
-    const children = initChildren(new FreePointer(Length.zero, Length.zero));
-    const mbb = minimalBoundingBox(children);
-    super(
-      mbb || {
-        width: Length.zero,
-        height: Length.zero,
-      },
-      mbb?.getAnyPosition() || {
-        x: "left",
-        y: "top",
-        point: new FreePointer(Length.zero, Length.zero),
-      }
-    );
-    this.children = children;
-  }
-
-  /**
-   * @param {BoxPlacement} position
-   */
-  setPosition(position) {
-    const oldCenter = this.getPoint("center", "center");
-    super.setPosition({
-      ...position,
-      point: position.point.clone(),
-    });
-    const newCenter = this.getPoint("center", "center");
-    const xMove = newCenter.x.sub(oldCenter.x);
-    const yMove = newCenter.y.sub(oldCenter.y);
-
-    for (const child of this.children) {
-      const newChildCenter = child.getPoint("center", "center");
-      newChildCenter.x = newChildCenter.x.add(xMove);
-      newChildCenter.y = newChildCenter.y.add(yMove);
-      child.setPosition({
-        x: "center",
-        y: "center",
-        point: newChildCenter,
-      });
-    }
   }
 }

@@ -1,7 +1,7 @@
 import { loadavg } from "os";
 import { LEN, Length } from "../../Length.js";
 import { SongLine } from "../../SongLine.js";
-import { AbstractHOBox } from "../BoxDrawingUtils.js";
+import { AbstractHOBox } from "../AbstractHOBox.js";
 import { FreePointer } from "../FreePointer.js";
 import { TextBox } from "../PrimitiveBoxes/TextBox.js";
 /**

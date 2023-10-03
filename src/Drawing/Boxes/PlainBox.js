@@ -1,5 +1,5 @@
 import { Length } from "../../Length.js";
-import { AbstractPrimitiveBox } from "../BoxDrawingUtils.js";
+import { AbstractPrimitiveBox } from "../AbstractPrimitiveBox.js";
 import { FreePointer } from "../FreePointer.js";
 
 /**

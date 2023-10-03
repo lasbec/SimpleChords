@@ -1,4 +1,4 @@
-import { AbstractHOBox } from "../BoxDrawingUtils.js";
+import { AbstractHOBox } from "../AbstractHOBox.js";
 import { FreePointer } from "../FreePointer.js";
 import { SongLineBox } from "./SongLineBox.js";
 /**

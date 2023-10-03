@@ -1,4 +1,4 @@
-import { AbstractPrimitiveBox } from "../BoxDrawingUtils.js";
+import { AbstractPrimitiveBox } from "../AbstractPrimitiveBox.js";
 import { FreePointer } from "../FreePointer.js";
 /**
  * @typedef {import("../TextConfig.js").TextConfig} TextConfig

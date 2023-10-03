@@ -1,7 +1,7 @@
 import { LEN, Length } from "../../Length.js";
 import { Document } from "../Document.js";
 import { BoxTreeRoot } from "../BoxTreeNode.js";
-import { AbstractPrimitiveBox } from "../BoxDrawingUtils.js";
+import { AbstractPrimitiveBox } from "../AbstractPrimitiveBox.js";
 import { FreePointer } from "../FreePointer.js";
 /**
  * @typedef {import("pdf-lib").PDFPage} PDFPage

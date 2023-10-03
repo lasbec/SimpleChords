@@ -2,7 +2,7 @@ import { LEN, Length } from "../../Length.js";
 import { rgb } from "pdf-lib";
 import { FreePointer } from "../FreePointer.js";
 import { getPoint } from "../BoxMeasuringUtils.js";
-import { AbstractPrimitiveBox } from "../BoxDrawingUtils.js";
+import { AbstractPrimitiveBox } from "../AbstractPrimitiveBox.js";
 /**
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("../Geometry.js").Point} Point
