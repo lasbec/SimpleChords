@@ -44,6 +44,7 @@ export class PageBox extends AbstractPrimitiveBox {
       point: FreePointer.origin(),
     });
     this.doc = doc;
+    this.setDocument(doc);
     this.children = [];
   }
 

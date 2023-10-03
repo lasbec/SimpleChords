@@ -59,6 +59,9 @@ export class BoxTreeRoot {
   get height() {
     return this.ownBox.height;
   }
+  get document() {
+    return this.ownBox.document;
+  }
 
   /** @return {BoxTreeRoot} */
   get root() {
@@ -163,6 +166,10 @@ export class BoxTreeChildNode {
 
   get height() {
     return this.ownBox.height;
+  }
+
+  get document() {
+    return this.ownBox.document;
   }
 
   /** @return {BoxTreeRoot} */

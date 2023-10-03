@@ -2,6 +2,7 @@ import { PDFPage } from "pdf-lib";
 import { Length } from "../Length.js";
 import { Page as PageBox } from "./Boxes/PageBox.js";
 import { FreePointer } from "./FreePointer.js";
+import { Document } from "./Document.js";
 
 export type Point = {
   x: Length;
@@ -33,6 +34,7 @@ export type Box = {
   width: Length;
   height: Length;
 
+  document: Document | null;
   parent: Box | null;
   root: Box;
 };

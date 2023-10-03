@@ -1,5 +1,6 @@
 import { Length } from "../Length.js";
 import { getPoint } from "./BoxMeasuringUtils.js";
+import { Document } from "./Document.js";
 
 /**
  */
@@ -28,11 +29,19 @@ export class AbstractPrimitiveBox {
     this.height = dims.height;
     this.position = position;
     this.parent = null;
+    /** @type {Document | null} */
+    this.document = null;
   }
 
   /** @param {Box} box  */
   setParent(box) {
     this.parent = box;
+    this.document = box.document;
+  }
+
+  /** @param {Document} doc */
+  setDocument(doc) {
+    this.document = this.document;
   }
 
   /** @returns {Box} */
