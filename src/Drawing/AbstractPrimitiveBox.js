@@ -2,6 +2,10 @@ import { Length } from "../Length.js";
 import { getPoint } from "./BoxMeasuringUtils.js";
 
 /**
+ */
+
+/**
+ * @typedef {import("./Geometry.js").BorderPosition} BorderPosition
  * @typedef {import("./Geometry.js").XStartPosition} XRel
  * @typedef {import("./Geometry.js").YStartPosition} YRel
  * @typedef {import("./Geometry.js").BoxPlacement} BoxPlacement
@@ -44,5 +48,16 @@ export class AbstractPrimitiveBox {
       width: this.width,
       height: this.height,
     });
+  }
+
+  /**
+   * @param {BorderPosition} border
+   * @returns {Length}
+   */
+  getBorder(border) {
+    if (border === "left" || border === "right") {
+      return this.getPoint(border, "bottom").x;
+    }
+    return this.getPoint("left", border).y;
   }
 }
