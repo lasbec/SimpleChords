@@ -7,16 +7,22 @@ import { Document } from "./Document.js";
 import { BoxOverflows } from "./BoxOverflow.js";
 import { FreePointer } from "./FreePointer.js";
 /**
+ */
+
+/**
+ * @typedef {import("./Geometry.js").BorderPosition} BorderPosition
  * @typedef {import("./Geometry.js").Point} Point
  * @typedef {import("./Geometry.js").Box} Box
  * @typedef {import("./Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("./Geometry.js").YStartPosition} YStartPosition
+ * @typedef {import("./Geometry.js").BoxPlacement} BoxPlacement
  */
 
 /**
  * @typedef {BoxTreeChildNode | BoxTreeRoot} BoxTreeNode
  */
 
+/** @implements {Box} */
 export class BoxTreeRoot {
   /** @type {Point} */
   leftBottomCorner;
@@ -82,20 +88,37 @@ export class BoxTreeRoot {
    * @param {YStartPosition} y
    * @returns {BoxPointer}
    */
-  getPointerAt(x, y) {
+  getBoxPointer(x, y) {
     return BoxPointer.atBox(x, y, this);
   }
 
   /**
    * @param {XStartPosition} x
    * @param {YStartPosition} y
-   * @returns {Point}
+   * @returns {FreePointer}
    */
   getPoint(x, y) {
-    return this.getPointerAt(x, y).clone();
+    return this.ownBox.getPoint(x, y);
+  }
+
+  /** @param {BorderPosition} border  */
+  getBorder(border) {
+    return this.ownBox.getBorder(border);
+  }
+
+  /**
+   *
+   * @param {BoxPlacement} position
+   */
+  setPosition(position) {
+    this.ownBox.setPosition(position);
   }
 }
 
+/**
+ */
+
+/** @implements {Box} */
 export class BoxTreeChildNode {
   /** @type {Point} */
   leftBottomCorner;
@@ -168,8 +191,30 @@ export class BoxTreeChildNode {
    * @param {XStartPosition} x
    * @param {YStartPosition} y
    */
-  getPoint(x, y) {
+  getBoxPointer(x, y) {
     return BoxPointer.atBox(x, y, this);
+  }
+
+  /**
+   * @param {XStartPosition} x
+   * @param {YStartPosition} y
+   * @returns {FreePointer}
+   */
+  getPoint(x, y) {
+    return this.ownBox.getPoint(x, y);
+  }
+
+  /** @param {BorderPosition} border  */
+  getBorder(border) {
+    return this.ownBox.getBorder(border);
+  }
+
+  /**
+   *
+   * @param {BoxPlacement} position
+   */
+  setPosition(position) {
+    this.ownBox.setPosition(position);
   }
 
   /**
@@ -190,7 +235,7 @@ export class BoxTreeChildNode {
    */
   drawOverflowMarker(page, overflow) {
     page.drawRectangle({
-      ...this.getPoint("left", "bottom").rawPointIn("pt"),
+      ...this.getBoxPointer("left", "bottom").rawPointIn("pt"),
       width: this.width.in("pt"),
       height: this.height.in("pt"),
       color: rgb(1, 0, 1),
@@ -198,7 +243,7 @@ export class BoxTreeChildNode {
     });
 
     if (overflow.left) {
-      const leftBottom = this.getPoint("left", "bottom");
+      const leftBottom = this.getBoxPointer("left", "bottom");
       const height = this.height;
       const width = overflow.left;
       page.drawRectangle({
@@ -210,7 +255,7 @@ export class BoxTreeChildNode {
     }
 
     if (overflow.right) {
-      const leftBottom = this.getPoint("right", "bottom").moveLeft(
+      const leftBottom = this.getBoxPointer("right", "bottom").moveLeft(
         overflow.right
       );
       const height = this.height;
@@ -224,7 +269,9 @@ export class BoxTreeChildNode {
     }
 
     if (overflow.top) {
-      const leftBottom = this.getPoint("left", "top").moveDown(overflow.top);
+      const leftBottom = this.getBoxPointer("left", "top").moveDown(
+        overflow.top
+      );
       const height = overflow.top;
       const width = this.width;
       page.drawRectangle({
@@ -236,7 +283,7 @@ export class BoxTreeChildNode {
     }
 
     if (overflow.bottom) {
-      const leftBottom = this.getPoint("left", "bottom");
+      const leftBottom = this.getBoxPointer("left", "bottom");
       const heigth = overflow.bottom;
       const width = this.width;
       page.drawRectangle({
