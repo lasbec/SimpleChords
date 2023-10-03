@@ -13,7 +13,7 @@ import { TextBox } from "../PrimitiveBoxes/TextBox.js";
  * @typedef {import("../Geometry.js").YStartPosition} YStartPosition
  * @typedef {import("../Geometry.js").Dimensions} Dimensions
  * @typedef {import("../Geometry.js").Box} Box
- * @typedef {import("../Geometry.js").PrimitiveBox} PrimitiveBox
+ * @typedef {import("../Geometry.js").Box} PrimitiveBox
  */
 
 /**

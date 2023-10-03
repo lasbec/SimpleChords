@@ -9,7 +9,7 @@ import { AbstractPrimitiveBox } from "../AbstractPrimitiveBox.js";
  * @typedef {import("../Geometry.js").BoxPlacement} BoxPlacement
  * @typedef {import("../Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("../Geometry.js").YStartPosition} YStartPosition
- * @typedef {import("../Geometry.js").PrimitiveBox} PrimitiveBox
+ * @typedef {import("../Geometry.js").Box} PrimitiveBox
  * @typedef {import("../Geometry.js").Dimensions} Dimesions
  * @typedef {import("../Boxes/PageBox.js").PageBox} PageBox
  */

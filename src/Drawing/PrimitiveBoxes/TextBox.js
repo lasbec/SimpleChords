@@ -8,7 +8,7 @@ import { FreePointer } from "../FreePointer.js";
  * @typedef {import("../Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("../Geometry.js").YStartPosition} YStartPosition
  * @typedef {import("../Geometry.js").Dimensions} Dimensions
- * @typedef {import("../Geometry.js").PrimitiveBox} PrimitiveBox
+ * @typedef {import("../Geometry.js").Box} PrimitiveBox
  */
 
 /**
