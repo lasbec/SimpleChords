@@ -8,7 +8,7 @@ import { FreePointer } from "../FreePointer.js";
  * @typedef {import("../Geometry.js").Point} Point
  * @typedef {import("../Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("../Geometry.js").YStartPosition} YStartPosition
- * @typedef {import("../Geometry.js").HOBox} HOBox
+ * @typedef {import("../Geometry.js").PrimitiveBox} PrimitiveBox
  * @typedef {import("../Geometry.js").Dimensions} Dimesions
  * @typedef {import("../Geometry.js").BoxPlacement} BoxPlacement
  * @typedef {import("../BoxTreeNode.js").BoxTreeNode} BoxTreeNode
@@ -21,7 +21,7 @@ import { FreePointer } from "../FreePointer.js";
  */
 
 /**
- * @implements {HOBox}
+ * @implements {PrimitiveBox}
  */
 export class PageBox extends AbstractPrimitiveBox {
   /** @type {BoxTreeNode[]} */
@@ -55,5 +55,15 @@ export class PageBox extends AbstractPrimitiveBox {
   /** @param {BoxTreeNode} box  */
   setBox(box) {
     this.children.push(box);
+  }
+
+  /**
+   *
+   * @param {PDFPage} page
+   */
+  drawToPdfPage(page) {
+    for (const child of this.children) {
+      child.drawToPdfPage(page);
+    }
   }
 }

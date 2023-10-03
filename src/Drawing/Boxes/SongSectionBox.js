@@ -10,7 +10,7 @@ import { SongLineBox } from "./SongLineBox.js";
  * @typedef {import("../Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("../Geometry.js").YStartPosition} YStartPosition
  * @typedef {import("../Geometry.js").Dimensions} Dimensions
- * @typedef {import("../Geometry.js").HOBox} HOBox
+ * @typedef {import("../Geometry.js").Box} Box
  */
 
 /**
@@ -20,7 +20,7 @@ import { SongLineBox } from "./SongLineBox.js";
  */
 
 /**
- * @implements {HOBox}
+ * @implements {Box}
  */
 export class SongSectionBox extends AbstractHOBox {
   /**

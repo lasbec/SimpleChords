@@ -1,6 +1,6 @@
 import { PDFPage, rgb } from "pdf-lib";
 import { PageBox } from "./Boxes/PageBox.js";
-import { drawDebugBox, drawToPdfPage } from "./BoxDrawingUtils.js";
+import { drawDebugBox } from "./BoxDrawingUtils.js";
 import { Length } from "../Length.js";
 import { BoxPointer } from "./BoxPointer.js";
 import { Document } from "./Document.js";
@@ -73,7 +73,7 @@ export class BoxTreeRoot {
    */
   drawToPdfPage(page) {
     drawDebugBox(page, this);
-    drawToPdfPage(page, this.ownBox);
+    this.ownBox.drawToPdfPage(page);
   }
 
   /**
@@ -157,7 +157,7 @@ export class BoxTreeChildNode {
       y: "bottom",
       point: new FreePointer(this.leftBottomCorner.x, this.leftBottomCorner.y),
     });
-    drawToPdfPage(page, this.ownBox);
+    this.ownBox.drawToPdfPage(page);
   }
 
   /** @return {number} */

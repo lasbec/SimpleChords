@@ -4,13 +4,11 @@
  * @typedef {import("pdf-lib").PDFFont} PDFFont
  * @typedef {import("pdf-lib").Color}  Color
  * @typedef {import("./BoxTreeNode.js").BoxTreeNode} BoxTreeNode
- * @typedef {import("./Geometry.js").HOBox} HOBox
+ * @typedef {import("./Geometry.js").Box} Box
  * @typedef {import("./Geometry.js").Printable} Printable
  */
 import { rgb } from "pdf-lib";
 import { Document } from "./Document.js";
-import { LEN } from "../Length.js";
-import { FreeBox } from "./FreeBoxPosition.js";
 
 /** @type {Map<number, Color>} */
 const debugLevelColorMap = new Map([
@@ -37,18 +35,5 @@ export function drawDebugBox(pdfPage, box) {
       borderColor,
     };
     pdfPage.drawRectangle(args);
-  }
-}
-
-/**
- * @param {PDFPage} page
- * @param {Printable | HOBox} box
- */
-export function drawToPdfPage(page, box) {
-  if ("drawToPdfPage" in box) {
-    return box.drawToPdfPage(page);
-  }
-  for (const child of box.children) {
-    drawToPdfPage(page, child);
   }
 }

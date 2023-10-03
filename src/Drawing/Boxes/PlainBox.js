@@ -4,16 +4,16 @@ import { FreePointer } from "../FreePointer.js";
 
 /**
  * @typedef {import("../Geometry.js").BoxPlacement} BoxPlacement
+ * @typedef {import("../Geometry.js").Box} Box
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("../Geometry.js").Point} Point
  * @typedef {import("../Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("../Geometry.js").YStartPosition} YStartPosition
- * @typedef {import("../Geometry.js").HOBox} HOBox
  * @typedef {import("../Geometry.js").Dimensions} Dimensions
  */
 
 /**
- * @implements {HOBox}
+ * @implements {Box}
  */
 export class PlainBox extends AbstractPrimitiveBox {
   /**
@@ -25,7 +25,13 @@ export class PlainBox extends AbstractPrimitiveBox {
       y: "bottom",
       point: FreePointer.origin(),
     });
-    /** @type {HOBox[]} */
+    /** @type {Box[]} */
     this.children = [];
   }
+
+  /**
+   *
+   * @param {PDFPage} page
+   */
+  drawToPdfPage(page) {}
 }

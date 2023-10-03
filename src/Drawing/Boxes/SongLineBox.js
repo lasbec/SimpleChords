@@ -12,7 +12,7 @@ import { TextBox } from "../PrimitiveBoxes/TextBox.js";
  * @typedef {import("../Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("../Geometry.js").YStartPosition} YStartPosition
  * @typedef {import("../Geometry.js").Dimensions} Dimensions
- * @typedef {import("../Geometry.js").HOBox} HOBox
+ * @typedef {import("../Geometry.js").Box} Box
  * @typedef {import("../Geometry.js").PrimitiveBox} PrimitiveBox
  */
 
@@ -23,7 +23,7 @@ import { TextBox } from "../PrimitiveBoxes/TextBox.js";
  */
 
 /**
- * @implements {HOBox}
+ * @implements {Box}
  */
 export class SongLineBox extends AbstractHOBox {
   /**

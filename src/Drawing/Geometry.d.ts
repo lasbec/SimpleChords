@@ -33,12 +33,4 @@ export type Printable = {
   drawToPdfPage(page: PDFPage): void;
 };
 
-export type HOBox = {
-  setPosition(position: BoxPlacement): void;
-  getPoint(x: XStartPosition, y: YStartPosition): FreePointer;
-  children: (Printable | HOBox)[];
-  width: Length;
-  height: Length;
-};
-
-export type Box = HOBox | PrimitiveBox;
+export type Box = PrimitiveBox;

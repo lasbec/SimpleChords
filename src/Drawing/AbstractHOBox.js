@@ -2,6 +2,7 @@ import { FreePointer } from "./FreePointer.js";
 import { Length } from "../Length.js";
 import { minimalBoundingBox } from "./BoxMeasuringUtils.js";
 import { AbstractPrimitiveBox } from "./AbstractPrimitiveBox.js";
+import { PDFPage } from "pdf-lib";
 
 /**
  * @typedef {import("./Geometry.js").BoxPlacement} BoxPlacement
@@ -51,6 +52,15 @@ export class AbstractHOBox extends AbstractPrimitiveBox {
         y: "center",
         point: newChildCenter,
       });
+    }
+  }
+
+  /**
+   * @param {PDFPage} page
+   */
+  drawToPdfPage(page) {
+    for (const child of this.children) {
+      child.drawToPdfPage(page);
     }
   }
 }
