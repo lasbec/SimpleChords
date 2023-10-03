@@ -72,7 +72,7 @@ export class BoxTreeRoot {
 
   /** @return {number} */
   level() {
-    return 0;
+    return this.ownBox.level();
   }
 
   /** @param {Box} box */
@@ -186,10 +186,7 @@ export class BoxTreeChildNode {
 
   /** @return {number} */
   level() {
-    if (this.ownBox instanceof PageBox) {
-      return 0;
-    }
-    return 1 + this.parent.level();
+    return this.ownBox.level();
   }
   /** @param {Box} box */
   setParent(box) {}
