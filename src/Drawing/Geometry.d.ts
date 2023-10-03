@@ -32,4 +32,7 @@ export type Box = {
   drawToPdfPage(page: PDFPage): void;
   width: Length;
   height: Length;
+
+  parent: Box | null;
+  root: Box;
 };

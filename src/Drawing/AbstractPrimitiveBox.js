@@ -35,6 +35,15 @@ export class AbstractPrimitiveBox {
     this.parent = box;
   }
 
+  /** @returns {Box} */
+  get root() {
+    if (this.parent === null) {
+      /** @ts-ignore */
+      return this;
+    }
+    return this.parent.root;
+  }
+
   level() {
     if (this.parent === null) {
       return 0;
