@@ -91,12 +91,8 @@ export class BoxTreeRoot {
    * @param {YStartPosition} y
    * @returns {Point}
    */
-  getCoordinates(x, y) {
-    const pointer = this.getPointerAt(x, y);
-    return {
-      x: pointer.x,
-      y: pointer.y,
-    };
+  getPoint(x, y) {
+    return this.getPointerAt(x, y).clone();
   }
 }
 
@@ -172,7 +168,7 @@ export class BoxTreeChildNode {
    * @param {XStartPosition} x
    * @param {YStartPosition} y
    */
-  getPointerAt(x, y) {
+  getPoint(x, y) {
     return BoxPointer.atBox(x, y, this);
   }
 
@@ -194,7 +190,7 @@ export class BoxTreeChildNode {
    */
   drawOverflowMarker(page, overflow) {
     page.drawRectangle({
-      ...this.getPointerAt("left", "bottom").rawPointIn("pt"),
+      ...this.getPoint("left", "bottom").rawPointIn("pt"),
       width: this.width.in("pt"),
       height: this.height.in("pt"),
       color: rgb(1, 0, 1),
@@ -202,7 +198,7 @@ export class BoxTreeChildNode {
     });
 
     if (overflow.left) {
-      const leftBottom = this.getPointerAt("left", "bottom");
+      const leftBottom = this.getPoint("left", "bottom");
       const height = this.height;
       const width = overflow.left;
       page.drawRectangle({
@@ -214,7 +210,7 @@ export class BoxTreeChildNode {
     }
 
     if (overflow.right) {
-      const leftBottom = this.getPointerAt("right", "bottom").moveLeft(
+      const leftBottom = this.getPoint("right", "bottom").moveLeft(
         overflow.right
       );
       const height = this.height;
@@ -228,9 +224,7 @@ export class BoxTreeChildNode {
     }
 
     if (overflow.top) {
-      const leftBottom = this.getPointerAt("left", "top").moveDown(
-        overflow.top
-      );
+      const leftBottom = this.getPoint("left", "top").moveDown(overflow.top);
       const height = overflow.top;
       const width = this.width;
       page.drawRectangle({
@@ -242,7 +236,7 @@ export class BoxTreeChildNode {
     }
 
     if (overflow.bottom) {
-      const leftBottom = this.getPointerAt("left", "bottom");
+      const leftBottom = this.getPoint("left", "bottom");
       const heigth = overflow.bottom;
       const width = this.width;
       page.drawRectangle({
