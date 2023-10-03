@@ -166,6 +166,7 @@ export class BoxTreeChildNode {
       y: "bottom",
       point: FreePointer.fromPoint(leftBottomCorner),
     });
+    this.setParent(parentNode.ownBox);
     this.parent = parentNode;
     this.children = [];
   }
