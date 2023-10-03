@@ -225,7 +225,8 @@ export class BoxPointer {
     const otherRelYPos = other.isLowerThan(this) ? "bottom" : "top";
     const width = this.x.sub(other.x).abs();
     const height = this.y.sub(other.y).abs();
-    return this.setPlainBox(otherRelXPos, otherRelYPos, { width, height });
+    const box = new PlainBox({ width, height });
+    return this.setBox(otherRelXPos, otherRelYPos, box);
   }
 
   /** @param {BoxPointer} other  */
@@ -270,15 +271,6 @@ export class BoxPointer {
     this.box.appendChild(result);
     this.box.rootPage.setBox(result);
     return result;
-  }
-  /**
-   * @param {XStartPosition} x
-   * @param {YStartPosition} y
-   * @param {Dimesions} dims
-   */
-  setPlainBox(x, y, dims) {
-    const box = new PlainBox(dims);
-    return this.setBox(x, y, box);
   }
 
   /**
