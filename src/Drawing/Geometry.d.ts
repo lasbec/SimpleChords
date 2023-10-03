@@ -32,7 +32,7 @@ export type Box = {
   getPoint(x: XStartPosition, y: YStartPosition): FreePointer;
   getBorder(border: BorderPosition): Length;
   drawToPdfPage(page: PDFPage): void;
-  appendNewPage(): BoxTreeNode;
+  appendNewPage(): BoxTreeRoot;
   width: Length;
   height: Length;
 
