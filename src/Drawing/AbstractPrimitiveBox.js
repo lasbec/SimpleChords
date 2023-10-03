@@ -1,5 +1,6 @@
 import { Length } from "../Length.js";
 import { getPoint } from "./BoxMeasuringUtils.js";
+import { BoxTreeRoot } from "./BoxTreeNode.js";
 import { Document } from "./Document.js";
 
 /**
@@ -31,6 +32,14 @@ export class AbstractPrimitiveBox {
     this.parent = null;
     /** @type {Document | null} */
     this.document = null;
+  }
+
+  /** @returns {BoxTreeRoot} */
+  appendNewPage() {
+    if (!this.document) {
+      throw Error("Can't appendNewPage for detached box.");
+    }
+    return this.document.appendNewPage();
   }
 
   /** @param {Box} box  */
