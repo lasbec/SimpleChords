@@ -10,16 +10,9 @@ import { LEN, Length } from "../Length.js";
  */
 
 /**
- * @typedef {object} BoxStruct
- * @property {Point} leftBottomCorner
- * @property {Length} width
- * @property {Length} height
- */
-
-/**
  * @typedef {object} OverflowCalcArgs
- * @property {BoxStruct} parent
- * @property {BoxStruct} child
+ * @property {Box} parent
+ * @property {Box} child
  */
 
 /**
@@ -62,16 +55,18 @@ export class BoxOverflows {
   /** @param {OverflowCalcArgs} args */
   static from(args) {
     const box = args.child;
-    const rightBorder = box.leftBottomCorner.x.add(box.width);
-    const leftBorder = box.leftBottomCorner.x;
-    const topBorder = box.leftBottomCorner.y.add(box.height);
-    const bottomBorder = box.leftBottomCorner.y;
+    const leftBottomCorner = box.getPoint("left", "bottom");
+    const rightBorder = leftBottomCorner.x.add(box.width);
+    const leftBorder = leftBottomCorner.x;
+    const topBorder = leftBottomCorner.y.add(box.height);
+    const bottomBorder = leftBottomCorner.y;
 
     const parent = args.parent;
-    const parentRightBorder = parent.leftBottomCorner.x.add(parent.width);
-    const parentLeftBorder = parent.leftBottomCorner.x;
-    const parentTopBorder = parent.leftBottomCorner.y.add(parent.height);
-    const parentBottomBorder = parent.leftBottomCorner.y;
+    const parentLeftBottomCorner = parent.getPoint("left", "bottom");
+    const parentRightBorder = parentLeftBottomCorner.x.add(parent.width);
+    const parentLeftBorder = parentLeftBottomCorner.x;
+    const parentTopBorder = parentLeftBottomCorner.y.add(parent.height);
+    const parentBottomBorder = parentLeftBottomCorner.y;
 
     return new BoxOverflows({
       right: rightBorder.sub(parentRightBorder).atLeastZero(),
