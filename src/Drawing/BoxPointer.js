@@ -67,12 +67,12 @@ export class BoxPointer {
 
   /**
    * @param {XStartPosition} xRelative
-   * @param {BoxTreeNode} box
+   * @param {Box} box
    * @private
    */
   static xPositionOnPage(xRelative, box) {
     const width = box.width;
-    const { x } = box.leftBottomCorner;
+    const { x } = box.getPoint("left", "bottom");
     if (xRelative === "left") return x;
     if (xRelative === "center") return x.add(width.mul(1 / 2));
     if (xRelative === "right") return x.add(width);
@@ -81,12 +81,12 @@ export class BoxPointer {
 
   /**
    * @param {YStartPosition} yRelative
-   * @param {BoxTreeNode} box
+   * @param {Box} box
    * @private
    */
   static yPositionOnPage(yRelative, box) {
     const height = box.height;
-    const { y } = box.leftBottomCorner;
+    const { y } = box.getPoint("left", "bottom");
     if (yRelative === "top") return y.add(height);
     if (yRelative === "center") return y.add(height.mul(1 / 2));
     if (yRelative === "bottom") return y;
