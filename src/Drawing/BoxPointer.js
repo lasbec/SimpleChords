@@ -59,34 +59,6 @@ export class BoxPointer {
   }
 
   /**
-   * @param {XStartPosition} xRelative
-   * @param {Box} box
-   * @private
-   */
-  static xPositionOnPage(xRelative, box) {
-    const width = box.width;
-    const { x } = box.getPoint("left", "bottom");
-    if (xRelative === "left") return x;
-    if (xRelative === "center") return x.add(width.mul(1 / 2));
-    if (xRelative === "right") return x.add(width);
-    throw Error("Invalid x start position.");
-  }
-
-  /**
-   * @param {YStartPosition} yRelative
-   * @param {Box} box
-   * @private
-   */
-  static yPositionOnPage(yRelative, box) {
-    const height = box.height;
-    const { y } = box.getPoint("left", "bottom");
-    if (yRelative === "top") return y.add(height);
-    if (yRelative === "center") return y.add(height.mul(1 / 2));
-    if (yRelative === "bottom") return y;
-    throw Error("Invalid y start position.");
-  }
-
-  /**
    * @param {XStartPosition} x
    * @param {Length} width
    * @private
@@ -251,9 +223,7 @@ export class BoxPointer {
     this.box.appendChild(box);
 
     const rootPage = this.box.root;
-    // box.setParent(rootPage); //!!
-    /** @ts-ignore */
-    rootPage.children.push(box);
+    rootPage.appendChild(box);
     return box;
   }
 }
