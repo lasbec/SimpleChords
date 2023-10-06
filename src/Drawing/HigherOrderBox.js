@@ -11,12 +11,31 @@ import { BoxOverflows } from "./BoxOverflow.js";
  * @typedef {import("./Geometry.js").Box} Box
  */
 
+/**
+ * @template Content
+ * @template Config
+ * @param {(content:Content, config:Config, drawingStartPoint:FreePointer) => Box[]} drawChildrenFn
+ */
+export function decorateAsBox(drawChildrenFn) {
+  /**
+   * @param {Content} content
+   * @param {Config} config
+   * @param {FreePointer=} drawingStartPoint
+   * @returns {Box}
+   */
+  return (content, config, drawingStartPoint) => {
+    drawingStartPoint = drawingStartPoint?.clone() || FreePointer.origin();
+    return new HigherOrderBox(
+      drawChildrenFn(content, config, drawingStartPoint)
+    );
+  };
+}
+
 export class HigherOrderBox extends AbstractPrimitiveBox {
   /**
-   * @param {(startPoint: FreePointer)=>Box[]} initChildren
+   * @param {Box[]} children
    */
-  constructor(initChildren) {
-    const children = initChildren(FreePointer.origin());
+  constructor(children) {
     const mbb = minimalBoundingBox(children);
     super(
       mbb || {

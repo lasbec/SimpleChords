@@ -1,7 +1,7 @@
 import { loadavg } from "os";
 import { LEN, Length } from "../../Length.js";
 import { SongLine } from "../../SongLine.js";
-import { HigherOrderBox } from "../HigherOrderBox.js";
+import { HigherOrderBox, decorateAsBox } from "../HigherOrderBox.js";
 import { FreePointer } from "../FreePointer.js";
 import { TextBox } from "../PrimitiveBoxes/TextBox.js";
 /**
@@ -22,21 +22,7 @@ import { TextBox } from "../PrimitiveBoxes/TextBox.js";
  * @property {TextConfig} chordsConfig
  */
 
-/**
- * @implements {Box}
- */
-export class SongLineBox extends HigherOrderBox {
-  /**
-   * @param {SongLine} line
-   * @param {SongLineBoxConfig} args
-   */
-  constructor(line, args) {
-    super(
-      /** @param {FreePointer} p  */
-      (p) => SongLineBox.initChildren(line, args, p)
-    );
-  }
-
+class SongLineBox {
   /**
    * @param {SongLine} line
    * @param {SongLineBoxConfig} args
@@ -48,7 +34,7 @@ export class SongLineBox extends HigherOrderBox {
     const pointer = topLeft.clone();
     pointer.moveDown(args.chordsConfig.lineHeight);
 
-    const partialWidths = this.partialWidths(line, args.lyricConfig);
+    const partialWidths = SongLineBox.partialWidths(line, args.lyricConfig);
     for (const chord of line.chords) {
       const yOffset = partialWidths[chord.startIndex];
       if (!yOffset) continue;
@@ -92,3 +78,5 @@ export class SongLineBox extends HigherOrderBox {
     return result;
   }
 }
+
+export const songLineBox = decorateAsBox(SongLineBox.initChildren);

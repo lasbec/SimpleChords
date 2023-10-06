@@ -1,6 +1,6 @@
-import { HigherOrderBox } from "../HigherOrderBox.js";
 import { FreePointer } from "../FreePointer.js";
-import { SongLineBox } from "./SongLineBox.js";
+import { decorateAsBox } from "../HigherOrderBox.js";
+import { songLineBox } from "./SongLineBox.js";
 /**
  * @typedef {import("../Geometry.js").BoxPlacement} BoxPlacement
  * @typedef {import("../../Song.js").SongSection} SongSection
@@ -20,28 +20,21 @@ import { SongLineBox } from "./SongLineBox.js";
  */
 
 /**
- * @implements {Box}
+ * @param {SongSection} section
+ * @param {SongSectionBoxConfig} config
+ * @param {FreePointer} startPoint
  */
-export class SongSectionBox extends HigherOrderBox {
-  /**
-   * @param {SongSection} section
-   * @param {SongSectionBoxConfig} config
-   */
-  constructor(section, config) {
-    /** @param {FreePointer} startPoint  */
-    function initChildren(startPoint) {
-      const children = section.lines.map((l) => new SongLineBox(l, config));
-      for (const l of children) {
-        l.setPosition({
-          x: "left",
-          y: "top",
-          point: startPoint,
-        });
-        startPoint.moveDown(l.height);
-      }
-      return children;
-    }
-
-    super(initChildren);
+function drawsongSection(section, config, startPoint) {
+  const children = section.lines.map((l) => songLineBox(l, config));
+  for (const l of children) {
+    l.setPosition({
+      x: "left",
+      y: "top",
+      point: startPoint,
+    });
+    startPoint.moveDown(l.height);
   }
+  return children;
 }
+
+export const songSection = decorateAsBox(drawsongSection);

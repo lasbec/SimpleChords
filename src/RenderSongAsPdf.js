@@ -17,8 +17,9 @@ import { SongLine } from "./SongLine.js";
 import { checkSongAst, WellKnownSectionType } from "./SongChecker.js";
 import { SchemaWrapper } from "./SchemaWrapper.js";
 import { TextConfig } from "./Drawing/TextConfig.js";
-import { SongSectionBox } from "./Drawing/Boxes/SongSectionBox.js";
+
 import { TextBox } from "./Drawing/PrimitiveBoxes/TextBox.js";
+import { songSection } from "./Drawing/Boxes/SongSectionBox.js";
 
 /**
  * @param {string} path
@@ -304,7 +305,7 @@ function drawSongSectionLines(pointer, songLines, sectionType, layoutConfig) {
       : layoutConfig.lyricTextConfig;
   const chordTextConfig = layoutConfig.chordTextConfig;
 
-  const sectionBox = new SongSectionBox(
+  const sectionBox = songSection(
     {
       type: sectionType,
       lines: songLines,

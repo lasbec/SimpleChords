@@ -8,7 +8,7 @@
 import { BreakableText } from "./BreakableText.js";
 import { SongLine } from "./SongLine.js";
 import { WellKnownSectionType } from "./SongChecker.js";
-import { SongLineBox } from "./Drawing/Boxes/SongLineBox.js";
+import { songLineBox } from "./Drawing/Boxes/SongLineBox.js";
 
 /**
  * @param {SongLine} line
@@ -16,10 +16,10 @@ import { SongLineBox } from "./Drawing/Boxes/SongLineBox.js";
  * @param {Length} width
  */
 function getMaxLenToFitWidth(line, style, width) {
-  let box = new SongLineBox(line, style);
+  let box = songLineBox(line, style);
   while (box.width.gt(width)) {
     line = line.slice(0, -1);
-    box = new SongLineBox(line, style);
+    box = songLineBox(line, style);
   }
   return line.length;
 }
@@ -80,7 +80,7 @@ export class SchemaWrapper {
   possibleChordsAInLine(line, textConfig) {
     let currMax = 0;
     for (const chord of line.text.chords) {
-      const box = new SongLineBox(
+      const box = songLineBox(
         line.text.slice(0, chord.startIndex + 1),
         textConfig
       );
