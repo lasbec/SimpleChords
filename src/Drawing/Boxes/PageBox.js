@@ -46,10 +46,6 @@ export class PageBox extends AbstractPrimitiveBox {
     this.children = [];
   }
 
-  level() {
-    return 0;
-  }
-
   /** @param {Box} box */
   appendChild(box) {
     this.children.push(box);

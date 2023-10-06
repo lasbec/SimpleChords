@@ -11,7 +11,7 @@ import { BoxOverflows } from "./BoxOverflow.js";
  * @typedef {import("./Geometry.js").Box} Box
  */
 
-export class AbstractHOBox extends AbstractPrimitiveBox {
+export class HigherOrderBox extends AbstractPrimitiveBox {
   /**
    * @param {(startPoint: FreePointer)=>Box[]} initChildren
    */

@@ -1,7 +1,7 @@
 import { loadavg } from "os";
 import { LEN, Length } from "../../Length.js";
 import { SongLine } from "../../SongLine.js";
-import { AbstractHOBox } from "../AbstractHOBox.js";
+import { HigherOrderBox } from "../HigherOrderBox.js";
 import { FreePointer } from "../FreePointer.js";
 import { TextBox } from "../PrimitiveBoxes/TextBox.js";
 /**
@@ -25,7 +25,7 @@ import { TextBox } from "../PrimitiveBoxes/TextBox.js";
 /**
  * @implements {Box}
  */
-export class SongLineBox extends AbstractHOBox {
+export class SongLineBox extends HigherOrderBox {
   /**
    * @param {SongLine} line
    * @param {SongLineBoxConfig} args

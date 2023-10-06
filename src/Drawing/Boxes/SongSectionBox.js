@@ -1,4 +1,4 @@
-import { AbstractHOBox } from "../AbstractHOBox.js";
+import { HigherOrderBox } from "../HigherOrderBox.js";
 import { FreePointer } from "../FreePointer.js";
 import { SongLineBox } from "./SongLineBox.js";
 /**
@@ -22,7 +22,7 @@ import { SongLineBox } from "./SongLineBox.js";
 /**
  * @implements {Box}
  */
-export class SongSectionBox extends AbstractHOBox {
+export class SongSectionBox extends HigherOrderBox {
   /**
    * @param {SongSection} section
    * @param {SongSectionBoxConfig} config
