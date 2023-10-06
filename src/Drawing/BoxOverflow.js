@@ -11,7 +11,7 @@ import { LEN, Length } from "../Length.js";
 
 /**
  * @typedef {object} OverflowCalcArgs
- * @property {Box} parent
+ * @property {Box | null} parent
  * @property {Box} child
  */
 
@@ -54,6 +54,14 @@ export class BoxOverflows {
 
   /** @param {OverflowCalcArgs} args */
   static from(args) {
+    if (!args.parent) {
+      return new BoxOverflows({
+        right: Length.zero,
+        left: Length.zero,
+        top: Length.zero,
+        bottom: Length.zero,
+      });
+    }
     const box = args.child;
     const leftBottomCorner = box.getPoint("left", "bottom");
     const rightBorder = leftBottomCorner.x.add(box.width);
@@ -92,7 +100,7 @@ export class BoxOverflows {
     }
     return `BoxOverflow at: ` + result.join(", ") + ".";
   }
-  /** @param {BoxTreeNode} box */
+  /** @param {Box} box */
   static assertBoxIsInsideParent(box) {
     const overflows = BoxOverflows.from({ child: box, parent: box.parent });
     if (!overflows.isEmpty()) {
