@@ -34,6 +34,11 @@ export class AbstractPrimitiveBox {
     this.document = null;
   }
 
+  /** @param {Box} box */
+  appendChild(box) {
+    throw Error("Can not append child to primitive box");
+  }
+
   /** @returns {BoxTreeRoot} */
   appendNewPage() {
     if (!this.document) {

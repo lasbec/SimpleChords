@@ -1,10 +1,7 @@
-import { PDFPage, rgb } from "pdf-lib";
+import { PDFPage } from "pdf-lib";
 import { PageBox } from "./Boxes/PageBox.js";
-import { drawDebugBox } from "./BoxDrawingUtils.js";
 import { Length } from "../Length.js";
 import { BoxPointer } from "./BoxPointer.js";
-import { Document } from "./Document.js";
-import { BoxOverflows } from "./BoxOverflow.js";
 import { FreePointer } from "./FreePointer.js";
 /**
  */
@@ -120,6 +117,12 @@ export class BoxTreeRoot {
   setPosition(position) {
     this.ownBox.setPosition(position);
   }
+
+  /** @param {Box} box */
+  appendChild(box) {
+    /** @ts-ignore */
+    this.children.push(box);
+  }
 }
 
 /**
@@ -158,6 +161,12 @@ export class BoxTreeChildNode {
     this.ownBox.setParent(parentNode.ownBox);
     this.parent = parentNode;
     this.children = [];
+  }
+
+  /** @param {Box} box */
+  appendChild(box) {
+    /** @ts-ignore */
+    this.children.push(box);
   }
 
   get width() {

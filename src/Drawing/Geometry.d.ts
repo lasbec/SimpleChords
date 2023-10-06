@@ -33,6 +33,9 @@ export type Box = {
   getBorder(border: BorderPosition): Length;
   drawToPdfPage(page: PDFPage): void;
   appendNewPage(): BoxTreeRoot;
+
+  appendChild(box: Box): void;
+
   width: Length;
   height: Length;
 

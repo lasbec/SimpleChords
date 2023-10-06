@@ -35,6 +35,15 @@ export class AbstractHOBox extends AbstractPrimitiveBox {
     }
   }
 
+  /** @param {Box} box */
+  appendChild(box) {
+    this.children.push(box);
+    box.parent = this;
+    const mbb = minimalBoundingBox(this.children);
+    this.width = mbb?.width || Length.zero;
+    this.height = mbb?.height || Length.zero;
+  }
+
   /**
    * @param {BoxPlacement} position
    */
