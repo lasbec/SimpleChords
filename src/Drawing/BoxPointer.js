@@ -58,30 +58,6 @@ export class BoxPointer {
     return new BoxPointer(point.x, point.y, box);
   }
 
-  /**
-   * @param {XStartPosition} x
-   * @param {Length} width
-   * @private
-   */
-  xPositionRelativeToThis(x, width) {
-    if (x === "left") return this.x.sub(width);
-    if (x === "center") return this.x.sub(width.mul(1 / 2));
-    if (x === "right") return this.x;
-    throw Error("Invalid x start position.");
-  }
-
-  /**
-   * @param {YStartPosition} y
-   * @param {Length} height
-   * @private
-   */
-  yPositionRelativeToThis(y, height) {
-    if (y === "top") return this.y;
-    if (y === "center") return this.y.sub(height.mul(1 / 2));
-    if (y === "bottom") return this.y.sub(height);
-    throw Error("Invalid y start position.");
-  }
-
   clone() {
     return new BoxPointer(this.x, this.y, this.box);
   }
@@ -210,12 +186,10 @@ export class BoxPointer {
    * @param {Box} box
    */
   setBox(x, y, box) {
-    const xToDraw = this.xPositionRelativeToThis(x, box.width);
-    const yToDraw = this.yPositionRelativeToThis(y, box.height);
     box.setPosition({
-      x: "left",
-      y: "bottom",
-      point: FreePointer.fromPoint({ x: xToDraw, y: yToDraw }),
+      x: x === "left" ? "right" : x === "right" ? "left" : "center",
+      y: y === "top" ? "bottom" : y === "bottom" ? "top" : "center",
+      point: FreePointer.fromPoint(this),
     });
     box.setParent(this.box);
 
