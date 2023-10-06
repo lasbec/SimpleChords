@@ -186,7 +186,7 @@ export class BoxTreeChildNode {
    * @param {PDFPage} page
    */
   drawToPdfPage(page) {
-    this.doOverflowManagement(page, this);
+    this.doOverflowManagement(page);
     this.ownBox.setPosition({
       x: "left",
       y: "bottom",
@@ -236,11 +236,10 @@ export class BoxTreeChildNode {
 
   /**
    * @param {PDFPage} page
-   * @param {BoxTreeNode} box
    * */
-  doOverflowManagement(page, box) {
-    if (!Document.debug) BoxOverflows.assertBoxIsInsideParent(box);
-    const overflows = BoxOverflows.from({ child: box, parent: box.parent });
+  doOverflowManagement(page) {
+    if (!Document.debug) BoxOverflows.assertBoxIsInsideParent(this);
+    const overflows = BoxOverflows.from({ child: this, parent: this.parent });
     if (overflows.isEmpty()) return;
     this.drawOverflowMarker(page, overflows);
     console.error("Overflow detecded", overflows.toString());
