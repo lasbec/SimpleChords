@@ -86,7 +86,6 @@ export class BoxTreeRoot {
    * @param {PDFPage} page
    */
   drawToPdfPage(page) {
-    drawDebugBox(page, this);
     this.ownBox.drawToPdfPage(page);
   }
 
@@ -188,7 +187,6 @@ export class BoxTreeChildNode {
    */
   drawToPdfPage(page) {
     this.doOverflowManagement(page, this);
-    drawDebugBox(page, this.ownBox);
     this.ownBox.setPosition({
       x: "left",
       y: "bottom",

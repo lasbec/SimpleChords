@@ -3,6 +3,7 @@ import { Document } from "../Document.js";
 import { BoxTreeRoot } from "../BoxTreeNode.js";
 import { AbstractPrimitiveBox } from "../AbstractPrimitiveBox.js";
 import { FreePointer } from "../FreePointer.js";
+import { drawDebugBox } from "../BoxDrawingUtils.js";
 /**
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("../Geometry.js").Point} Point

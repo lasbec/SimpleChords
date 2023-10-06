@@ -3,6 +3,7 @@ import { Length } from "../Length.js";
 import { minimalBoundingBox } from "./BoxMeasuringUtils.js";
 import { AbstractPrimitiveBox } from "./AbstractPrimitiveBox.js";
 import { PDFPage } from "pdf-lib";
+import { drawDebugBox } from "./BoxDrawingUtils.js";
 
 /**
  * @typedef {import("./Geometry.js").BoxPlacement} BoxPlacement
@@ -63,6 +64,7 @@ export class AbstractHOBox extends AbstractPrimitiveBox {
    */
   drawToPdfPage(page) {
     for (const child of this.children) {
+      drawDebugBox(page, child);
       child.drawToPdfPage(page);
     }
   }
