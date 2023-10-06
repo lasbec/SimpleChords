@@ -54,11 +54,8 @@ export class BoxPointer {
    * @param {Box} box
    */
   static atBox(x, y, box) {
-    return new BoxPointer(
-      BoxPointer.xPositionOnPage(x, box),
-      BoxPointer.yPositionOnPage(y, box),
-      box
-    );
+    const point = box.getPoint(x, y);
+    return new BoxPointer(point.x, point.y, box);
   }
 
   /**
@@ -128,12 +125,12 @@ export class BoxPointer {
   }
 
   moveHorizontalCenter() {
-    this.freePointer.x = BoxPointer.xPositionOnPage("center", this.box);
+    this.freePointer.x = this.box.getPoint("center", "center").x;
     return this;
   }
 
   moveVerticalCenter() {
-    this.freePointer.y = BoxPointer.yPositionOnPage("center", this.box);
+    this.freePointer.y = this.box.getPoint("center", "center").y;
     return this;
   }
 
