@@ -5,6 +5,10 @@ import { AbstractPrimitiveBox } from "../AbstractPrimitiveBox.js";
 import { FreePointer } from "../FreePointer.js";
 import { drawDebugBox } from "../BoxDrawingUtils.js";
 /**
+ */
+
+/**
+ * @typedef {import("../Geometry.js").Box} Box
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("../Geometry.js").Point} Point
  * @typedef {import("../Geometry.js").XStartPosition} XStartPosition
@@ -25,7 +29,7 @@ import { drawDebugBox } from "../BoxDrawingUtils.js";
  * @implements {PrimitiveBox}
  */
 export class PageBox extends AbstractPrimitiveBox {
-  /** @type {BoxTreeNode[]} */
+  /** @type {Box[]} */
   children;
 
   /**
