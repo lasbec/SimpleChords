@@ -248,7 +248,7 @@ async function layOutSongOnNewPage(song, layoutConfig, doc) {
     layoutConfig.topMargin,
     layoutConfig.titleTextConfig
   );
-  const pointer = titleBox.getBoxPointer("left", "bottom").onPage();
+  const pointer = BoxPointer.atBox("left", "bottom", titleBox).onPage();
 
   pointer.moveDown(lyricLineHeight);
   pointer.moveToBorder("left").moveRight(layoutConfig.leftMargin);
@@ -260,7 +260,7 @@ async function layOutSongOnNewPage(song, layoutConfig, doc) {
     .moveUp(layoutConfig.bottomMargin)
     .moveLeft(layoutConfig.rightMargin);
   const lyricBox = pointer.span(rightBottomPointer);
-  let lyricPointer = lyricBox.getBoxPointer("left", "top");
+  let lyricPointer = BoxPointer.atBox("left", "top", lyricBox);
 
   for (const section of song.sections) {
     let onlyChordsSections = [
@@ -334,7 +334,7 @@ function drawSongSectionLines(pointer, songLines, sectionType, layoutConfig) {
       .moveUp(layoutConfig.topMargin)
       .moveLeft(layoutConfig.rightMargin);
     const lyricBox = leftTopCorner.span(rightBottomCorner);
-    pointer = lyricBox.getBoxPointer("left", "top");
+    pointer = BoxPointer.atBox("left", "top", lyricBox);
   }
   pointer.setBox("right", "bottom", sectionBox);
   return pointer.moveDown(sectionBox.height);
@@ -373,7 +373,7 @@ function drawSongSectionLinesOnlyChords(
       .moveUp(layoutConfig.topMargin)
       .moveLeft(layoutConfig.rightMargin);
     const lyricBox = leftTopCorner.span(rightBottomCorner);
-    pointer = lyricBox.getBoxPointer("left", "top");
+    pointer = BoxPointer.atBox("left", "top", lyricBox);
   }
   for (const line of songLines) {
     const text = title + line.chords.map((c) => c.chord).join(" ");
@@ -391,7 +391,7 @@ function drawSongSectionLinesOnlyChords(
  * @param {TextConfig} style
  */
 function drawTitle(song, page, topMargin, style) {
-  const pointer = page.getBoxPointer("center", "top").moveDown(topMargin);
+  const pointer = BoxPointer.atBox("center", "top", page).moveDown(topMargin);
   const x = "center";
   const y = "bottom";
   const text = song.heading;
