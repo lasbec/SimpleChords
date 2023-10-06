@@ -3,7 +3,6 @@
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("pdf-lib").PDFFont} PDFFont
  * @typedef {import("pdf-lib").Color}  Color
- * @typedef {import("./BoxTreeNode.js").BoxTreeNode} BoxTreeNode
  * @typedef {import("./Geometry.js").Box} Box
  */
 import { rgb } from "pdf-lib";

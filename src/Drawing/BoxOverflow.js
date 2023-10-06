@@ -6,7 +6,6 @@ import { Document } from "./Document.js";
  * @typedef {import("./Geometry.js").Point} Point
  * @typedef {import("./Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("./Geometry.js").YStartPosition} YStartPosition
- * @typedef {import("./BoxTreeNode.js").BoxTreeNode} BoxTreeNode
  * @typedef {import("./Geometry.js").Box} Box
  * @typedef {import("./Geometry.js").Dimensions} Dimesions
  * @typedef {import("./TextConfig.js").TextConfig} TextConfig

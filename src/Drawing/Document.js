@@ -1,6 +1,5 @@
 import { PDFDocument } from "pdf-lib";
 import { PageBox as Page } from "./Boxes/PageBox.js";
-import { BoxTreeRoot } from "./BoxTreeNode.js";
 
 /**
  */

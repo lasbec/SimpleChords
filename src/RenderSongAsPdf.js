@@ -2,6 +2,7 @@
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("./Drawing/Geometry.js").Dimensions} Dimensions
  * @typedef {import("./Song.js").SongSection} SongSection
+ * @typedef {import("./Drawing/Geometry.js").Box} Box
  */
 import { PDFDocument, StandardFonts } from "pdf-lib";
 import { FontLoader } from "./Drawing/FontLoader.js";
@@ -15,7 +16,6 @@ import { Song } from "./Song.js";
 import { SongLine } from "./SongLine.js";
 import { checkSongAst, WellKnownSectionType } from "./SongChecker.js";
 import { SchemaWrapper } from "./SchemaWrapper.js";
-import { BoxTreeRoot } from "./Drawing/BoxTreeNode.js";
 import { TextConfig } from "./Drawing/TextConfig.js";
 import { SongSectionBox } from "./Drawing/Boxes/SongSectionBox.js";
 import { TextBox } from "./Drawing/PrimitiveBoxes/TextBox.js";
@@ -386,7 +386,7 @@ function drawSongSectionLinesOnlyChords(
 
 /**
  * @param {Song} song
- * @param {BoxTreeRoot} page
+ * @param {Box} page
  * @param {Length} topMargin
  * @param {TextConfig} style
  */

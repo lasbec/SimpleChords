@@ -1,12 +1,6 @@
-import { LEN, Length } from "../../Length.js";
 import { Document } from "../Document.js";
-import { BoxTreeRoot } from "../BoxTreeNode.js";
 import { AbstractPrimitiveBox } from "../AbstractPrimitiveBox.js";
 import { FreePointer } from "../FreePointer.js";
-import { drawDebugBox } from "../BoxDrawingUtils.js";
-import { minimalBoundingBox } from "../BoxMeasuringUtils.js";
-/**
- */
 
 /**
  * @typedef {import("../Geometry.js").Box} Box
@@ -17,7 +11,6 @@ import { minimalBoundingBox } from "../BoxMeasuringUtils.js";
  * @typedef {import("../Geometry.js").Box} PrimitiveBox
  * @typedef {import("../Geometry.js").Dimensions} Dimesions
  * @typedef {import("../Geometry.js").BoxPlacement} BoxPlacement
- * @typedef {import("../BoxTreeNode.js").BoxTreeNode} BoxTreeNode
  */
 
 /**
