@@ -186,7 +186,6 @@ export class BoxTreeChildNode {
    * @param {PDFPage} page
    */
   drawToPdfPage(page) {
-    BoxOverflows.doOverflowManagement(page, this);
     this.ownBox.setPosition({
       x: "left",
       y: "bottom",
