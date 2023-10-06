@@ -186,7 +186,7 @@ export class BoxTreeChildNode {
    * @param {PDFPage} page
    */
   drawToPdfPage(page) {
-    this.doOverflowManagement(page);
+    BoxTreeChildNode.doOverflowManagement(page, this);
     this.ownBox.setPosition({
       x: "left",
       y: "bottom",
@@ -236,31 +236,33 @@ export class BoxTreeChildNode {
 
   /**
    * @param {PDFPage} page
-   * */
-  doOverflowManagement(page) {
-    if (!Document.debug) BoxOverflows.assertBoxIsInsideParent(this);
-    const overflows = BoxOverflows.from({ child: this, parent: this.parent });
+   * @param {Box} box
+   */
+  static doOverflowManagement(page, box) {
+    if (!Document.debug) BoxOverflows.assertBoxIsInsideParent(box);
+    const overflows = BoxOverflows.from({ child: box, parent: box.parent });
     if (overflows.isEmpty()) return;
-    this.drawOverflowMarker(page, overflows);
+    BoxTreeChildNode.drawOverflowMarker(page, box, overflows);
     console.error("Overflow detecded", overflows.toString());
   }
 
   /**
    * @param {PDFPage} page
+   * @param {Box} box
    * @param {BoxOverflows} overflow
    */
-  drawOverflowMarker(page, overflow) {
+  static drawOverflowMarker(page, box, overflow) {
     page.drawRectangle({
-      ...this.getBoxPointer("left", "bottom").rawPointIn("pt"),
-      width: this.width.in("pt"),
-      height: this.height.in("pt"),
+      ...box.getPoint("left", "bottom").rawPointIn("pt"),
+      width: box.width.in("pt"),
+      height: box.height.in("pt"),
       color: rgb(1, 0, 1),
       opacity: 0.5,
     });
 
     if (overflow.left) {
-      const leftBottom = this.getBoxPointer("left", "bottom");
-      const height = this.height;
+      const leftBottom = box.getPoint("left", "bottom");
+      const height = box.height;
       const width = overflow.left;
       page.drawRectangle({
         ...leftBottom.rawPointIn("pt"),
@@ -271,10 +273,10 @@ export class BoxTreeChildNode {
     }
 
     if (overflow.right) {
-      const leftBottom = this.getBoxPointer("right", "bottom").moveLeft(
-        overflow.right
-      );
-      const height = this.height;
+      const leftBottom = box
+        .getPoint("right", "bottom")
+        .moveLeft(overflow.right);
+      const height = box.height;
       const width = overflow.right;
       page.drawRectangle({
         ...leftBottom.rawPointIn("pt"),
@@ -285,11 +287,9 @@ export class BoxTreeChildNode {
     }
 
     if (overflow.top) {
-      const leftBottom = this.getBoxPointer("left", "top").moveDown(
-        overflow.top
-      );
+      const leftBottom = box.getPoint("left", "top").moveDown(overflow.top);
       const height = overflow.top;
-      const width = this.width;
+      const width = box.width;
       page.drawRectangle({
         ...leftBottom.rawPointIn("pt"),
         width: width.in("pt"),
@@ -299,9 +299,9 @@ export class BoxTreeChildNode {
     }
 
     if (overflow.bottom) {
-      const leftBottom = this.getBoxPointer("left", "bottom");
+      const leftBottom = box.getPoint("left", "bottom");
       const heigth = overflow.bottom;
-      const width = this.width;
+      const width = box.width;
       page.drawRectangle({
         ...leftBottom.rawPointIn("pt"),
         width: width.in("pt"),
