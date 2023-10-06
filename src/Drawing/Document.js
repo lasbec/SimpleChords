@@ -3,6 +3,10 @@ import { PageBox as Page } from "./Boxes/PageBox.js";
 import { BoxTreeRoot } from "./BoxTreeNode.js";
 
 /**
+ */
+
+/**
+ * @typedef {import("./Geometry.js").Box} Box
  * @typedef {import("./Geometry.js").Dimensions} Dimensions
  */
 
@@ -12,7 +16,7 @@ export class Document {
   /**
    * @private
    * @readonly
-   * @type {BoxTreeRoot[]}
+   * @type {Box[]}
    */
   pages;
 
@@ -29,7 +33,7 @@ export class Document {
   }
 
   appendNewPage() {
-    const result = new BoxTreeRoot(new Page(this.defaultPageDims, this));
+    const result = new Page(this.defaultPageDims, this);
     this.pages.push(result);
     return result;
   }

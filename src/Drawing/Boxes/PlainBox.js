@@ -1,5 +1,6 @@
 import { Length } from "../../Length.js";
 import { AbstractPrimitiveBox } from "../AbstractPrimitiveBox.js";
+import { minimalBoundingBox } from "../BoxMeasuringUtils.js";
 import { FreePointer } from "../FreePointer.js";
 
 /**
@@ -27,6 +28,11 @@ export class PlainBox extends AbstractPrimitiveBox {
     });
     /** @type {Box[]} */
     this.children = [];
+  }
+
+  /** @param {Box} box */
+  appendChild(box) {
+    this.children.push(box);
   }
 
   /**

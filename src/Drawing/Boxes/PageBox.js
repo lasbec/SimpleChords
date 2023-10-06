@@ -4,6 +4,7 @@ import { BoxTreeRoot } from "../BoxTreeNode.js";
 import { AbstractPrimitiveBox } from "../AbstractPrimitiveBox.js";
 import { FreePointer } from "../FreePointer.js";
 import { drawDebugBox } from "../BoxDrawingUtils.js";
+import { minimalBoundingBox } from "../BoxMeasuringUtils.js";
 /**
  */
 
@@ -54,6 +55,11 @@ export class PageBox extends AbstractPrimitiveBox {
 
   level() {
     return 0;
+  }
+
+  /** @param {Box} box */
+  appendChild(box) {
+    this.children.push(box);
   }
 
   setParent() {

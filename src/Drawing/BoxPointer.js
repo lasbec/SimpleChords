@@ -30,7 +30,7 @@ export class BoxPointer {
     return this.freePointer.y;
   }
 
-  /** @type {BoxTreeNode} */
+  /** @type {Box} */
   box;
 
   /** @param {unknown[]} args  */
@@ -44,7 +44,7 @@ export class BoxPointer {
    *
    * @param {Length} x
    * @param {Length} y
-   * @param {BoxTreeNode} page
+   * @param {Box} page
    * @private
    */
   constructor(x, y, page) {
@@ -55,7 +55,7 @@ export class BoxPointer {
   /**
    * @param {XStartPosition} x
    * @param {YStartPosition} y
-   * @param {BoxTreeNode} box
+   * @param {Box} box
    */
   static atBox(x, y, box) {
     return new BoxPointer(
@@ -203,12 +203,13 @@ export class BoxPointer {
    * @returns {BoxPointer}
    */
   onParent() {
+    if (!this.box.parent) return this;
     return new BoxPointer(this.x, this.y, this.box.parent);
   }
 
   /**
    * @param {BoxPointer} other
-   * @returns {BoxTreeChildNode}
+   * @returns {Box}
    */
   span(other) {
     const otherRelXPos = other.isLeftFrom(this) ? "left" : "right";
@@ -246,17 +247,20 @@ export class BoxPointer {
   setBox(x, y, box) {
     const xToDraw = this.xPositionRelativeToThis(x, box.width);
     const yToDraw = this.yPositionRelativeToThis(y, box.height);
-    const result = new BoxTreeChildNode(
-      { x: xToDraw, y: yToDraw },
-      box,
-      this.box
-    );
-    result.ownBox.setParent(this.box.ownBox);
-    this.box.appendChild(result);
+    box.setPosition({
+      x: "left",
+      y: "bottom",
+      point: FreePointer.fromPoint({ x: xToDraw, y: yToDraw }),
+    });
+    box.setParent(this.box);
 
-    const rootPage = this.box.rootPage;
-    result.ownBox.setParent(rootPage);
-    rootPage.children.push(result);
-    return result;
+    box.setParent(this.box);
+    this.box.appendChild(box);
+
+    const rootPage = this.box.root;
+    // box.setParent(rootPage); //!!
+    /** @ts-ignore */
+    rootPage.children.push(box);
+    return box;
   }
 }
