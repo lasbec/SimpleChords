@@ -171,7 +171,7 @@ export async function renderSongAsPdf(songs, debug, layoutConfig, pdfDoc) {
           .sub(layoutConfig.rightMargin)
       ),
       layoutConfig,
-      doc.appendNewPage()
+      BoxPointer.atBox("left", "top", doc.appendNewPage())
     );
   }
   doc.drawToPdfDoc(pdfDoc);

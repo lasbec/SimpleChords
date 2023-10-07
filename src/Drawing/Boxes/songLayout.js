@@ -15,14 +15,14 @@ import { SongLine } from "../../SongLine.js";
 /**
  * @param {Song} song
  * @param {LayoutConfig} layoutConfig
- * @param {Box} page
- * @returns {Box}
+ * @param {BoxPointer} _pointer
+ * @returns {Box[]}
  */
-export function layOutSongOnNewPage(song, layoutConfig, page) {
+export function layOutSongOnNewPage(song, layoutConfig, _pointer) {
   const lyricLineHeight = layoutConfig.lyricTextConfig.lineHeight;
   const titleBox = drawTitle(
     song,
-    page,
+    _pointer,
     layoutConfig.topMargin,
     layoutConfig.titleTextConfig
   );
@@ -40,6 +40,8 @@ export function layOutSongOnNewPage(song, layoutConfig, page) {
   const lyricBox = pointer.span(rightBottomPointer);
   let lyricPointer = BoxPointer.atBox("left", "top", lyricBox);
 
+  /** @type {Box[]} */
+  const result = [titleBox];
   for (const section of song.sections) {
     let onlyChordsSections = [
       WellKnownSectionType.Intro,
@@ -59,6 +61,7 @@ export function layOutSongOnNewPage(song, layoutConfig, page) {
           section.type,
           layoutConfig
         );
+    result.push(...sectionLines);
     const lastLine = sectionLines[sectionLines.length - 1];
     if (lastLine) {
       lyricPointer = BoxPointer.fromPoint(
@@ -68,7 +71,7 @@ export function layOutSongOnNewPage(song, layoutConfig, page) {
     }
     lyricPointer.moveDown(layoutConfig.sectionDistance);
   }
-  return page;
+  return result;
 }
 
 /**
@@ -180,12 +183,16 @@ export function drawSongSectionLinesOnlyChords(
 
 /**
  * @param {Song} song
- * @param {Box} page
+ * @param {BoxPointer} _pointer
  * @param {Length} topMargin
  * @param {TextConfig} style
  */
-export function drawTitle(song, page, topMargin, style) {
-  const pointer = BoxPointer.atBox("center", "top", page).moveDown(topMargin);
+export function drawTitle(song, _pointer, topMargin, style) {
+  const pointer = _pointer
+    .onPage()
+    .moveHorizontalCenter()
+    .moveToBorder("top")
+    .moveDown(topMargin);
   const x = "center";
   const y = "top";
   const text = song.heading;
