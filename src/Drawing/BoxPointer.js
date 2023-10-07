@@ -191,7 +191,6 @@ export class BoxPointer {
       y,
       point: FreePointer.fromPoint(this),
     });
-    box.setParent(this.box);
 
     box.setParent(this.box);
     this.box.appendChild(box);
