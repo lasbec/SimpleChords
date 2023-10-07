@@ -170,7 +170,7 @@ export async function renderSongAsPdf(songs, debug, layoutConfig, pdfDoc) {
           .sub(layoutConfig.rightMargin)
       ),
       layoutConfig,
-      doc
+      doc.appendNewPage()
     );
   }
   doc.drawToPdfDoc(pdfDoc);
@@ -238,14 +238,14 @@ async function layoutConfigFromDto(configDto, pdfDoc) {
 /**
  * @param {Song} song
  * @param {LayoutConfig} layoutConfig
- * @param {Document} doc
- * @returns {Promise<Document>}
+ * @param {Box} page
+ * @returns {Promise<Box>}
  */
-async function layOutSongOnNewPage(song, layoutConfig, doc) {
+async function layOutSongOnNewPage(song, layoutConfig, page) {
   const lyricLineHeight = layoutConfig.lyricTextConfig.lineHeight;
   const titleBox = drawTitle(
     song,
-    doc.appendNewPage(),
+    page,
     layoutConfig.topMargin,
     layoutConfig.titleTextConfig
   );
@@ -286,7 +286,7 @@ async function layOutSongOnNewPage(song, layoutConfig, doc) {
     }
     lyricPointer.moveDown(layoutConfig.sectionDistance);
   }
-  return doc;
+  return page;
 }
 
 /**
