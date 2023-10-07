@@ -16,9 +16,9 @@ import { SongLine } from "../../SongLine.js";
  * @param {Song} song
  * @param {LayoutConfig} layoutConfig
  * @param {Box} page
- * @returns {Promise<Box>}
+ * @returns {Box}
  */
-export async function layOutSongOnNewPage(song, layoutConfig, page) {
+export function layOutSongOnNewPage(song, layoutConfig, page) {
   const lyricLineHeight = layoutConfig.lyricTextConfig.lineHeight;
   const titleBox = drawTitle(
     song,

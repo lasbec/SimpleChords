@@ -162,7 +162,7 @@ export async function renderSongAsPdf(songs, debug, layoutConfig, pdfDoc) {
   });
   for (const song of songs) {
     console.log(`Drawing '${song.heading}'`);
-    await layOutSongOnNewPage(
+    layOutSongOnNewPage(
       reshapeSongWithSchema(
         song,
         layoutConfig,
