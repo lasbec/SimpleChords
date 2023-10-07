@@ -153,8 +153,8 @@ export class BoxPointer {
    * @returns {Box}
    */
   span(other) {
-    const otherRelXPos = other.isLeftFrom(this) ? "left" : "right";
-    const otherRelYPos = other.isLowerThan(this) ? "bottom" : "top";
+    const otherRelXPos = other.isLeftFrom(this) ? "right" : "left";
+    const otherRelYPos = other.isLowerThan(this) ? "top" : "bottom";
     const width = this.x.sub(other.x).abs();
     const height = this.y.sub(other.y).abs();
     const box = new PlainBox({ width, height });
@@ -187,8 +187,8 @@ export class BoxPointer {
    */
   setBox(x, y, box) {
     box.setPosition({
-      x: x === "left" ? "right" : x === "right" ? "left" : "center",
-      y: y === "top" ? "bottom" : y === "bottom" ? "top" : "center",
+      x,
+      y,
       point: FreePointer.fromPoint(this),
     });
     box.setParent(this.box);

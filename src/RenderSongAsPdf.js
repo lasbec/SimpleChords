@@ -337,7 +337,7 @@ function drawSongSectionLines(pointer, songLines, sectionType, layoutConfig) {
     const lyricBox = leftTopCorner.span(rightBottomCorner);
     pointer = BoxPointer.atBox("left", "top", lyricBox);
   }
-  pointer.setBox("right", "bottom", sectionBox);
+  pointer.setBox("left", "top", sectionBox);
   return pointer.moveDown(sectionBox.height);
 }
 
@@ -379,7 +379,7 @@ function drawSongSectionLinesOnlyChords(
   for (const line of songLines) {
     const text = title + line.chords.map((c) => c.chord).join(" ");
     const textBox = new TextBox(text, layoutConfig.chordTextConfig);
-    pointer.setBox("right", "bottom", textBox);
+    pointer.setBox("left", "top", textBox);
     pointer.moveDown(chordLineHeight);
   }
   return pointer;
@@ -394,7 +394,7 @@ function drawSongSectionLinesOnlyChords(
 function drawTitle(song, page, topMargin, style) {
   const pointer = BoxPointer.atBox("center", "top", page).moveDown(topMargin);
   const x = "center";
-  const y = "bottom";
+  const y = "top";
   const text = song.heading;
   const textBox = new TextBox(text, style);
   return pointer.setBox(x, y, textBox);
