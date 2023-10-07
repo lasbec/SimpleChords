@@ -54,11 +54,16 @@ export function layOutSongOnNewPage(song, layoutConfig, page) {
         layoutConfig
       );
     } else {
-      lyricPointer = drawSongSectionLines(
+      const sectionBox = drawSongSectionLines(
         lyricPointer,
         section.lines,
         section.type,
         layoutConfig
+      );
+
+      lyricPointer = BoxPointer.fromPoint(
+        sectionBox.getPoint("left", "bottom"),
+        lyricBox
       );
     }
     lyricPointer.moveDown(layoutConfig.sectionDistance);
@@ -71,6 +76,7 @@ export function layOutSongOnNewPage(song, layoutConfig, page) {
  * @param {SongLine[]} songLines
  * @param {string} sectionType
  * @param {LayoutConfig} layoutConfig
+ * @returns {Box}
  * */
 export function drawSongSectionLines(
   pointer,
@@ -120,7 +126,7 @@ export function drawSongSectionLines(
     pointer = BoxPointer.atBox("left", "top", lyricBox);
   }
   pointer.setBox("left", "top", sectionBox);
-  return pointer.moveDown(sectionBox.height);
+  return sectionBox;
 }
 
 /**

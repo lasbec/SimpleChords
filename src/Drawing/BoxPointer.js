@@ -58,6 +58,16 @@ export class BoxPointer {
     return new BoxPointer(point.x, point.y, box);
   }
 
+  /**
+   *
+   * @param {Point} point
+   * @param {Box} box
+   * @returns
+   */
+  static fromPoint(point, box) {
+    return new BoxPointer(point.x, point.y, box);
+  }
+
   clone() {
     return new BoxPointer(this.x, this.y, this.box);
   }
