@@ -46,30 +46,23 @@ export function layOutSongOnNewPage(song, layoutConfig, page) {
       WellKnownSectionType.Outro,
       WellKnownSectionType.Interlude,
     ];
-    if (onlyChordsSections.includes(section.type)) {
-      const sectionLines = drawSongSectionLinesOnlyChords(
-        lyricPointer,
-        section.lines,
-        section.type + "   ",
-        layoutConfig
-      );
-      const lastLine = sectionLines[sectionLines.length - 1];
-      if (lastLine) {
-        lyricPointer = BoxPointer.fromPoint(
-          lastLine?.getPoint("left", "bottom"),
-          lyricBox
+    const sectionLines = onlyChordsSections.includes(section.type)
+      ? drawSongSectionLinesOnlyChords(
+          lyricPointer,
+          section.lines,
+          section.type + "   ",
+          layoutConfig
+        )
+      : drawSongSectionLines(
+          lyricPointer,
+          section.lines,
+          section.type,
+          layoutConfig
         );
-      }
-    } else {
-      const sectionBox = drawSongSectionLines(
-        lyricPointer,
-        section.lines,
-        section.type,
-        layoutConfig
-      );
-
+    const lastLine = sectionLines[sectionLines.length - 1];
+    if (lastLine) {
       lyricPointer = BoxPointer.fromPoint(
-        sectionBox.getPoint("left", "bottom"),
+        lastLine?.getPoint("left", "bottom"),
         lyricBox
       );
     }
@@ -83,7 +76,7 @@ export function layOutSongOnNewPage(song, layoutConfig, page) {
  * @param {SongLine[]} songLines
  * @param {string} sectionType
  * @param {LayoutConfig} layoutConfig
- * @returns {Box}
+ * @returns {Box[]}
  * */
 export function drawSongSectionLines(
   pointer,
@@ -133,7 +126,7 @@ export function drawSongSectionLines(
     pointer = BoxPointer.atBox("left", "top", lyricBox);
   }
   pointer.setBox("left", "top", sectionBox);
-  return sectionBox;
+  return [sectionBox];
 }
 
 /**
