@@ -65,7 +65,7 @@ export function layOutSongOnNewPage(song, layoutConfig, _pointer) {
     const lastLine = sectionLines[sectionLines.length - 1];
     if (lastLine) {
       lyricPointer = MutableBoxPointer.fromPoint(
-        lastLine.getPoint("left", "bottom"),
+        lastLine.rectangle.getPoint("left", "bottom"),
         lastLine
       ).onPage();
     }
@@ -107,7 +107,7 @@ export function drawSongSectionLines(
     }
   );
 
-  const heightOfSection = sectionBox.height;
+  const heightOfSection = sectionBox.rectangle.height;
 
   const lowerEndOfSection = pointer.onPage().clone().moveToBorder("bottom");
 

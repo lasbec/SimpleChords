@@ -19,7 +19,7 @@ export type XStartPosition = "left" | "center" | "right";
 export type YStartPosition = "top" | "center" | "bottom";
 export type BorderPosition = "left" | "top" | "right" | "bottom";
 
-export type BoxPlacement = {
+export type RectanglePlacement = {
   x: XStartPosition;
   y: YStartPosition;
   point: MutableFreePointer;
@@ -35,21 +35,17 @@ export type Box = {
   parent: Box | null;
   root: Box;
 
-  setPosition(position: BoxPlacement): void;
-
-  getPoint(x: XStartPosition, y: YStartPosition): MutableFreePointer;
-  getBorder(border: BorderPosition): Length;
-  width: Length;
-  height: Length;
+  rectangle: Rectangle;
+  setPosition(position: RectanglePlacement): void;
 };
 
 export type Rectangle = {
-  getPoint(x: XStartPosition, y: YStartPosition): MutableFreePointer;
   getBorder(border: BorderPosition): Length;
+  getPoint(x: XStartPosition, y: YStartPosition): MutableFreePointer;
   width: Length;
   height: Length;
 };
 
 export type MutRectangle = Rectangle & {
-  setPosition(position: BoxPlacement): void;
+  setPosition(position: RectanglePlacement): void;
 };

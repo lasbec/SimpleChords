@@ -5,7 +5,7 @@ import { HigherOrderBox, decorateAsBox } from "../HigherOrderBox.js";
 import { MutableFreePointer } from "../FreePointer.js";
 import { TextBox } from "../PrimitiveBoxes/TextBox.js";
 /**
- * @typedef {import("../Geometry.js").BoxPlacement} BoxPlacement
+ * @typedef {import("../Geometry.js").RectanglePlacement} BoxPlacement
  * @typedef {import("../TextConfig.js").TextConfig} TextConfig
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("../Geometry.js").Point} Point

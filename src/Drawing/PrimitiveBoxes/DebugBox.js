@@ -6,7 +6,7 @@ import { AbstractPrimitiveBox } from "../AbstractPrimitiveBox.js";
 /**
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("../Geometry.js").Point} Point
- * @typedef {import("../Geometry.js").BoxPlacement} BoxPlacement
+ * @typedef {import("../Geometry.js").RectanglePlacement} BoxPlacement
  * @typedef {import("../Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("../Geometry.js").YStartPosition} YStartPosition
  * @typedef {import("../Geometry.js").Box} PrimitiveBox
@@ -46,8 +46,8 @@ export class DebugBox extends AbstractPrimitiveBox {
    * @param {PDFPage} pdfPage
    */
   drawToPdfPage(pdfPage) {
-    const center = this.getPoint("center", "center");
-    const leftBottomCorner = this.getPoint("left", "bottom");
+    const center = this.rectangle.getPoint("center", "center");
+    const leftBottomCorner = this.rectangle.getPoint("left", "bottom");
     pdfPage.drawCircle({
       x: center.x.in("pt"),
       y: center.y.in("pt"),
@@ -63,11 +63,11 @@ export class DebugBox extends AbstractPrimitiveBox {
     });
     pdfPage.drawLine({
       start: {
-        x: center.x.sub(this.width).in("pt"),
+        x: center.x.sub(this.rectangle.width).in("pt"),
         y: center.y.in("pt"),
       },
       end: {
-        x: center.x.add(this.width).in("pt"),
+        x: center.x.add(this.rectangle.width).in("pt"),
         y: center.y.in("pt"),
       },
       thickness: 0.1,
@@ -75,11 +75,11 @@ export class DebugBox extends AbstractPrimitiveBox {
     pdfPage.drawLine({
       start: {
         x: center.x.in("pt"),
-        y: center.y.sub(this.height).in("pt"),
+        y: center.y.sub(this.rectangle.height).in("pt"),
       },
       end: {
         x: center.x.in("pt"),
-        y: center.y.add(this.height).in("pt"),
+        y: center.y.add(this.rectangle.height).in("pt"),
       },
       thickness: 0.1,
     });

@@ -7,7 +7,7 @@ import { drawDebugBox } from "./BoxDrawingUtils.js";
 import { BoxOverflows } from "./BoxOverflow.js";
 
 /**
- * @typedef {import("./Geometry.js").BoxPlacement} BoxPlacement
+ * @typedef {import("./Geometry.js").RectanglePlacement} BoxPlacement
  * @typedef {import("./Geometry.js").Box} Box
  */
 
@@ -68,17 +68,17 @@ export class HigherOrderBox extends AbstractPrimitiveBox {
    * @param {BoxPlacement} position
    */
   setPosition(position) {
-    const oldCenter = this.getPoint("center", "center");
+    const oldCenter = this.rectangle.getPoint("center", "center");
     super.setPosition({
       ...position,
       point: position.point.clone(),
     });
-    const newCenter = this.getPoint("center", "center");
+    const newCenter = this.rectangle.getPoint("center", "center");
     const xMove = newCenter.x.sub(oldCenter.x);
     const yMove = newCenter.y.sub(oldCenter.y);
 
     for (const child of this.children) {
-      const newChildCenter = child.getPoint("center", "center");
+      const newChildCenter = child.rectangle.getPoint("center", "center");
       newChildCenter.x = newChildCenter.x.add(xMove);
       newChildCenter.y = newChildCenter.y.add(yMove);
       child.setPosition({

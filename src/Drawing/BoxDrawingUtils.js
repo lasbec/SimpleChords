@@ -23,12 +23,12 @@ const debugLevelColorMap = new Map([
 export function drawDebugBox(pdfPage, box) {
   if (Document.debug) {
     const borderColor = debugLevelColorMap.get(box.level()) || rgb(1, 0, 0);
-    const leftBottomCorner = box.getPoint("left", "bottom");
+    const leftBottomCorner = box.rectangle.getPoint("left", "bottom");
     const args = {
       x: leftBottomCorner.x.in("pt"),
       y: leftBottomCorner.y.in("pt"),
-      width: box.width.in("pt"),
-      height: box.height.in("pt"),
+      width: box.rectangle.width.in("pt"),
+      height: box.rectangle.height.in("pt"),
       opacity: 1,
       borderWidth: 1,
       borderColor,

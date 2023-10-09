@@ -3,7 +3,7 @@ import { FreeBox } from "./FreeBox.js";
 import { MutableFreePointer } from "./FreePointer.js";
 
 /**
- * @typedef {import("./Geometry.js").BoxPlacement} BoxPlacement
+ * @typedef {import("./Geometry.js").RectanglePlacement} RectanglePlacement
  * @typedef {import("./Geometry.js").XStartPosition} RelX
  * @typedef {import("./Geometry.js").YStartPosition} RelY
  */
@@ -12,7 +12,7 @@ import { MutableFreePointer } from "./FreePointer.js";
  * @typedef {object} GetPointArgs
  * @property {RelX} targetX
  * @property {RelY} targetY
- * @property {BoxPlacement} corner
+ * @property {RectanglePlacement} corner
  * @property {Length} width
  * @property {Length} height
  */
@@ -106,13 +106,15 @@ const yMovementMap = {
 export function minimalBoundingBox(boxes) {
   const fst = boxes[0];
   if (!boxes) return;
-  let leftTop = fst.getPoint("left", "top");
-  let rightBottom = fst.getPoint("right", "bottom");
+  let leftTop = fst.rectangle.getPoint("left", "top");
+  let rightBottom = fst.rectangle.getPoint("right", "bottom");
 
   for (const box of boxes) {
-    leftTop = leftTop.span(box.getPoint("left", "top")).getPoint("left", "top");
+    leftTop = leftTop
+      .span(box.rectangle.getPoint("left", "top"))
+      .getPoint("left", "top");
     rightBottom = rightBottom
-      .span(box.getPoint("right", "bottom"))
+      .span(box.rectangle.getPoint("right", "bottom"))
       .getPoint("right", "bottom");
   }
   return FreeBox.fromCorners(leftTop, rightBottom);

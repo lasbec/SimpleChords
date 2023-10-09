@@ -2,13 +2,25 @@
  * @typedef {import("./Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("./Geometry.js").YStartPosition} YStartPosition
  * @typedef {import("./Geometry.js").Point} Point
- * @typedef {import("./Geometry.js").Rectangle} Rectangle
+
+ * @typedef {import("./Geometry.js").MutRectangle} MutRectangle
+ * @typedef {import("./Geometry.js").Dimensions} Dimensions
+ * @typedef {import("./Geometry.js").RectanglePlacement} RectanglePlacement
+ */
+
+/**
+ * @typedef {object} BoxBorders
+ * @property {Length} left
+ * @property {Length} right
+ * @property {Length} top
+ * @property {Length} bottom
  */
 
 import { Length } from "../Length.js";
+import { getPoint } from "./BoxMeasuringUtils.js";
 import { MutableFreePointer } from "./FreePointer.js";
 
-/** @implements {Rectangle} */
+/** @implements {MutRectangle} */
 export class FreeBox {
   /**
    * @param {MutableFreePointer} c0
@@ -19,17 +31,68 @@ export class FreeBox {
     const right = c0.isLeftFrom(c1) ? c1.x : c0.x;
     const top = c0.isLowerThan(c1) ? c1.y : c0.y;
     const bottom = c0.isLowerThan(c1) ? c0.y : c1.y;
-    return new FreeBox(left, right, top, bottom);
+    return FreeBox.fromBorders({ left, right, top, bottom });
   }
 
   /**
    *
-   * @param {Length} left
-   * @param {Length} right
-   * @param {Length} top
-   * @param {Length} bottom
+   * @param {RectanglePlacement} placement
+   * @param {Dimensions} dims
+   * @returns {FreeBox}
    */
-  constructor(left, right, top, bottom) {
+  static fromPlacement(placement, dims) {
+    const { x: left, y: bottom } = getPoint({
+      targetX: "left",
+      targetY: "bottom",
+      corner: placement,
+      ...dims,
+    });
+    const { x: right, y: top } = getPoint({
+      targetX: "right",
+      targetY: "top",
+      corner: placement,
+      ...dims,
+    });
+    return new FreeBox({
+      left,
+      bottom,
+      right,
+      top,
+    });
+  }
+
+  /** @param {RectanglePlacement} placement  */
+  setPosition(placement) {
+    const { x: left, y: bottom } = getPoint({
+      targetX: "left",
+      targetY: "bottom",
+      corner: placement,
+      width: this.width,
+      height: this.height,
+    });
+    const { x: right, y: top } = getPoint({
+      targetX: "right",
+      targetY: "top",
+      corner: placement,
+      width: this.width,
+      height: this.height,
+    });
+    this.left = left;
+    this.right = right;
+    this.bottom = bottom;
+    this.top = top;
+  }
+
+  /** @param {BoxBorders} args */
+  static fromBorders({ left, right, top, bottom }) {
+    return new FreeBox({ left, right, top, bottom });
+  }
+
+  /**
+   *@private
+   * @param {BoxBorders} args
+   */
+  constructor({ left, right, top, bottom }) {
     this.left = left;
     this.right = right;
     this.top = top;
@@ -93,7 +156,7 @@ export class FreeBox {
     return this.yPositionFor(position);
   }
 
-  /** @returns {import("./Geometry.js").BoxPlacement} */
+  /** @returns {import("./Geometry.js").RectanglePlacement} */
   getAnyPosition() {
     return {
       x: "left",

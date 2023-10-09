@@ -17,7 +17,7 @@ import { songLineBox } from "./Drawing/Boxes/SongLineBox.js";
  */
 function getMaxLenToFitWidth(line, style, width) {
   let box = songLineBox(line, style);
-  while (box.width.gt(width)) {
+  while (box.rectangle.width.gt(width)) {
     line = line.slice(0, -1);
     box = songLineBox(line, style);
   }
@@ -84,7 +84,7 @@ export class SchemaWrapper {
         line.text.slice(0, chord.startIndex + 1),
         textConfig
       );
-      if (box.width.gt(this.width)) return currMax;
+      if (box.rectangle.width.gt(this.width)) return currMax;
       currMax += 1;
     }
     return currMax;

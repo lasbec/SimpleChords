@@ -1,6 +1,7 @@
 import { Length } from "../Length.js";
 import { getPoint } from "./BoxMeasuringUtils.js";
 import { Document } from "./Document.js";
+import { FreeBox } from "./FreeBox.js";
 
 /**
  */
@@ -9,25 +10,18 @@ import { Document } from "./Document.js";
  * @typedef {import("./Geometry.js").BorderPosition} BorderPosition
  * @typedef {import("./Geometry.js").XStartPosition} XRel
  * @typedef {import("./Geometry.js").YStartPosition} YRel
- * @typedef {import("./Geometry.js").BoxPlacement} BoxPlacement
+ * @typedef {import("./Geometry.js").RectanglePlacement} BoxPlacement
  * @typedef {import("./Geometry.js").Dimensions} Dimensions
  * @typedef {import("./Geometry.js").Box} Box
  */
 
 export class AbstractPrimitiveBox {
-  /**@type {Length}*/
-  width;
-  /**@type {Length}*/
-  height;
-
   /**
    * @param {import("./Geometry.js").Dimensions} dims
    * @param {BoxPlacement} position
    */
   constructor(dims, position) {
-    this.width = dims.width;
-    this.height = dims.height;
-    this.position = position;
+    this.rectangle = FreeBox.fromPlacement(position, dims);
     this.parent = null;
     /** @type {Document | null} */
     this.document = null;
@@ -77,31 +71,6 @@ export class AbstractPrimitiveBox {
    * @param {BoxPlacement} position
    */
   setPosition(position) {
-    this.position = position;
-  }
-
-  /**
-   *@param {XRel} x
-   *@param {YRel} y
-   */
-  getPoint(x, y) {
-    return getPoint({
-      targetX: x,
-      targetY: y,
-      corner: this.position,
-      width: this.width,
-      height: this.height,
-    });
-  }
-
-  /**
-   * @param {BorderPosition} border
-   * @returns {Length}
-   */
-  getBorder(border) {
-    if (border === "left" || border === "right") {
-      return this.getPoint(border, "center").x;
-    }
-    return this.getPoint("center", border).y;
+    this.rectangle.setPosition(position);
   }
 }

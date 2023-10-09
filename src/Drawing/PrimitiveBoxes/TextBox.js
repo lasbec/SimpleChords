@@ -4,7 +4,7 @@ import { MutableFreePointer } from "../FreePointer.js";
  * @typedef {import("../TextConfig.js").TextConfig} TextConfig
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("../Geometry.js").Point} Point
- * @typedef {import("../Geometry.js").BoxPlacement} BoxPlacement
+ * @typedef {import("../Geometry.js").RectanglePlacement} BoxPlacement
  * @typedef {import("../Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("../Geometry.js").YStartPosition} YStartPosition
  * @typedef {import("../Geometry.js").Dimensions} Dimensions
@@ -44,7 +44,7 @@ export class TextBox extends AbstractPrimitiveBox {
    * @param {PDFPage} pdfPage
    */
   drawToPdfPage(pdfPage) {
-    const leftBottomCorner = this.getPoint("left", "bottom");
+    const leftBottomCorner = this.rectangle.getPoint("left", "bottom");
     if (!leftBottomCorner) {
       throw Error("Position not set.");
     }

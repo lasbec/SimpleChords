@@ -4,7 +4,7 @@ import { minimalBoundingBox } from "../BoxMeasuringUtils.js";
 import { MutableFreePointer } from "../FreePointer.js";
 
 /**
- * @typedef {import("../Geometry.js").BoxPlacement} BoxPlacement
+ * @typedef {import("../Geometry.js").RectanglePlacement} BoxPlacement
  * @typedef {import("../Geometry.js").Box} Box
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("../Geometry.js").Point} Point

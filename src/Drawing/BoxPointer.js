@@ -28,14 +28,6 @@ export class MutableBoxPointer {
 
   /** @type {Box} */
   box;
-
-  /** @param {unknown[]} args  */
-  log(...args) {
-    if (Document.debug) {
-      // console.log(...args);
-    }
-  }
-
   /**
    *
    * @param {Length} x
@@ -54,7 +46,7 @@ export class MutableBoxPointer {
    * @param {Box} box
    */
   static atBox(x, y, box) {
-    const point = box.getPoint(x, y);
+    const point = box.rectangle.getPoint(x, y);
     return new MutableBoxPointer(point.x, point.y, box);
   }
 
@@ -75,20 +67,20 @@ export class MutableBoxPointer {
   /** @param {import("./Geometry.js").BorderPosition} border*/
   moveToBorder(border) {
     if (border === "left" || border === "right") {
-      this.freePointer.x = this.box.getBorder(border);
+      this.freePointer.x = this.box.rectangle.getBorder(border);
     } else {
-      this.freePointer.y = this.box.getBorder(border);
+      this.freePointer.y = this.box.rectangle.getBorder(border);
     }
     return this;
   }
 
   moveHorizontalCenter() {
-    this.freePointer.x = this.box.getPoint("center", "center").x;
+    this.freePointer.x = this.box.rectangle.getPoint("center", "center").x;
     return this;
   }
 
   moveVerticalCenter() {
-    this.freePointer.y = this.box.getPoint("center", "center").y;
+    this.freePointer.y = this.box.rectangle.getPoint("center", "center").y;
     return this;
   }
 

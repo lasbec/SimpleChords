@@ -2,7 +2,7 @@ import { MutableFreePointer } from "../FreePointer.js";
 import { decorateAsBox } from "../HigherOrderBox.js";
 import { songLineBox } from "./SongLineBox.js";
 /**
- * @typedef {import("../Geometry.js").BoxPlacement} BoxPlacement
+ * @typedef {import("../Geometry.js").RectanglePlacement} BoxPlacement
  * @typedef {import("../../Song.js").SongSection} SongSection
  * @typedef {import("../TextConfig.js").TextConfig} TextConfig
  * @typedef {import("pdf-lib").PDFPage} PDFPage
@@ -32,7 +32,7 @@ function drawsongSection(section, config, startPoint) {
       y: "top",
       point: startPoint,
     });
-    startPoint.moveDown(l.height);
+    startPoint.moveDown(l.rectangle.height);
   }
   return children;
 }

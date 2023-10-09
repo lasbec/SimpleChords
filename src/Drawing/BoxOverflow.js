@@ -65,17 +65,21 @@ export class BoxOverflows {
       });
     }
     const box = args.child;
-    const leftBottomCorner = box.getPoint("left", "bottom");
-    const rightBorder = leftBottomCorner.x.add(box.width);
+    const leftBottomCorner = box.rectangle.getPoint("left", "bottom");
+    const rightBorder = leftBottomCorner.x.add(box.rectangle.width);
     const leftBorder = leftBottomCorner.x;
-    const topBorder = leftBottomCorner.y.add(box.height);
+    const topBorder = leftBottomCorner.y.add(box.rectangle.height);
     const bottomBorder = leftBottomCorner.y;
 
     const parent = args.parent;
-    const parentLeftBottomCorner = parent.getPoint("left", "bottom");
-    const parentRightBorder = parentLeftBottomCorner.x.add(parent.width);
+    const parentLeftBottomCorner = parent.rectangle.getPoint("left", "bottom");
+    const parentRightBorder = parentLeftBottomCorner.x.add(
+      parent.rectangle.width
+    );
     const parentLeftBorder = parentLeftBottomCorner.x;
-    const parentTopBorder = parentLeftBottomCorner.y.add(parent.height);
+    const parentTopBorder = parentLeftBottomCorner.y.add(
+      parent.rectangle.height
+    );
     const parentBottomBorder = parentLeftBottomCorner.y;
 
     return new BoxOverflows({
@@ -129,16 +133,16 @@ export class BoxOverflows {
    */
   static drawOverflowMarker(page, box, overflow) {
     page.drawRectangle({
-      ...box.getPoint("left", "bottom").rawPointIn("pt"),
-      width: box.width.in("pt"),
-      height: box.height.in("pt"),
+      ...box.rectangle.getPoint("left", "bottom").rawPointIn("pt"),
+      width: box.rectangle.width.in("pt"),
+      height: box.rectangle.height.in("pt"),
       color: rgb(1, 0, 1),
       opacity: 0.5,
     });
 
     if (overflow.left) {
-      const leftBottom = box.getPoint("left", "bottom");
-      const height = box.height;
+      const leftBottom = box.rectangle.getPoint("left", "bottom");
+      const height = box.rectangle.height;
       const width = overflow.left;
       page.drawRectangle({
         ...leftBottom.rawPointIn("pt"),
@@ -149,10 +153,10 @@ export class BoxOverflows {
     }
 
     if (overflow.right) {
-      const leftBottom = box
+      const leftBottom = box.rectangle
         .getPoint("right", "bottom")
         .moveLeft(overflow.right);
-      const height = box.height;
+      const height = box.rectangle.height;
       const width = overflow.right;
       page.drawRectangle({
         ...leftBottom.rawPointIn("pt"),
@@ -163,9 +167,11 @@ export class BoxOverflows {
     }
 
     if (overflow.top) {
-      const leftBottom = box.getPoint("left", "top").moveDown(overflow.top);
+      const leftBottom = box.rectangle
+        .getPoint("left", "top")
+        .moveDown(overflow.top);
       const height = overflow.top;
-      const width = box.width;
+      const width = box.rectangle.width;
       page.drawRectangle({
         ...leftBottom.rawPointIn("pt"),
         width: width.in("pt"),
@@ -175,9 +181,9 @@ export class BoxOverflows {
     }
 
     if (overflow.bottom) {
-      const leftBottom = box.getPoint("left", "bottom");
+      const leftBottom = box.rectangle.getPoint("left", "bottom");
       const heigth = overflow.bottom;
-      const width = box.width;
+      const width = box.rectangle.width;
       page.drawRectangle({
         ...leftBottom.rawPointIn("pt"),
         width: width.in("pt"),

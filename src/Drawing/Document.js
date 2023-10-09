@@ -41,8 +41,8 @@ export class Document {
   drawToPdfDoc(pdfDoc) {
     for (const page of this.pages) {
       const pdfPage = pdfDoc.addPage([
-        page.width.in("pt"),
-        page.height.in("pt"),
+        page.rectangle.width.in("pt"),
+        page.rectangle.height.in("pt"),
       ]);
       page.drawToPdfPage(pdfPage);
     }
