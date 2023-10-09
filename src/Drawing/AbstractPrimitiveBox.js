@@ -100,8 +100,8 @@ export class AbstractPrimitiveBox {
    */
   getBorder(border) {
     if (border === "left" || border === "right") {
-      return this.getPoint(border, "bottom").x;
+      return this.getPoint(border, "center").x;
     }
-    return this.getPoint("left", border).y;
+    return this.getPoint("center", border).y;
   }
 }

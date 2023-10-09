@@ -65,9 +65,9 @@ export function layOutSongOnNewPage(song, layoutConfig, _pointer) {
     const lastLine = sectionLines[sectionLines.length - 1];
     if (lastLine) {
       lyricPointer = MutableBoxPointer.fromPoint(
-        lastLine?.getPoint("left", "bottom"),
-        lyricBox
-      );
+        lastLine.getPoint("left", "bottom"),
+        lastLine
+      ).onPage();
     }
     lyricPointer.moveDown(layoutConfig.sectionDistance);
   }
@@ -109,7 +109,7 @@ export function drawSongSectionLines(
 
   const heightOfSection = sectionBox.height;
 
-  const lowerEndOfSection = pointer.clone().moveToBorder("bottom");
+  const lowerEndOfSection = pointer.onPage().clone().moveToBorder("bottom");
 
   const sectionWillExeedPage = pointer
     .pointerDown(heightOfSection)
@@ -119,8 +119,8 @@ export function drawSongSectionLines(
       .nextPageAt("left", "top")
       .moveDown(layoutConfig.topMargin)
       .moveRight(layoutConfig.leftMargin);
-    const rightBottomCorner = pointer
-      .onPage()
+    const rightBottomCorner = leftTopCorner
+      .clone()
       .moveToBorder("bottom")
       .moveToBorder("right")
       .moveUp(layoutConfig.topMargin)
@@ -159,8 +159,8 @@ export function drawSongSectionLinesOnlyChords(
       .nextPageAt("left", "top")
       .moveDown(layoutConfig.topMargin)
       .moveRight(layoutConfig.leftMargin);
-    const rightBottomCorner = pointer
-      .onPage()
+    const rightBottomCorner = leftTopCorner
+      .clone()
       .moveToBorder("bottom")
       .moveToBorder("right")
       .moveUp(layoutConfig.topMargin)
