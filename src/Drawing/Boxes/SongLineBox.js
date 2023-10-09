@@ -2,7 +2,7 @@ import { loadavg } from "os";
 import { LEN, Length } from "../../Length.js";
 import { SongLine } from "../../SongLine.js";
 import { HigherOrderBox, decorateAsBox } from "../HigherOrderBox.js";
-import { FreePointer } from "../FreePointer.js";
+import { MutableFreePointer } from "../FreePointer.js";
 import { TextBox } from "../PrimitiveBoxes/TextBox.js";
 /**
  * @typedef {import("../Geometry.js").BoxPlacement} BoxPlacement
@@ -26,7 +26,7 @@ class SongLineBox {
   /**
    * @param {SongLine} line
    * @param {SongLineBoxConfig} args
-   * @param {FreePointer} topLeft
+   * @param {MutableFreePointer} topLeft
    */
   static initChildren(line, args, topLeft) {
     /**@type {import("../Geometry.js").Box[]} */

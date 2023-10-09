@@ -1,4 +1,4 @@
-import { FreePointer } from "./FreePointer.js";
+import { MutableFreePointer } from "./FreePointer.js";
 import { Length } from "../Length.js";
 import { minimalBoundingBox } from "./BoxMeasuringUtils.js";
 import { AbstractPrimitiveBox } from "./AbstractPrimitiveBox.js";
@@ -14,17 +14,18 @@ import { BoxOverflows } from "./BoxOverflow.js";
 /**
  * @template Content
  * @template Config
- * @param {(content:Content, config:Config, drawingStartPoint:FreePointer) => Box[]} drawChildrenFn
+ * @param {(content:Content, config:Config, drawingStartPoint:MutableFreePointer) => Box[]} drawChildrenFn
  */
 export function decorateAsBox(drawChildrenFn) {
   /**
    * @param {Content} content
    * @param {Config} config
-   * @param {FreePointer=} drawingStartPoint
+   * @param {MutableFreePointer=} drawingStartPoint
    * @returns {Box}
    */
   return (content, config, drawingStartPoint) => {
-    drawingStartPoint = drawingStartPoint?.clone() || FreePointer.origin();
+    drawingStartPoint =
+      drawingStartPoint?.clone() || MutableFreePointer.origin();
     return new HigherOrderBox(
       drawChildrenFn(content, config, drawingStartPoint)
     );
@@ -45,7 +46,7 @@ export class HigherOrderBox extends AbstractPrimitiveBox {
       mbb?.getAnyPosition() || {
         x: "left",
         y: "top",
-        point: FreePointer.origin(),
+        point: MutableFreePointer.origin(),
       }
     );
     this.children = children;

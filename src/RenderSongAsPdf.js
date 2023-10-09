@@ -8,7 +8,7 @@ import { PDFDocument, StandardFonts } from "pdf-lib";
 import { FontLoader } from "./Drawing/FontLoader.js";
 import { LEN, Length } from "./Length.js";
 import { Document } from "./Drawing/Document.js";
-import { BoxPointer } from "./Drawing/BoxPointer.js";
+import { MutableBoxPointer } from "./Drawing/BoxPointer.js";
 import { parseSongAst } from "./SongParser.js";
 import * as Path from "path";
 import * as fs from "fs/promises";
@@ -171,7 +171,7 @@ export async function renderSongAsPdf(songs, debug, layoutConfig, pdfDoc) {
           .sub(layoutConfig.rightMargin)
       ),
       layoutConfig,
-      BoxPointer.atBox("left", "top", doc.appendNewPage())
+      MutableBoxPointer.atBox("left", "top", doc.appendNewPage())
     );
   }
   doc.drawToPdfDoc(pdfDoc);

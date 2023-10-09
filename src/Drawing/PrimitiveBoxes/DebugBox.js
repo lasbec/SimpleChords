@@ -1,6 +1,6 @@
 import { LEN, Length } from "../../Length.js";
 import { rgb } from "pdf-lib";
-import { FreePointer } from "../FreePointer.js";
+import { MutableFreePointer } from "../FreePointer.js";
 import { getPoint } from "../BoxMeasuringUtils.js";
 import { AbstractPrimitiveBox } from "../AbstractPrimitiveBox.js";
 /**
@@ -35,7 +35,7 @@ export class DebugBox extends AbstractPrimitiveBox {
       {
         x: "center",
         y: "center",
-        point: FreePointer.fromPoint(center),
+        point: MutableFreePointer.fromPoint(center),
       }
     );
     this.constructCount = DebugBox.constructionCounter;

@@ -1,7 +1,7 @@
 import { Length } from "../Length.js";
 import { FreeBox } from "./FreeBox.js";
 
-export class FreePointer {
+export class MutableFreePointer {
   /**
    * @type {Length}
    */
@@ -22,12 +22,12 @@ export class FreePointer {
   }
 
   static origin() {
-    return new FreePointer(Length.zero, Length.zero);
+    return new MutableFreePointer(Length.zero, Length.zero);
   }
 
   /** @param {import("./Geometry.js").Point} point  */
   static fromPoint(point) {
-    return new FreePointer(point.x, point.y);
+    return new MutableFreePointer(point.x, point.y);
   }
 
   /**
@@ -59,7 +59,7 @@ export class FreePointer {
   }
 
   clone() {
-    return new FreePointer(this.x, this.y);
+    return new MutableFreePointer(this.x, this.y);
   }
 
   /** @param {Length} offset  */
@@ -89,19 +89,19 @@ export class FreePointer {
   }
 
   /**
-   * @param {FreePointer} other
+   * @param {MutableFreePointer} other
    * @returns {FreeBox}
    */
   span(other) {
     return FreeBox.fromCorners(this.clone(), other.clone());
   }
 
-  /** @param {FreePointer} other  */
+  /** @param {MutableFreePointer} other  */
   isLeftFrom(other) {
     return this.x.lt(other.x);
   }
 
-  /** @param {FreePointer} other  */
+  /** @param {MutableFreePointer} other  */
   isLowerThan(other) {
     return this.y.lt(other.y);
   }

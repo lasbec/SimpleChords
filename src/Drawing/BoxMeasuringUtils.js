@@ -1,6 +1,6 @@
 import { Length } from "../Length.js";
 import { FreeBox } from "./FreeBox.js";
-import { FreePointer } from "./FreePointer.js";
+import { MutableFreePointer } from "./FreePointer.js";
 
 /**
  * @typedef {import("./Geometry.js").BoxPlacement} BoxPlacement
@@ -35,7 +35,7 @@ export function getPoint(args) {
 }
 
 /**
- * @type {Record<`${RelX}_to_${RelX}`, (width:Length, pointer: FreePointer)=> void>}
+ * @type {Record<`${RelX}_to_${RelX}`, (width:Length, pointer: MutableFreePointer)=> void>}
  */
 const xMovementMap = {
   // from left
@@ -65,7 +65,7 @@ const xMovementMap = {
 };
 
 /**
- * @type {Record<`${RelY}_to_${RelY}`, (height:Length, pointer: FreePointer)=> void>}
+ * @type {Record<`${RelY}_to_${RelY}`, (height:Length, pointer: MutableFreePointer)=> void>}
  */
 const yMovementMap = {
   // from bottom

@@ -5,12 +5,12 @@
  */
 
 import { Length } from "../Length.js";
-import { FreePointer } from "./FreePointer.js";
+import { MutableFreePointer } from "./FreePointer.js";
 
 export class FreeBox {
   /**
-   * @param {FreePointer} c0
-   * @param {FreePointer} c1
+   * @param {MutableFreePointer} c0
+   * @param {MutableFreePointer} c1
    */
   static fromCorners(c0, c1) {
     const left = c0.isLeftFrom(c1) ? c0.x : c1.x;
@@ -80,7 +80,7 @@ export class FreeBox {
    * @param {YStartPosition} y
    */
   getPoint(x, y) {
-    return new FreePointer(this.xPositionFor(x), this.yPositionFor(y));
+    return new MutableFreePointer(this.xPositionFor(x), this.yPositionFor(y));
   }
 
   /** @returns {import("./Geometry.js").BoxPlacement} */

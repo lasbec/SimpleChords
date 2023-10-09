@@ -1,4 +1,4 @@
-import { FreePointer } from "../FreePointer.js";
+import { MutableFreePointer } from "../FreePointer.js";
 import { decorateAsBox } from "../HigherOrderBox.js";
 import { songLineBox } from "./SongLineBox.js";
 /**
@@ -22,7 +22,7 @@ import { songLineBox } from "./SongLineBox.js";
 /**
  * @param {SongSection} section
  * @param {SongSectionBoxConfig} config
- * @param {FreePointer} startPoint
+ * @param {MutableFreePointer} startPoint
  */
 function drawsongSection(section, config, startPoint) {
   const children = section.lines.map((l) => songLineBox(l, config));

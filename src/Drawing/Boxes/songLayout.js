@@ -1,4 +1,4 @@
-import { BoxPointer } from "../BoxPointer.js";
+import { MutableBoxPointer } from "../BoxPointer.js";
 import { songSection } from "./SongSectionBox.js";
 import { TextBox } from "../PrimitiveBoxes/TextBox.js";
 import { TextConfig } from "../TextConfig.js";
@@ -15,7 +15,7 @@ import { SongLine } from "../../SongLine.js";
 /**
  * @param {Song} song
  * @param {LayoutConfig} layoutConfig
- * @param {BoxPointer} _pointer
+ * @param {MutableBoxPointer} _pointer
  * @returns {Box[]}
  */
 export function layOutSongOnNewPage(song, layoutConfig, _pointer) {
@@ -26,7 +26,7 @@ export function layOutSongOnNewPage(song, layoutConfig, _pointer) {
     layoutConfig.topMargin,
     layoutConfig.titleTextConfig
   );
-  const pointer = BoxPointer.atBox("left", "bottom", titleBox).onPage();
+  const pointer = MutableBoxPointer.atBox("left", "bottom", titleBox).onPage();
 
   pointer.moveDown(lyricLineHeight);
   pointer.moveToBorder("left").moveRight(layoutConfig.leftMargin);
@@ -38,7 +38,7 @@ export function layOutSongOnNewPage(song, layoutConfig, _pointer) {
     .moveUp(layoutConfig.bottomMargin)
     .moveLeft(layoutConfig.rightMargin);
   const lyricBox = pointer.span(rightBottomPointer);
-  let lyricPointer = BoxPointer.atBox("left", "top", lyricBox);
+  let lyricPointer = MutableBoxPointer.atBox("left", "top", lyricBox);
 
   /** @type {Box[]} */
   const result = [titleBox];
@@ -64,7 +64,7 @@ export function layOutSongOnNewPage(song, layoutConfig, _pointer) {
     result.push(...sectionLines);
     const lastLine = sectionLines[sectionLines.length - 1];
     if (lastLine) {
-      lyricPointer = BoxPointer.fromPoint(
+      lyricPointer = MutableBoxPointer.fromPoint(
         lastLine?.getPoint("left", "bottom"),
         lyricBox
       );
@@ -75,7 +75,7 @@ export function layOutSongOnNewPage(song, layoutConfig, _pointer) {
 }
 
 /**
- * @param {BoxPointer} pointer
+ * @param {MutableBoxPointer} pointer
  * @param {SongLine[]} songLines
  * @param {string} sectionType
  * @param {LayoutConfig} layoutConfig
@@ -126,14 +126,14 @@ export function drawSongSectionLines(
       .moveUp(layoutConfig.topMargin)
       .moveLeft(layoutConfig.rightMargin);
     const lyricBox = leftTopCorner.span(rightBottomCorner);
-    pointer = BoxPointer.atBox("left", "top", lyricBox);
+    pointer = MutableBoxPointer.atBox("left", "top", lyricBox);
   }
   pointer.setBox("left", "top", sectionBox);
   return [sectionBox];
 }
 
 /**
- * @param {BoxPointer} pointer
+ * @param {MutableBoxPointer} pointer
  * @param {SongLine[]} songLines
  * @param {string} title
  * @param {LayoutConfig} layoutConfig
@@ -166,7 +166,7 @@ export function drawSongSectionLinesOnlyChords(
       .moveUp(layoutConfig.topMargin)
       .moveLeft(layoutConfig.rightMargin);
     const lyricBox = leftTopCorner.span(rightBottomCorner);
-    pointer = BoxPointer.atBox("left", "top", lyricBox);
+    pointer = MutableBoxPointer.atBox("left", "top", lyricBox);
   }
 
   /** @type {Box[]} */
@@ -183,7 +183,7 @@ export function drawSongSectionLinesOnlyChords(
 
 /**
  * @param {Song} song
- * @param {BoxPointer} _pointer
+ * @param {MutableBoxPointer} _pointer
  * @param {Length} topMargin
  * @param {TextConfig} style
  */

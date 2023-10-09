@@ -1,6 +1,6 @@
 import { Document } from "../Document.js";
 import { AbstractPrimitiveBox } from "../AbstractPrimitiveBox.js";
-import { FreePointer } from "../FreePointer.js";
+import { MutableFreePointer } from "../FreePointer.js";
 
 /**
  * @typedef {import("../Geometry.js").Box} Box
@@ -40,7 +40,7 @@ export class PageBox extends AbstractPrimitiveBox {
     super(dims, {
       x: "left",
       y: "bottom",
-      point: FreePointer.origin(),
+      point: MutableFreePointer.origin(),
     });
     this.document = doc;
     this.children = [];

@@ -1,7 +1,7 @@
 import { Length } from "../../Length.js";
 import { AbstractPrimitiveBox } from "../AbstractPrimitiveBox.js";
 import { minimalBoundingBox } from "../BoxMeasuringUtils.js";
-import { FreePointer } from "../FreePointer.js";
+import { MutableFreePointer } from "../FreePointer.js";
 
 /**
  * @typedef {import("../Geometry.js").BoxPlacement} BoxPlacement
@@ -24,7 +24,7 @@ export class PlainBox extends AbstractPrimitiveBox {
     super(dims, {
       x: "left",
       y: "bottom",
-      point: FreePointer.origin(),
+      point: MutableFreePointer.origin(),
     });
     /** @type {Box[]} */
     this.children = [];

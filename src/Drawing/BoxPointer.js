@@ -1,7 +1,7 @@
 import { Length } from "../Length.js";
 import { Document } from "./Document.js";
 import { PlainBox } from "./Boxes/PlainBox.js";
-import { FreePointer } from "./FreePointer.js";
+import { MutableFreePointer } from "./FreePointer.js";
 /**
  * @typedef {import("./Geometry.js").Point} Point
  * @typedef {import("./Geometry.js").XStartPosition} XStartPosition
@@ -11,9 +11,9 @@ import { FreePointer } from "./FreePointer.js";
  * @typedef {import("./TextConfig.js").TextConfig} TextConfig
  */
 
-export class BoxPointer {
+export class MutableBoxPointer {
   /**
-   * @type {FreePointer}
+   * @type {MutableFreePointer}
    * @private
    */
   freePointer;
@@ -44,7 +44,7 @@ export class BoxPointer {
    * @private
    */
   constructor(x, y, page) {
-    this.freePointer = new FreePointer(x, y);
+    this.freePointer = new MutableFreePointer(x, y);
     this.box = page;
   }
 
@@ -55,7 +55,7 @@ export class BoxPointer {
    */
   static atBox(x, y, box) {
     const point = box.getPoint(x, y);
-    return new BoxPointer(point.x, point.y, box);
+    return new MutableBoxPointer(point.x, point.y, box);
   }
 
   /**
@@ -65,11 +65,11 @@ export class BoxPointer {
    * @returns
    */
   static fromPoint(point, box) {
-    return new BoxPointer(point.x, point.y, box);
+    return new MutableBoxPointer(point.x, point.y, box);
   }
 
   clone() {
-    return new BoxPointer(this.x, this.y, this.box);
+    return new MutableBoxPointer(this.x, this.y, this.box);
   }
 
   /** @param {import("./Geometry.js").BorderPosition} border*/
@@ -144,22 +144,22 @@ export class BoxPointer {
   }
 
   /**
-   * @returns {BoxPointer}
+   * @returns {MutableBoxPointer}
    */
   onPage() {
-    return new BoxPointer(this.x, this.y, this.box.root);
+    return new MutableBoxPointer(this.x, this.y, this.box.root);
   }
 
   /**
-   * @returns {BoxPointer}
+   * @returns {MutableBoxPointer}
    */
   onParent() {
     if (!this.box.parent) return this;
-    return new BoxPointer(this.x, this.y, this.box.parent);
+    return new MutableBoxPointer(this.x, this.y, this.box.parent);
   }
 
   /**
-   * @param {BoxPointer} other
+   * @param {MutableBoxPointer} other
    * @returns {Box}
    */
   span(other) {
@@ -171,12 +171,12 @@ export class BoxPointer {
     return this.setBox(otherRelXPos, otherRelYPos, box);
   }
 
-  /** @param {BoxPointer} other  */
+  /** @param {MutableBoxPointer} other  */
   isLeftFrom(other) {
     return this.freePointer.isLeftFrom(other.freePointer);
   }
 
-  /** @param {BoxPointer} other  */
+  /** @param {MutableBoxPointer} other  */
   isLowerThan(other) {
     return this.freePointer.isLowerThan(other.freePointer);
   }
@@ -187,7 +187,7 @@ export class BoxPointer {
    */
   nextPageAt(x, y) {
     const nextPage = this.box.appendNewPage();
-    return BoxPointer.atBox(x, y, nextPage);
+    return MutableBoxPointer.atBox(x, y, nextPage);
   }
 
   /**
@@ -199,7 +199,7 @@ export class BoxPointer {
     box.setPosition({
       x,
       y,
-      point: FreePointer.fromPoint(this),
+      point: MutableFreePointer.fromPoint(this),
     });
 
     box.setParent(this.box);

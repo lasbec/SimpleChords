@@ -1,7 +1,7 @@
 import { PDFPage } from "pdf-lib";
 import { Length } from "../Length.js";
 import { Page as PageBox } from "./Boxes/PageBox.js";
-import { FreePointer } from "./FreePointer.js";
+import { MutableFreePointer } from "./FreePointer.js";
 import { Document } from "./Document.js";
 import { BoxTreeNode } from "./BoxTreeNode.js";
 
@@ -22,14 +22,14 @@ export type BorderPosition = "left" | "top" | "right" | "bottom";
 export type BoxPlacement = {
   x: XStartPosition;
   y: YStartPosition;
-  point: FreePointer;
+  point: MutableFreePointer;
 };
 
 export type Box = {
   setPosition(position: BoxPlacement): void;
   level(): number;
   setParent(box: Box): void;
-  getPoint(x: XStartPosition, y: YStartPosition): FreePointer;
+  getPoint(x: XStartPosition, y: YStartPosition): MutableFreePointer;
   getBorder(border: BorderPosition): Length;
   drawToPdfPage(page: PDFPage): void;
   appendNewPage(): BoxTreeRoot;
