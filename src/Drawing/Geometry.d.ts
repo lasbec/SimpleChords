@@ -26,20 +26,30 @@ export type BoxPlacement = {
 };
 
 export type Box = {
-  setPosition(position: BoxPlacement): void;
   level(): number;
   setParent(box: Box): void;
-  getPoint(x: XStartPosition, y: YStartPosition): MutableFreePointer;
-  getBorder(border: BorderPosition): Length;
   drawToPdfPage(page: PDFPage): void;
   appendNewPage(): BoxTreeRoot;
-
   appendChild(box: Box): void;
-
-  width: Length;
-  height: Length;
-
   document: Document | null;
   parent: Box | null;
   root: Box;
+
+  setPosition(position: BoxPlacement): void;
+
+  getPoint(x: XStartPosition, y: YStartPosition): MutableFreePointer;
+  getBorder(border: BorderPosition): Length;
+  width: Length;
+  height: Length;
+};
+
+export type Rectangle = {
+  getPoint(x: XStartPosition, y: YStartPosition): MutableFreePointer;
+  getBorder(border: BorderPosition): Length;
+  width: Length;
+  height: Length;
+};
+
+export type MutRectangle = Rectangle & {
+  setPosition(position: BoxPlacement): void;
 };

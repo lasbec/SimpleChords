@@ -2,11 +2,13 @@
  * @typedef {import("./Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("./Geometry.js").YStartPosition} YStartPosition
  * @typedef {import("./Geometry.js").Point} Point
+ * @typedef {import("./Geometry.js").Rectangle} Rectangle
  */
 
 import { Length } from "../Length.js";
 import { MutableFreePointer } from "./FreePointer.js";
 
+/** @implements {Rectangle} */
 export class FreeBox {
   /**
    * @param {MutableFreePointer} c0
@@ -81,6 +83,14 @@ export class FreeBox {
    */
   getPoint(x, y) {
     return new MutableFreePointer(this.xPositionFor(x), this.yPositionFor(y));
+  }
+
+  /** @param {import("./Geometry.js").BorderPosition} position  */
+  getBorder(position) {
+    if (position === "left" || position === "right") {
+      return this.xPositionFor(position);
+    }
+    return this.yPositionFor(position);
   }
 
   /** @returns {import("./Geometry.js").BoxPlacement} */
