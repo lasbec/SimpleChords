@@ -194,9 +194,6 @@ export class MutableBoxPointer {
     });
 
     this.box.appendChild(box);
-
-    const rootPage = this.box.root;
-    rootPage.appendChild(box);
     return box;
   }
 }

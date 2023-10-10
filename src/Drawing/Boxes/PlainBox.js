@@ -1,6 +1,8 @@
 import { Length } from "../../Length.js";
 import { AbstractPrimitiveBox } from "../AbstractPrimitiveBox.js";
+import { drawDebugBox } from "../BoxDrawingUtils.js";
 import { minimalBoundingBox } from "../BoxMeasuringUtils.js";
+import { BoxOverflows } from "../BoxOverflow.js";
 import { MutableFreePointer } from "../FreePointer.js";
 
 /**
@@ -39,5 +41,14 @@ export class PlainBox extends AbstractPrimitiveBox {
    *
    * @param {PDFPage} page
    */
-  drawToPdfPage(page) {}
+  /**
+   * @param {PDFPage} page
+   */
+  drawToPdfPage(page) {
+    BoxOverflows.doOverflowManagement(page, this);
+    for (const child of this.children) {
+      drawDebugBox(page, child);
+      child.drawToPdfPage(page);
+    }
+  }
 }

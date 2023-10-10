@@ -7,6 +7,7 @@ import { Song } from "../../Song.js";
 import { WellKnownSectionType } from "../../SongChecker.js";
 import { SongLine } from "../../SongLine.js";
 import { MutableFreePointer } from "../FreePointer.js";
+import { decorateAsBox } from "../HigherOrderBox.js";
 
 /**
  * @typedef {import("../Geometry.js").Rectangle} Rectangle
@@ -175,19 +176,23 @@ export function drawSongSectionLinesOnlyChords(
     pointer = MutableBoxPointer.atBox("left", "top", lyricBox);
   }
 
-  /** @type {Box[]} */
-  const lines = drawOnlyChords(songLines, title, layoutConfig, pointer);
-  return lines;
+  /** @type {Box} */
+  const lines = decorateAsBox(drawOnlyChords)(
+    { songLines, title },
+    layoutConfig,
+    MutableFreePointer.fromPoint(pointer)
+  );
+  pointer.box.appendChild(lines);
+  return [lines];
 }
 
 /**
- * @param {SongLine[]} songLines
- * @param {string} title
+ * @param {{songLines:SongLine[]; title:string}} content
  * @param {LayoutConfig} layoutConfig
- * @param {MutableBoxPointer} pointer
+ * @param {MutableFreePointer} pointer
  * @returns
  */
-function drawOnlyChords(songLines, title, layoutConfig, pointer) {
+function drawOnlyChords({ songLines, title }, layoutConfig, pointer) {
   const chordTextConfig = layoutConfig.chordTextConfig;
   const chordLineHeight = chordTextConfig.lineHeight;
 
@@ -200,12 +205,6 @@ function drawOnlyChords(songLines, title, layoutConfig, pointer) {
       pointOnRect: { x: "left", y: "top" },
       pointOnGrid: MutableFreePointer.fromPoint(pointer),
     });
-
-    pointer.box.appendChild(textBox);
-
-    const rootPage = pointer.box.root;
-    rootPage.appendChild(textBox);
-
     pointer.moveDown(chordLineHeight);
   }
   return lines;
