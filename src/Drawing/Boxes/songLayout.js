@@ -20,15 +20,17 @@ import { SongLine } from "../../SongLine.js";
  * @returns {Box[]}
  */
 export function layOutSongOnNewPage(song, layoutConfig, _pointer) {
-  const lyricLineHeight = layoutConfig.lyricTextConfig.lineHeight;
   /** @type {Rectangle} */
   const rect = _pointer.box.rectangle;
+
+  const lyricLineHeight = layoutConfig.lyricTextConfig.lineHeight;
   const titleBox = drawTitle(
     song,
     rect,
     layoutConfig.topMargin,
     layoutConfig.titleTextConfig
   );
+  _pointer.box.appendChild(titleBox);
   titleBox.setParent(_pointer.box);
   const pointer = MutableBoxPointer.atBox("left", "bottom", titleBox).onPage();
 
