@@ -56,8 +56,13 @@ export function layOutSongOnNewPage(song, layoutConfig, _pointer) {
       WellKnownSectionType.Interlude,
     ];
     const sectionBox = onlyChordsSections.includes(section.type)
-      ? drawSongSectionLinesOnlyChords(section, layoutConfig, lyricPointer)
+      ? drawSongSectionLinesOnlyChords(section, layoutConfig)
       : drawSongSectionLines(section, layoutConfig, lyricPointer);
+
+    sectionBox.setPosition({
+      pointOnRect: { x: "left", y: "top" },
+      pointOnGrid: MutableFreePointer.fromPoint(lyricPointer),
+    });
 
     const sectionWillExeedPage = sectionBox.rectangle
       .getPointAt({ x: "left", y: "bottom" })
@@ -107,7 +112,6 @@ export function layOutSongOnNewPage(song, layoutConfig, _pointer) {
  * */
 export function drawSongSectionLines(section, layoutConfig, lyricPointer) {
   const sectionType = section.type;
-  const songLines = section.lines;
   /** @type {TextConfig} */
   const lyricStyle =
     sectionType === WellKnownSectionType.Chorus
@@ -117,56 +121,24 @@ export function drawSongSectionLines(section, layoutConfig, lyricPointer) {
       : layoutConfig.lyricTextConfig;
   const chordTextConfig = layoutConfig.chordTextConfig;
 
-  const sectionBox = songSection(
-    {
-      type: sectionType,
-      lines: songLines,
-    },
-    {
-      chordsConfig: chordTextConfig,
-      lyricConfig: lyricStyle,
-    }
-  );
-  sectionBox.setPosition({
-    pointOnRect: { x: "left", y: "top" },
-    pointOnGrid: MutableFreePointer.fromPoint(lyricPointer),
+  const sectionBox = songSection(section, {
+    chordsConfig: chordTextConfig,
+    lyricConfig: lyricStyle,
   });
   return sectionBox;
 }
 
-/**
- * @param {SongSection} section
- * @param {LayoutConfig} layoutConfig
- * @param {MutableBoxPointer} lyricPointer
- * @returns {Box}
- * */
-export function drawSongSectionLinesOnlyChords(
-  section,
-  layoutConfig,
-  lyricPointer
-) {
-  const title = section.type + "   ";
-  const songLines = section.lines;
-  /** @type {Box} */
-  const chords = decorateAsBox(drawOnlyChords)(
-    { songLines, title },
-    layoutConfig,
-    MutableFreePointer.fromPoint(lyricPointer)
-  );
-  chords.setPosition({
-    pointOnRect: { x: "left", y: "top" },
-    pointOnGrid: MutableFreePointer.fromPoint(lyricPointer),
-  });
-  return chords;
-}
+const drawSongSectionLinesOnlyChords = decorateAsBox(drawOnlyChords);
 
 /**
- * @param {{songLines:SongLine[]; title:string}} content
+ * @param {SongSection} section
  * @param {LayoutConfig} layoutConfig
  * @param {MutableFreePointer} pointer
  * @returns
  */
-function drawOnlyChords({ songLines, title }, layoutConfig, pointer) {
+function drawOnlyChords(section, layoutConfig, pointer) {
+  const title = section.type + "   ";
+  const songLines = section.lines;
   const chordTextConfig = layoutConfig.chordTextConfig;
   const chordLineHeight = chordTextConfig.lineHeight;
 
