@@ -176,6 +176,21 @@ export function drawSongSectionLinesOnlyChords(
   }
 
   /** @type {Box[]} */
+  const lines = drawOnlyChords(songLines, title, layoutConfig, pointer);
+  return lines;
+}
+
+/**
+ * @param {SongLine[]} songLines
+ * @param {string} title
+ * @param {LayoutConfig} layoutConfig
+ * @param {MutableBoxPointer} pointer
+ * @returns
+ */
+function drawOnlyChords(songLines, title, layoutConfig, pointer) {
+  const chordTextConfig = layoutConfig.chordTextConfig;
+  const chordLineHeight = chordTextConfig.lineHeight;
+
   const lines = [];
   for (const line of songLines) {
     const text = title + line.chords.map((c) => c.chord).join(" ");
