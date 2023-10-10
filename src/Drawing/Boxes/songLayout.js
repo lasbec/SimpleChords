@@ -56,18 +56,8 @@ export function layOutSongOnNewPage(song, layoutConfig, _pointer) {
       WellKnownSectionType.Interlude,
     ];
     const sectionLines = onlyChordsSections.includes(section.type)
-      ? drawSongSectionLinesOnlyChords(
-          lyricPointer,
-          section.lines,
-          section.type + "   ",
-          layoutConfig
-        )
-      : drawSongSectionLines(
-          lyricPointer,
-          section.lines,
-          section.type,
-          layoutConfig
-        );
+      ? drawSongSectionLinesOnlyChords(section, layoutConfig, lyricPointer)
+      : drawSongSectionLines(section, layoutConfig, lyricPointer);
     result.push(...sectionLines);
     const lastLine = sectionLines[sectionLines.length - 1];
     if (lastLine) {
@@ -82,18 +72,18 @@ export function layOutSongOnNewPage(song, layoutConfig, _pointer) {
 }
 
 /**
- * @param {MutableBoxPointer} pointer
- * @param {SongLine[]} songLines
- * @param {string} sectionType
+ * @typedef {import("./SongSectionBox.js").SongSection} SongSection
+ */
+
+/**
+ * @param {SongSection} section
  * @param {LayoutConfig} layoutConfig
+ * @param {MutableBoxPointer} pointer
  * @returns {Box[]}
  * */
-export function drawSongSectionLines(
-  pointer,
-  songLines,
-  sectionType,
-  layoutConfig
-) {
+export function drawSongSectionLines(section, layoutConfig, pointer) {
+  const sectionType = section.type;
+  const songLines = section.lines;
   /** @type {TextConfig} */
   const lyricStyle =
     sectionType === WellKnownSectionType.Chorus
@@ -146,18 +136,14 @@ export function drawSongSectionLines(
 }
 
 /**
- * @param {MutableBoxPointer} pointer
- * @param {SongLine[]} songLines
- * @param {string} title
+ * @param {SongSection} section
  * @param {LayoutConfig} layoutConfig
+ * @param {MutableBoxPointer} pointer
  * @returns {Box[]}
  * */
-export function drawSongSectionLinesOnlyChords(
-  pointer,
-  songLines,
-  title,
-  layoutConfig
-) {
+export function drawSongSectionLinesOnlyChords(section, layoutConfig, pointer) {
+  const title = section.type + "   ";
+  const songLines = section.lines;
   /** @type {Box} */
   const chords = decorateAsBox(drawOnlyChords)(
     { songLines, title },
