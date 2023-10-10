@@ -44,9 +44,8 @@ export class HigherOrderBox extends AbstractPrimitiveBox {
         height: Length.zero,
       },
       mbb?.getAnyPosition() || {
-        x: "left",
-        y: "top",
-        point: MutableFreePointer.origin(),
+        pointOnRect: { x: "left", y: "top" },
+        pointOnGrid: MutableFreePointer.origin(),
       }
     );
     this.children = children;
@@ -71,7 +70,7 @@ export class HigherOrderBox extends AbstractPrimitiveBox {
     const oldCenter = this.rectangle.getPoint("center", "center");
     super.setPosition({
       ...position,
-      point: position.point.clone(),
+      pointOnGrid: position.pointOnGrid.clone(),
     });
     const newCenter = this.rectangle.getPoint("center", "center");
     const xMove = newCenter.x.sub(oldCenter.x);
@@ -82,9 +81,8 @@ export class HigherOrderBox extends AbstractPrimitiveBox {
       newChildCenter.x = newChildCenter.x.add(xMove);
       newChildCenter.y = newChildCenter.y.add(yMove);
       child.setPosition({
-        x: "center",
-        y: "center",
-        point: newChildCenter,
+        pointOnRect: { x: "center", y: "center" },
+        pointOnGrid: newChildCenter,
       });
     }
   }

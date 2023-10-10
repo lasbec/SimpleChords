@@ -159,9 +159,8 @@ export class FreeBox {
   /** @returns {import("./Geometry.js").RectanglePlacement} */
   getAnyPosition() {
     return {
-      x: "left",
-      y: "top",
-      point: this.getPoint("left", "top"),
+      pointOnRect: { x: "left", y: "top" },
+      pointOnGrid: this.getPoint("left", "top"),
     };
   }
 }

@@ -33,9 +33,8 @@ export class DebugBox extends AbstractPrimitiveBox {
         height: LEN(3, "mm"),
       },
       {
-        x: "center",
-        y: "center",
-        point: MutableFreePointer.fromPoint(center),
+        pointOnRect: { x: "center", y: "center" },
+        pointOnGrid: MutableFreePointer.fromPoint(center),
       }
     );
     this.constructCount = DebugBox.constructionCounter;

@@ -19,10 +19,14 @@ export type XStartPosition = "left" | "center" | "right";
 export type YStartPosition = "top" | "center" | "bottom";
 export type BorderPosition = "left" | "top" | "right" | "bottom";
 
-export type RectanglePlacement = {
+export type PointOnRect = {
   x: XStartPosition;
   y: YStartPosition;
-  point: MutableFreePointer;
+};
+
+export type RectanglePlacement = {
+  pointOnRect: PointOnRect;
+  pointOnGrid: MutableFreePointer;
 };
 
 export type Box = {

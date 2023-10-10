@@ -22,9 +22,8 @@ export class PlainBox extends AbstractPrimitiveBox {
    */
   constructor(dims) {
     super(dims, {
-      x: "left",
-      y: "bottom",
-      point: MutableFreePointer.origin(),
+      pointOnRect: { x: "left", y: "bottom" },
+      pointOnGrid: MutableFreePointer.origin(),
     });
     /** @type {Box[]} */
     this.children = [];

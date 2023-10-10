@@ -38,9 +38,8 @@ export class PageBox extends AbstractPrimitiveBox {
    */
   constructor(dims, doc) {
     super(dims, {
-      x: "left",
-      y: "bottom",
-      point: MutableFreePointer.origin(),
+      pointOnRect: { x: "left", y: "bottom" },
+      pointOnGrid: MutableFreePointer.origin(),
     });
     this.document = doc;
     this.children = [];

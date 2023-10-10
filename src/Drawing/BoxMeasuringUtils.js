@@ -21,14 +21,14 @@ import { MutableFreePointer } from "./FreePointer.js";
  * @param {GetPointArgs} args
  */
 export function getPoint(args) {
-  const result = args.corner.point.clone();
+  const result = args.corner.pointOnGrid.clone();
 
   const movePointerHorizontal =
-    xMovementMap[`${args.corner.x}_to_${args.targetX}`];
+    xMovementMap[`${args.corner.pointOnRect.x}_to_${args.targetX}`];
   movePointerHorizontal(args.width, result);
 
   const movePointerVertical =
-    yMovementMap[`${args.corner.y}_to_${args.targetY}`];
+    yMovementMap[`${args.corner.pointOnRect.y}_to_${args.targetY}`];
   movePointerVertical(args.height, result);
 
   return result;

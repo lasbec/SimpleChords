@@ -41,18 +41,16 @@ class SongLineBox {
       const bottomLeftOfChord = pointer.pointerRight(yOffset);
       const chordBox = new TextBox(chord.chord, args.chordsConfig);
       chordBox.setPosition({
-        x: "left",
-        y: "bottom",
-        point: bottomLeftOfChord,
+        pointOnRect: { x: "left", y: "bottom" },
+        pointOnGrid: bottomLeftOfChord,
       });
       children.push(chordBox);
     }
     pointer.moveDown(args.lyricConfig.lineHeight);
     const lyricBox = new TextBox(line.lyric, args.lyricConfig);
     lyricBox.setPosition({
-      x: "left",
-      y: "bottom",
-      point: pointer,
+      pointOnRect: { x: "left", y: "bottom" },
+      pointOnGrid: pointer,
     });
     children.push(lyricBox);
     return children;

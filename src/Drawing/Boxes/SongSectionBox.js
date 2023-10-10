@@ -28,9 +28,8 @@ function drawsongSection(section, config, startPoint) {
   const children = section.lines.map((l) => songLineBox(l, config));
   for (const l of children) {
     l.setPosition({
-      x: "left",
-      y: "top",
-      point: startPoint,
+      pointOnRect: { x: "left", y: "top" },
+      pointOnGrid: startPoint,
     });
     startPoint.moveDown(l.rectangle.height);
   }

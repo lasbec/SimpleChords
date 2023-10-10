@@ -189,9 +189,8 @@ export class MutableBoxPointer {
    */
   setBox(x, y, box) {
     box.setPosition({
-      x,
-      y,
-      point: MutableFreePointer.fromPoint(this),
+      pointOnRect: { x, y },
+      pointOnGrid: MutableFreePointer.fromPoint(this),
     });
 
     box.setParent(this.box);

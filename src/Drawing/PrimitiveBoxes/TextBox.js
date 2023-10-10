@@ -31,9 +31,8 @@ export class TextBox extends AbstractPrimitiveBox {
         height: style.lineHeight,
       },
       {
-        x: "left",
-        y: "bottom",
-        point: MutableFreePointer.origin(),
+        pointOnRect: { x: "left", y: "bottom" },
+        pointOnGrid: MutableFreePointer.origin(),
       }
     );
     this.text = text;
