@@ -140,7 +140,6 @@ export function drawSongSectionLines(
     pointOnRect: { x: "left", y: "top" },
     pointOnGrid: MutableFreePointer.fromPoint(pointer),
   });
-
   pointer.box.appendChild(sectionBox);
 
   return [sectionBox];
@@ -165,6 +164,10 @@ export function drawSongSectionLinesOnlyChords(
     layoutConfig,
     MutableFreePointer.fromPoint(pointer)
   );
+  chords.setPosition({
+    pointOnRect: { x: "left", y: "top" },
+    pointOnGrid: MutableFreePointer.fromPoint(pointer),
+  });
 
   const lowerEndOfSection = MutableFreePointer.fromPoint(
     pointer.clone().moveToBorder("bottom")
@@ -186,6 +189,10 @@ export function drawSongSectionLinesOnlyChords(
     const lyricBox = leftTopCorner.span(rightBottomCorner);
     pointer = MutableBoxPointer.atBox("left", "top", lyricBox);
   }
+  chords.setPosition({
+    pointOnRect: { x: "left", y: "top" },
+    pointOnGrid: MutableFreePointer.fromPoint(pointer),
+  });
   pointer.box.appendChild(chords);
   return [chords];
 }
@@ -204,12 +211,12 @@ function drawOnlyChords({ songLines, title }, layoutConfig, pointer) {
   for (const line of songLines) {
     const text = title + line.chords.map((c) => c.chord).join(" ");
     const textBox = new TextBox(text, layoutConfig.chordTextConfig);
-    lines.push(textBox);
     textBox.setPosition({
       pointOnRect: { x: "left", y: "top" },
       pointOnGrid: MutableFreePointer.fromPoint(pointer),
     });
     pointer.moveDown(chordLineHeight);
+    lines.push(textBox);
   }
   return lines;
 }
