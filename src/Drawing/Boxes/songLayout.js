@@ -152,14 +152,18 @@ export function drawSongSectionLinesOnlyChords(
   title,
   layoutConfig
 ) {
-  const chordTextConfig = layoutConfig.chordTextConfig;
-  const chordLineHeight = chordTextConfig.lineHeight;
-  const heightOfSection = chordLineHeight.mul(songLines.length);
+  /** @type {Box} */
+  const chords = decorateAsBox(drawOnlyChords)(
+    { songLines, title },
+    layoutConfig,
+    MutableFreePointer.fromPoint(pointer)
+  );
 
-  const lowerEndOfSection = pointer.clone().moveToBorder("bottom");
-
-  const sectionWillExeedPage = pointer
-    .pointerDown(heightOfSection)
+  const lowerEndOfSection = MutableFreePointer.fromPoint(
+    pointer.clone().moveToBorder("bottom")
+  );
+  const sectionWillExeedPage = chords.rectangle
+    .getPointAt({ x: "left", y: "bottom" })
     .isLowerThan(lowerEndOfSection);
   if (sectionWillExeedPage) {
     const leftTopCorner = pointer
@@ -175,15 +179,8 @@ export function drawSongSectionLinesOnlyChords(
     const lyricBox = leftTopCorner.span(rightBottomCorner);
     pointer = MutableBoxPointer.atBox("left", "top", lyricBox);
   }
-
-  /** @type {Box} */
-  const lines = decorateAsBox(drawOnlyChords)(
-    { songLines, title },
-    layoutConfig,
-    MutableFreePointer.fromPoint(pointer)
-  );
-  pointer.box.appendChild(lines);
-  return [lines];
+  pointer.box.appendChild(chords);
+  return [chords];
 }
 
 /**
