@@ -8,6 +8,7 @@ import { WellKnownSectionType } from "../../SongChecker.js";
 import { SongLine } from "../../SongLine.js";
 
 /**
+ * @typedef {import("../Geometry.js").Rectangle} Rectangle
  * @typedef {import("../Geometry.js").Box} Box
  * @typedef {import("../../SchemaWrapper.js").LayoutConfig} LayoutConfig
  */
@@ -20,12 +21,15 @@ import { SongLine } from "../../SongLine.js";
  */
 export function layOutSongOnNewPage(song, layoutConfig, _pointer) {
   const lyricLineHeight = layoutConfig.lyricTextConfig.lineHeight;
+  /** @type {Rectangle} */
+  const rect = _pointer.box.rectangle;
   const titleBox = drawTitle(
     song,
-    _pointer,
+    rect,
     layoutConfig.topMargin,
     layoutConfig.titleTextConfig
   );
+  titleBox.setParent(_pointer.box);
   const pointer = MutableBoxPointer.atBox("left", "bottom", titleBox).onPage();
 
   pointer.moveDown(lyricLineHeight);
@@ -183,19 +187,18 @@ export function drawSongSectionLinesOnlyChords(
 
 /**
  * @param {Song} song
- * @param {MutableBoxPointer} _pointer
+ * @param {Rectangle} page
  * @param {Length} topMargin
  * @param {TextConfig} style
  */
-export function drawTitle(song, _pointer, topMargin, style) {
-  const pointer = _pointer
-    .onPage()
-    .moveHorizontalCenter()
-    .moveToBorder("top")
+export function drawTitle(song, page, topMargin, style) {
+  const pointer = page
+    .getPointAt({ x: "center", y: "top" })
     .moveDown(topMargin);
-  const x = "center";
-  const y = "top";
-  const text = song.heading;
-  const textBox = new TextBox(text, style);
-  return pointer.setBox(x, y, textBox);
+  const textBox = new TextBox(song.heading, style);
+  textBox.setPosition({
+    pointOnRect: { x: "center", y: "top" },
+    pointOnGrid: pointer,
+  });
+  return textBox;
 }

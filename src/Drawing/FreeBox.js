@@ -148,6 +148,16 @@ export class FreeBox {
     return new MutableFreePointer(this.xPositionFor(x), this.yPositionFor(y));
   }
 
+  /**
+   * @param {import("./Geometry.js").PointOnRect} point
+   */
+  getPointAt(point) {
+    return new MutableFreePointer(
+      this.xPositionFor(point.x),
+      this.yPositionFor(point.y)
+    );
+  }
+
   /** @param {import("./Geometry.js").BorderPosition} position  */
   getBorder(position) {
     if (position === "left" || position === "right") {

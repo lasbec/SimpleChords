@@ -1,9 +1,9 @@
 import { PDFPage } from "pdf-lib";
 import { Length } from "../Length.js";
-import { Page as PageBox } from "./Boxes/PageBox.js";
+import { PageBox } from "./Boxes/PageBox.js";
 import { MutableFreePointer } from "./FreePointer.js";
 import { Document } from "./Document.js";
-import { BoxTreeNode } from "./BoxTreeNode.js";
+import { FreeBox } from "./FreeBox.js";
 
 export type Point = {
   x: Length;
@@ -13,6 +13,10 @@ export type Point = {
 export type Dimensions = {
   width: Length;
   height: Length;
+};
+
+export type BoxGenerator = {
+  next(): FreeBox;
 };
 
 export type XStartPosition = "left" | "center" | "right";
@@ -33,7 +37,7 @@ export type Box = {
   level(): number;
   setParent(box: Box): void;
   drawToPdfPage(page: PDFPage): void;
-  appendNewPage(): BoxTreeRoot;
+  appendNewPage(): Box;
   appendChild(box: Box): void;
   document: Document | null;
   parent: Box | null;
@@ -46,6 +50,7 @@ export type Box = {
 export type Rectangle = {
   getBorder(border: BorderPosition): Length;
   getPoint(x: XStartPosition, y: YStartPosition): MutableFreePointer;
+  getPointAt(point: PointOnRect): MutableFreePointer;
   width: Length;
   height: Length;
 };

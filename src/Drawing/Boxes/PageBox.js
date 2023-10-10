@@ -21,7 +21,7 @@ import { MutableFreePointer } from "../FreePointer.js";
 
 /**
  * @implements {PrimitiveBox}
- */
+ */ 
 export class PageBox extends AbstractPrimitiveBox {
   /** @type {Box[]} */
   children;
