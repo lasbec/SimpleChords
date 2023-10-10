@@ -6,20 +6,16 @@
  */
 import { PDFDocument, StandardFonts } from "pdf-lib";
 import { FontLoader } from "./Drawing/FontLoader.js";
-import { LEN, Length } from "./Length.js";
+import { Length } from "./Length.js";
 import { Document } from "./Drawing/Document.js";
 import { MutableBoxPointer } from "./Drawing/BoxPointer.js";
 import { parseSongAst } from "./SongParser.js";
 import * as Path from "path";
 import * as fs from "fs/promises";
 import { Song } from "./Song.js";
-import { SongLine } from "./SongLine.js";
 import { checkSongAst, WellKnownSectionType } from "./SongChecker.js";
 import { SchemaWrapper } from "./SchemaWrapper.js";
 import { TextConfig } from "./Drawing/TextConfig.js";
-
-import { TextBox } from "./Drawing/PrimitiveBoxes/TextBox.js";
-import { songSection } from "./Drawing/Boxes/SongSectionBox.js";
 import { layOutSongOnNewPage } from "./Drawing/Boxes/songLayout.js";
 
 /**

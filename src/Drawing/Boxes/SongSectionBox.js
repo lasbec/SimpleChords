@@ -1,13 +1,15 @@
 import { WellKnownSectionType } from "../../SongChecker.js";
 import { MutableFreePointer } from "../FreePointer.js";
 import { decorateAsBox } from "../HigherOrderBox.js";
+import { TextBox } from "../PrimitiveBoxes/TextBox.js";
 import { songLineBox } from "./SongLineBox.js";
 /**
  * @typedef {import("../Geometry.js").RectanglePlacement} BoxPlacement
- * @typedef {import("../../Song.js").SongSection} SongSection
+ * @typedef {import("../../RenderSongAsPdf.js").LayoutConfig} LayoutConfig
  * @typedef {import("../TextConfig.js").TextConfig} TextConfig
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("../Geometry.js").Point} Point
+ * @typedef {import("../../Song.js").SongSection} SongSection
  * @typedef {import("../Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("../Geometry.js").YStartPosition} YStartPosition
  * @typedef {import("../Geometry.js").Dimensions} Dimensions
@@ -50,4 +52,50 @@ function drawsongSection(section, layoutConfig, startPoint) {
   return children;
 }
 
-export const songSection = decorateAsBox(drawsongSection);
+const songSectionWithLyric = decorateAsBox(drawsongSection);
+
+const songSectionInstrumental = decorateAsBox(drawOnlyChords);
+
+/**
+ *
+ * @param {SongSection} section
+ * @param {LayoutConfig} layoutConfig
+ * @returns
+ */
+export function songSection(section, layoutConfig) {
+  const onlyChordsSections = [
+    WellKnownSectionType.Intro,
+    WellKnownSectionType.Outro,
+    WellKnownSectionType.Interlude,
+  ];
+  const sectionBox = onlyChordsSections.includes(section.type)
+    ? songSectionInstrumental(section, layoutConfig)
+    : songSectionWithLyric(section, layoutConfig);
+  return sectionBox;
+}
+
+/**
+ * @param {SongSection} section
+ * @param {LayoutConfig} layoutConfig
+ * @param {MutableFreePointer} pointer
+ * @returns
+ */
+function drawOnlyChords(section, layoutConfig, pointer) {
+  const title = section.type + "   ";
+  const songLines = section.lines;
+  const chordTextConfig = layoutConfig.chordTextConfig;
+  const chordLineHeight = chordTextConfig.lineHeight;
+
+  const lines = [];
+  for (const line of songLines) {
+    const text = title + line.chords.map((c) => c.chord).join(" ");
+    const textBox = new TextBox(text, layoutConfig.chordTextConfig);
+    textBox.setPosition({
+      pointOnRect: { x: "left", y: "top" },
+      pointOnGrid: MutableFreePointer.fromPoint(pointer),
+    });
+    pointer.moveDown(chordLineHeight);
+    lines.push(textBox);
+  }
+  return lines;
+}

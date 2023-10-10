@@ -4,10 +4,7 @@ import { TextBox } from "../PrimitiveBoxes/TextBox.js";
 import { TextConfig } from "../TextConfig.js";
 import { Length } from "../../Length.js";
 import { Song } from "../../Song.js";
-import { WellKnownSectionType } from "../../SongChecker.js";
-import { SongLine } from "../../SongLine.js";
 import { MutableFreePointer } from "../FreePointer.js";
-import { decorateAsBox } from "../HigherOrderBox.js";
 
 /**
  * @typedef {import("../Geometry.js").Rectangle} Rectangle
@@ -50,14 +47,7 @@ export function layOutSongOnNewPage(song, layoutConfig, _pointer) {
   /** @type {Box[]} */
   const result = [titleBox];
   for (const section of song.sections) {
-    let onlyChordsSections = [
-      WellKnownSectionType.Intro,
-      WellKnownSectionType.Outro,
-      WellKnownSectionType.Interlude,
-    ];
-    const sectionBox = onlyChordsSections.includes(section.type)
-      ? drawSongSectionLinesOnlyChords(section, layoutConfig)
-      : songSection(section, layoutConfig);
+    const sectionBox = songSection(section, layoutConfig);
 
     sectionBox.setPosition({
       pointOnRect: { x: "left", y: "top" },
@@ -98,38 +88,6 @@ export function layOutSongOnNewPage(song, layoutConfig, _pointer) {
     lyricPointer.moveDown(layoutConfig.sectionDistance);
   }
   return result;
-}
-
-/**
- * @typedef {import("./SongSectionBox.js").SongSection} SongSection
- */
-
-const drawSongSectionLinesOnlyChords = decorateAsBox(drawOnlyChords);
-
-/**
- * @param {SongSection} section
- * @param {LayoutConfig} layoutConfig
- * @param {MutableFreePointer} pointer
- * @returns
- */
-function drawOnlyChords(section, layoutConfig, pointer) {
-  const title = section.type + "   ";
-  const songLines = section.lines;
-  const chordTextConfig = layoutConfig.chordTextConfig;
-  const chordLineHeight = chordTextConfig.lineHeight;
-
-  const lines = [];
-  for (const line of songLines) {
-    const text = title + line.chords.map((c) => c.chord).join(" ");
-    const textBox = new TextBox(text, layoutConfig.chordTextConfig);
-    textBox.setPosition({
-      pointOnRect: { x: "left", y: "top" },
-      pointOnGrid: MutableFreePointer.fromPoint(pointer),
-    });
-    pointer.moveDown(chordLineHeight);
-    lines.push(textBox);
-  }
-  return lines;
 }
 
 /**
