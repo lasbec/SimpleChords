@@ -22,6 +22,7 @@ export class AbstractPrimitiveBox {
    */
   constructor(dims, position) {
     this.rectangle = FreeBox.fromPlacement(position, dims);
+    /** @type {Box | null} */
     this.parent = null;
     /** @type {Document | null} */
     this.document = null;
