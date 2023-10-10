@@ -6,6 +6,7 @@ import { Length } from "../../Length.js";
 import { Song } from "../../Song.js";
 import { WellKnownSectionType } from "../../SongChecker.js";
 import { SongLine } from "../../SongLine.js";
+import { MutableFreePointer } from "../FreePointer.js";
 
 /**
  * @typedef {import("../Geometry.js").Rectangle} Rectangle
@@ -180,7 +181,16 @@ export function drawSongSectionLinesOnlyChords(
     const text = title + line.chords.map((c) => c.chord).join(" ");
     const textBox = new TextBox(text, layoutConfig.chordTextConfig);
     lines.push(textBox);
-    pointer.setBox("left", "top", textBox);
+    textBox.setPosition({
+      pointOnRect: { x: "left", y: "top" },
+      pointOnGrid: MutableFreePointer.fromPoint(pointer),
+    });
+
+    pointer.box.appendChild(textBox);
+
+    const rootPage = pointer.box.root;
+    rootPage.appendChild(textBox);
+
     pointer.moveDown(chordLineHeight);
   }
   return lines;

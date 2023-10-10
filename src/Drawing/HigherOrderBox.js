@@ -70,7 +70,7 @@ export class HigherOrderBox extends AbstractPrimitiveBox {
     const oldCenter = this.rectangle.getPoint("center", "center");
     super.setPosition({
       ...position,
-      pointOnGrid: position.pointOnGrid.clone(),
+      pointOnGrid: position.pointOnGrid,
     });
     const newCenter = this.rectangle.getPoint("center", "center");
     const xMove = newCenter.x.sub(oldCenter.x);
