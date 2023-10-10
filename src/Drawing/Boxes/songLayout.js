@@ -113,14 +113,14 @@ export function drawSongSectionLines(
       lyricConfig: lyricStyle,
     }
   );
+  sectionBox.setPosition({
+    pointOnRect: { x: "left", y: "top" },
+    pointOnGrid: MutableFreePointer.fromPoint(pointer),
+  });
 
-  const heightOfSection = sectionBox.rectangle.height;
-
-  const lowerEndOfSection = pointer.onPage().clone().moveToBorder("bottom");
-
-  const sectionWillExeedPage = pointer
-    .pointerDown(heightOfSection)
-    .isLowerThan(lowerEndOfSection);
+  const sectionWillExeedPage = sectionBox.rectangle
+    .getPointAt({ x: "left", y: "bottom" })
+    .isLowerThan(pointer.box.rectangle.getPointAt({ x: "left", y: "bottom" }));
   if (sectionWillExeedPage) {
     const leftTopCorner = pointer
       .nextPageAt("left", "top")
@@ -135,7 +135,14 @@ export function drawSongSectionLines(
     const lyricBox = leftTopCorner.span(rightBottomCorner);
     pointer = MutableBoxPointer.atBox("left", "top", lyricBox);
   }
-  pointer.setBox("left", "top", sectionBox);
+
+  sectionBox.setPosition({
+    pointOnRect: { x: "left", y: "top" },
+    pointOnGrid: MutableFreePointer.fromPoint(pointer),
+  });
+
+  pointer.box.appendChild(sectionBox);
+
   return [sectionBox];
 }
 
