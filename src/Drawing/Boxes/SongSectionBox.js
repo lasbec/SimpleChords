@@ -1,3 +1,4 @@
+import { WellKnownSectionType } from "../../SongChecker.js";
 import { MutableFreePointer } from "../FreePointer.js";
 import { decorateAsBox } from "../HigherOrderBox.js";
 import { songLineBox } from "./SongLineBox.js";
@@ -21,10 +22,23 @@ import { songLineBox } from "./SongLineBox.js";
 
 /**
  * @param {SongSection} section
- * @param {SongSectionBoxConfig} config
+ * @param {import("../../RenderSongAsPdf.js").LayoutConfig} layoutConfig
  * @param {MutableFreePointer} startPoint
  */
-function drawsongSection(section, config, startPoint) {
+function drawsongSection(section, layoutConfig, startPoint) {
+  const sectionType = section.type;
+  /** @type {TextConfig} */
+  const lyricStyle =
+    sectionType === WellKnownSectionType.Chorus
+      ? layoutConfig.chorusTextConfig
+      : sectionType === WellKnownSectionType.Refrain
+      ? layoutConfig.refTextConfig
+      : layoutConfig.lyricTextConfig;
+  const chordTextConfig = layoutConfig.chordTextConfig;
+  const config = {
+    chordsConfig: chordTextConfig,
+    lyricConfig: lyricStyle,
+  };
   const children = section.lines.map((l) => songLineBox(l, config));
   for (const l of children) {
     l.setPosition({

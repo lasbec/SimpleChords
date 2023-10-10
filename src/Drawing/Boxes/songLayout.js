@@ -57,7 +57,7 @@ export function layOutSongOnNewPage(song, layoutConfig, _pointer) {
     ];
     const sectionBox = onlyChordsSections.includes(section.type)
       ? drawSongSectionLinesOnlyChords(section, layoutConfig)
-      : drawSongSectionLines(section, layoutConfig, lyricPointer);
+      : songSection(section, layoutConfig);
 
     sectionBox.setPosition({
       pointOnRect: { x: "left", y: "top" },
@@ -103,30 +103,6 @@ export function layOutSongOnNewPage(song, layoutConfig, _pointer) {
 /**
  * @typedef {import("./SongSectionBox.js").SongSection} SongSection
  */
-
-/**
- * @param {SongSection} section
- * @param {LayoutConfig} layoutConfig
- * @param {MutableBoxPointer} lyricPointer
- * @returns {Box}
- * */
-export function drawSongSectionLines(section, layoutConfig, lyricPointer) {
-  const sectionType = section.type;
-  /** @type {TextConfig} */
-  const lyricStyle =
-    sectionType === WellKnownSectionType.Chorus
-      ? layoutConfig.chorusTextConfig
-      : sectionType === WellKnownSectionType.Refrain
-      ? layoutConfig.refTextConfig
-      : layoutConfig.lyricTextConfig;
-  const chordTextConfig = layoutConfig.chordTextConfig;
-
-  const sectionBox = songSection(section, {
-    chordsConfig: chordTextConfig,
-    lyricConfig: lyricStyle,
-  });
-  return sectionBox;
-}
 
 const drawSongSectionLinesOnlyChords = decorateAsBox(drawOnlyChords);
 
