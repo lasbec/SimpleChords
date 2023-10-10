@@ -48,37 +48,16 @@ export function layOutSongOnNewPage(song, layoutConfig, _pointer) {
   const result = [titleBox];
   for (const section of song.sections) {
     const sectionBox = songSection(section, layoutConfig);
-
     sectionBox.setPosition({
       pointOnRect: { x: "left", y: "top" },
       pointOnGrid: MutableFreePointer.fromPoint(lyricPointer),
     });
 
-    const sectionWillExeedPage = sectionBox.rectangle
-      .getPointAt({ x: "left", y: "bottom" })
-      .isLowerThan(
-        lyricPointer.box.rectangle.getPointAt({ x: "left", y: "bottom" })
-      );
-    if (sectionWillExeedPage) {
-      const leftTopCorner = lyricPointer
-        .nextPageAt("left", "top")
-        .moveDown(layoutConfig.topMargin)
-        .moveRight(layoutConfig.leftMargin);
-      const rightBottomCorner = leftTopCorner
-        .clone()
-        .moveToBorder("bottom")
-        .moveToBorder("right")
-        .moveUp(layoutConfig.topMargin)
-        .moveLeft(layoutConfig.rightMargin);
-      const lyricBox = leftTopCorner.span(rightBottomCorner);
-      lyricPointer = MutableBoxPointer.atBox("left", "top", lyricBox);
-    }
-
-    sectionBox.setPosition({
-      pointOnRect: { x: "left", y: "top" },
-      pointOnGrid: MutableFreePointer.fromPoint(lyricPointer),
-    });
-    lyricPointer.box.appendChild(sectionBox);
+    lyricPointer = ifExceedingPageMoveToNextOne(
+      sectionBox,
+      lyricPointer,
+      layoutConfig
+    );
 
     result.push(sectionBox);
     lyricPointer = MutableBoxPointer.fromPoint(
@@ -88,6 +67,41 @@ export function layOutSongOnNewPage(song, layoutConfig, _pointer) {
     lyricPointer.moveDown(layoutConfig.sectionDistance);
   }
   return result;
+}
+/**
+ *
+ * @param {Box} sectionBox
+ * @param {MutableBoxPointer} lyricPointer
+ * @param {LayoutConfig} layoutConfig
+ * @returns
+ */
+function ifExceedingPageMoveToNextOne(sectionBox, lyricPointer, layoutConfig) {
+  const sectionWillExeedPage = sectionBox.rectangle
+    .getPointAt({ x: "left", y: "bottom" })
+    .isLowerThan(
+      lyricPointer.box.rectangle.getPointAt({ x: "left", y: "bottom" })
+    );
+  if (sectionWillExeedPage) {
+    const leftTopCorner = lyricPointer
+      .nextPageAt("left", "top")
+      .moveDown(layoutConfig.topMargin)
+      .moveRight(layoutConfig.leftMargin);
+    const rightBottomCorner = leftTopCorner
+      .clone()
+      .moveToBorder("bottom")
+      .moveToBorder("right")
+      .moveUp(layoutConfig.topMargin)
+      .moveLeft(layoutConfig.rightMargin);
+    const lyricBox = leftTopCorner.span(rightBottomCorner);
+    lyricPointer = MutableBoxPointer.atBox("left", "top", lyricBox);
+  }
+
+  sectionBox.setPosition({
+    pointOnRect: { x: "left", y: "top" },
+    pointOnGrid: MutableFreePointer.fromPoint(lyricPointer),
+  });
+  lyricPointer.box.appendChild(sectionBox);
+  return lyricPointer;
 }
 
 /**
