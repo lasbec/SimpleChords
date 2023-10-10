@@ -40,12 +40,6 @@ export class AbstractPrimitiveBox {
     return this.document.appendNewPage();
   }
 
-  /** @param {Box} box  */
-  setParent(box) {
-    this.document = box.document;
-    this.parent = box;
-  }
-
   /** @param {Document} doc */
   setDocument(doc) {
     this.document = doc;

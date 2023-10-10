@@ -50,7 +50,7 @@ export class HigherOrderBox extends AbstractPrimitiveBox {
     );
     this.children = children;
     for (const child of children) {
-      child.setParent(this);
+      child.parent = this;
     }
   }
 

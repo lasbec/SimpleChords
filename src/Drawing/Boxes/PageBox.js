@@ -21,7 +21,7 @@ import { MutableFreePointer } from "../FreePointer.js";
 
 /**
  * @implements {PrimitiveBox}
- */ 
+ */
 export class PageBox extends AbstractPrimitiveBox {
   /** @type {Box[]} */
   children;
@@ -47,13 +47,9 @@ export class PageBox extends AbstractPrimitiveBox {
 
   /** @param {Box} box */
   appendChild(box) {
+    box.parent = this;
     this.children.push(box);
   }
-
-  setParent() {
-    throw new Error("Parent can't be set for PageBox.");
-  }
-
   /**
    *
    * @param {PDFPage} page

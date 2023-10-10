@@ -193,7 +193,6 @@ export class MutableBoxPointer {
       pointOnGrid: MutableFreePointer.fromPoint(this),
     });
 
-    box.setParent(this.box);
     this.box.appendChild(box);
 
     const rootPage = this.box.root;

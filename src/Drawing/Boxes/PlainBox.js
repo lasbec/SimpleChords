@@ -31,6 +31,7 @@ export class PlainBox extends AbstractPrimitiveBox {
 
   /** @param {Box} box */
   appendChild(box) {
+    box.parent = this;
     this.children.push(box);
   }
 

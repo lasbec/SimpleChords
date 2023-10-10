@@ -31,7 +31,6 @@ export function layOutSongOnNewPage(song, layoutConfig, _pointer) {
     layoutConfig.titleTextConfig
   );
   _pointer.box.appendChild(titleBox);
-  titleBox.setParent(_pointer.box);
   const pointer = MutableBoxPointer.atBox("left", "bottom", titleBox).onPage();
 
   pointer.moveDown(lyricLineHeight);

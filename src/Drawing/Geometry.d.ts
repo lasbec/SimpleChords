@@ -35,7 +35,6 @@ export type RectanglePlacement = {
 
 export type Box = {
   level(): number;
-  setParent(box: Box): void;
   drawToPdfPage(page: PDFPage): void;
   appendNewPage(): Box;
   appendChild(box: Box): void;
