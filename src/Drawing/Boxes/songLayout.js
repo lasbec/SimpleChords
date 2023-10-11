@@ -45,29 +45,27 @@ export function layOutSongOnNewPage(song, layoutConfig, _pointer) {
   let lyricPointer = MutableBoxPointer.atBox("left", "top", lyricBox);
 
   /** @type {Box[]} */
-  const result = [titleBox];
+  const result = [];
   for (const section of song.sections) {
-    const sectionBox = songSection(section, layoutConfig);
-    sectionBox.setPosition({
-      pointOnRect: { x: "left", y: "top" },
-      pointOnGrid: MutableFreePointer.fromPoint(lyricPointer),
-    });
-
+    const sectionBox = songSection(section, layoutConfig, lyricBox.rectangle);
+    result.push(sectionBox);
+  }
+  for (const sectionBox of result) {
     lyricPointer = ifExceedingPageMoveToNextOne(
       sectionBox,
       lyricPointer,
       layoutConfig
     );
 
-    result.push(sectionBox);
     lyricPointer = MutableBoxPointer.fromPoint(
       sectionBox.rectangle.getPoint("left", "bottom"),
       sectionBox
     ).onPage();
     lyricPointer.moveDown(layoutConfig.sectionDistance);
   }
-  return result;
+  return [titleBox, ...result];
 }
+
 /**
  *
  * @param {Box} sectionBox

@@ -14,6 +14,7 @@ import { songLineBox } from "./SongLineBox.js";
  * @typedef {import("../Geometry.js").YStartPosition} YStartPosition
  * @typedef {import("../Geometry.js").Dimensions} Dimensions
  * @typedef {import("../Geometry.js").Box} Box
+ * @typedef {import("../Geometry.js").Rectangle} Rectangle
  */
 
 /**
@@ -57,12 +58,12 @@ const songSectionWithLyric = decorateAsBox(drawsongSection);
 const songSectionInstrumental = decorateAsBox(drawOnlyChords);
 
 /**
- *
  * @param {SongSection} section
  * @param {LayoutConfig} layoutConfig
+ * @param {Rectangle} rect
  * @returns
  */
-export function songSection(section, layoutConfig) {
+export function songSection(section, layoutConfig, rect) {
   const onlyChordsSections = [
     WellKnownSectionType.Intro,
     WellKnownSectionType.Outro,
@@ -71,6 +72,10 @@ export function songSection(section, layoutConfig) {
   const sectionBox = onlyChordsSections.includes(section.type)
     ? songSectionInstrumental(section, layoutConfig)
     : songSectionWithLyric(section, layoutConfig);
+  sectionBox.setPosition({
+    pointOnRect: { x: "left", y: "top" },
+    pointOnGrid: rect.getPointAt({ x: "left", y: "top" }),
+  });
   return sectionBox;
 }
 

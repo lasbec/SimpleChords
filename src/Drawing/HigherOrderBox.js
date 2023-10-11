@@ -5,11 +5,39 @@ import { AbstractPrimitiveBox } from "./AbstractPrimitiveBox.js";
 import { PDFPage } from "pdf-lib";
 import { drawDebugBox } from "./BoxDrawingUtils.js";
 import { BoxOverflows } from "./BoxOverflow.js";
+import { FreeBox } from "./FreeBox.js";
 
 /**
  * @typedef {import("./Geometry.js").RectanglePlacement} BoxPlacement
  * @typedef {import("./Geometry.js").Box} Box
+ * @typedef {import("./Geometry.js").BoxGenerator} BoxGenerator
  */
+
+/**
+ * @template Content
+ * @template Config
+ * @param {(content:Content, config:Config, box:FreeBox) => {children:Box[], rest?:Content}} drawChildrenFn
+ */
+export function decorateAsComponent(drawChildrenFn) {
+  /**
+   * @param {Content} content
+   * @param {Config} config
+   * @param {BoxGenerator} boxGen
+   * @returns {Box[]}
+   */
+  return (content, config, boxGen) => {
+    /** @type {Box[]} */
+    const result = [];
+    /** @type {Content | undefined} */
+    let rest = content;
+    while (rest !== undefined) {
+      const partialResult = drawChildrenFn(rest, config, boxGen.next());
+      result.push(new HigherOrderBox(partialResult.children));
+      rest = partialResult.rest;
+    }
+    return result;
+  };
+}
 
 /**
  * @template Content
