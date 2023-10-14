@@ -13,8 +13,7 @@ import { parseSongAst } from "../Parsing/SongParser.js";
 import * as Path from "path";
 import * as fs from "fs/promises";
 import { Song } from "../Song/Song.js";
-import { checkSongAst, WellKnownSectionType } from "../Song/SongChecker.js";
-import { SchemaWrapper } from "../Song/SchemaWrapper.js";
+import { checkSongAst } from "../Song/SongChecker.js";
 import { TextConfig } from "../Drawing/TextConfig.js";
 import { layOutSongOnNewPage } from "./songLayout.js";
 

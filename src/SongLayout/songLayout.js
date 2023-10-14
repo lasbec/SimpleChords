@@ -5,38 +5,20 @@ import { TextConfig } from "../Drawing/TextConfig.js";
 import { Length } from "../Shared/Length.js";
 import { Song } from "../Song/Song.js";
 import { MutableFreePointer } from "../Drawing/FreePointer.js";
-import { SchemaWrapper } from "../Song/SchemaWrapper.js";
 
 /**
  * @typedef {import("../Drawing/Geometry.js").Rectangle} Rectangle
  * @typedef {import("../Drawing/Geometry.js").Box} Box
- * @typedef {import("../Song/SchemaWrapper.js").LayoutConfig} LayoutConfig
+ * @typedef {import("./RenderSongAsPdf.js").LayoutConfig} LayoutConfig
  */
-
-/**
- * @param {Song} _song
- * @param {LayoutConfig} config
- * @param {Length} width
- */
-function reshapeSongWithSchema(_song, config, width) {
-  return new SchemaWrapper(_song, width, config).process();
-}
 
 /**
  * @param {Song} song
  * @param {LayoutConfig} layoutConfig
- * @param {MutableBoxPointer} _pointer  
+ * @param {MutableBoxPointer} _pointer
  * @returns {Box[]}
  */
 export function layOutSongOnNewPage(song, layoutConfig, _pointer) {
-  reshapeSongWithSchema(
-    song,
-    layoutConfig,
-    layoutConfig.pageWidth
-      .sub(layoutConfig.leftMargin)
-      .sub(layoutConfig.rightMargin)
-  );
-
   /** @type {Rectangle} */
   const rect = _pointer.box.rectangle;
 
