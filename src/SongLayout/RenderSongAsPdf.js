@@ -159,13 +159,7 @@ export async function renderSongAsPdf(songs, debug, layoutConfig, pdfDoc) {
   for (const song of songs) {
     console.log(`Drawing '${song.heading}'`);
     layOutSongOnNewPage(
-      reshapeSongWithSchema(
-        song,
-        layoutConfig,
-        layoutConfig.pageWidth
-          .sub(layoutConfig.leftMargin)
-          .sub(layoutConfig.rightMargin)
-      ),
+      song,
       layoutConfig,
       MutableBoxPointer.atBox("left", "top", doc.appendNewPage())
     );
@@ -230,13 +224,4 @@ async function layoutConfigFromDto(configDto, pdfDoc) {
       fontSize: Length.fromString(configDto.chordTextConfig.fontSize),
     }),
   };
-}
-
-/**
- * @param {Song} _song
- * @param {LayoutConfig} config
- * @param {Length} width
- */
-function reshapeSongWithSchema(_song, config, width) {
-  return new SchemaWrapper(_song, width, config).process();
 }

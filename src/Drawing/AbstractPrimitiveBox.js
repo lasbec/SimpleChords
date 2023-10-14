@@ -1,5 +1,3 @@
-import { Length } from "../Shared/Length.js";
-import { getPoint } from "./BoxMeasuringUtils.js";
 import { Document } from "./Document.js";
 import { FreeBox } from "./FreeBox.js";
 

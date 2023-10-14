@@ -1,10 +1,8 @@
+import { range } from "../Shared/ArrayUtils.js";
 /**
  * @template StrLike
  * @typedef {{slice(s:StrLike, start:number, stop?:number):StrLike, concat(s:StrLike[]):StrLike}} StrLikeImpl
  */
-
-import { range } from "../Shared/ArrayUtils.js";
-
 /**
  * @typedef {Iterable<string> & {length:number; charAt(index:number):string; toString():string}} StrLikeConstraint
  */
