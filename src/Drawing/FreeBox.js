@@ -2,8 +2,8 @@
  * @typedef {import("./Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("./Geometry.js").YStartPosition} YStartPosition
  * @typedef {import("./Geometry.js").Point} Point
-
  * @typedef {import("./Geometry.js").MutRectangle} MutRectangle
+ * @typedef {import("./Geometry.js").Rectangle} Rectangle
  * @typedef {import("./Geometry.js").Dimensions} Dimensions
  * @typedef {import("./Geometry.js").RectanglePlacement} RectanglePlacement
  */

@@ -14,7 +14,6 @@ export class Song {
   /**
    * @param {string} heading
    * @param {SongSection[]} sections
-   * @private
    */
   constructor(heading, sections) {
     this.heading = heading;

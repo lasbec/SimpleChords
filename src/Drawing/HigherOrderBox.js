@@ -65,7 +65,7 @@ export class HigherOrderBox extends AbstractPrimitiveBox {
    * @param {Box[]} children
    */
   constructor(children) {
-    const mbb = minimalBoundingBox(children);
+    const mbb = minimalBoundingBox(children.map((c) => c.rectangle));
     super(
       mbb || {
         width: Length.zero,
@@ -86,7 +86,7 @@ export class HigherOrderBox extends AbstractPrimitiveBox {
   appendChild(box) {
     this.children.push(box);
     box.parent = this;
-    const mbb = minimalBoundingBox(this.children);
+    const mbb = minimalBoundingBox(this.children.map((c) => c.rectangle));
     this.width = mbb?.width || Length.zero;
     this.height = mbb?.height || Length.zero;
   }

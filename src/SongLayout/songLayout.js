@@ -1,12 +1,9 @@
-import { MutableBoxPointer } from "../Drawing/BoxPointer.js";
 import { songSection } from "./SongSectionBox.js";
 import { TextBox } from "../Drawing/PrimitiveBoxes/TextBox.js";
-import { TextConfig } from "../Drawing/TextConfig.js";
-import { Length } from "../Shared/Length.js";
 import { Song } from "../Song/Song.js";
-import { MutableFreePointer } from "../Drawing/FreePointer.js";
-import { FreeBox } from "../Drawing/FreeBox.js";
-import { PlainBox } from "../Drawing/Boxes/PlainBox.js";
+import { AtLeastBox } from "../Drawing/Boxes/AtLeastBox.js";
+import { SongLine } from "../Song/SongLine.js";
+import { isInside } from "../Drawing/BoxMeasuringUtils.js";
 
 /**
  * @typedef {import("../Drawing/Geometry.js").Rectangle} Rectangle
@@ -21,7 +18,27 @@ import { PlainBox } from "../Drawing/Boxes/PlainBox.js";
  * @returns {Box[]}
  */
 export function songLayout(song, layoutConfig, rect) {
-  let currPage = PlainBox.fromRect(rect);
+  const simpleResult = songLayoutSimple(song, layoutConfig, rect);
+  if (simpleResult.length <= 1) {
+    return simpleResult;
+  }
+  const denseResult = songLayoutDense(song, layoutConfig, rect);
+  if (denseResult.length < simpleResult.length) {
+    if (denseResult.every((b) => isInside(b.rectangle, rect))) {
+      return denseResult;
+    }
+  }
+  return simpleResult;
+}
+
+/**
+ * @param {Song} song
+ * @param {LayoutConfig} layoutConfig
+ * @param {Rectangle} rect
+ * @returns {Box[]}
+ */
+export function songLayoutSimple(song, layoutConfig, rect) {
+  let currPage = AtLeastBox.fromRect(rect);
 
   const pointer = rect.getPointAt({ x: "center", y: "top" });
   const titleBox = new TextBox(song.heading, layoutConfig.titleTextConfig);
@@ -44,12 +61,11 @@ export function songLayout(song, layoutConfig, rect) {
     );
     const sectionBox = songSection(section, layoutConfig, lyricBox);
 
-    if (
-      sectionBox.rectangle
-        .getPoint("left", "bottom")
-        .isLowerThan(currPage.rectangle.getPoint("left", "bottom"))
-    ) {
-      currPage = PlainBox.fromRect(rect);
+    const sectionExeedsPage = sectionBox.rectangle
+      .getPoint("left", "bottom")
+      .isLowerThan(currPage.rectangle.getPoint("left", "bottom"));
+    if (sectionExeedsPage) {
+      currPage = AtLeastBox.fromRect(rect);
       result.push(currPage);
       sectionBox.setPosition({
         pointOnRect: { x: "left", y: "top" },
@@ -61,5 +77,43 @@ export function songLayout(song, layoutConfig, rect) {
       .getPoint("left", "bottom")
       .moveDown(layoutConfig.sectionDistance);
   }
+  return result;
+}
+
+/**
+ * @param {Song} song
+ * @param {LayoutConfig} layoutConfig
+ * @param {Rectangle} rect
+ * @returns {Box[]}
+ */
+export function songLayoutDense(song, layoutConfig, rect) {
+  return songLayoutSimple(
+    new Song(
+      song.heading,
+      song.sections.map((s) => ({
+        type: s.type,
+        lines: doubleSongLines(s.lines),
+      }))
+    ),
+    layoutConfig,
+    rect
+  );
+}
+
+/**
+ * @param {SongLine[]} lines
+ * @returns {SongLine[]}
+ */
+function doubleSongLines(lines) {
+  /** @type {SongLine[]} */
+  const result = [];
+  lines.forEach((l, i) => {
+    const next = lines[i + 1];
+    if (i % 2 == 0 && next) {
+      result.push(l.concat([next]));
+    } else if (!next) {
+      result.push(l);
+    }
+  });
   return result;
 }

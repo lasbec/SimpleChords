@@ -167,6 +167,15 @@ export class Length {
   gt(other) {
     return this.in("pt") > other.in("pt");
   }
+  /** @param {Length} other */
+  le(other) {
+    return this.in("pt") <= other.in("pt");
+  }
+
+  /** @param {Length} other */
+  ge(other) {
+    return this.in("pt") >= other.in("pt");
+  }
 
   gtz() {
     return this.value > 0;

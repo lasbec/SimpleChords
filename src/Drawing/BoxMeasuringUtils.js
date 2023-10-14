@@ -6,6 +6,7 @@ import { MutableFreePointer } from "./FreePointer.js";
  * @typedef {import("./Geometry.js").RectanglePlacement} RectanglePlacement
  * @typedef {import("./Geometry.js").XStartPosition} RelX
  * @typedef {import("./Geometry.js").YStartPosition} RelY
+ * @typedef {import("./Geometry.js").Rectangle} Rectangle
  */
 
 /**
@@ -16,6 +17,24 @@ import { MutableFreePointer } from "./FreePointer.js";
  * @property {Length} width
  * @property {Length} height
  */
+
+/**
+ *
+ * @param {Rectangle} inner
+ * @param {Rectangle} outer
+ */
+export function isInside(inner, outer) {
+  const innerLeftTop = inner.getPoint("left", "top");
+  const innerRightBottom = inner.getPoint("right", "bottom");
+  const outerLeftTop = outer.getPoint("left", "top");
+  const outerRightBottom = outer.getPoint("right", "bottom");
+  return (
+    innerLeftTop.isRightFrom(outerLeftTop) &&
+    innerLeftTop.isLowerThan(outerLeftTop) &&
+    innerRightBottom.isLeftFrom(outerRightBottom) &&
+    innerRightBottom.isHigherThan(outerRightBottom)
+  );
+}
 
 /**
  * @param {GetPointArgs} args
@@ -100,21 +119,19 @@ const yMovementMap = {
  */
 
 /**
- * @param {Box[]} boxes
+ * @param {Rectangle[]} boxes
  * @returns {FreeBox | undefined}
  */
 export function minimalBoundingBox(boxes) {
   const fst = boxes[0];
   if (!boxes) return;
-  let leftTop = fst.rectangle.getPoint("left", "top");
-  let rightBottom = fst.rectangle.getPoint("right", "bottom");
+  let leftTop = fst.getPoint("left", "top");
+  let rightBottom = fst.getPoint("right", "bottom");
 
   for (const box of boxes) {
-    leftTop = leftTop
-      .span(box.rectangle.getPoint("left", "top"))
-      .getPoint("left", "top");
+    leftTop = leftTop.span(box.getPoint("left", "top")).getPoint("left", "top");
     rightBottom = rightBottom
-      .span(box.rectangle.getPoint("right", "bottom"))
+      .span(box.getPoint("right", "bottom"))
       .getPoint("right", "bottom");
   }
   return FreeBox.fromCorners(leftTop, rightBottom);
