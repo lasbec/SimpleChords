@@ -1,3 +1,4 @@
+import { WellKnownSectionType } from "../Song/SongChecker.js";
 import { ParsingError } from "./ParsingError.js";
 
 /**
@@ -144,7 +145,12 @@ class SongParser {
       });
     }
     const sectionType = line.slice(0, -1).trim().toLocaleLowerCase();
-    if (sectionType === "ref") return "refrain";
+    if (sectionType === "ref") return WellKnownSectionType.Refrain;
+    if (sectionType === "vorspiel") return WellKnownSectionType.Intro;
+    if (sectionType === "instrumental") return WellKnownSectionType.Interlude;
+    if (sectionType === "übergang") return WellKnownSectionType.Interlude;
+    if (sectionType === "nachspiel") return WellKnownSectionType.Outro;
+    if (sectionType === "schluss") return WellKnownSectionType.Outro;
     return sectionType || "verse";
   }
 
