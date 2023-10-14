@@ -21,14 +21,28 @@ import { MutableFreePointer } from "../FreePointer.js";
 export class PlainBox extends AbstractPrimitiveBox {
   /**
    * @param {Dimensions} dims
+   * @param {BoxPlacement=} position
    */
-  constructor(dims) {
-    super(dims, {
-      pointOnRect: { x: "left", y: "bottom" },
-      pointOnGrid: MutableFreePointer.origin(),
-    });
+  constructor(dims, position) {
+    super(
+      dims,
+      position || {
+        pointOnRect: { x: "left", y: "bottom" },
+        pointOnGrid: MutableFreePointer.origin(),
+      }
+    );
     /** @type {Box[]} */
     this.children = [];
+  }
+
+  /**
+   * @param {import("../Geometry.js").Rectangle} rect
+   */
+  static fromRect(rect) {
+    return new PlainBox(rect, {
+      pointOnRect: { x: "left", y: "top" },
+      pointOnGrid: rect.getPoint("left", "top"),
+    });
   }
 
   /** @param {Box} box */

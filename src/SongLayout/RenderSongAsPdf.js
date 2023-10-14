@@ -8,7 +8,6 @@ import { PDFDocument, StandardFonts } from "pdf-lib";
 import { FontLoader } from "../Drawing/FontLoader.js";
 import { Length } from "../Shared/Length.js";
 import { Document } from "../Drawing/Document.js";
-import { MutableBoxPointer } from "../Drawing/BoxPointer.js";
 import { parseSongAst } from "../Parsing/SongParser.js";
 import * as Path from "path";
 import * as fs from "fs/promises";
@@ -16,6 +15,8 @@ import { Song } from "../Song/Song.js";
 import { checkSongAst } from "../Song/SongChecker.js";
 import { TextConfig } from "../Drawing/TextConfig.js";
 import { layOutSongOnNewPage } from "./songLayout.js";
+import { FreeBox } from "../Drawing/FreeBox.js";
+import { MutableFreePointer } from "../Drawing/FreePointer.js";
 
 /**
  * @param {string} path
@@ -151,17 +152,37 @@ async function parseASTs(paths, debug) {
 export async function renderSongAsPdf(songs, debug, layoutConfig, pdfDoc) {
   Document.debug = debug;
 
-  const doc = new Document({
+  const pageDims = {
     width: layoutConfig.pageWidth,
     height: layoutConfig.pageHeight,
-  });
+  };
+  const doc = new Document(pageDims);
+
+  const pageArea = FreeBox.fromPlacement(
+    {
+      pointOnRect: { x: "left", y: "bottom" },
+      pointOnGrid: MutableFreePointer.origin(),
+    },
+    pageDims
+  );
+
+  const writableArea = pageArea
+    .getPoint("left", "top")
+    .moveDown(layoutConfig.topMargin)
+    .moveRight(layoutConfig.rightMargin)
+    .span(
+      pageArea
+        .getPoint("right", "bottom")
+        .moveUp(layoutConfig.bottomMargin)
+        .moveLeft(layoutConfig.rightMargin)
+    );
   for (const song of songs) {
     console.log(`Drawing '${song.heading}'`);
-    layOutSongOnNewPage(
-      song,
-      layoutConfig,
-      MutableBoxPointer.atBox("left", "top", doc.appendNewPage())
-    );
+    const boxes = layOutSongOnNewPage(song, layoutConfig, writableArea);
+    for (const box of boxes) {
+      const currPage = doc.appendNewPage();
+      currPage.appendChild(box);
+    }
   }
   doc.drawToPdfDoc(pdfDoc);
 
