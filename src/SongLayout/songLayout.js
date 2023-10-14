@@ -20,7 +20,7 @@ import { PlainBox } from "../Drawing/Boxes/PlainBox.js";
  * @param {Rectangle} rect
  * @returns {Box[]}
  */
-export function layOutSongOnNewPage(song, layoutConfig, rect) {
+export function songLayout(song, layoutConfig, rect) {
   let currPage = PlainBox.fromRect(rect);
 
   const pointer = rect.getPointAt({ x: "center", y: "top" });

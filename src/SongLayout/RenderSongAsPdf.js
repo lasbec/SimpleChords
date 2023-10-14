@@ -14,7 +14,7 @@ import * as fs from "fs/promises";
 import { Song } from "../Song/Song.js";
 import { checkSongAst } from "../Song/SongChecker.js";
 import { TextConfig } from "../Drawing/TextConfig.js";
-import { layOutSongOnNewPage } from "./songLayout.js";
+import { songLayout } from "./songLayout.js";
 import { FreeBox } from "../Drawing/FreeBox.js";
 import { MutableFreePointer } from "../Drawing/FreePointer.js";
 
@@ -178,7 +178,7 @@ export async function renderSongAsPdf(songs, debug, layoutConfig, pdfDoc) {
     );
   for (const song of songs) {
     console.log(`Drawing '${song.heading}'`);
-    const boxes = layOutSongOnNewPage(song, layoutConfig, writableArea);
+    const boxes = songLayout(song, layoutConfig, writableArea);
     for (const box of boxes) {
       const currPage = doc.appendNewPage();
       currPage.appendChild(box);
