@@ -1,7 +1,7 @@
 /**
- * @typedef {import("./SongParser.js").SongAst} SongAst
- * @typedef {import("./SongParser.js").ChordsLineElement} ChordsLineElement
- * @typedef {import("./SongParser.js").SongLineNode}  SongLineNode
+ * @typedef {import("../Parsing/SongParser.js").SongAst} SongAst
+ * @typedef {import("../Parsing/SongParser.js").ChordsLineElement} ChordsLineElement
+ * @typedef {import("../Parsing/SongParser.js").SongLineNode}  SongLineNode
  */
 import { WellKnownSectionType } from "./SongChecker.js";
 import { SongLine } from "./SongLine.js";

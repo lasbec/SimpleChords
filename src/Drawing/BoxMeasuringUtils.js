@@ -1,4 +1,4 @@
-import { Length } from "../Length.js";
+import { Length } from "../Shared/Length.js";
 import { FreeBox } from "./FreeBox.js";
 import { MutableFreePointer } from "./FreePointer.js";
 

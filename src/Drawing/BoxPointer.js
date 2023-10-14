@@ -1,4 +1,4 @@
-import { Length } from "../Length.js";
+import { Length } from "../Shared/Length.js";
 import { Document } from "./Document.js";
 import { PlainBox } from "./Boxes/PlainBox.js";
 import { MutableFreePointer } from "./FreePointer.js";
@@ -85,7 +85,7 @@ export class MutableBoxPointer {
   }
 
   /**
-   * @param {import("../Length.js").UnitName} unit
+   * @param {import("../Shared/Length.js").UnitName} unit
    */
   rawPointIn(unit) {
     return this.freePointer.rawPointIn(unit);

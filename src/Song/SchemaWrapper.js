@@ -1,14 +1,15 @@
 /**
  * @typedef {import("./Song.js").SongSection} SongSection
  * @typedef {import("./Song.js").Song} Song
- * @typedef {import("./Length.js").Length} Length
- * @typedef {import("./RenderSongAsPdf.js").LayoutConfig} LayoutConfig
- * @typedef {import("./Drawing/TextConfig.js").TextConfig} TextConfig
+ * @typedef {import("../Shared/Length.js").Length} Length
+ * @typedef {import("../SongLayout/RenderSongAsPdf.js").LayoutConfig} LayoutConfig
+ * @typedef {import("../Drawing/TextConfig.js").TextConfig} TextConfig
+ * @typedef {import("../SongLayout/SongLineBox.js").SongLineBoxConfig} SongLineConfig
  */
-import { BreakableText } from "./BreakableText.js";
+import { BreakableText } from "../Drawing/BreakableText.js";
 import { SongLine } from "./SongLine.js";
 import { WellKnownSectionType } from "./SongChecker.js";
-import { songLineBox } from "./Drawing/Boxes/SongLineBox.js";
+import { songLineBox } from "../SongLayout/SongLineBox.js";
 
 /**
  * @param {SongLine} line
@@ -23,10 +24,6 @@ function getMaxLenToFitWidth(line, style, width) {
   }
   return line.length;
 }
-
-/**
- * @typedef {import("./Drawing/Boxes/SongLineBox.js").SongLineBoxConfig} SongLineConfig
- */
 
 /**
  * @typedef {SongSection & {toBeProcessed:BreakableText<SongLine> }} Result

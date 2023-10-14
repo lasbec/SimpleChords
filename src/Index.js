@@ -1,7 +1,10 @@
 import * as fs from "fs/promises";
 import * as Path from "path";
-import { renderAllInSingleFile, renderSingleFile } from "./RenderSongAsPdf.js";
-import { DefaultLayoutConfigDto } from "./DefaultLayoutConfigDto.js";
+import {
+  renderAllInSingleFile,
+  renderSingleFile,
+} from "./SongLayout/RenderSongAsPdf.js";
+import { DefaultLayoutConfigDto } from "./SongLayout/DefaultLayoutConfigDto.js";
 
 /** @param {string} inputPath */
 function getCorrespondingOutPutPath(inputPath) {

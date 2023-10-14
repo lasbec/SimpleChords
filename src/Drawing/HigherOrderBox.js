@@ -1,5 +1,5 @@
 import { MutableFreePointer } from "./FreePointer.js";
-import { Length } from "../Length.js";
+import { Length } from "../Shared/Length.js";
 import { minimalBoundingBox } from "./BoxMeasuringUtils.js";
 import { AbstractPrimitiveBox } from "./AbstractPrimitiveBox.js";
 import { PDFPage } from "pdf-lib";

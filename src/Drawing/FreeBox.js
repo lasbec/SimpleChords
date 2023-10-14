@@ -16,7 +16,7 @@
  * @property {Length} bottom
  */
 
-import { Length } from "../Length.js";
+import { Length } from "../Shared/Length.js";
 import { getPoint } from "./BoxMeasuringUtils.js";
 import { MutableFreePointer } from "./FreePointer.js";
 

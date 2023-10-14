@@ -1,4 +1,4 @@
-import { Length } from "../../Length.js";
+import { Length } from "../../Shared/Length.js";
 import { AbstractPrimitiveBox } from "../AbstractPrimitiveBox.js";
 import { drawDebugBox } from "../BoxDrawingUtils.js";
 import { minimalBoundingBox } from "../BoxMeasuringUtils.js";

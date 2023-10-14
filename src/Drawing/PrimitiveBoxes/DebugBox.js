@@ -1,4 +1,4 @@
-import { LEN, Length } from "../../Length.js";
+import { LEN, Length } from "../../Shared/Length.js";
 import { rgb } from "pdf-lib";
 import { MutableFreePointer } from "../FreePointer.js";
 import { getPoint } from "../BoxMeasuringUtils.js";

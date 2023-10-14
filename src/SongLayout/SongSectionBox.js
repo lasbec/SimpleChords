@@ -1,21 +1,21 @@
-import { WellKnownSectionType } from "../../SongChecker.js";
-import { MutableFreePointer } from "../FreePointer.js";
-import { decorateAsBox } from "../HigherOrderBox.js";
-import { TextBox } from "../PrimitiveBoxes/TextBox.js";
+import { WellKnownSectionType } from "../Song/SongChecker.js";
+import { MutableFreePointer } from "../Drawing/FreePointer.js";
+import { decorateAsBox } from "../Drawing/HigherOrderBox.js";
+import { TextBox } from "../Drawing/PrimitiveBoxes/TextBox.js";
 import { songLineBox } from "./SongLineBox.js";
 /**
- * @typedef {import("../Geometry.js").RectanglePlacement} BoxPlacement
- * @typedef {import("../../RenderSongAsPdf.js").LayoutConfig} LayoutConfig
- * @typedef {import("../TextConfig.js").TextConfig} TextConfig
+ * @typedef {import("../Drawing/Geometry.js").RectanglePlacement} BoxPlacement
+ * @typedef {import("./RenderSongAsPdf.js").LayoutConfig} LayoutConfig
+ * @typedef {import("../Drawing/TextConfig.js").TextConfig} TextConfig
  * @typedef {import("pdf-lib").PDFPage} PDFPage
- * @typedef {import("../Geometry.js").Point} Point
- * @typedef {import("../../Song.js").SongSection} SongSection
- * @typedef {import("../Geometry.js").XStartPosition} XStartPosition
- * @typedef {import("../Geometry.js").YStartPosition} YStartPosition
- * @typedef {import("../Geometry.js").Dimensions} Dimensions
- * @typedef {import("../Geometry.js").Box} Box
- * @typedef {import("../Geometry.js").Rectangle} Rectangle
- * @typedef {import("../Geometry.js").RectNoBottom} RectNoBottom */
+ * @typedef {import("../Drawing/Geometry.js").Point} Point
+ * @typedef {import("../Song/Song.js").SongSection} SongSection
+ * @typedef {import("../Drawing/Geometry.js").XStartPosition} XStartPosition
+ * @typedef {import("../Drawing/Geometry.js").YStartPosition} YStartPosition
+ * @typedef {import("../Drawing/Geometry.js").Dimensions} Dimensions
+ * @typedef {import("../Drawing/Geometry.js").Box} Box
+ * @typedef {import("../Drawing/Geometry.js").Rectangle} Rectangle
+ * @typedef {import("../Drawing/Geometry.js").RectNoBottom} RectNoBottom */
 
 /**
  * @typedef {object} SongSectionBoxConfig
@@ -25,7 +25,7 @@ import { songLineBox } from "./SongLineBox.js";
 
 /**
  * @param {SongSection} section
- * @param {import("../../RenderSongAsPdf.js").LayoutConfig} layoutConfig
+ * @param {LayoutConfig} layoutConfig
  * @param {MutableFreePointer} startPoint
  */
 function drawsongSection(section, layoutConfig, startPoint) {

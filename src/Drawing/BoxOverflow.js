@@ -1,5 +1,5 @@
 import { rgb } from "pdf-lib";
-import { LEN, Length } from "../Length.js";
+import { LEN, Length } from "../Shared/Length.js";
 import { PDFPage } from "pdf-lib";
 import { Document } from "./Document.js";
 /**

@@ -1,22 +1,22 @@
 /**
  * @typedef {import("pdf-lib").PDFPage} PDFPage
- * @typedef {import("./Drawing/Geometry.js").Dimensions} Dimensions
- * @typedef {import("./Song.js").SongSection} SongSection
- * @typedef {import("./Drawing/Geometry.js").Box} Box
+ * @typedef {import("../Drawing/Geometry.js").Dimensions} Dimensions
+ * @typedef {import("../Song/Song.js").SongSection} SongSection
+ * @typedef {import("../Drawing/Geometry.js").Box} Box
  */
 import { PDFDocument, StandardFonts } from "pdf-lib";
-import { FontLoader } from "./Drawing/FontLoader.js";
-import { Length } from "./Length.js";
-import { Document } from "./Drawing/Document.js";
-import { MutableBoxPointer } from "./Drawing/BoxPointer.js";
-import { parseSongAst } from "./SongParser.js";
+import { FontLoader } from "../Drawing/FontLoader.js";
+import { Length } from "../Shared/Length.js";
+import { Document } from "../Drawing/Document.js";
+import { MutableBoxPointer } from "../Drawing/BoxPointer.js";
+import { parseSongAst } from "../Parsing/SongParser.js";
 import * as Path from "path";
 import * as fs from "fs/promises";
-import { Song } from "./Song.js";
-import { checkSongAst, WellKnownSectionType } from "./SongChecker.js";
-import { SchemaWrapper } from "./SchemaWrapper.js";
-import { TextConfig } from "./Drawing/TextConfig.js";
-import { layOutSongOnNewPage } from "./Drawing/Boxes/songLayout.js";
+import { Song } from "../Song/Song.js";
+import { checkSongAst, WellKnownSectionType } from "../Song/SongChecker.js";
+import { SchemaWrapper } from "../Song/SchemaWrapper.js";
+import { TextConfig } from "../Drawing/TextConfig.js";
+import { layOutSongOnNewPage } from "./songLayout.js";
 
 /**
  * @param {string} path
@@ -103,8 +103,8 @@ async function parseASTs(paths, debug) {
 }
 
 /**
- * @typedef {import("./Length.js").LengthDto} LengthDto
- * @typedef {import("./Drawing/TextConfig.js").TextConfigDto} TextConfigDto
+ * @typedef {import("../Shared/Length.js").LengthDto} LengthDto
+ * @typedef {import("../Drawing/TextConfig.js").TextConfigDto} TextConfigDto
  */
 
 /**

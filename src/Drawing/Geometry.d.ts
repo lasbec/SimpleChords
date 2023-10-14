@@ -1,5 +1,5 @@
 import { PDFPage } from "pdf-lib";
-import { Length } from "../Length.js";
+import { Length } from "../Shared/Length.js";
 import { PageBox } from "./Boxes/PageBox.js";
 import { MutableFreePointer } from "./FreePointer.js";
 import { Document } from "./Document.js";

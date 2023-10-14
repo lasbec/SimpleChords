@@ -1,8 +1,8 @@
 import { PDFFont } from "pdf-lib";
-import { Length, LEN } from "../Length.js";
+import { Length, LEN } from "../Shared/Length.js";
 
 /**
- * @typedef {import("../Length.js").LengthDto} LengthDto
+ * @typedef {import("../Shared/Length.js").LengthDto} LengthDto
  */
 
 /**

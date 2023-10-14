@@ -1,15 +1,15 @@
-import { MutableBoxPointer } from "../BoxPointer.js";
+import { MutableBoxPointer } from "../Drawing/BoxPointer.js";
 import { songSection } from "./SongSectionBox.js";
-import { TextBox } from "../PrimitiveBoxes/TextBox.js";
-import { TextConfig } from "../TextConfig.js";
-import { Length } from "../../Length.js";
-import { Song } from "../../Song.js";
-import { MutableFreePointer } from "../FreePointer.js";
+import { TextBox } from "../Drawing/PrimitiveBoxes/TextBox.js";
+import { TextConfig } from "../Drawing/TextConfig.js";
+import { Length } from "../Shared/Length.js";
+import { Song } from "../Song/Song.js";
+import { MutableFreePointer } from "../Drawing/FreePointer.js";
 
 /**
- * @typedef {import("../Geometry.js").Rectangle} Rectangle
- * @typedef {import("../Geometry.js").Box} Box
- * @typedef {import("../../SchemaWrapper.js").LayoutConfig} LayoutConfig
+ * @typedef {import("../Drawing/Geometry.js").Rectangle} Rectangle
+ * @typedef {import("../Drawing/Geometry.js").Box} Box
+ * @typedef {import("../Song/SchemaWrapper.js").LayoutConfig} LayoutConfig
  */
 
 /**
