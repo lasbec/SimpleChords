@@ -111,9 +111,10 @@ function doubleSongLines(lines) {
     const next = lines[i + 1];
     if (i % 2 == 0 && next) {
       result.push(l.concat([next]));
-    } else if (!next) {
-      result.push(l);
     }
   });
+  if (lines.length % 2 == 1) {
+    result.push(lines[lines.length - 1]);
+  }
   return result;
 }
