@@ -46,6 +46,12 @@ export type Box = {
   setPosition(position: RectanglePlacement): void;
 };
 
+export type RectNoBottom = {
+  getBorder(border: Omit<BorderPosition, "bottom">): Length;
+  getPoint(x: XStartPosition, y: "top"): MutableFreePointer;
+  width: Length;
+};
+
 export type Rectangle = {
   getBorder(border: BorderPosition): Length;
   getPoint(x: XStartPosition, y: YStartPosition): MutableFreePointer;
