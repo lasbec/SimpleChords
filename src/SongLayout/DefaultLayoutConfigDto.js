@@ -7,8 +7,8 @@ import { StandardFonts } from "pdf-lib";
  * @type {LayoutConfigDto}
  */
 export const DefaultLayoutConfigDto = {
-  pageWidth: "210mm",
-  pageHeight: "148.5mm",
+  pageWidth: "148.5mm",
+  pageHeight: "210mm",
 
   leftMargin: "5mm",
   rightMargin: "5mm",

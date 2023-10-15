@@ -20,9 +20,12 @@ import { isInside } from "../Drawing/BoxMeasuringUtils.js";
 export function songLayout(song, layoutConfig, rect) {
   const simpleResult = songLayoutSimple(song, layoutConfig, rect);
   if (simpleResult.length <= 1) {
-    return simpleResult;
+    if (simpleResult.every((b) => isInside(b.rectangle, rect))) {
+      return simpleResult;
+    }
+    return songLayoutDense(song, layoutConfig, rect);
   }
-  const denseResult = songLayoutDense(song, layoutConfig, rect);
+  const denseResult = songLayoutDoubleLine(song, layoutConfig, rect);
   if (denseResult.length < simpleResult.length) {
     if (denseResult.every((b) => isInside(b.rectangle, rect))) {
       return denseResult;
@@ -86,7 +89,7 @@ export function songLayoutSimple(song, layoutConfig, rect) {
  * @param {Rectangle} rect
  * @returns {Box[]}
  */
-export function songLayoutDense(song, layoutConfig, rect) {
+export function songLayoutDoubleLine(song, layoutConfig, rect) {
   return songLayoutSimple(
     new Song(
       song.heading,
@@ -117,4 +120,14 @@ function doubleSongLines(lines) {
     result.push(lines[lines.length - 1]);
   }
   return result;
+}
+
+/**
+ * @param {Song} song
+ * @param {LayoutConfig} layoutConfig
+ * @param {Rectangle} rect
+ * @returns {Box[]}
+ */
+export function songLayoutDense(song, layoutConfig, rect) {
+  return songLayoutSimple(song, layoutConfig, rect);
 }
