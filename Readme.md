@@ -79,6 +79,7 @@ printPdfFiles({
   inputPath: "~/my_songs/",
   outPath: "./Songs_for_the_bonfire.pdf",
   debug: false,
+  style: dinA5Landscape
 })
 ```
 
@@ -89,6 +90,62 @@ The **outPath** is set a single pdf file with all songs will be printed.
 Otherwise each file will be printed to it's own pdf file, the pdfs will be in the same directory as the input file.
 
 Setting the **debug** flag will print the parsed ASTs, allow overflows and will draw debugging boxes into the output.
+
+The **style** argument is optional and has the following schema:
+
+```typescript
+const dinA5Landscape = {
+  pageHeight: "148.5mm",
+  pageWidth: "210mm",
+
+  leftMargin: "5mm",
+  rightMargin: "5mm",
+  topMargin: "5mm",
+  bottomMargin: "5mm",
+  sectionDistance: "12pt",
+
+  lyricTextConfig: {
+    font: "../fonts/CaterOne/CarterOne-Regular.ttf",
+    fontSize: "11pt",
+  },
+  refTextConfig: {
+    font: "Times-Roman",
+    fontSize: "11pt",
+  },
+  chorusTextConfig: {
+    font: pathToFontFile,
+    fontSize: "11pt",
+  },
+  titleTextConfig: {
+    fontSize: "13pt",
+    font: pathToFontFile,
+  },
+  chordTextConfig: {
+    font: "Times-BoldItalic",
+    fontSize: "9pt",
+  },
+};
+```
+
+Supported units are `"mm"` and `"pt"`.
+The following fonts are built in:
+
+```typescript
+'Courier',
+'Courier-Bold',
+'Courier-Oblique',
+'Courier-BoldOblique',
+'Helvetica',
+'Helvetica-Bold',
+'Helvetica-Oblique',
+'Helvetica-BoldOblique',
+'Times-Roman',
+'Times-Bold',
+'Times-Italic',
+'Times-BoldItalic',
+'Symbol',
+'ZapfDingbats',
+```
 
 ## CLI
 

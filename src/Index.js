@@ -22,13 +22,18 @@ function getCorrespondingOutPutPath(inputPath) {
  * @property {string} inputPath
  * @property {string | undefined} outPath
  * @property {boolean} debug
- * @property {LayoutConfig=} theme
+ * @property {LayoutConfig=} style
  */
 
 /**
  * @param {MainArgs} args
  */
-export async function printPdfFiles({ inputPath, outPath, debug, theme }) {
+export async function printPdfFiles({
+  inputPath,
+  outPath,
+  debug,
+  style: theme,
+}) {
   if (inputPath.endsWith(".chords.md")) {
     await renderSingleFile(
       inputPath,
