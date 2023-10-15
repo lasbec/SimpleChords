@@ -5,6 +5,9 @@ import {
   renderSingleFile,
 } from "./SongLayout/RenderSongAsPdf.js";
 import { DefaultLayoutConfigDto } from "./SongLayout/DefaultLayoutConfigDto.js";
+/**
+ * @typedef {import("./SongLayout/RenderSongAsPdf.js").LayoutConfigDto} LayoutConfig
+ */
 
 /** @param {string} inputPath */
 function getCorrespondingOutPutPath(inputPath) {
@@ -19,17 +22,18 @@ function getCorrespondingOutPutPath(inputPath) {
  * @property {string} inputPath
  * @property {string | undefined} outPath
  * @property {boolean} debug
+ * @property {LayoutConfig=} theme
  */
 
 /**
  * @param {MainArgs} args
  */
-export async function printPdfFiles({ inputPath, outPath, debug }) {
+export async function printPdfFiles({ inputPath, outPath, debug, theme }) {
   if (inputPath.endsWith(".chords.md")) {
     await renderSingleFile(
       inputPath,
       outPath || getCorrespondingOutPutPath(inputPath),
-      DefaultLayoutConfigDto,
+      theme || DefaultLayoutConfigDto,
       debug
     );
     return;
@@ -41,7 +45,7 @@ export async function printPdfFiles({ inputPath, outPath, debug }) {
     await renderAllInSingleFile(
       chordFiles,
       outPath,
-      DefaultLayoutConfigDto,
+      theme || DefaultLayoutConfigDto,
       debug
     );
     return;
@@ -51,7 +55,7 @@ export async function printPdfFiles({ inputPath, outPath, debug }) {
       await renderSingleFile(
         filePath,
         getCorrespondingOutPutPath(filePath),
-        DefaultLayoutConfigDto,
+        theme || DefaultLayoutConfigDto,
         debug
       );
     } catch (e) {
