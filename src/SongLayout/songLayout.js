@@ -25,10 +25,10 @@ export function songLayout(song, layoutConfig, rect) {
     }
     return songLayoutDense(song, layoutConfig, rect);
   }
-  const denseResult = songLayoutDoubleLine(song, layoutConfig, rect);
-  if (denseResult.length < simpleResult.length) {
-    if (denseResult.every((b) => isInside(b.rectangle, rect))) {
-      return denseResult;
+  const doubleLineResult = songLayoutDoubleLine(song, layoutConfig, rect);
+  if (doubleLineResult.length < simpleResult.length) {
+    if (doubleLineResult.every((b) => isInside(b.rectangle, rect))) {
+      return doubleLineResult;
     }
   }
   return simpleResult;
