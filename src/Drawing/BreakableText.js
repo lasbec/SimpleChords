@@ -217,7 +217,7 @@ export class BreakableText {
     const punctuation = [".", ",", ":", "!", "?", ";", "-", "|"];
     /** @type {number[]} */
     const result = [];
-    for (const i of range(args.minLineLen, args.maxLineLen + 1)) {
+    for (const i of range(args.minLineLen - 1, args.maxLineLen + 1)) {
       const previous = this.text.charAt(i - 1);
       const char = this.text.charAt(i);
       const consecutive = this.text.charAt(i + 1);
