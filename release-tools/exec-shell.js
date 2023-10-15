@@ -22,11 +22,13 @@ export async function execShellCmd(command) {
 export async function execShellCmdRequireSuccess(command) {
   const result = await execShellCmd(command);
   if (result.error) {
-    throw new Error(`Execution of ${command} failed: ${result.error.message}`);
+    throw new Error(
+      `Execution of '${command}' failed: ${result.error.message}`
+    );
   }
   if (result.stderr) {
     throw new Error(
-      `Execution of ${command} failed (stderr): ${result.stderr}`
+      `Execution of '${command}' failed (stderr): ${result.stderr}`
     );
   }
   return result.stdout;

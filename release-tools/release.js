@@ -4,7 +4,7 @@ import {
   assertRepositoryIsReleaseReady,
   pushReleaseCommit,
 } from "./git-for-release.js";
-import { execShellCmdRequireSuccess } from "./exec-shell.js";
+import { execShellCmd, execShellCmdRequireSuccess } from "./exec-shell.js";
 /**
  * @typedef {"patch" | "minor" | "major"} ReleaseType
  */
@@ -21,7 +21,7 @@ async function main() {
   console.log("Updated package.json and commited release.");
   await pushReleaseCommit();
   console.log("Pushed release.");
-  await execShellCmdRequireSuccess("npm publish");
+  await execShellCmd("npm publish");
   console.log("Successfuly releasd package");
 }
 
