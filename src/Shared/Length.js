@@ -71,8 +71,8 @@ export class Length {
   }
 
   /**
-   *
    * @param {UnitName=} unit
+   * @returns {LengthDto}
    */
   toString(unit) {
     const _unit = unit || this.unit;
