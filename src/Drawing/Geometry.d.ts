@@ -15,7 +15,7 @@ export type Dimensions = {
   height: Length;
 };
 
-export type BoxGenerator = {
+export type RectangleGenerator = {
   get(index: number): Rectangle;
 };
 

@@ -4,15 +4,14 @@ import { Song } from "../Song/Song.js";
 import { AtLeastBox } from "../Drawing/Boxes/AtLeastBox.js";
 import { SongLine } from "../Song/SongLine.js";
 import { isInside } from "../Drawing/BoxMeasuringUtils.js";
-import { Length } from "../Shared/Length.js";
-import { MutableFreePointer } from "../Drawing/FreePointer.js";
-import { relative } from "path";
+import { SimpleBoxGen } from "../Drawing/RectangleGens/SimpleBoxGen.js";
+import { stackLayout } from "../Drawing/CollectionComponents/stackLayout.js";
 
 /**
  * @typedef {import("../Drawing/Geometry.js").Rectangle} Rectangle
  * @typedef {import("../Drawing/Geometry.js").Box} Box
  * @typedef {import("./RenderSongAsPdf.js").LayoutConfig} LayoutConfig
- * @typedef {import("../Drawing/Geometry.js").BoxGenerator} BoxGen
+ * @typedef {import("../Drawing/Geometry.js").RectangleGenerator} BoxGen
  */
 
 /**
@@ -37,75 +36,6 @@ export function songLayout(song, layoutConfig, rect) {
   }
   return simpleResult;
 }
-/**
- * @template Content
- * @template Style
- * @param {Content[]} contents
- * @param {{layout:(content:Content, style:Style, bounds:Rectangle)=> Box, sectionDistance:Length, style:Style}} style
- * @param {BoxGen} boundsGen
- * @returns {Box[]}
- */
-function stackLayout(contents, style, boundsGen) {
-  let pageCount = 0;
-  let currPage = AtLeastBox.fromRect(boundsGen.get(pageCount));
-  pageCount += 1;
-
-  /** @type {Box[]} */
-  const result = [currPage];
-
-  let leftBottomOfLastSection = currPage.rectangle.getPoint("left", "top");
-  for (const cnt of contents) {
-    const bounds = leftBottomOfLastSection.span(
-      currPage.rectangle.getPoint("right", "bottom")
-    );
-    const currBox = style.layout(cnt, style.style, bounds);
-
-    const sectionExeedsPage = currBox.rectangle
-      .getPoint("left", "bottom")
-      .isLowerThan(currPage.rectangle.getPoint("left", "bottom"));
-    if (sectionExeedsPage) {
-      currPage = AtLeastBox.fromRect(boundsGen.get(pageCount));
-      pageCount += 1;
-      result.push(currPage);
-      currBox.setPosition({
-        pointOnRect: { x: "left", y: "top" },
-        pointOnGrid: currPage.rectangle.getPoint("left", "top"),
-      });
-    }
-    currPage.appendChild(currBox);
-    leftBottomOfLastSection = currBox.rectangle
-      .getPoint("left", "bottom")
-      .moveDown(style.sectionDistance);
-  }
-  return result;
-}
-
-/**
- * @implements {BoxGen}
- */
-class SimpleBoxGen {
-  /**
-   *
-   * @param {MutableFreePointer} begin
-   * @param {Rectangle} regular
-   */
-  constructor(begin, regular) {
-    this.beginLeftTop = regular.getPoint("left", "top").setHeight(begin);
-    this.regular = regular;
-  }
-
-  /**
-   * @param {number} index
-   * @returns {Rectangle}
-   */
-  get(index) {
-    if (index === 0) {
-      return this.beginLeftTop.span(this.regular.getPoint("right", "bottom"));
-    }
-    return this.regular;
-  }
-}
-
 /**
  * @param {Song} song
  * @param {LayoutConfig} layoutConfig

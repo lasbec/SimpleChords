@@ -10,7 +10,7 @@ import { FreeBox } from "./FreeBox.js";
 /**
  * @typedef {import("./Geometry.js").RectanglePlacement} BoxPlacement
  * @typedef {import("./Geometry.js").Box} Box
- * @typedef {import("./Geometry.js").BoxGenerator} BoxGenerator
+ * @typedef {import("./Geometry.js").RectangleGenerator} BoxGenerator
  */
 
 /**
