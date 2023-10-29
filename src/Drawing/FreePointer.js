@@ -40,6 +40,15 @@ export class MutableFreePointer {
     };
   }
 
+  /**
+   * @param {MutableFreePointer} other
+   * @return {this}
+   */
+  setHeight(other) {
+    this.y = other.y;
+    return this;
+  }
+
   /** @param {Length} offset  */
   moveRight(offset) {
     this.x = this.x.add(offset);

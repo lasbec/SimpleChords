@@ -5,6 +5,8 @@ import { AtLeastBox } from "../Drawing/Boxes/AtLeastBox.js";
 import { SongLine } from "../Song/SongLine.js";
 import { isInside } from "../Drawing/BoxMeasuringUtils.js";
 import { Length } from "../Shared/Length.js";
+import { MutableFreePointer } from "../Drawing/FreePointer.js";
+import { relative } from "path";
 
 /**
  * @typedef {import("../Drawing/Geometry.js").Rectangle} Rectangle
@@ -79,19 +81,43 @@ function stackLayout(contents, style, boundsGen) {
 }
 
 /**
+ * @implements {BoxGen}
+ */
+class SimpleBoxGen {
+  /**
+   *
+   * @param {MutableFreePointer} begin
+   * @param {Rectangle} regular
+   */
+  constructor(begin, regular) {
+    this.beginLeftTop = regular.getPoint("left", "top").setHeight(begin);
+    this.regular = regular;
+  }
+
+  /**
+   * @param {number} index
+   * @returns {Rectangle}
+   */
+  get(index) {
+    if (index === 0) {
+      return this.beginLeftTop.span(this.regular.getPoint("right", "bottom"));
+    }
+    return this.regular;
+  }
+}
+
+/**
  * @param {Song} song
  * @param {LayoutConfig} layoutConfig
  * @param {Rectangle} rect
  * @returns {Box[]}
  */
 export function songLayoutSimple(song, layoutConfig, rect) {
-  let fstPage = AtLeastBox.fromRect(rect);
-
-  const pointer = rect.getPointAt({ x: "center", y: "top" });
+  const fstPage = AtLeastBox.fromRect(rect);
   const titleBox = new TextBox(song.heading, layoutConfig.titleTextConfig);
   titleBox.setPosition({
     pointOnRect: { x: "center", y: "top" },
-    pointOnGrid: pointer,
+    pointOnGrid: rect.getPointAt({ x: "center", y: "top" }),
   });
   fstPage.appendChild(titleBox);
 
@@ -101,20 +127,9 @@ export function songLayoutSimple(song, layoutConfig, rect) {
     .moveDown(titleBox.rectangle.height);
 
   /** @type {BoxGen} */
-  const boundsGen = {
-    /**
-     * @param {number} index
-     * @returns {Rectangle}
-     */
-    get: (index) => {
-      if (index === 0) {
-        return begin.span(rect.getPoint("right", "bottom"));
-      }
-      return rect;
-    },
-  };
+  const boundsGen = new SimpleBoxGen(begin, rect);
 
-  const x = stackLayout(
+  const sectionContainers = stackLayout(
     song.sections,
     {
       layout: songSection,
@@ -123,11 +138,11 @@ export function songLayoutSimple(song, layoutConfig, rect) {
     },
     boundsGen
   );
-  if (x[0]) {
-    fstPage.appendChild(x[0]);
+  if (sectionContainers[0]) {
+    fstPage.appendChild(sectionContainers[0]);
   }
 
-  return [fstPage, ...x.slice(1)];
+  return [fstPage, ...sectionContainers.slice(1)];
 }
 
 /**
