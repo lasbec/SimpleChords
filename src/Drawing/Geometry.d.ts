@@ -52,6 +52,12 @@ export type RectNoBottom = {
   width: Length;
 };
 
+export type RectNoRight = {
+  getBorder(border: Omit<BorderPosition, "right">): Length;
+  getPoint(x: XStartPosition, y: "left"): MutableFreePointer;
+  width: Length;
+};
+
 export type Rectangle = {
   getBorder(border: BorderPosition): Length;
   getPoint(x: XStartPosition, y: YStartPosition): MutableFreePointer;

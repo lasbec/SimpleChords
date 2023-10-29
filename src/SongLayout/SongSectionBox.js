@@ -60,7 +60,7 @@ const songSectionInstrumental = decorateAsBox(drawOnlyChords);
 /**
  * @param {SongSection} section
  * @param {LayoutConfig} layoutConfig
- * @param {RectNoBottom} rect
+ * @param {RectNoBottom=} rect
  * @returns
  */
 export function songSection(section, layoutConfig, rect) {
@@ -72,10 +72,12 @@ export function songSection(section, layoutConfig, rect) {
   const sectionBox = onlyChordsSections.includes(section.type)
     ? songSectionInstrumental(section, layoutConfig)
     : songSectionWithLyric(section, layoutConfig);
-  sectionBox.setPosition({
-    pointOnRect: { x: "left", y: "top" },
-    pointOnGrid: rect.getPoint("left", "top"),
-  });
+  if (rect) {
+    sectionBox.setPosition({
+      pointOnRect: { x: "left", y: "top" },
+      pointOnGrid: rect.getPoint("left", "top"),
+    });
+  }
   return sectionBox;
 }
 

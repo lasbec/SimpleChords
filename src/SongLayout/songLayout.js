@@ -6,6 +6,7 @@ import { SongLine } from "../Song/SongLine.js";
 import { isInside } from "../Drawing/BoxMeasuringUtils.js";
 import { SimpleBoxGen } from "../Drawing/RectangleGens/SimpleBoxGen.js";
 import { stackLayout } from "../Drawing/CollectionComponents/stackLayout.js";
+import { stackBoxes } from "../Drawing/CollectionComponents/stackBoxes.js";
 
 /**
  * @typedef {import("../Drawing/Geometry.js").Rectangle} Rectangle
@@ -57,7 +58,7 @@ export function songLayoutSimple(song, layoutConfig, rect) {
     .moveDown(titleBox.rectangle.height);
 
   /** @type {BoxGen} */
-  const boundsGen = new SimpleBoxGen(begin, rect);
+  const boundsGen = new SimpleBoxGen(rect, begin);
 
   const sectionContainers = stackLayout(
     song.sections,
@@ -121,5 +122,24 @@ function doubleSongLines(lines) {
  * @returns {Box[]}
  */
 export function songLayoutDense(song, layoutConfig, rect) {
-  return songLayoutSimple(song, layoutConfig, rect);
+  const titleBox = new TextBox(song.heading, layoutConfig.titleTextConfig);
+  titleBox.setPosition({
+    pointOnRect: { x: "center", y: "top" },
+    pointOnGrid: rect.getPointAt({ x: "center", y: "top" }),
+  });
+
+  /** @type {BoxGen} */
+  const boundsGen = new SimpleBoxGen(rect);
+
+  const sectionBoxes = song.sections.map((section) =>
+    songSection(section, layoutConfig)
+  );
+  return stackBoxes(
+    [titleBox, ...sectionBoxes],
+    {
+      sectionDistance: layoutConfig.sectionDistance,
+      alignment: "left",
+    },
+    boundsGen
+  );
 }

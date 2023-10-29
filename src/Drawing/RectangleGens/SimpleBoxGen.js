@@ -13,11 +13,13 @@ import { MutableFreePointer } from "../../Drawing/FreePointer.js";
 export class SimpleBoxGen {
   /**
    *
-   * @param {MutableFreePointer} begin
+   * @param {MutableFreePointer=} begin
    * @param {Rectangle} regular
    */
-  constructor(begin, regular) {
-    this.beginLeftTop = regular.getPoint("left", "top").setHeight(begin);
+  constructor(regular, begin) {
+    this.beginLeftTop = begin
+      ? regular.getPoint("left", "top").setHeight(begin)
+      : regular.getPoint("left", "top");
     this.regular = regular;
   }
 
