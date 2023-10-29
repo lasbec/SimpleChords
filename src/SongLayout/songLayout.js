@@ -135,7 +135,16 @@ export function songLayoutDense(song, layoutConfig, rect) {
     songSection(section, layoutConfig)
   );
   return stackBoxes(
-    [titleBox, ...sectionBoxes],
+    [
+      {
+        content: titleBox,
+        style: {
+          alignment: "center",
+          sectionDistance: titleBox.rectangle.height,
+        },
+      },
+      ...sectionBoxes,
+    ],
     {
       sectionDistance: layoutConfig.sectionDistance,
       alignment: "left",

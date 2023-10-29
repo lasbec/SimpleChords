@@ -41,11 +41,11 @@ export class MutableFreePointer {
   }
 
   /**
-   * @param {MutableFreePointer} other
+   * @param {MutableFreePointer | Length} other
    * @return {this}
    */
   setHeight(other) {
-    this.y = other.y;
+    this.y = other instanceof Length ? other : other.y;
     return this;
   }
 
