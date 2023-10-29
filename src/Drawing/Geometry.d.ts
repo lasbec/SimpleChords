@@ -16,7 +16,7 @@ export type Dimensions = {
 };
 
 export type BoxGenerator = {
-  next(): FreeBox;
+  get(index: number): Rectangle;
 };
 
 export type XStartPosition = "left" | "center" | "right";
