@@ -5,9 +5,9 @@ import { AbstractPrimitiveBox } from "./AbstractPrimitiveBox.js";
 import { PDFPage } from "pdf-lib";
 import { drawDebugBox } from "./BoxDrawingUtils.js";
 import { BoxOverflows } from "./BoxOverflow.js";
-import { FreeBox } from "./FreeBox.js";
 
 /**
+ * @typedef {import("./Geometry.js").Rectangle} Rectangle
  * @typedef {import("./Geometry.js").RectanglePlacement} BoxPlacement
  * @typedef {import("./Geometry.js").Box} Box
  * @typedef {import("./Geometry.js").RectangleGenerator} BoxGenerator
@@ -16,7 +16,7 @@ import { FreeBox } from "./FreeBox.js";
 /**
  * @template Content
  * @template Config
- * @param {(content:Content, config:Config, box:FreeBox) => {children:Box[], rest?:Content}} drawChildrenFn
+ * @param {(content:Content, config:Config, box:Rectangle) => {children:Box[], rest?:Content}} drawChildrenFn
  */
 export function decorateAsComponent(drawChildrenFn) {
   /**
@@ -30,8 +30,10 @@ export function decorateAsComponent(drawChildrenFn) {
     const result = [];
     /** @type {Content | undefined} */
     let rest = content;
+    let pageCount = 0;
     while (rest !== undefined) {
-      const partialResult = drawChildrenFn(rest, config, boxGen.next());
+      const partialResult = drawChildrenFn(rest, config, boxGen.get(pageCount));
+      pageCount += 1;
       result.push(new HigherOrderBox(partialResult.children));
       rest = partialResult.rest;
     }
