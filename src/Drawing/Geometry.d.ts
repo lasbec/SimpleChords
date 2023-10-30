@@ -70,10 +70,20 @@ export type Rectangle = {
   getPointAt(point: PointOnRect): MutableFreePointer;
   referencePoint(): ReferencePoint;
 
+  clone(): MutRectangle;
+
   width: Length;
   height: Length;
+};
+
+export type PatialRectangle = Partial<Record<BorderPosition, Length>> & {
+  width?: Length;
+  height?: Length;
 };
 
 export type MutRectangle = Rectangle & {
   setPosition(position: ReferencePoint): void;
 };
+
+type BoundMark = "maxWidth" | "maxHeight" | "minWidth" | "minHeight";
+export type Bounds = Partial<Record<BoundMark, Length>>;

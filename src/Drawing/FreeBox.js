@@ -101,6 +101,15 @@ export class FreeBox {
     this.height = this.top.sub(this.bottom);
   }
 
+  clone() {
+    return new FreeBox({
+      left: this.left,
+      right: this.right,
+      top: this.top,
+      bottom: this.bottom,
+    });
+  }
+
   xCenter() {
     return this.left.add(this.width.mul(1 / 2));
   }

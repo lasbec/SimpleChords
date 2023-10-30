@@ -1,9 +1,5 @@
-import { PDFPage } from "pdf-lib";
 import { FreeBox } from "../FreeBox.js";
-import { LEN, Length } from "../../Shared/Length.js";
-
-/**
- */
+import { Length } from "../../Shared/Length.js";
 
 /**
  * @typedef {import("../Geometry.js").Rectangle} Rectangle
@@ -15,11 +11,8 @@ import { LEN, Length } from "../../Shared/Length.js";
  * @typedef {import("../Geometry.js").Dimensions} Dimensions
  * @typedef {import("../Geometry.js").Box} Box
  * @typedef {import("../Geometry.js").LeaveBox} LeaveBox
- */
-
-/**
- * @typedef {"Min" | "Max"} MinMaxEmptyString
- * @typedef {`${"width" | "height"}${MinMaxEmptyString}`} BoundMark
+ * @typedef {import("../Geometry.js").Bounds} Bounds
+ * @typedef {import("../Geometry.js").PatialRectangle} PatialRectangle
  */
 
 /**
@@ -30,7 +23,7 @@ export class AbstractBox {
   /**
    * @param {Content} content
    * @param {Style} style
-   * @param {Partial<Record<BoundMark, Length>>} bounds
+   * @param {Bounds} bounds
    */
   constructor(content, style, bounds) {
     this.content = content;
@@ -73,26 +66,30 @@ export class AbstractBox {
     return this.rectangle.referencePoint();
   }
 
-  upperLimitBox() {
+  /**
+   * @param {"max" | "min"} dir
+   * @returns {PatialRectangle}
+   */
+  limitBox(dir) {
     const limitBox = FreeBox.fromPlacement(this.referencePoint(), {
-      width: this._bounds.widthMax || Length.zero,
-      height: this._bounds.heightMax || Length.zero,
+      width: this._bounds[`${dir}Width`] || Length.zero,
+      height: this._bounds[`${dir}Height`] || Length.zero,
     });
-    const horizontalLimits = this._bounds.widthMax
+    const horizontalLimits = this._bounds[`${dir}Width`]
       ? {
           left: limitBox.getBorder("left"),
           right: limitBox.getBorder("right"),
         }
       : {};
-    const verticalLimits = this._bounds.heightMax
+    const verticalLimits = this._bounds[`${dir}Height`]
       ? {
           top: limitBox.getBorder("top"),
           bottom: limitBox.getBorder("bottom"),
         }
       : {};
     return {
-      width: this._bounds.widthMax,
-      height: this._bounds.heightMax,
+      width: this._bounds[`${dir}Width`],
+      height: this._bounds[`${dir}Height`],
       ...horizontalLimits,
       ...verticalLimits,
     };

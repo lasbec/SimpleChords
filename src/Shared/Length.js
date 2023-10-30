@@ -44,12 +44,12 @@ export class Length {
 
   /**
    * @param {Length} arg0
-   * @param  {...Length} args
+   * @param  {...(Length| undefined)} args
    */
   static safeMax(arg0, ...args) {
     let currMax = arg0;
     for (const l of args) {
-      if (l.gt(currMax)) {
+      if (l?.gt(currMax)) {
         currMax = l;
       }
     }
@@ -68,6 +68,36 @@ export class Length {
       }
     }
     return currMax;
+  }
+
+  /**
+   * @param {Length} arg0
+   * @param  {...(Length | undefined)} args
+   * @returns {Length}
+   */
+  static safeMin(arg0, ...args) {
+    let currMin = arg0;
+    for (const l of args) {
+      if (l?.lt(currMin)) {
+        currMin = l;
+      }
+    }
+    return currMin;
+  }
+
+  /**
+   * @param  {Array<Length>} args
+   * @returns {Length | undefined}
+   */
+  static min(args) {
+    /** @type {Length} */
+    let currMin = args[0];
+    for (const l of args) {
+      if (l.lt(currMin)) {
+        currMin = l;
+      }
+    }
+    return currMin;
   }
 
   /**

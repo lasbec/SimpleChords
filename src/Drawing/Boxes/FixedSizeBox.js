@@ -34,10 +34,10 @@ export class FixedSizeBox extends AbstractBox {
     /** @type {Box[]} */
     const children = [];
     super(children, null, {
-      widthMax: rectangle.width,
-      widthMin: rectangle.width,
-      heightMax: rectangle.height,
-      heightMin: rectangle.height,
+      maxWidth: rectangle.width,
+      minWidth: rectangle.width,
+      maxHeight: rectangle.height,
+      minHeight: rectangle.height,
     });
     this._rectangle = rectangle;
   }
@@ -47,6 +47,7 @@ export class FixedSizeBox extends AbstractBox {
     return this._rectangle;
   }
 
+  /** @returns {Box[]} */
   get children() {
     return this.content;
   }
