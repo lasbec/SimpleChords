@@ -24,23 +24,29 @@ export class TextBox extends PrimitiveBox {
   /**
    * @param {string} text
    * @param {TextConfig} style
-   * @param {RectanglePlacement=} placement
+   * @param {RectanglePlacement=} position
    */
-  constructor(text, style, placement) {
-    super(
-      text,
-      style,
-      FreeBox.fromPlacement(
-        placement || {
-          pointOnRect: { x: "left", y: "bottom" },
-          pointOnGrid: MutableFreePointer.origin(),
-        },
-        {
-          width: style.widthOfText(text),
-          height: style.lineHeight,
-        }
-      )
-    );
+  constructor(text, style, position) {
+    super(text, style);
+    this.position = position || {
+      pointOnRect: { x: "left", y: "bottom" },
+      pointOnGrid: MutableFreePointer.origin(),
+    };
+  }
+
+  getAnyPosition() {
+    return this.position;
+  }
+  dims() {
+    return {
+      width: this.style.widthOfText(this.content),
+      height: this.style.lineHeight,
+    };
+  }
+
+  /** @param {RectanglePlacement} position*/
+  setPosition(position) {
+    this.position = position;
   }
 
   /**

@@ -2,7 +2,6 @@ import { LEN } from "../../Shared/Length.js";
 import { rgb } from "pdf-lib";
 import { MutableFreePointer } from "../FreePointer.js";
 import { PrimitiveBox } from "./PrimitiveBox.js";
-import { FreeBox } from "../FreeBox.js";
 /**
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("../Geometry.js").Point} Point
@@ -10,6 +9,7 @@ import { FreeBox } from "../FreeBox.js";
  * @typedef {import("../Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("../Geometry.js").YStartPosition} YStartPosition
  * @typedef {import("../Geometry.js").LeaveBox} LeaveBox
+ * @typedef {import("../Geometry.js").RectanglePlacement} RectanglePlacement
  * @typedef {import("../Geometry.js").Dimensions} Dimesions
  */
 
@@ -27,22 +27,33 @@ export class DebugBox extends PrimitiveBox {
    * @param {Point} center
    */
   constructor(center) {
-    super(
-      null,
-      null,
-      FreeBox.fromPlacement(
-        {
-          pointOnRect: { x: "center", y: "center" },
-          pointOnGrid: MutableFreePointer.fromPoint(center),
-        },
-        {
-          width: LEN(3, "mm"),
-          height: LEN(3, "mm"),
-        }
-      )
-    );
+    super(null, null);
+    /**
+     */
+
+    /** @type {RectanglePlacement} */
+    this.position = {
+      pointOnRect: { x: "center", y: "center" },
+      pointOnGrid: MutableFreePointer.fromPoint(center),
+    };
     this.constructCount = DebugBox.constructionCounter;
     DebugBox.constructionCounter += 1;
+  }
+
+  dims() {
+    return {
+      width: LEN(3, "mm"),
+      height: LEN(3, "mm"),
+    };
+  }
+
+  getAnyPosition() {
+    return this.position;
+  }
+
+  /** @param {RectanglePlacement} postion  */
+  setPosition(postion) {
+    this.position = postion;
   }
 
   /**

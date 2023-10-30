@@ -82,7 +82,7 @@ export class DynamicSizedBox extends FixedSizeBox {
     this.children.push(box);
     box.parent = this;
     const mbb = minimalBoundingBox(this.children.map((c) => c.rectangle));
-    this.rectangle =
+    this._rectangle =
       mbb ||
       FreeBox.fromCorners(
         MutableFreePointer.origin(),

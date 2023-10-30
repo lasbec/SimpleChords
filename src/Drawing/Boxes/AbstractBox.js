@@ -1,6 +1,11 @@
 import { PDFPage } from "pdf-lib";
+import { FreeBox } from "../FreeBox.js";
 
 /**
+ */
+
+/**
+ * @typedef {import("../Geometry.js").Rectangle} Rectangle
  * @typedef {import("../Geometry.js").MutRectangle} MutRectangle
  * @typedef {import("../Geometry.js").BorderPosition} BorderPosition
  * @typedef {import("../Geometry.js").XStartPosition} XRel
@@ -41,5 +46,22 @@ export class AbstractBox {
       return 0;
     }
     return 1 + this.parent.level();
+  }
+
+  /** subclasses need to implement dims and getAnyPosition or just rectangle */
+  /** @returns {Dimensions} */
+  dims() {
+    return this.rectangle;
+  }
+
+  /**
+   * @returns {Rectangle}
+   */
+  get rectangle() {
+    return FreeBox.fromPlacement(this.getAnyPosition(), this.dims());
+  }
+
+  getAnyPosition() {
+    return this.rectangle.getAnyPosition();
   }
 }

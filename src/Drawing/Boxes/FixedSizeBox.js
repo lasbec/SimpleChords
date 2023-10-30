@@ -6,6 +6,7 @@ import { MutableFreePointer } from "../FreePointer.js";
 import { AbstractBox } from "./AbstractBox.js";
 
 /**
+ * @typedef {import("../Geometry.js").Rectangle} Rectangle
  * @typedef {import("../Geometry.js").MutRectangle} MutRectangle
  * @typedef {import("../Geometry.js").BorderPosition} BorderPosition
  * @typedef {import("../Geometry.js").XStartPosition} XRel
@@ -33,7 +34,12 @@ export class FixedSizeBox extends AbstractBox {
     /** @type {Box[]} */
     const children = [];
     super(children, null);
-    this.rectangle = rectangle;
+    this._rectangle = rectangle;
+  }
+
+  /** @returns {Rectangle} */
+  get rectangle() {
+    return this._rectangle;
   }
 
   get children() {
@@ -76,7 +82,7 @@ export class FixedSizeBox extends AbstractBox {
    */
   setPosition(position) {
     const oldCenter = this.rectangle.getPoint("center", "center");
-    this.rectangle.setPosition(position);
+    this._rectangle.setPosition(position);
     const newCenter = this.rectangle.getPoint("center", "center");
     const xMove = newCenter.x.sub(oldCenter.x);
     const yMove = newCenter.y.sub(oldCenter.y);

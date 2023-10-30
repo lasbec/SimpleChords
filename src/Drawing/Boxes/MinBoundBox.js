@@ -45,7 +45,7 @@ export class MinBoundBox extends FixedSizeBox {
   appendChild(box) {
     this.children.push(box);
     box.parent = this;
-    this.rectangle =
+    this._rectangle =
       minimalBoundingBox([
         ...this.children.map((c) => c.rectangle),
         this.minimalBox,
