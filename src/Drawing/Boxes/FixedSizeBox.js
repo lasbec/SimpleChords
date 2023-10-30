@@ -4,6 +4,7 @@ import { BoxOverflows } from "../BoxOverflow.js";
 import { drawDebugBox } from "../BoxDrawingUtils.js";
 import { FreeBox } from "../FreeBox.js";
 import { MutableFreePointer } from "../FreePointer.js";
+import { AbstractBox } from "./AbstractBox.js";
 
 /**
  * @typedef {import("../Geometry.js").MutRectangle} MutRectangle
@@ -19,7 +20,7 @@ import { MutableFreePointer } from "../FreePointer.js";
 /**
  * @implements {ParentBox}
  */
-export class FixedSizeBox {
+export class FixedSizeBox extends AbstractBox {
   /**
    * @type {"parent"}
    * @readonly
@@ -30,26 +31,9 @@ export class FixedSizeBox {
    * @param {Document=} doc
    */
   constructor(rectangle, doc) {
-    this.rectangle = rectangle;
-    /** @type {Box | null} */
-    this.parent = null;
-    /** @type {Document | null} */
-    this._document = doc || null;
+    super(rectangle, doc);
     /** @type {Box[]} */
     this.children = [];
-  }
-
-  /**
-   * @returns {Document | null}
-   */
-  get document() {
-    if (this._document) {
-      return this._document;
-    }
-    if (this.parent) {
-      return this.parent.document;
-    }
-    return null;
   }
 
   /**
@@ -74,30 +58,6 @@ export class FixedSizeBox {
     box.parent = this;
     this.children.push(box);
   }
-
-  /** @returns {Box} */
-  appendNewPage() {
-    if (!this.document) {
-      throw Error("Can't appendNewPage for detached box.");
-    }
-    return this.document.appendNewPage();
-  }
-
-  /** @returns {Box} */
-  get root() {
-    if (this.parent === null) {
-      return this;
-    }
-    return this.parent.root;
-  }
-
-  level() {
-    if (this.parent === null) {
-      return 0;
-    }
-    return 1 + this.parent.level();
-  }
-
   /**
    * @param {PDFPage} page
    */

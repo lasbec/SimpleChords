@@ -13,15 +13,7 @@ import { FreeBox } from "../FreeBox.js";
  * @typedef {import("../Geometry.js").LeaveBox} LeaveBox
  */
 
-/**
- *  @implements {LeaveBox}
- */
-export class AbstractPrimitiveBox {
-  /**
-   * @type {"leave"}
-   * @readonly
-   */
-  __discriminator__ = "leave";
+export class AbstractBox {
   /**
    * @param {MutRectangle} rectagle
    * @param {Document=} doc
@@ -31,7 +23,20 @@ export class AbstractPrimitiveBox {
     /** @type {Box | null} */
     this.parent = null;
     /** @type {Document | null} */
-    this.document = doc || null;
+    this._document = doc || null;
+  }
+
+  /**
+   * @returns {Document | null}
+   */
+  get document() {
+    if (this._document) {
+      return this._document;
+    }
+    if (this.parent) {
+      return this.parent.document;
+    }
+    return null;
   }
 
   /** @returns {Box} */
@@ -45,6 +50,7 @@ export class AbstractPrimitiveBox {
   /** @returns {Box} */
   get root() {
     if (this.parent === null) {
+      /** @ts-ignore */
       return this;
     }
     return this.parent.root;

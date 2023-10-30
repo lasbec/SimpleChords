@@ -1,4 +1,4 @@
-import { AbstractPrimitiveBox } from "./AbstractPrimitiveBox.js";
+import { PrimitiveBox } from "./PrimitiveBox.js";
 import { MutableFreePointer } from "../FreePointer.js";
 import { FreeBox } from "../FreeBox.js";
 /**
@@ -15,7 +15,7 @@ import { FreeBox } from "../FreeBox.js";
 /**
  * @implements {LeaveBox}
  */
-export class TextBox extends AbstractPrimitiveBox {
+export class TextBox extends PrimitiveBox {
   /**@type {string}*/
   text;
   /**@type {TextConfig}*/

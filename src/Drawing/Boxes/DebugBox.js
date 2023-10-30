@@ -1,7 +1,7 @@
 import { LEN } from "../../Shared/Length.js";
 import { rgb } from "pdf-lib";
 import { MutableFreePointer } from "../FreePointer.js";
-import { AbstractPrimitiveBox } from "./AbstractPrimitiveBox.js";
+import { PrimitiveBox } from "./PrimitiveBox.js";
 import { FreeBox } from "../FreeBox.js";
 /**
  * @typedef {import("pdf-lib").PDFPage} PDFPage
@@ -16,7 +16,7 @@ import { FreeBox } from "../FreeBox.js";
 /**
  * @implements {LeaveBox}
  */
-export class DebugBox extends AbstractPrimitiveBox {
+export class DebugBox extends PrimitiveBox {
   /** @type {number} */
   constructCount;
 
