@@ -2,6 +2,10 @@ import { PrimitiveBox } from "./PrimitiveBox.js";
 import { MutableFreePointer } from "../FreePointer.js";
 import { FreeBox } from "../FreeBox.js";
 /**
+ */
+
+/**
+ * @typedef {import("../Geometry.js").RectanglePlacement} RectanglePlacement
  * @typedef {import("../TextConfig.js").TextConfig} TextConfig
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("../Geometry.js").Point} Point
@@ -24,11 +28,12 @@ export class TextBox extends PrimitiveBox {
   /**
    * @param {string} text
    * @param {TextConfig} style
+   * @param {RectanglePlacement=} placement
    */
-  constructor(text, style) {
+  constructor(text, style, placement) {
     super(
       FreeBox.fromPlacement(
-        {
+        placement || {
           pointOnRect: { x: "left", y: "bottom" },
           pointOnGrid: MutableFreePointer.origin(),
         },

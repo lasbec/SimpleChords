@@ -1,7 +1,6 @@
 import { PDFPage } from "pdf-lib";
 import { Length } from "../Shared/Length.js";
 import { MutableFreePointer } from "./FreePointer.js";
-import { Document } from "./DrawToPdfDoc.js";
 import { FreeBox } from "./FreeBox.js";
 
 export type Point = {
