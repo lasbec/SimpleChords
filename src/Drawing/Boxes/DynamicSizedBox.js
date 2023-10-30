@@ -93,16 +93,4 @@ export class DynamicSizedBox extends AbstractHOB {
     this.width = mbb?.width || Length.zero;
     this.height = mbb?.height || Length.zero;
   }
-
-
-  /**
-   * @param {PDFPage} page
-   */
-  drawToPdfPage(page) {
-    BoxOverflows.doOverflowManagement(page, this);
-    for (const child of this.children) {
-      drawDebugBox(page, child);
-      child.drawToPdfPage(page);
-    }
-  }
 }

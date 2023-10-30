@@ -1,9 +1,8 @@
 import { PDFPage } from "pdf-lib";
 import { Document } from "../Document.js";
 import { FreeBox } from "../FreeBox.js";
-
-/**
- */
+import { BoxOverflows } from "../BoxOverflow.js";
+import { drawDebugBox } from "../BoxDrawingUtils.js";
 
 /**
  * @typedef {import("../Geometry.js").BorderPosition} BorderPosition
@@ -64,11 +63,12 @@ export class AbstractHOB {
   }
 
   /**
-   *
    * @param {PDFPage} page
    */
   drawToPdfPage(page) {
+    BoxOverflows.doOverflowManagement(page, this);
     for (const child of this.children) {
+      drawDebugBox(page, child);
       child.drawToPdfPage(page);
     }
   }
