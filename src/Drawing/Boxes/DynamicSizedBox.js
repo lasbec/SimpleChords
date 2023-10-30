@@ -5,7 +5,7 @@ import { AbstractPrimitiveBox } from "./AbstractPrimitiveBox.js";
 import { PDFPage } from "pdf-lib";
 import { drawDebugBox } from "../BoxDrawingUtils.js";
 import { BoxOverflows } from "../BoxOverflow.js";
-import { AbstractHOB } from "./AbstractHOB.js";
+import { FixedSizeBox } from "./FixedSizeBox.js";
 import { FreeBox } from "../FreeBox.js";
 
 /**
@@ -64,7 +64,7 @@ export function decorateAsBox(drawChildrenFn) {
   };
 }
 
-export class DynamicSizedBox extends AbstractHOB {
+export class DynamicSizedBox extends FixedSizeBox {
   /**
    * @param {Box[]} children
    */

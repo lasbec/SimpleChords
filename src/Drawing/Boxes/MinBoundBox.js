@@ -3,7 +3,7 @@ import { minimalBoundingBox } from "../BoxMeasuringUtils.js";
 import { BoxOverflows } from "../BoxOverflow.js";
 import { FreeBox } from "../FreeBox.js";
 import { MutableFreePointer } from "../FreePointer.js";
-import { AbstractHOB } from "./AbstractHOB.js";
+import { FixedSizeBox } from "./FixedSizeBox.js";
 
 /**
  * @typedef {import("../Geometry.js").RectanglePlacement} BoxPlacement
@@ -18,7 +18,7 @@ import { AbstractHOB } from "./AbstractHOB.js";
 /**
  * @implements {Box}
  */
-export class MinBoundBox extends AbstractHOB {
+export class MinBoundBox extends FixedSizeBox {
   /**
    * @param {Dimensions} dims
    * @param {BoxPlacement=} position

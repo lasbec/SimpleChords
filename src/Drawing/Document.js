@@ -32,7 +32,7 @@ export class Document {
   }
 
   appendNewPage() {
-    const result = new FixedSizeBox(this.defaultPageDims, this);
+    const result = FixedSizeBox.newPage(this.defaultPageDims, this);  
     this.pages.push(result);
     return result;
   }
