@@ -24,13 +24,14 @@ export class AbstractPrimitiveBox {
   __discriminator__ = "leave";
   /**
    * @param {MutRectangle} rectagle
+   * @param {Document=} doc
    */
-  constructor(rectagle) {
+  constructor(rectagle, doc) {
     this.rectangle = rectagle;
     /** @type {Box | null} */
     this.parent = null;
     /** @type {Document | null} */
-    this.document = null;
+    this.document = doc || null;
   }
 
   /** @returns {Box} */

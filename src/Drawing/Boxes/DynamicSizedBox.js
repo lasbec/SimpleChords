@@ -1,10 +1,6 @@
 import { MutableFreePointer } from "../FreePointer.js";
 import { Length } from "../../Shared/Length.js";
 import { minimalBoundingBox } from "../BoxMeasuringUtils.js";
-import { AbstractPrimitiveBox } from "./AbstractPrimitiveBox.js";
-import { PDFPage } from "pdf-lib";
-import { drawDebugBox } from "../BoxDrawingUtils.js";
-import { BoxOverflows } from "../BoxOverflow.js";
 import { FixedSizeBox } from "./FixedSizeBox.js";
 import { FreeBox } from "../FreeBox.js";
 
