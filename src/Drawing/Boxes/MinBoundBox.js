@@ -8,6 +8,7 @@ import { FixedSizeBox } from "./FixedSizeBox.js";
 /**
  * @typedef {import("../Geometry.js").RectanglePlacement} BoxPlacement
  * @typedef {import("../Geometry.js").Box} Box
+ * @typedef {import("../Geometry.js").ParentBox} ParentBox
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("../Geometry.js").Point} Point
  * @typedef {import("../Geometry.js").XStartPosition} XStartPosition
@@ -16,7 +17,7 @@ import { FixedSizeBox } from "./FixedSizeBox.js";
  */
 
 /**
- * @implements {Box}
+ * @implements {ParentBox}
  */
 export class MinBoundBox extends FixedSizeBox {
   /**
@@ -59,16 +60,5 @@ export class MinBoundBox extends FixedSizeBox {
   setPosition(position) {
     this.minimalBox = FreeBox.fromPlacement(position, this.minimalBox);
     super.setPosition(position);
-  }
-
-  /**
-   * @param {PDFPage} page
-   */
-  drawToPdfPage(page) {
-    BoxOverflows.doOverflowManagement(page, this);
-    for (const child of this.children) {
-      drawDebugBox(page, child);
-      child.drawToPdfPage(page);
-    }
   }
 }

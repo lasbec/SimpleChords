@@ -32,11 +32,10 @@ export type RectanglePlacement = {
   pointOnGrid: MutableFreePointer;
 };
 
-export type Box = {
+type BaseBox = {
   level(): number;
   drawToPdfPage(page: PDFPage): void;
   appendNewPage(): Box;
-  appendChild(box: Box): void;
   document: Document | null;
   parent: Box | null;
   root: Box;
@@ -44,6 +43,17 @@ export type Box = {
   rectangle: Rectangle;
   setPosition(position: RectanglePlacement): void;
 };
+
+export type LeaveBox = BaseBox & {
+  __discriminator__: "leave";
+};
+
+export type ParentBox = BaseBox & {
+  __discriminator__: "parent";
+  appendChild(box: Box): void;
+};
+
+export type Box = ParentBox | LeaveBox;
 
 export type RectNoBottom = {
   getBorder(border: Omit<BorderPosition, "bottom">): Length;

@@ -13,12 +13,15 @@ import { MutableFreePointer } from "../FreePointer.js";
  * @typedef {import("../Geometry.js").RectanglePlacement} BoxPlacement
  * @typedef {import("../Geometry.js").Dimensions} Dimensions
  * @typedef {import("../Geometry.js").Box} Box
+ * @typedef {import("../Geometry.js").ParentBox} ParentBox
  */
 
 /**
- * @implements {Box}
+ * @implements {ParentBox}
  */
 export class FixedSizeBox {
+/** @type {"parent"} */
+  __discriminator__ = "parent"
   /**
    * @param {MutRectangle} rectangle
    * @param {Document=} doc

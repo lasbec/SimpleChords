@@ -1,3 +1,4 @@
+import { PDFPage } from "pdf-lib";
 import { Document } from "../Document.js";
 import { FreeBox } from "../FreeBox.js";
 
@@ -11,9 +12,15 @@ import { FreeBox } from "../FreeBox.js";
  * @typedef {import("../Geometry.js").RectanglePlacement} BoxPlacement
  * @typedef {import("../Geometry.js").Dimensions} Dimensions
  * @typedef {import("../Geometry.js").Box} Box
+ * @typedef {import("../Geometry.js").LeaveBox} LeaveBox
  */
 
+/**
+ *  @implements {LeaveBox}
+ */
 export class AbstractPrimitiveBox {
+  /** @type {"leave"} */
+  __discriminator__ = "leave";
   /**
    * @param {import("../Geometry.js").Dimensions} dims
    * @param {BoxPlacement} position
@@ -24,11 +31,6 @@ export class AbstractPrimitiveBox {
     this.parent = null;
     /** @type {Document | null} */
     this.document = null;
-  }
-
-  /** @param {Box} box */
-  appendChild(box) {
-    throw Error("Can not append child to primitive box");
   }
 
   /** @returns {Box} */
@@ -42,7 +44,6 @@ export class AbstractPrimitiveBox {
   /** @returns {Box} */
   get root() {
     if (this.parent === null) {
-      /** @ts-ignore */
       return this;
     }
     return this.parent.root;
@@ -60,5 +61,12 @@ export class AbstractPrimitiveBox {
    */
   setPosition(position) {
     this.rectangle.setPosition(position);
+  }
+
+  /**
+   * @param {PDFPage} page
+   */
+  drawToPdfPage(page) {
+    throw Error("Can not draw abstract box.");
   }
 }

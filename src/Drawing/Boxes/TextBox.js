@@ -8,11 +8,11 @@ import { MutableFreePointer } from "../FreePointer.js";
  * @typedef {import("../Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("../Geometry.js").YStartPosition} YStartPosition
  * @typedef {import("../Geometry.js").Dimensions} Dimensions
- * @typedef {import("../Geometry.js").Box} PrimitiveBox
+ * @typedef {import("../Geometry.js").LeaveBox} LeaveBox
  */
 
 /**
- * @implements {PrimitiveBox}
+ * @implements {LeaveBox}
  */
 export class TextBox extends AbstractPrimitiveBox {
   /**@type {string}*/
