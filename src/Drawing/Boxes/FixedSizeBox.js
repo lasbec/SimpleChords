@@ -19,7 +19,7 @@ import { AbstractBox } from "./AbstractBox.js";
 
 /**
  * @implements {ParentBox}
- * @extends {AbstractBox<Box[], null, BorderPosition>}
+ * @extends {AbstractBox<Box[], null, "width" | "height">}
  */
 export class FixedSizeBox extends AbstractBox {
   /**

@@ -19,7 +19,7 @@ import { Length } from "../../Shared/Length.js";
 
 /**
  * @typedef {"" | "Min" | "Max"} MinMaxEmptyString
- * @typedef {`${BorderPosition}${MinMaxEmptyString}`} BoundMark
+ * @typedef {`${"width" | "height"}${MinMaxEmptyString}`} BoundMark
  */
 
 /**
