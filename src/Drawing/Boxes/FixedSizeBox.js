@@ -32,7 +32,8 @@ export class FixedSizeBox extends AbstractBox {
   constructor(rectangle) {
     /** @type {Box[]} */
     const children = [];
-    super(children, null, rectangle);
+    super(children, null);
+    this.rectangle = rectangle;
   }
 
   get children() {
@@ -75,10 +76,7 @@ export class FixedSizeBox extends AbstractBox {
    */
   setPosition(position) {
     const oldCenter = this.rectangle.getPoint("center", "center");
-    this.rectangle.setPosition({
-      ...position,
-      pointOnGrid: position.pointOnGrid,
-    });
+    this.rectangle.setPosition(position);
     const newCenter = this.rectangle.getPoint("center", "center");
     const xMove = newCenter.x.sub(oldCenter.x);
     const yMove = newCenter.y.sub(oldCenter.y);

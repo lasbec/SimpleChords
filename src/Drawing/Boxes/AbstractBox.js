@@ -19,12 +19,10 @@ export class AbstractBox {
   /**
    * @param {Content} content
    * @param {Style} style
-   * @param {MutRectangle} rectagle
    */
-  constructor(content, style, rectagle) {
+  constructor(content, style) {
     this.content = content;
     this.style = style;
-    this.rectangle = rectagle;
     /** @type {Box | null} */
     this.parent = null;
   }
@@ -43,19 +41,5 @@ export class AbstractBox {
       return 0;
     }
     return 1 + this.parent.level();
-  }
-
-  /**
-   * @param {BoxPlacement} position
-   */
-  setPosition(position) {
-    this.rectangle.setPosition(position);
-  }
-
-  /**
-   * @param {PDFPage} page
-   */
-  drawToPdfPage(page) {
-    throw Error("Can not draw abstract box.");
   }
 }
