@@ -150,19 +150,6 @@ export class MutableBoxPointer {
     return new MutableBoxPointer(this.x, this.y, this.box.parent);
   }
 
-  /**
-   * @param {MutableBoxPointer} other
-   * @returns {Box}
-   */
-  span(other) {
-    const otherRelXPos = other.isLeftFrom(this) ? "right" : "left";
-    const otherRelYPos = other.isLowerThan(this) ? "top" : "bottom";
-    const width = this.x.sub(other.x).abs();
-    const height = this.y.sub(other.y).abs();
-    const box = new PlainBox({ width, height });
-    return this.setBox(otherRelXPos, otherRelYPos, box);
-  }
-
   /** @param {MutableBoxPointer} other  */
   isLeftFrom(other) {
     return this.freePointer.isLeftFrom(other.freePointer);
