@@ -1,6 +1,5 @@
 import { PDFDocument } from "pdf-lib";
-import { PageBox as Page } from "./Boxes/PageBox.js";
-import { FreeBox } from "./FreeBox.js";
+import { FixedSizeBox } from "./Boxes/FixedSizeBox.js";
 
 /**
  */
@@ -33,7 +32,7 @@ export class Document {
   }
 
   appendNewPage() {
-    const result = new Page(this.defaultPageDims, this);
+    const result = new FixedSizeBox(this.defaultPageDims, this);
     this.pages.push(result);
     return result;
   }

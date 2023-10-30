@@ -1,5 +1,5 @@
 import { Document } from "../Document.js";
-import { AbstractPrimitiveBox } from "../AbstractPrimitiveBox.js";
+import { AbstractPrimitiveBox } from "./AbstractPrimitiveBox.js";
 import { MutableFreePointer } from "../FreePointer.js";
 
 /**
@@ -15,14 +15,14 @@ import { MutableFreePointer } from "../FreePointer.js";
 
 /**
  * @typedef {object} PageLinking
- * @property {PageBox | null} previous
- * @property {PageBox | null} next
+ * @property {FixedSizeBox | null} previous
+ * @property {FixedSizeBox | null} next
  */
 
 /**
  * @implements {PrimitiveBox}
  */
-export class PageBox extends AbstractPrimitiveBox {
+export class FixedSizeBox extends AbstractPrimitiveBox {
   /** @type {Box[]} */
   children;
 

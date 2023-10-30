@@ -1,8 +1,8 @@
 import { LEN, Length } from "../Shared/Length.js";
 import { SongLine } from "../Song/SongLine.js";
-import { decorateAsBox } from "../Drawing/HigherOrderBox.js";
+import { decorateAsBox } from "../Drawing/Boxes/DynamicSizedBox.js";
 import { MutableFreePointer } from "../Drawing/FreePointer.js";
-import { TextBox } from "../Drawing/PrimitiveBoxes/TextBox.js";
+import { TextBox } from "../Drawing/Boxes/TextBox.js";
 /**
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("../Drawing/TextConfig.js").TextConfig} TextConfig

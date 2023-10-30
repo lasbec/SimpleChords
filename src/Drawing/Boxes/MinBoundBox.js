@@ -1,5 +1,5 @@
 import { Length } from "../../Shared/Length.js";
-import { AbstractPrimitiveBox } from "../AbstractPrimitiveBox.js";
+import { AbstractPrimitiveBox } from "./AbstractPrimitiveBox.js";
 import { drawDebugBox } from "../BoxDrawingUtils.js";
 import { minimalBoundingBox } from "../BoxMeasuringUtils.js";
 import { BoxOverflows } from "../BoxOverflow.js";
@@ -19,7 +19,7 @@ import { MutableFreePointer } from "../FreePointer.js";
 /**
  * @implements {Box}
  */
-export class AtLeastBox extends AbstractPrimitiveBox {
+export class MinBoundBox extends AbstractPrimitiveBox {
   /**
    * @param {Dimensions} dims
    * @param {BoxPlacement=} position
@@ -39,7 +39,7 @@ export class AtLeastBox extends AbstractPrimitiveBox {
    * @param {import("../Geometry.js").Rectangle} rect
    */
   static fromRect(rect) {
-    return new AtLeastBox(rect, {
+    return new MinBoundBox(rect, {
       pointOnRect: { x: "left", y: "top" },
       pointOnGrid: rect.getPoint("left", "top"),
     });
@@ -53,7 +53,7 @@ export class AtLeastBox extends AbstractPrimitiveBox {
       minimalBoundingBox([
         ...this.children.map((c) => c.rectangle),
         this.minimalBox,
-      ]) || this.minimalBox;  
+      ]) || this.minimalBox;
   }
 
   /**

@@ -1,7 +1,7 @@
 import { WellKnownSectionType } from "../Song/SongChecker.js";
 import { MutableFreePointer } from "../Drawing/FreePointer.js";
-import { decorateAsBox } from "../Drawing/HigherOrderBox.js";
-import { TextBox } from "../Drawing/PrimitiveBoxes/TextBox.js";
+import { decorateAsBox } from "../Drawing/Boxes/DynamicSizedBox.js";
+import { TextBox } from "../Drawing/Boxes/TextBox.js";
 import { songLineBox } from "./SongLineBox.js";
 /**
  * @typedef {import("../Drawing/Geometry.js").RectanglePlacement} BoxPlacement

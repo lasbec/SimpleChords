@@ -1,21 +1,21 @@
-import { Document } from "./Document.js";
-import { FreeBox } from "./FreeBox.js";
+import { Document } from "../Document.js";
+import { FreeBox } from "../FreeBox.js";
 
 /**
  */
 
 /**
- * @typedef {import("./Geometry.js").BorderPosition} BorderPosition
- * @typedef {import("./Geometry.js").XStartPosition} XRel
- * @typedef {import("./Geometry.js").YStartPosition} YRel
- * @typedef {import("./Geometry.js").RectanglePlacement} BoxPlacement
- * @typedef {import("./Geometry.js").Dimensions} Dimensions
- * @typedef {import("./Geometry.js").Box} Box
+ * @typedef {import("../Geometry.js").BorderPosition} BorderPosition
+ * @typedef {import("../Geometry.js").XStartPosition} XRel
+ * @typedef {import("../Geometry.js").YStartPosition} YRel
+ * @typedef {import("../Geometry.js").RectanglePlacement} BoxPlacement
+ * @typedef {import("../Geometry.js").Dimensions} Dimensions
+ * @typedef {import("../Geometry.js").Box} Box
  */
 
 export class AbstractPrimitiveBox {
   /**
-   * @param {import("./Geometry.js").Dimensions} dims
+   * @param {import("../Geometry.js").Dimensions} dims
    * @param {BoxPlacement} position
    */
   constructor(dims, position) {

@@ -1,16 +1,16 @@
-import { MutableFreePointer } from "./FreePointer.js";
-import { Length } from "../Shared/Length.js";
-import { minimalBoundingBox } from "./BoxMeasuringUtils.js";
+import { MutableFreePointer } from "../FreePointer.js";
+import { Length } from "../../Shared/Length.js";
+import { minimalBoundingBox } from "../BoxMeasuringUtils.js";
 import { AbstractPrimitiveBox } from "./AbstractPrimitiveBox.js";
 import { PDFPage } from "pdf-lib";
-import { drawDebugBox } from "./BoxDrawingUtils.js";
-import { BoxOverflows } from "./BoxOverflow.js";
+import { drawDebugBox } from "../BoxDrawingUtils.js";
+import { BoxOverflows } from "../BoxOverflow.js";
 
 /**
- * @typedef {import("./Geometry.js").Rectangle} Rectangle
- * @typedef {import("./Geometry.js").RectanglePlacement} BoxPlacement
- * @typedef {import("./Geometry.js").Box} Box
- * @typedef {import("./Geometry.js").RectangleGenerator} BoxGenerator
+ * @typedef {import("../Geometry.js").Rectangle} Rectangle
+ * @typedef {import("../Geometry.js").RectanglePlacement} BoxPlacement
+ * @typedef {import("../Geometry.js").Box} Box
+ * @typedef {import("../Geometry.js").RectangleGenerator} BoxGenerator
  */
 
 /**
@@ -34,7 +34,7 @@ export function decorateAsComponent(drawChildrenFn) {
     while (rest !== undefined) {
       const partialResult = drawChildrenFn(rest, config, boxGen.get(pageCount));
       pageCount += 1;
-      result.push(new HigherOrderBox(partialResult.children));
+      result.push(new DynamicSizedBox(partialResult.children));
       rest = partialResult.rest;
     }
     return result;
@@ -56,13 +56,13 @@ export function decorateAsBox(drawChildrenFn) {
   return (content, config, drawingStartPoint) => {
     drawingStartPoint =
       drawingStartPoint?.clone() || MutableFreePointer.origin();
-    return new HigherOrderBox(
+    return new DynamicSizedBox(
       drawChildrenFn(content, config, drawingStartPoint)
     );
   };
 }
 
-export class HigherOrderBox extends AbstractPrimitiveBox {
+export class DynamicSizedBox extends AbstractPrimitiveBox {
   /**
    * @param {Box[]} children
    */

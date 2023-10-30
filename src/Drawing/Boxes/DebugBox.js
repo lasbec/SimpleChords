@@ -1,8 +1,7 @@
-import { LEN, Length } from "../../Shared/Length.js";
+import { LEN } from "../../Shared/Length.js";
 import { rgb } from "pdf-lib";
 import { MutableFreePointer } from "../FreePointer.js";
-import { getPoint } from "../BoxMeasuringUtils.js";
-import { AbstractPrimitiveBox } from "../AbstractPrimitiveBox.js";
+import { AbstractPrimitiveBox } from "./AbstractPrimitiveBox.js";
 /**
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("../Geometry.js").Point} Point
@@ -11,7 +10,6 @@ import { AbstractPrimitiveBox } from "../AbstractPrimitiveBox.js";
  * @typedef {import("../Geometry.js").YStartPosition} YStartPosition
  * @typedef {import("../Geometry.js").Box} PrimitiveBox
  * @typedef {import("../Geometry.js").Dimensions} Dimesions
- * @typedef {import("../Boxes/PageBox.js").PageBox} PageBox
  */
 
 /**
