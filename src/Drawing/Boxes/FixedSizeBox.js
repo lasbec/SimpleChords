@@ -15,18 +15,35 @@ import { MutableFreePointer } from "../FreePointer.js";
  * @typedef {import("../Geometry.js").Box} Box
  */
 
+/**
+ * @implements {Box}
+ */
 export class FixedSizeBox {
   /**
    * @param {MutRectangle} rectangle
+   * @param {Document=} doc
    */
-  constructor(rectangle) {
+  constructor(rectangle, doc) {
     this.rectangle = rectangle;
     /** @type {Box | null} */
     this.parent = null;
     /** @type {Document | null} */
-    this.document = null;
+    this._document = doc || null;
     /** @type {Box[]} */
     this.children = [];
+  }
+
+  /**
+   * @returns {Document | null}
+   */
+  get document() {
+    if (this._document) {
+      return this._document;
+    }
+    if (this.parent) {
+      return this.parent.document;
+    }
+    return null;
   }
 
   /**
@@ -34,17 +51,16 @@ export class FixedSizeBox {
    * @param {Document} doc
    */
   static newPage(dims, doc) {
-    const result = new FixedSizeBox(
+    return new FixedSizeBox(
       FreeBox.fromPlacement(
         {
           pointOnRect: { x: "left", y: "bottom" },
           pointOnGrid: MutableFreePointer.origin(),
         },
         dims
-      )
+      ),
+      doc
     );
-    result.setDocument(doc);
-    return result;
   }
 
   /** @param {Box} box */
@@ -59,11 +75,6 @@ export class FixedSizeBox {
       throw Error("Can't appendNewPage for detached box.");
     }
     return this.document.appendNewPage();
-  }
-
-  /** @param {Document} doc */
-  setDocument(doc) {
-    this.document = doc;
   }
 
   /** @returns {Box} */

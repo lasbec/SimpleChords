@@ -39,11 +39,6 @@ export class AbstractPrimitiveBox {
     return this.document.appendNewPage();
   }
 
-  /** @param {Document} doc */
-  setDocument(doc) {
-    this.document = doc;
-  }
-
   /** @returns {Box} */
   get root() {
     if (this.parent === null) {
