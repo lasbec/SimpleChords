@@ -1,10 +1,9 @@
-import { Length } from "../../Shared/Length.js";
-import { AbstractPrimitiveBox } from "./AbstractPrimitiveBox.js";
 import { drawDebugBox } from "../BoxDrawingUtils.js";
 import { minimalBoundingBox } from "../BoxMeasuringUtils.js";
 import { BoxOverflows } from "../BoxOverflow.js";
 import { FreeBox } from "../FreeBox.js";
 import { MutableFreePointer } from "../FreePointer.js";
+import { AbstractHOB } from "./AbstractHOB.js";
 
 /**
  * @typedef {import("../Geometry.js").RectanglePlacement} BoxPlacement
@@ -19,7 +18,7 @@ import { MutableFreePointer } from "../FreePointer.js";
 /**
  * @implements {Box}
  */
-export class MinBoundBox extends AbstractPrimitiveBox {
+export class MinBoundBox extends AbstractHOB {
   /**
    * @param {Dimensions} dims
    * @param {BoxPlacement=} position
@@ -31,8 +30,6 @@ export class MinBoundBox extends AbstractPrimitiveBox {
     };
     super(dims, pos);
     this.minimalBox = FreeBox.fromPlacement(pos, dims);
-    /** @type {Box[]} */
-    this.children = [];
   }
 
   /**
@@ -61,24 +58,7 @@ export class MinBoundBox extends AbstractPrimitiveBox {
    */
   setPosition(position) {
     this.minimalBox = FreeBox.fromPlacement(position, this.minimalBox);
-    const oldCenter = this.rectangle.getPoint("center", "center");
-    super.setPosition({
-      ...position,
-      pointOnGrid: position.pointOnGrid,
-    });
-    const newCenter = this.rectangle.getPoint("center", "center");
-    const xMove = newCenter.x.sub(oldCenter.x);
-    const yMove = newCenter.y.sub(oldCenter.y);
-
-    for (const child of this.children) {
-      const newChildCenter = child.rectangle.getPoint("center", "center");
-      newChildCenter.x = newChildCenter.x.add(xMove);
-      newChildCenter.y = newChildCenter.y.add(yMove);
-      child.setPosition({
-        pointOnRect: { x: "center", y: "center" },
-        pointOnGrid: newChildCenter,
-      });
-    }
+    super.setPosition(position);
   }
 
   /**

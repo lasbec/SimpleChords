@@ -1,6 +1,7 @@
 import { Document } from "../Document.js";
 import { AbstractPrimitiveBox } from "./AbstractPrimitiveBox.js";
 import { MutableFreePointer } from "../FreePointer.js";
+import { AbstractHOB } from "./AbstractHOB.js";
 
 /**
  * @typedef {import("../Geometry.js").Box} Box
@@ -22,7 +23,7 @@ import { MutableFreePointer } from "../FreePointer.js";
 /**
  * @implements {PrimitiveBox}
  */
-export class FixedSizeBox extends AbstractPrimitiveBox {
+export class FixedSizeBox extends AbstractHOB {
   /** @type {Box[]} */
   children;
 
@@ -43,20 +44,5 @@ export class FixedSizeBox extends AbstractPrimitiveBox {
     });
     this.document = doc;
     this.children = [];
-  }
-
-  /** @param {Box} box */
-  appendChild(box) {
-    box.parent = this;
-    this.children.push(box);
-  }
-  /**
-   *
-   * @param {PDFPage} page
-   */
-  drawToPdfPage(page) {
-    for (const child of this.children) {
-      child.drawToPdfPage(page);
-    }
   }
 }

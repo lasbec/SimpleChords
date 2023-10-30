@@ -5,6 +5,7 @@ import { AbstractPrimitiveBox } from "./AbstractPrimitiveBox.js";
 import { PDFPage } from "pdf-lib";
 import { drawDebugBox } from "../BoxDrawingUtils.js";
 import { BoxOverflows } from "../BoxOverflow.js";
+import { AbstractHOB } from "./AbstractHOB.js";
 
 /**
  * @typedef {import("../Geometry.js").Rectangle} Rectangle
@@ -62,7 +63,7 @@ export function decorateAsBox(drawChildrenFn) {
   };
 }
 
-export class DynamicSizedBox extends AbstractPrimitiveBox {
+export class DynamicSizedBox extends AbstractHOB {
   /**
    * @param {Box[]} children
    */
@@ -93,29 +94,6 @@ export class DynamicSizedBox extends AbstractPrimitiveBox {
     this.height = mbb?.height || Length.zero;
   }
 
-  /**
-   * @param {BoxPlacement} position
-   */
-  setPosition(position) {
-    const oldCenter = this.rectangle.getPoint("center", "center");
-    super.setPosition({
-      ...position,
-      pointOnGrid: position.pointOnGrid,
-    });
-    const newCenter = this.rectangle.getPoint("center", "center");
-    const xMove = newCenter.x.sub(oldCenter.x);
-    const yMove = newCenter.y.sub(oldCenter.y);
-
-    for (const child of this.children) {
-      const newChildCenter = child.rectangle.getPoint("center", "center");
-      newChildCenter.x = newChildCenter.x.add(xMove);
-      newChildCenter.y = newChildCenter.y.add(yMove);
-      child.setPosition({
-        pointOnRect: { x: "center", y: "center" },
-        pointOnGrid: newChildCenter,
-      });
-    }
-  }
 
   /**
    * @param {PDFPage} page
