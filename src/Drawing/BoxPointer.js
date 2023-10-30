@@ -1,6 +1,4 @@
 import { Length } from "../Shared/Length.js";
-import { Document } from "./Document.js";
-import { PlainBox } from "./Boxes/PlainBox.js";
 import { MutableFreePointer } from "./FreePointer.js";
 /**
  * @typedef {import("./Geometry.js").Point} Point
