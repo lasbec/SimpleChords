@@ -1,5 +1,4 @@
 import { PDFPage } from "pdf-lib";
-import { Document } from "../Document.js";
 import { BoxOverflows } from "../BoxOverflow.js";
 import { drawDebugBox } from "../BoxDrawingUtils.js";
 import { FreeBox } from "../FreeBox.js";
@@ -28,19 +27,17 @@ export class FixedSizeBox extends AbstractBox {
   __discriminator__ = "parent";
   /**
    * @param {MutRectangle} rectangle
-   * @param {Document=} doc
    */
-  constructor(rectangle, doc) {
-    super(rectangle, doc);
+  constructor(rectangle) {
+    super(rectangle);
     /** @type {Box[]} */
     this.children = [];
   }
 
   /**
    * @param {Dimensions} dims
-   * @param {Document} doc
    */
-  static newPage(dims, doc) {
+  static newPage(dims) {
     return new FixedSizeBox(
       FreeBox.fromPlacement(
         {
@@ -48,8 +45,7 @@ export class FixedSizeBox extends AbstractBox {
           pointOnGrid: MutableFreePointer.origin(),
         },
         dims
-      ),
-      doc
+      )
     );
   }
 

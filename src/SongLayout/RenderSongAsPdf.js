@@ -7,7 +7,6 @@
 import { PDFDocument, StandardFonts } from "pdf-lib";
 import { FontLoader } from "../Drawing/FontLoader.js";
 import { Length } from "../Shared/Length.js";
-import { Document } from "../Drawing/Document.js";
 import { parseSongAst } from "../Parsing/SongParser.js";
 import * as Path from "path";
 import * as fs from "fs/promises";
@@ -17,6 +16,9 @@ import { TextConfig } from "../Drawing/TextConfig.js";
 import { songLayout } from "./songLayout.js";
 import { FreeBox } from "../Drawing/FreeBox.js";
 import { MutableFreePointer } from "../Drawing/FreePointer.js";
+import { drawToPdfDoc } from "../Drawing/DrawToPdfDoc.js";
+import { DebugMode } from "../Drawing/DebugMode.js";
+import { FixedSizeBox } from "../Drawing/Boxes/FixedSizeBox.js";
 
 /**
  * @param {string} path
@@ -150,13 +152,12 @@ async function parseASTs(paths, debug) {
  * @param {PDFDocument} pdfDoc
  */
 export async function renderSongAsPdf(songs, debug, layoutConfig, pdfDoc) {
-  Document.debug = debug;
+  DebugMode.isOn = debug;
 
   const pageDims = {
     width: layoutConfig.pageWidth,
     height: layoutConfig.pageHeight,
   };
-  const doc = new Document(pageDims);
 
   const pageArea = FreeBox.fromPlacement(
     {
@@ -176,15 +177,18 @@ export async function renderSongAsPdf(songs, debug, layoutConfig, pdfDoc) {
         .moveUp(layoutConfig.bottomMargin)
         .moveLeft(layoutConfig.rightMargin)
     );
+  /** @type {Box[]} */
+  const pages = [];
   for (const song of songs) {
     console.log(`Drawing '${song.heading}'`);
     const boxes = songLayout(song, layoutConfig, writableArea);
     for (const box of boxes) {
-      const currPage = doc.appendNewPage();
+      const currPage = FixedSizeBox.newPage(pageDims);
       currPage.appendChild(box);
+      pages.push(currPage);
     }
   }
-  doc.drawToPdfDoc(pdfDoc);
+  drawToPdfDoc(pdfDoc, pages);
 
   return await pdfDoc.save();
 }

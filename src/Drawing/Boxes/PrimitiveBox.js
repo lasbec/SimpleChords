@@ -1,9 +1,12 @@
 import { AbstractBox } from "./AbstractBox.js";
 
 /**
- *  @implements {LeaveBox}
+ * @typedef {import("../Geometry.js").LeaveBox} LeaveBox
  */
 
+/**
+ *  @implements {LeaveBox}
+ */
 export class PrimitiveBox extends AbstractBox {
   /**
    * @type {"leave"}

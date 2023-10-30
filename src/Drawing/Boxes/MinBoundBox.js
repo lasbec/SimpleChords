@@ -1,6 +1,4 @@
-import { drawDebugBox } from "../BoxDrawingUtils.js";
 import { minimalBoundingBox } from "../BoxMeasuringUtils.js";
-import { BoxOverflows } from "../BoxOverflow.js";
 import { FreeBox } from "../FreeBox.js";
 import { MutableFreePointer } from "../FreePointer.js";
 import { FixedSizeBox } from "./FixedSizeBox.js";

@@ -1,7 +1,7 @@
 import { rgb } from "pdf-lib";
 import { LEN, Length } from "../Shared/Length.js";
 import { PDFPage } from "pdf-lib";
-import { Document } from "./Document.js";
+import { DebugMode } from "./DebugMode.js";
 /**
  * @typedef {import("./Geometry.js").Point} Point
  * @typedef {import("./Geometry.js").XStartPosition} XStartPosition
@@ -119,7 +119,7 @@ export class BoxOverflows {
    * @param {Box} box
    */
   static doOverflowManagement(page, box) {
-    if (!Document.debug) BoxOverflows.assertBoxIsInsideParent(box);
+    if (!DebugMode.isOn) BoxOverflows.assertBoxIsInsideParent(box);
     const overflows = BoxOverflows.from({ child: box, parent: box.parent });
     if (overflows.isEmpty()) return;
     BoxOverflows.drawOverflowMarker(page, box, overflows);

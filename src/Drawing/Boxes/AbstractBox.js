@@ -1,6 +1,4 @@
 import { PDFPage } from "pdf-lib";
-import { Document } from "../Document.js";
-import { FreeBox } from "../FreeBox.js";
 
 /**
  * @typedef {import("../Geometry.js").MutRectangle} MutRectangle
@@ -16,35 +14,11 @@ import { FreeBox } from "../FreeBox.js";
 export class AbstractBox {
   /**
    * @param {MutRectangle} rectagle
-   * @param {Document=} doc
    */
-  constructor(rectagle, doc) {
+  constructor(rectagle) {
     this.rectangle = rectagle;
     /** @type {Box | null} */
     this.parent = null;
-    /** @type {Document | null} */
-    this._document = doc || null;
-  }
-
-  /**
-   * @returns {Document | null}
-   */
-  get document() {
-    if (this._document) {
-      return this._document;
-    }
-    if (this.parent) {
-      return this.parent.document;
-    }
-    return null;
-  }
-
-  /** @returns {Box} */
-  appendNewPage() {
-    if (!this.document) {
-      throw Error("Can't appendNewPage for detached box.");
-    }
-    return this.document.appendNewPage();
   }
 
   /** @returns {Box} */

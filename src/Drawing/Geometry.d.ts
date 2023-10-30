@@ -1,7 +1,7 @@
 import { PDFPage } from "pdf-lib";
 import { Length } from "../Shared/Length.js";
 import { MutableFreePointer } from "./FreePointer.js";
-import { Document } from "./Document.js";
+import { Document } from "./DrawToPdfDoc.js";
 import { FreeBox } from "./FreeBox.js";
 
 export type Point = {
@@ -35,8 +35,6 @@ export type RectanglePlacement = {
 type BaseBox = {
   level(): number;
   drawToPdfPage(page: PDFPage): void;
-  appendNewPage(): Box;
-  document: Document | null;
   parent: Box | null;
   root: Box;
 

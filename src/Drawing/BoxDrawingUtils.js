@@ -6,7 +6,7 @@
  * @typedef {import("./Geometry.js").Box} Box
  */
 import { rgb } from "pdf-lib";
-import { Document } from "./Document.js";
+import { DebugMode } from "./DebugMode.js";
 
 /** @type {Map<number, Color>} */
 const debugLevelColorMap = new Map([
@@ -21,7 +21,7 @@ const debugLevelColorMap = new Map([
  * @param {Box} box
  * */
 export function drawDebugBox(pdfPage, box) {
-  if (Document.debug) {
+  if (DebugMode.isOn) {
     const borderColor = debugLevelColorMap.get(box.level()) || rgb(1, 0, 0);
     const leftBottomCorner = box.rectangle.getPoint("left", "bottom");
     const args = {
