@@ -57,7 +57,7 @@ export function stackBoxes(boxes, defaultStyle, boundsGen) {
     });
     const sectionExeedsPage = box.rectangle
       .getPoint("left", "bottom")
-      .isLowerThan(currPage.rectangle.getPoint("left", "bottom"));
+      .isLowerOrEq(currPage.rectangle.getPoint("left", "bottom"));
     if (sectionExeedsPage) {
       currPage = AtLeastBox.fromRect(boundsGen.get(pageCount));
       pageCount += 1;

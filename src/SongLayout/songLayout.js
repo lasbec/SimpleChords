@@ -22,6 +22,7 @@ import { stackBoxes } from "../Drawing/CollectionComponents/stackBoxes.js";
  * @returns {Box[]}
  */
 export function songLayout(song, layoutConfig, rect) {
+  // return songLayoutDoubleLine(song, layoutConfig, rect);
   const simpleResult = songLayoutSimple(song, layoutConfig, rect);
   if (simpleResult.length <= 1) {
     if (simpleResult.every((b) => isInside(b.rectangle, rect))) {

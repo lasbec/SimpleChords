@@ -27,10 +27,10 @@ export class FreeBox {
    * @param {MutableFreePointer} c1
    */
   static fromCorners(c0, c1) {
-    const left = c0.isLeftFrom(c1) ? c0.x : c1.x;
-    const right = c0.isLeftFrom(c1) ? c1.x : c0.x;
-    const top = c0.isLowerThan(c1) ? c1.y : c0.y;
-    const bottom = c0.isLowerThan(c1) ? c0.y : c1.y;
+    const left = c0.isLeftOrEq(c1) ? c0.x : c1.x;
+    const right = c0.isLeftOrEq(c1) ? c1.x : c0.x;
+    const top = c0.isLowerOrEq(c1) ? c1.y : c0.y;
+    const bottom = c0.isLowerOrEq(c1) ? c0.y : c1.y;
     return FreeBox.fromBorders({ left, right, top, bottom });
   }
 

@@ -106,22 +106,22 @@ export class MutableFreePointer {
   }
 
   /** @param {MutableFreePointer} other  */
-  isLeftFrom(other) {
+  isLeftOrEq(other) {
     return this.x.le(other.x);
   }
 
   /** @param {MutableFreePointer} other  */
-  isLowerThan(other) {
+  isLowerOrEq(other) {
     return this.y.le(other.y);
   }
 
   /** @param {MutableFreePointer} other  */
-  isRightFrom(other) {
+  isRightOrEq(other) {
     return other.x.le(this.x);
   }
 
   /** @param {MutableFreePointer} other  */
-  isHigherThan(other) {
+  isHigherOrEq(other) {
     return other.y.le(this.y);
   }
 }

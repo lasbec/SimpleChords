@@ -29,10 +29,10 @@ export function isInside(inner, outer) {
   const outerLeftTop = outer.getPoint("left", "top");
   const outerRightBottom = outer.getPoint("right", "bottom");
   return (
-    innerLeftTop.isRightFrom(outerLeftTop) &&
-    innerLeftTop.isLowerThan(outerLeftTop) &&
-    innerRightBottom.isLeftFrom(outerRightBottom) &&
-    innerRightBottom.isHigherThan(outerRightBottom)
+    innerLeftTop.isRightOrEq(outerLeftTop) &&
+    innerLeftTop.isLowerOrEq(outerLeftTop) &&
+    innerRightBottom.isLeftOrEq(outerRightBottom) &&
+    innerRightBottom.isHigherOrEq(outerRightBottom)
   );
 }
 

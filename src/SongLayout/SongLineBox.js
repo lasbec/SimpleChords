@@ -1,6 +1,6 @@
 import { LEN, Length } from "../Shared/Length.js";
 import { SongLine } from "../Song/SongLine.js";
-import { HigherOrderBox, decorateAsBox } from "../Drawing/HigherOrderBox.js";
+import { decorateAsBox } from "../Drawing/HigherOrderBox.js";
 import { MutableFreePointer } from "../Drawing/FreePointer.js";
 import { TextBox } from "../Drawing/PrimitiveBoxes/TextBox.js";
 /**

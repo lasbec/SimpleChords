@@ -32,7 +32,7 @@ export function stackLayout(contents, style, boundsGen) {
 
     const sectionExeedsPage = currBox.rectangle
       .getPoint("left", "bottom")
-      .isLowerThan(currPage.rectangle.getPoint("left", "bottom"));
+      .isLowerOrEq(currPage.rectangle.getPoint("left", "bottom"));
     if (sectionExeedsPage) {
       currPage = AtLeastBox.fromRect(boundsGen.get(pageCount));
       pageCount += 1;

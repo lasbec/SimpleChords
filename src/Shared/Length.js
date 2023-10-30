@@ -158,27 +158,34 @@ export class Length {
     return LEN(this.value * scalar, this.unit);
   }
 
+  /** @readonly */
+  static comparisonPercission = 0.000001;
+
   /** @param {Length} other */
   lt(other) {
-    return this.in("pt") < other.in("pt");
+    return this.in("pt") - other.in("pt") < Length.comparisonPercission;
   }
 
   /** @param {Length} other */
   gt(other) {
-    return this.in("pt") > other.in("pt");
+    return this.in("pt") - other.in("pt") > Length.comparisonPercission;
   }
   /** @param {Length} other */
   le(other) {
-    return this.in("pt") <= other.in("pt");
+    return this.in("pt") - other.in("pt") <= Length.comparisonPercission;
   }
 
   /** @param {Length} other */
   ge(other) {
-    return this.in("pt") >= other.in("pt");
+    return this.in("pt") - other.in("pt") >= Length.comparisonPercission;
   }
 
   gtz() {
-    return this.value > 0;
+    return this.value > Length.comparisonPercission;
+  }
+
+  ltz() {
+    return this.value < Length.comparisonPercission;
   }
 
   abs() {
@@ -186,20 +193,20 @@ export class Length {
   }
 
   isZero() {
-    return this.value === 0;
+    return Math.abs(this.value) - Length.comparisonPercission <= 0;
   }
 
   static zero = new Length(0, "pt");
 
   atLeastZero() {
-    if (this.value < 0) {
+    if (this.ltz()) {
       return Length.zero;
     }
     return this;
   }
 
   maximumZero() {
-    if (this.value > 0) {
+    if (this.gtz()) {
       return Length.zero;
     }
     return this;
