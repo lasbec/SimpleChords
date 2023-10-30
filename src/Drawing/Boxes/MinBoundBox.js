@@ -28,7 +28,7 @@ export class MinBoundBox extends AbstractHOB {
       pointOnRect: { x: "left", y: "bottom" },
       pointOnGrid: MutableFreePointer.origin(),
     };
-    super(dims, pos);
+    super(FreeBox.fromPlacement(pos, dims));
     this.minimalBox = FreeBox.fromPlacement(pos, dims);
   }
 

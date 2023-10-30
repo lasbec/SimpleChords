@@ -1,10 +1,10 @@
 import { PDFPage } from "pdf-lib";
 import { Document } from "../Document.js";
-import { FreeBox } from "../FreeBox.js";
 import { BoxOverflows } from "../BoxOverflow.js";
 import { drawDebugBox } from "../BoxDrawingUtils.js";
 
 /**
+ * @typedef {import("../Geometry.js").MutRectangle} MutRectangle
  * @typedef {import("../Geometry.js").BorderPosition} BorderPosition
  * @typedef {import("../Geometry.js").XStartPosition} XRel
  * @typedef {import("../Geometry.js").YStartPosition} YRel
@@ -15,11 +15,10 @@ import { drawDebugBox } from "../BoxDrawingUtils.js";
 
 export class AbstractHOB {
   /**
-   * @param {import("../Geometry.js").Dimensions} dims
-   * @param {BoxPlacement} position
+   * @param {MutRectangle} rectangle
    */
-  constructor(dims, position) {
-    this.rectangle = FreeBox.fromPlacement(position, dims);
+  constructor(rectangle) {
+    this.rectangle = rectangle;
     /** @type {Box | null} */
     this.parent = null;
     /** @type {Document | null} */

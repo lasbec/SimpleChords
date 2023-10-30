@@ -2,6 +2,7 @@ import { Document } from "../Document.js";
 import { AbstractPrimitiveBox } from "./AbstractPrimitiveBox.js";
 import { MutableFreePointer } from "../FreePointer.js";
 import { AbstractHOB } from "./AbstractHOB.js";
+import { FreeBox } from "../FreeBox.js";
 
 /**
  * @typedef {import("../Geometry.js").Box} Box
@@ -38,10 +39,14 @@ export class FixedSizeBox extends AbstractHOB {
    * @param {Document} doc
    */
   constructor(dims, doc) {
-    super(dims, {
-      pointOnRect: { x: "left", y: "bottom" },
-      pointOnGrid: MutableFreePointer.origin(),
-    });
+    const rect = FreeBox.fromPlacement(
+      {
+        pointOnRect: { x: "left", y: "bottom" },
+        pointOnGrid: MutableFreePointer.origin(),
+      },
+      dims
+    );
+    super(rect);
     this.document = doc;
     this.children = [];
   }

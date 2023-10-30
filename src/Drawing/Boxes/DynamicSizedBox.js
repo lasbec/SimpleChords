@@ -6,6 +6,7 @@ import { PDFPage } from "pdf-lib";
 import { drawDebugBox } from "../BoxDrawingUtils.js";
 import { BoxOverflows } from "../BoxOverflow.js";
 import { AbstractHOB } from "./AbstractHOB.js";
+import { FreeBox } from "../FreeBox.js";
 
 /**
  * @typedef {import("../Geometry.js").Rectangle} Rectangle
@@ -68,20 +69,14 @@ export class DynamicSizedBox extends AbstractHOB {
    * @param {Box[]} children
    */
   constructor(children) {
-    const mbb = minimalBoundingBox(children.map((c) => c.rectangle));
     super(
-      mbb || {
-        width: Length.zero,
-        height: Length.zero,
-      },
-      mbb?.getAnyPosition() || {
-        pointOnRect: { x: "left", y: "top" },
-        pointOnGrid: MutableFreePointer.origin(),
-      }
+      FreeBox.fromCorners(
+        MutableFreePointer.origin(),
+        MutableFreePointer.origin()
+      )
     );
-    this.children = children;
     for (const child of children) {
-      child.parent = this;
+      this.appendChild(child);
     }
   }
 
@@ -90,6 +85,12 @@ export class DynamicSizedBox extends AbstractHOB {
     this.children.push(box);
     box.parent = this;
     const mbb = minimalBoundingBox(this.children.map((c) => c.rectangle));
+    this.rectangle =
+      mbb ||
+      FreeBox.fromCorners(
+        MutableFreePointer.origin(),
+        MutableFreePointer.origin()
+      );
     this.width = mbb?.width || Length.zero;
     this.height = mbb?.height || Length.zero;
   }
