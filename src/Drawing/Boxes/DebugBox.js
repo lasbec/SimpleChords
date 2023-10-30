@@ -15,7 +15,7 @@ import { PrimitiveBox } from "./PrimitiveBox.js";
 
 /**
  * @implements {LeaveBox}
- * @extends {PrimitiveBox<null, null, never>}
+ * @extends {PrimitiveBox<null, null>}
  */
 export class DebugBox extends PrimitiveBox {
   /** @type {number} */
@@ -47,7 +47,7 @@ export class DebugBox extends PrimitiveBox {
     };
   }
 
-  getAnyPosition() {
+  referencePoint() {
     return this.position;
   }
 

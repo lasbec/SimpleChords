@@ -1,6 +1,6 @@
 import { PDFPage } from "pdf-lib";
 import { FreeBox } from "../FreeBox.js";
-import { Length } from "../../Shared/Length.js";
+import { LEN, Length } from "../../Shared/Length.js";
 
 /**
  */
@@ -18,25 +18,24 @@ import { Length } from "../../Shared/Length.js";
  */
 
 /**
- * @typedef {"" | "Min" | "Max"} MinMaxEmptyString
+ * @typedef {"Min" | "Max"} MinMaxEmptyString
  * @typedef {`${"width" | "height"}${MinMaxEmptyString}`} BoundMark
  */
 
 /**
  * @template Content
  * @template Style
- * @template {BoundMark} Bounds
  */
 export class AbstractBox {
   /**
    * @param {Content} content
    * @param {Style} style
-   * @param {Record<Bounds, Length>} bounds
+   * @param {Partial<Record<BoundMark, Length>>} bounds
    */
   constructor(content, style, bounds) {
     this.content = content;
     this.style = style;
-    this.bounds = bounds;
+    this._bounds = bounds;
     /** @type {Box | null} */
     this.parent = null;
   }
@@ -67,10 +66,35 @@ export class AbstractBox {
    * @returns {Rectangle}
    */
   get rectangle() {
-    return FreeBox.fromPlacement(this.getAnyPosition(), this.dims());
+    return FreeBox.fromPlacement(this.referencePoint(), this.dims());
   }
 
-  getAnyPosition() {
+  referencePoint() {
     return this.rectangle.getAnyPosition();
+  }
+
+  upperLimitBox() {
+    const limitBox = FreeBox.fromPlacement(this.referencePoint(), {
+      width: this._bounds.widthMax || Length.zero,
+      height: this._bounds.heightMax || Length.zero,
+    });
+    const horizontalLimits = this._bounds.widthMax
+      ? {
+          left: limitBox.getBorder("left"),
+          right: limitBox.getBorder("right"),
+        }
+      : {};
+    const verticalLimits = this._bounds.heightMax
+      ? {
+          top: limitBox.getBorder("top"),
+          bottom: limitBox.getBorder("bottom"),
+        }
+      : {};
+    return {
+      width: this._bounds.widthMax,
+      height: this._bounds.heightMax,
+      ...horizontalLimits,
+      ...verticalLimits,
+    };
   }
 }

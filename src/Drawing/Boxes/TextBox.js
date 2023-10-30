@@ -18,7 +18,7 @@ import { FreeBox } from "../FreeBox.js";
 
 /**
  * @implements {LeaveBox}
- * @extends {PrimitiveBox<string, TextConfig, never>}
+ * @extends {PrimitiveBox<string, TextConfig>}
  */
 export class TextBox extends PrimitiveBox {
   /**
@@ -34,7 +34,7 @@ export class TextBox extends PrimitiveBox {
     };
   }
 
-  getAnyPosition() {
+  referencePoint() {
     return this.position;
   }
   dims() {

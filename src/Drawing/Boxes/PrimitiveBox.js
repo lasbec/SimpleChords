@@ -15,8 +15,7 @@ import { AbstractBox } from "./AbstractBox.js";
 /**
  * @template Content
  * @template Style
- * @template {BoundMark} Bounds
- * @extends {AbstractBox<Content, Style, Bounds>}
+ * @extends {AbstractBox<Content, Style>}
  */
 export class PrimitiveBox extends AbstractBox {
   /**
