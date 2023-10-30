@@ -19,7 +19,7 @@ import { AbstractBox } from "./AbstractBox.js";
 
 /**
  * @implements {ParentBox}
- * @extends {AbstractBox<Box[], null>}
+ * @extends {AbstractBox<Box[], null, BorderPosition>}
  */
 export class FixedSizeBox extends AbstractBox {
   /**
@@ -33,7 +33,7 @@ export class FixedSizeBox extends AbstractBox {
   constructor(rectangle) {
     /** @type {Box[]} */
     const children = [];
-    super(children, null);
+    super(children, null, rectangle);
     this._rectangle = rectangle;
   }
 

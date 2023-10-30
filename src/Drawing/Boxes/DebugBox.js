@@ -15,7 +15,7 @@ import { PrimitiveBox } from "./PrimitiveBox.js";
 
 /**
  * @implements {LeaveBox}
- * @extends {PrimitiveBox<null, null>}
+ * @extends {PrimitiveBox<null, null, never>}
  */
 export class DebugBox extends PrimitiveBox {
   /** @type {number} */
@@ -27,7 +27,7 @@ export class DebugBox extends PrimitiveBox {
    * @param {Point} center
    */
   constructor(center) {
-    super(null, null);
+    super(null, null, {});
     /**
      */
 

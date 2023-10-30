@@ -69,6 +69,11 @@ export type Rectangle = {
   getPoint(x: XStartPosition, y: YStartPosition): MutableFreePointer;
   getPointAt(point: PointOnRect): MutableFreePointer;
   getAnyPosition(): RectanglePlacement;
+  left: Length;
+  right: Length;
+  top: Length;
+  bottom: Length;
+
   width: Length;
   height: Length;
 };

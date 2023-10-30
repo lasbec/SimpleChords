@@ -1,8 +1,10 @@
-import { PDFPage } from "pdf-lib";
 import { AbstractBox } from "./AbstractBox.js";
-import { FreeBox } from "../FreeBox.js";
 
 /**
+ */
+
+/**
+ * @typedef {import("./AbstractBox.js").BoundMark} BoundMark
  * @typedef {import("../Geometry.js").Rectangle} Rectangle
  * @typedef {import("../Geometry.js").Dimensions} Dimensions
  * @typedef {import("../Geometry.js").MutRectangle} MutRectangle
@@ -13,7 +15,8 @@ import { FreeBox } from "../FreeBox.js";
 /**
  * @template Content
  * @template Style
- * @extends {AbstractBox<Content, Style>}
+ * @template {BoundMark} Bounds
+ * @extends {AbstractBox<Content, Style, Bounds>}
  */
 export class PrimitiveBox extends AbstractBox {
   /**

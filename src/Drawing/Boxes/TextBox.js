@@ -18,7 +18,7 @@ import { FreeBox } from "../FreeBox.js";
 
 /**
  * @implements {LeaveBox}
- * @extends {PrimitiveBox<string, TextConfig>}
+ * @extends {PrimitiveBox<string, TextConfig, never>}
  */
 export class TextBox extends PrimitiveBox {
   /**
@@ -27,7 +27,7 @@ export class TextBox extends PrimitiveBox {
    * @param {RectanglePlacement=} position
    */
   constructor(text, style, position) {
-    super(text, style);
+    super(text, style, {});
     this.position = position || {
       pointOnRect: { x: "left", y: "bottom" },
       pointOnGrid: MutableFreePointer.origin(),

@@ -1,5 +1,6 @@
 import { PDFPage } from "pdf-lib";
 import { FreeBox } from "../FreeBox.js";
+import { Length } from "../../Shared/Length.js";
 
 /**
  */
@@ -17,17 +18,25 @@ import { FreeBox } from "../FreeBox.js";
  */
 
 /**
+ * @typedef {"" | "Min" | "Max"} MinMaxEmptyString
+ * @typedef {`${BorderPosition}${MinMaxEmptyString}`} BoundMark
+ */
+
+/**
  * @template Content
  * @template Style
+ * @template {BoundMark} Bounds
  */
 export class AbstractBox {
   /**
    * @param {Content} content
    * @param {Style} style
+   * @param {Record<Bounds, Length>} bounds
    */
-  constructor(content, style) {
+  constructor(content, style, bounds) {
     this.content = content;
     this.style = style;
+    this.bounds = bounds;
     /** @type {Box | null} */
     this.parent = null;
   }
