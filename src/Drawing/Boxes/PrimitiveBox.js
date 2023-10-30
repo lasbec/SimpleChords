@@ -5,7 +5,10 @@ import { AbstractBox } from "./AbstractBox.js";
  */
 
 /**
- *  @implements {LeaveBox}
+ * @template Content
+ * @template Style
+ * @implements {LeaveBox}
+ * @extends {AbstractBox<Content, Style>}
  */
 export class PrimitiveBox extends AbstractBox {
   /**

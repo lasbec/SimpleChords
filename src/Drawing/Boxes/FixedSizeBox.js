@@ -18,6 +18,7 @@ import { AbstractBox } from "./AbstractBox.js";
 
 /**
  * @implements {ParentBox}
+ * @extends {AbstractBox<Box[], null>}
  */
 export class FixedSizeBox extends AbstractBox {
   /**
@@ -29,9 +30,13 @@ export class FixedSizeBox extends AbstractBox {
    * @param {MutRectangle} rectangle
    */
   constructor(rectangle) {
-    super(rectangle);
     /** @type {Box[]} */
-    this.children = [];
+    const children = [];
+    super(children, null, rectangle);
+  }
+
+  get children() {
+    return this.content;
   }
 
   /**

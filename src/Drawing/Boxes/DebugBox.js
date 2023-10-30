@@ -15,6 +15,7 @@ import { FreeBox } from "../FreeBox.js";
 
 /**
  * @implements {LeaveBox}
+ * @extends {PrimitiveBox<null, null>}
  */
 export class DebugBox extends PrimitiveBox {
   /** @type {number} */
@@ -27,6 +28,8 @@ export class DebugBox extends PrimitiveBox {
    */
   constructor(center) {
     super(
+      null,
+      null,
       FreeBox.fromPlacement(
         {
           pointOnRect: { x: "center", y: "center" },

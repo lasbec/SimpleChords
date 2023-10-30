@@ -60,6 +60,7 @@ export function decorateAsBox(drawChildrenFn) {
   };
 }
 
+/** Unbounded (no startpoint), Arrangement, HOB, Mutable */
 export class DynamicSizedBox extends FixedSizeBox {
   /**
    * @param {Box[]} children

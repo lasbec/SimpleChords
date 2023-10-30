@@ -11,11 +11,19 @@ import { PDFPage } from "pdf-lib";
  * @typedef {import("../Geometry.js").LeaveBox} LeaveBox
  */
 
+/**
+ * @template Content
+ * @template Style
+ */
 export class AbstractBox {
   /**
+   * @param {Content} content
+   * @param {Style} style
    * @param {MutRectangle} rectagle
    */
-  constructor(rectagle) {
+  constructor(content, style, rectagle) {
+    this.content = content;
+    this.style = style;
     this.rectangle = rectagle;
     /** @type {Box | null} */
     this.parent = null;

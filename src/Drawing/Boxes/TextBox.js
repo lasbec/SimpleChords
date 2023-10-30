@@ -18,13 +18,9 @@ import { FreeBox } from "../FreeBox.js";
 
 /**
  * @implements {LeaveBox}
+ * @extends {PrimitiveBox<string, TextConfig>}
  */
 export class TextBox extends PrimitiveBox {
-  /**@type {string}*/
-  text;
-  /**@type {TextConfig}*/
-  style;
-
   /**
    * @param {string} text
    * @param {TextConfig} style
@@ -32,6 +28,8 @@ export class TextBox extends PrimitiveBox {
    */
   constructor(text, style, placement) {
     super(
+      text,
+      style,
       FreeBox.fromPlacement(
         placement || {
           pointOnRect: { x: "left", y: "bottom" },
@@ -43,8 +41,6 @@ export class TextBox extends PrimitiveBox {
         }
       )
     );
-    this.text = text;
-    this.style = style;
   }
 
   /**
@@ -55,7 +51,7 @@ export class TextBox extends PrimitiveBox {
     if (!leftBottomCorner) {
       throw Error("Position not set.");
     }
-    pdfPage.drawText(this.text, {
+    pdfPage.drawText(this.content, {
       x: leftBottomCorner.x.in("pt"),
       y: leftBottomCorner.y.in("pt"),
       font: this.style.font,
@@ -66,7 +62,7 @@ export class TextBox extends PrimitiveBox {
   partialWidths() {
     const result = [];
     let partial = "";
-    for (const char of this.text) {
+    for (const char of this.content) {
       const width = this.style.widthOfText(partial);
       result.push(width);
       partial += char;
