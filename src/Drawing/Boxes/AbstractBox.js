@@ -12,7 +12,7 @@ import { Length } from "../../Shared/Length.js";
  * @typedef {import("../Geometry.js").Box} Box
  * @typedef {import("../Geometry.js").LeaveBox} LeaveBox
  * @typedef {import("../Geometry.js").Bounds} Bounds
- * @typedef {import("../Geometry.js").PatialRectangle} PatialRectangle
+ * @typedef {import("../Geometry.js").PartialRectangle} PartialRectangle
  */
 
 /**
@@ -28,7 +28,7 @@ export class AbstractBox {
   constructor(content, style, bounds) {
     this.content = content;
     this.style = style;
-    this._bounds = bounds;
+    this.bounds = bounds;
     /** @type {Box | null} */
     this.parent = null;
   }
@@ -66,30 +66,56 @@ export class AbstractBox {
     return this.rectangle.referencePoint();
   }
 
+  /** @param {"min" | "max" } upperLower */
+  limitRectangle(upperLower) {
+    return Limits.fromBounds(this.referencePoint(), this.bounds, upperLower);
+  }
+}
+
+/**
+ * @typedef {import("../Geometry.js").ReferencePoint} ReferencePoint
+ */
+
+/**
+ * @implements {PartialRectangle}
+ */
+export class Limits {
   /**
-   * @param {"max" | "min"} dir
-   * @returns {PatialRectangle}
+   * @param {PartialRectangle} rect
    */
-  limitBox(dir) {
-    const limitBox = FreeBox.fromPlacement(this.referencePoint(), {
-      width: this._bounds[`${dir}Width`] || Length.zero,
-      height: this._bounds[`${dir}Height`] || Length.zero,
+  constructor(rect) {
+    this.left = rect.left;
+    this.right = rect.right;
+    this.top = rect.top;
+    this.bottom = rect.bottom;
+    this.width = rect.width;
+    this.height = rect.height;
+  }
+  /**
+   * @param {ReferencePoint} referencePoint
+   * @param {Bounds} bounds
+   * @param {"min" | "max" } upperLower
+   */
+  static fromBounds(referencePoint, bounds, upperLower) {
+    const limitBox = FreeBox.fromPlacement(referencePoint, {
+      width: bounds[`${upperLower}Width`] || Length.zero,
+      height: bounds[`${upperLower}Height`] || Length.zero,
     });
-    const horizontalLimits = this._bounds[`${dir}Width`]
+    const horizontalLimits = bounds[`${upperLower}Width`]
       ? {
           left: limitBox.getBorder("left"),
           right: limitBox.getBorder("right"),
         }
       : {};
-    const verticalLimits = this._bounds[`${dir}Height`]
+    const verticalLimits = bounds[`${upperLower}Height`]
       ? {
           top: limitBox.getBorder("top"),
           bottom: limitBox.getBorder("bottom"),
         }
       : {};
     return {
-      width: this._bounds[`${dir}Width`],
-      height: this._bounds[`${dir}Height`],
+      width: bounds[`${upperLower}Width`],
+      height: bounds[`${upperLower}Height`],
       ...horizontalLimits,
       ...verticalLimits,
     };

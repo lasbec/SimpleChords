@@ -124,7 +124,7 @@ const yMovementMap = {
  */
 export function minimalBoundingBox(boxes) {
   const fst = boxes[0];
-  if (!boxes) return;
+  if (!fst) return;
   let leftTop = fst.getPoint("left", "top");
   let rightBottom = fst.getPoint("right", "bottom");
 

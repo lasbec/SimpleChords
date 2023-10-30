@@ -2,7 +2,7 @@ import { MutableFreePointer } from "../FreePointer.js";
 import { Length } from "../../Shared/Length.js";
 import { minimalBoundingBox } from "../BoxMeasuringUtils.js";
 import { FreeBox } from "../FreeBox.js";
-import { AbstractBox } from "./AbstractBox.js";
+import { AbstractBox, Limits } from "./AbstractBox.js";
 import { PDFPage } from "pdf-lib";
 import { BoxOverflows } from "../BoxOverflow.js";
 import { drawDebugBox } from "../BoxDrawingUtils.js";
@@ -14,6 +14,7 @@ import { drawDebugBox } from "../BoxDrawingUtils.js";
  * @typedef {import("../Geometry.js").RectangleGenerator} BoxGenerator
  * @typedef {import("../Geometry.js").ParentBox} ParentBox
  * @typedef {import("../Geometry.js").Bounds} Bounds
+ * @typedef {import("../Geometry.js").ReferencePoint} ReferencePoint
  */
 
 /** All bounds possible, Arrangement, HOB, Mutable */
@@ -33,10 +34,21 @@ export class HigherOrderBox extends AbstractBox {
    */
   constructor(children, bounds) {
     super(children, null, bounds);
+    /** @type {MutableFreePointer} */
+    this.leftBottom = MutableFreePointer.origin();
     for (const child of children) {
       this.appendChild(child);
     }
   }
+
+  /** @returns {ReferencePoint} */
+  referencePoint() {
+    return {
+      pointOnRect: { x: "left", y: "bottom" },
+      pointOnGrid: this.leftBottom,
+    };
+  }
+
   /** @type {Rectangle} */
   get rectangle() {
     const mbb = minimalBoundingBox(this.children.map((c) => c.rectangle));
@@ -46,8 +58,8 @@ export class HigherOrderBox extends AbstractBox {
         MutableFreePointer.origin()
       );
     }
-    const upperLimits = this.limitBox("max");
-    const lowerLimits = this.limitBox("min");
+    const upperLimits = this.limitRectangle("max");
+    const lowerLimits = this.limitRectangle("min");
     return FreeBox.fromBorders({
       left: Length.safeMin(
         Length.safeMax(mbb.left, lowerLimits.left),
@@ -84,6 +96,9 @@ export class HigherOrderBox extends AbstractBox {
     const xMove = newCenter.x.sub(oldCenter.x);
     const yMove = newCenter.y.sub(oldCenter.y);
 
+    this.leftBottom.x = this.leftBottom.x.add(xMove);
+    this.leftBottom.y = this.leftBottom.x.add(yMove);
+
     for (const child of this.children) {
       const newChildCenter = child.rectangle.getPoint("center", "center");
       newChildCenter.x = newChildCenter.x.add(xMove);
@@ -97,6 +112,14 @@ export class HigherOrderBox extends AbstractBox {
 
   /** @param {Box} box */
   appendChild(box) {
+    this.leftBottom =
+      this.children.length <= 0
+        ? box.rectangle.getPoint("left", "bottom")
+        : (this.leftBottom = box.rectangle
+            .getPoint("left", "bottom")
+            .span(this.leftBottom)
+            .getPoint("left", "bottom"));
+          
     this.children.push(box);
     box.parent = this;
   }

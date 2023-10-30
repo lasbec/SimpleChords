@@ -76,7 +76,7 @@ export type Rectangle = {
   height: Length;
 };
 
-export type PatialRectangle = Partial<Record<BorderPosition, Length>> & {
+export type PartialRectangle = Partial<Record<BorderPosition, Length>> & {
   width?: Length;
   height?: Length;
 };
