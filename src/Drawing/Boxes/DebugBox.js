@@ -2,6 +2,7 @@ import { LEN } from "../../Shared/Length.js";
 import { rgb } from "pdf-lib";
 import { MutableFreePointer } from "../FreePointer.js";
 import { AbstractPrimitiveBox } from "./AbstractPrimitiveBox.js";
+import { FreeBox } from "../FreeBox.js";
 /**
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("../Geometry.js").Point} Point
@@ -26,14 +27,16 @@ export class DebugBox extends AbstractPrimitiveBox {
    */
   constructor(center) {
     super(
-      {
-        width: LEN(3, "mm"),
-        height: LEN(3, "mm"),
-      },
-      {
-        pointOnRect: { x: "center", y: "center" },
-        pointOnGrid: MutableFreePointer.fromPoint(center),
-      }
+      FreeBox.fromPlacement(
+        {
+          pointOnRect: { x: "center", y: "center" },
+          pointOnGrid: MutableFreePointer.fromPoint(center),
+        },
+        {
+          width: LEN(3, "mm"),
+          height: LEN(3, "mm"),
+        }
+      )
     );
     this.constructCount = DebugBox.constructionCounter;
     DebugBox.constructionCounter += 1;

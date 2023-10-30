@@ -3,9 +3,7 @@ import { Document } from "../Document.js";
 import { FreeBox } from "../FreeBox.js";
 
 /**
- */
-
-/**
+ * @typedef {import("../Geometry.js").MutRectangle} MutRectangle
  * @typedef {import("../Geometry.js").BorderPosition} BorderPosition
  * @typedef {import("../Geometry.js").XStartPosition} XRel
  * @typedef {import("../Geometry.js").YStartPosition} YRel
@@ -19,14 +17,16 @@ import { FreeBox } from "../FreeBox.js";
  *  @implements {LeaveBox}
  */
 export class AbstractPrimitiveBox {
-  /** @type {"leave"} */
+  /**
+   * @type {"leave"}
+   * @readonly
+   */
   __discriminator__ = "leave";
   /**
-   * @param {import("../Geometry.js").Dimensions} dims
-   * @param {BoxPlacement} position
+   * @param {MutRectangle} rectagle
    */
-  constructor(dims, position) {
-    this.rectangle = FreeBox.fromPlacement(position, dims);
+  constructor(rectagle) {
+    this.rectangle = rectagle;
     /** @type {Box | null} */
     this.parent = null;
     /** @type {Document | null} */

@@ -20,8 +20,11 @@ import { MutableFreePointer } from "../FreePointer.js";
  * @implements {ParentBox}
  */
 export class FixedSizeBox {
-/** @type {"parent"} */
-  __discriminator__ = "parent"
+  /**
+   * @type {"parent"}
+   * @readonly
+   */
+  __discriminator__ = "parent";
   /**
    * @param {MutRectangle} rectangle
    * @param {Document=} doc

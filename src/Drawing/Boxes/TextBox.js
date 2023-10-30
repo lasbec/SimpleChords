@@ -1,5 +1,6 @@
 import { AbstractPrimitiveBox } from "./AbstractPrimitiveBox.js";
 import { MutableFreePointer } from "../FreePointer.js";
+import { FreeBox } from "../FreeBox.js";
 /**
  * @typedef {import("../TextConfig.js").TextConfig} TextConfig
  * @typedef {import("pdf-lib").PDFPage} PDFPage
@@ -26,14 +27,16 @@ export class TextBox extends AbstractPrimitiveBox {
    */
   constructor(text, style) {
     super(
-      {
-        width: style.widthOfText(text),
-        height: style.lineHeight,
-      },
-      {
-        pointOnRect: { x: "left", y: "bottom" },
-        pointOnGrid: MutableFreePointer.origin(),
-      }
+      FreeBox.fromPlacement(
+        {
+          pointOnRect: { x: "left", y: "bottom" },
+          pointOnGrid: MutableFreePointer.origin(),
+        },
+        {
+          width: style.widthOfText(text),
+          height: style.lineHeight,
+        }
+      )
     );
     this.text = text;
     this.style = style;
