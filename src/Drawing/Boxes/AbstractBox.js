@@ -11,7 +11,7 @@ import { LEN, Length } from "../../Shared/Length.js";
  * @typedef {import("../Geometry.js").BorderPosition} BorderPosition
  * @typedef {import("../Geometry.js").XStartPosition} XRel
  * @typedef {import("../Geometry.js").YStartPosition} YRel
- * @typedef {import("../Geometry.js").RectanglePlacement} BoxPlacement
+ * @typedef {import("../Geometry.js").ReferencePoint} BoxPlacement
  * @typedef {import("../Geometry.js").Dimensions} Dimensions
  * @typedef {import("../Geometry.js").Box} Box
  * @typedef {import("../Geometry.js").LeaveBox} LeaveBox
@@ -70,7 +70,7 @@ export class AbstractBox {
   }
 
   referencePoint() {
-    return this.rectangle.getAnyPosition();
+    return this.rectangle.referencePoint();
   }
 
   upperLimitBox() {

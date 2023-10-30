@@ -11,7 +11,7 @@ import { AbstractBox } from "./AbstractBox.js";
  * @typedef {import("../Geometry.js").BorderPosition} BorderPosition
  * @typedef {import("../Geometry.js").XStartPosition} XRel
  * @typedef {import("../Geometry.js").YStartPosition} YRel
- * @typedef {import("../Geometry.js").RectanglePlacement} BoxPlacement
+ * @typedef {import("../Geometry.js").ReferencePoint} BoxPlacement
  * @typedef {import("../Geometry.js").Dimensions} Dimensions
  * @typedef {import("../Geometry.js").Box} Box
  * @typedef {import("../Geometry.js").ParentBox} ParentBox

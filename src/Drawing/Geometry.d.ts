@@ -26,7 +26,7 @@ export type PointOnRect = {
   y: YStartPosition;
 };
 
-export type RectanglePlacement = {
+export type ReferencePoint = {
   pointOnRect: PointOnRect;
   pointOnGrid: MutableFreePointer;
 };
@@ -38,7 +38,7 @@ type BaseBox = {
   root: Box;
 
   rectangle: Rectangle;
-  setPosition(position: RectanglePlacement): void;
+  setPosition(position: ReferencePoint): void;
 };
 
 export type LeaveBox = BaseBox & {
@@ -68,12 +68,12 @@ export type Rectangle = {
   getBorder(border: BorderPosition): Length;
   getPoint(x: XStartPosition, y: YStartPosition): MutableFreePointer;
   getPointAt(point: PointOnRect): MutableFreePointer;
-  getAnyPosition(): RectanglePlacement;
+  referencePoint(): ReferencePoint;
 
   width: Length;
   height: Length;
 };
 
 export type MutRectangle = Rectangle & {
-  setPosition(position: RectanglePlacement): void;
+  setPosition(position: ReferencePoint): void;
 };

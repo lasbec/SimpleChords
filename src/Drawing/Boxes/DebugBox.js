@@ -5,11 +5,11 @@ import { PrimitiveBox } from "./PrimitiveBox.js";
 /**
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("../Geometry.js").Point} Point
- * @typedef {import("../Geometry.js").RectanglePlacement} BoxPlacement
+ * @typedef {import("../Geometry.js").ReferencePoint} BoxPlacement
  * @typedef {import("../Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("../Geometry.js").YStartPosition} YStartPosition
  * @typedef {import("../Geometry.js").LeaveBox} LeaveBox
- * @typedef {import("../Geometry.js").RectanglePlacement} RectanglePlacement
+ * @typedef {import("../Geometry.js").ReferencePoint} ReferencePoint
  * @typedef {import("../Geometry.js").Dimensions} Dimesions
  */
 
@@ -31,7 +31,7 @@ export class DebugBox extends PrimitiveBox {
     /**
      */
 
-    /** @type {RectanglePlacement} */
+    /** @type {ReferencePoint} */
     this.position = {
       pointOnRect: { x: "center", y: "center" },
       pointOnGrid: MutableFreePointer.fromPoint(center),
@@ -51,7 +51,7 @@ export class DebugBox extends PrimitiveBox {
     return this.position;
   }
 
-  /** @param {RectanglePlacement} postion  */
+  /** @param {ReferencePoint} postion  */
   setPosition(postion) {
     this.position = postion;
   }

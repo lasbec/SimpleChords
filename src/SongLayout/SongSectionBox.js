@@ -4,7 +4,7 @@ import { decorateAsBox } from "../Drawing/Boxes/DynamicSizedBox.js";
 import { TextBox } from "../Drawing/Boxes/TextBox.js";
 import { songLineBox } from "./SongLineBox.js";
 /**
- * @typedef {import("../Drawing/Geometry.js").RectanglePlacement} BoxPlacement
+ * @typedef {import("../Drawing/Geometry.js").ReferencePoint} BoxPlacement
  * @typedef {import("./RenderSongAsPdf.js").LayoutConfig} LayoutConfig
  * @typedef {import("../Drawing/TextConfig.js").TextConfig} TextConfig
  * @typedef {import("pdf-lib").PDFPage} PDFPage

@@ -5,11 +5,11 @@ import { FreeBox } from "../FreeBox.js";
  */
 
 /**
- * @typedef {import("../Geometry.js").RectanglePlacement} RectanglePlacement
+ * @typedef {import("../Geometry.js").ReferencePoint} ReferencePoint
  * @typedef {import("../TextConfig.js").TextConfig} TextConfig
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("../Geometry.js").Point} Point
- * @typedef {import("../Geometry.js").RectanglePlacement} BoxPlacement
+ * @typedef {import("../Geometry.js").ReferencePoint} BoxPlacement
  * @typedef {import("../Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("../Geometry.js").YStartPosition} YStartPosition
  * @typedef {import("../Geometry.js").Dimensions} Dimensions
@@ -24,7 +24,7 @@ export class TextBox extends PrimitiveBox {
   /**
    * @param {string} text
    * @param {TextConfig} style
-   * @param {RectanglePlacement=} position
+   * @param {ReferencePoint=} position
    */
   constructor(text, style, position) {
     super(text, style, {});
@@ -44,7 +44,7 @@ export class TextBox extends PrimitiveBox {
     };
   }
 
-  /** @param {RectanglePlacement} position*/
+  /** @param {ReferencePoint} position*/
   setPosition(position) {
     this.position = position;
   }

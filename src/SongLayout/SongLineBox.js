@@ -6,7 +6,7 @@ import { TextBox } from "../Drawing/Boxes/TextBox.js";
 /**
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("../Drawing/TextConfig.js").TextConfig} TextConfig
- * @typedef {import("../Drawing/Geometry.js").RectanglePlacement} BoxPlacement
+ * @typedef {import("../Drawing/Geometry.js").ReferencePoint} BoxPlacement
  * @typedef {import("../Drawing/Geometry.js").Point} Point
  * @typedef {import("../Drawing/Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("../Drawing/Geometry.js").YStartPosition} YStartPosition

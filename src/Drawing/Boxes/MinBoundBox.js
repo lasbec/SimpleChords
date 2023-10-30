@@ -4,7 +4,7 @@ import { MutableFreePointer } from "../FreePointer.js";
 import { FixedSizeBox } from "./FixedSizeBox.js";
 
 /**
- * @typedef {import("../Geometry.js").RectanglePlacement} BoxPlacement
+ * @typedef {import("../Geometry.js").ReferencePoint} BoxPlacement
  * @typedef {import("../Geometry.js").Box} Box
  * @typedef {import("../Geometry.js").ParentBox} ParentBox
  * @typedef {import("pdf-lib").PDFPage} PDFPage

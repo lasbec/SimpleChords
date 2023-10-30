@@ -5,7 +5,7 @@
  * @typedef {import("./Geometry.js").MutRectangle} MutRectangle
  * @typedef {import("./Geometry.js").Rectangle} Rectangle
  * @typedef {import("./Geometry.js").Dimensions} Dimensions
- * @typedef {import("./Geometry.js").RectanglePlacement} RectanglePlacement
+ * @typedef {import("./Geometry.js").ReferencePoint} ReferencePoint
  */
 
 /**
@@ -36,7 +36,7 @@ export class FreeBox {
 
   /**
    *
-   * @param {RectanglePlacement} placement
+   * @param {ReferencePoint} placement
    * @param {Dimensions} dims
    * @returns {FreeBox}
    */
@@ -61,7 +61,7 @@ export class FreeBox {
     });
   }
 
-  /** @param {RectanglePlacement} placement  */
+  /** @param {ReferencePoint} placement  */
   setPosition(placement) {
     const { x: left, y: bottom } = getPoint({
       targetX: "left",
@@ -166,8 +166,8 @@ export class FreeBox {
     return this.yPositionFor(position);
   }
 
-  /** @returns {import("./Geometry.js").RectanglePlacement} */
-  getAnyPosition() {
+  /** @returns {import("./Geometry.js").ReferencePoint} */
+  referencePoint() {
     return {
       pointOnRect: { x: "left", y: "top" },
       pointOnGrid: this.getPoint("left", "top"),

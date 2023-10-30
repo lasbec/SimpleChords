@@ -3,7 +3,7 @@ import { FreeBox } from "./FreeBox.js";
 import { MutableFreePointer } from "./FreePointer.js";
 
 /**
- * @typedef {import("./Geometry.js").RectanglePlacement} RectanglePlacement
+ * @typedef {import("./Geometry.js").ReferencePoint} ReferencePoint
  * @typedef {import("./Geometry.js").XStartPosition} RelX
  * @typedef {import("./Geometry.js").YStartPosition} RelY
  * @typedef {import("./Geometry.js").Rectangle} Rectangle
@@ -13,7 +13,7 @@ import { MutableFreePointer } from "./FreePointer.js";
  * @typedef {object} GetPointArgs
  * @property {RelX} targetX
  * @property {RelY} targetY
- * @property {RectanglePlacement} corner
+ * @property {ReferencePoint} corner
  * @property {Length} width
  * @property {Length} height
  */
