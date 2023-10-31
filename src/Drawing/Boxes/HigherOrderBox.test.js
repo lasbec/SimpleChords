@@ -5,7 +5,6 @@ import { BoundsImpl } from "../Figures/BoundsImpl.js";
 import { RectangleImpl } from "../Figures/RectangleImpl.js";
 import { PointImpl } from "../Figures/PointImpl.js";
 import { LEN } from "../../Shared/Length.js";
-import exp from "constants";
 import { expect } from "vitest";
 
 describe("HigherOrderBox", () => {
@@ -15,7 +14,9 @@ describe("HigherOrderBox", () => {
       PointImpl.origin().moveUp(LEN(50, "mm")).moveRight(LEN(60, "mm"))
     );
     const hob = new HigherOrderBox([], BoundsImpl.minBoundsFrom(minRect));
-    expect(hob.rectangle.width.in("mm")).toEqual(60);
-    expect(hob.rectangle.height.in("mm")).toEqual(50);
+    expect([
+      hob.rectangle.width.in("mm").toFixed(8),
+      hob.rectangle.height.in("mm").toFixed(8),
+    ]).toEqual(["60.00000000", "50.00000000"]);
   });
 });
