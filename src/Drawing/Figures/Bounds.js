@@ -47,40 +47,36 @@ export class BoundsIml {
   top(minMax) {
     const value = this.verticalBounds.upper(minMax);
     if (!value) return;
-    return new VLineImpl(value);
+    return new HLineImpl(value);
   }
   /** @param {*} minMax  */
   bottom(minMax) {
     const value = this.verticalBounds.lower(minMax);
     if (!value) return;
-    return new VLineImpl(value);
+    return new HLineImpl(value);
   }
   /** @param {*} minMax  */
   height(minMax) {
-    const value = this.verticalBounds.value(minMax);
-    if (!value) return;
-    return new VLineImpl(value);
+    return this.verticalBounds.value(minMax);
   }
 
   /** @param {*} minMax  */
   left(minMax) {
     const value = this.horizontalBounds.lower(minMax);
     if (!value) return;
-    return new HLineImpl(value);
+    return new VLineImpl(value);
   }
 
   /** @param {*} minMax  */
   right(minMax) {
     const value = this.horizontalBounds.upper(minMax);
     if (!value) return;
-    return new HLineImpl(value);
+    return new VLineImpl(value);
   }
 
   /** @param {*} minMax  */
   width(minMax) {
-    const value = this.horizontalBounds.value(minMax);
-    if (!value) return;
-    return new HLineImpl(value);
+    return this.horizontalBounds.value(minMax);
   }
 }
 

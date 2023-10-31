@@ -1,21 +1,12 @@
-import { Length } from "../Shared/Length.js";
-import { RectangleImpl } from "./Figures/RectangleImpl.js";
-import { PointImpl } from "./Figures/PointImpl.js";
+import { Length } from "../../Shared/Length.js";
+import { RectangleImpl } from "./RectangleImpl.js";
+import { PointImpl } from "./PointImpl.js";
 
 /**
- * @typedef {import("./Geometry.js").ReferencePoint} ReferencePoint
- * @typedef {import("./Geometry.js").XStartPosition} RelX
- * @typedef {import("./Geometry.js").YStartPosition} RelY
- * @typedef {import("./Geometry.js").Rectangle} Rectangle
- */
-
-/**
- * @typedef {object} GetPointArgs
- * @property {RelX} targetX
- * @property {RelY} targetY
- * @property {ReferencePoint} corner
- * @property {Length} width
- * @property {Length} height
+ * @typedef {import("../Geometry.js").ReferencePoint} ReferencePoint
+ * @typedef {import("../Geometry.js").XStartPosition} RelX
+ * @typedef {import("../Geometry.js").YStartPosition} RelY
+ * @typedef {import("../Geometry.js").Rectangle} Rectangle
  */
 
 /**
@@ -35,6 +26,15 @@ export function isInside(inner, outer) {
     innerRightBottom.isHigherOrEq(outerRightBottom)
   );
 }
+
+/**
+ * @typedef {object} GetPointArgs
+ * @property {RelX} targetX
+ * @property {RelY} targetY
+ * @property {ReferencePoint} corner
+ * @property {Length} width
+ * @property {Length} height
+ */
 
 /**
  * @param {GetPointArgs} args
@@ -114,8 +114,8 @@ const yMovementMap = {
 };
 
 /**
- * @typedef {import("./Geometry.js").Dimensions} Dimensions
- * @typedef {import("./Geometry.js").Box} Box
+ * @typedef {import("../Geometry.js").Dimensions} Dimensions
+ * @typedef {import("../Geometry.js").Box} Box
  */
 
 /**

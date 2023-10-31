@@ -7,7 +7,6 @@ import { PointCompare } from "../CoordinateSystemSpecifics/Compare.js";
  * @typedef {import("../CoordinateSystemSpecifics/Figures.js").VLine} VLine
  */
 
-
 /**
  * @implements {VLine}
  */
@@ -42,6 +41,13 @@ export class VLineImpl {
   moveLeft(offset) {
     RelativeMovement.left(offset).change(this);
     return this;
+  }
+
+  /**
+   * @param {VLine} other
+   */
+  distance(other) {
+    return this.x.sub(other.x).abs();
   }
 
   clone() {

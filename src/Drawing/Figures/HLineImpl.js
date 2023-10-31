@@ -45,6 +45,13 @@ export class HLineImpl {
     return new HLineImpl(this.y);
   }
 
+  /**
+   * @param {HLine} other
+   */
+  distance(other) {
+    return this.y.sub(other.y).abs();
+  }
+
   /** @param {Length} offset  */
   pointerUp(offset) {
     return this.clone().moveUp(offset);

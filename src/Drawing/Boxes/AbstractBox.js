@@ -12,7 +12,6 @@ import { BoundsIml } from "../Figures/Bounds.js";
  * @typedef {import("../Geometry.js").Dimensions} Dimensions
  * @typedef {import("../Geometry.js").Box} Box
  * @typedef {import("../Geometry.js").LeaveBox} LeaveBox
- * @typedef {import("../Geometry.js").PartialRectangle} PartialRectangle
  */
 
 /**

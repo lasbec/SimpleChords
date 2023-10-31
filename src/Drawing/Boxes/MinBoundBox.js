@@ -1,4 +1,4 @@
-import { minimalBoundingBox } from "../BoxMeasuringUtils.js";
+import { minimalBoundingBox } from "../Figures/FigureUtils.js";
 import { RectangleImpl } from "../Figures/RectangleImpl.js";
 import { PointImpl } from "../Figures/PointImpl.js";
 import { FixedSizeBox } from "./FixedSizeBox.js";

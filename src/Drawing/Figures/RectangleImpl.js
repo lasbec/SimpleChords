@@ -17,7 +17,7 @@
  */
 
 import { Length } from "../../Shared/Length.js";
-import { getPoint } from "../BoxMeasuringUtils.js";
+import { getPoint } from "./FigureUtils.js";
 import { HLineImpl } from "./HLineImpl.js";
 import { PointImpl } from "./PointImpl.js";
 import { VLineImpl } from "./VLineImpl.js";
@@ -33,7 +33,7 @@ export class RectangleImpl {
     const right = c0.isLeftOrEq(c1) ? c1.x : c0.x;
     const top = c0.isLowerOrEq(c1) ? c1.y : c0.y;
     const bottom = c0.isLowerOrEq(c1) ? c0.y : c1.y;
-    return RectangleImpl.fromBorders({ left, right, top, bottom });
+    return new RectangleImpl({ left, right, top, bottom });
   }
 
   /**
@@ -83,11 +83,6 @@ export class RectangleImpl {
     this.right = right;
     this.bottom = bottom;
     this.top = top;
-  }
-
-  /** @param {BoxBorders} args */
-  static fromBorders({ left, right, top, bottom }) {
-    return new RectangleImpl({ left, right, top, bottom });
   }
 
   /**

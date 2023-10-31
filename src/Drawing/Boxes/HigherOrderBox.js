@@ -1,5 +1,5 @@
 import { PointImpl } from "../Figures/PointImpl.js";
-import { minimalBoundingBox } from "../BoxMeasuringUtils.js";
+import { minimalBoundingBox } from "../Figures/FigureUtils.js";
 import { RectangleImpl } from "../Figures/RectangleImpl.js";
 import { AbstractBox } from "./AbstractBox.js";
 import { PDFPage } from "pdf-lib";

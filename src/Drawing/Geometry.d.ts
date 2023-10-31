@@ -55,18 +55,6 @@ export type ParentBox = BaseBox & {
 
 export type Box = ParentBox | LeaveBox;
 
-export type RectNoBottom = {
-  getBorder(border: Omit<BorderPosition, "bottom">): Length;
-  getPoint(x: XStartPosition, y: "top"): PointImpl;
-  width: Length;
-};
-
-export type RectNoRight = {
-  getBorder(border: Omit<BorderPosition, "right">): Length;
-  getPoint(x: XStartPosition, y: "left"): PointImpl;
-  width: Length;
-};
-
 export type Rectangle = {
   getBorderHorizontal(border: "top" | "bottom"): HLineImpl;
   getBorderVertical(border: "left" | "right"): VLineImpl;
@@ -81,9 +69,15 @@ export type Rectangle = {
   height: Length;
 };
 
-export type PartialRectangle = Partial<Record<BorderPosition, Length>> & {
-  width?: Length;
-  height?: Length;
+export type PartialRectangle = {
+  getBorderHorizontal(border: "top" | "bottom"): HLineImpl | undefined;
+  getBorderVertical(border: "left" | "right"): VLineImpl | undefined;
+  getBorder(border: BorderPosition): HLineImpl | VLineImpl | undefined;
+
+  clone(): PartialRectangle;
+
+  width: Length | undefined;
+  height: Length | undefined;
 };
 
 export type MutRectangle = Rectangle & {
