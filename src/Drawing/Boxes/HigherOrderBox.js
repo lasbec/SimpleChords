@@ -71,6 +71,7 @@ export class HigherOrderBox extends AbstractBox {
     rectangle.setPosition(position);
     const newCenter = rectangle.getPoint("center", "center");
     const move = RelativeMovement.from(oldCenter).to(newCenter);
+    this.bounds.move(move);
 
     for (const child of this.children) {
       const newChildCenter = child.rectangle.getPoint("center", "center");

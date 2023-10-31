@@ -1,4 +1,5 @@
 import { Length } from "../../Shared/Length.js";
+import { RelativeMovement } from "../CoordinateSystemSpecifics/Movement.js";
 import { HLineImpl } from "./HLineImpl.js";
 import { VLineImpl } from "./VLineImpl.js";
 /**
@@ -90,6 +91,14 @@ export class BoundsImpl {
         minLower: restrictions.minBottom?.x,
       }),
     });
+  }
+
+  /**
+   * @param {RelativeMovement} move
+   */
+  move(move) {
+    this.verticalBounds.add(move.x);
+    this.horizontalBounds.add(move.y);
   }
 
   /** @param {*} minMax  */
