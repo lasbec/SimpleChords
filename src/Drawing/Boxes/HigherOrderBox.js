@@ -38,7 +38,7 @@ export class HigherOrderBox extends AbstractBox {
    * @param {BoundsImpl} bounds
    */
   constructor(children, bounds) {
-    super(children, null, bounds);
+    super([], null, bounds);
     for (const child of children) {
       this.appendChild(child);
     }
