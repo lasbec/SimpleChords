@@ -30,7 +30,7 @@ export function decorateAsComponent(drawChildrenFn) {
     while (rest !== undefined) {
       const partialResult = drawChildrenFn(rest, config, boxGen.get(pageCount));
       pageCount += 1;
-      result.push(new DynamicSizedBox(partialResult.children));
+      result.push(HigherOrderBox.undboundBoxGroup(partialResult.children));
       rest = partialResult.rest;
     }
     return result;
@@ -51,18 +51,8 @@ export function decorateAsBox(drawChildrenFn) {
    */
   return (content, config, drawingStartPoint) => {
     drawingStartPoint = drawingStartPoint?.clone() || PointImpl.origin();
-    return new DynamicSizedBox(
+    return HigherOrderBox.undboundBoxGroup(
       drawChildrenFn(content, config, drawingStartPoint)
     );
   };
-}
-
-/** Unbounded (no startpoint), Arrangement, HOB, Mutable */
-export class DynamicSizedBox extends HigherOrderBox {
-  /**
-   * @param {Box[]} children
-   */
-  constructor(children) {
-    super(children, BoundsImpl.unbound());
-  }
 }

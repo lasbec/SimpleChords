@@ -1,6 +1,6 @@
 import { LEN, Length } from "../Shared/Length.js";
 import { SongLine } from "../Song/SongLine.js";
-import { decorateAsBox } from "../Drawing/Boxes/DynamicSizedBox.js";
+import { decorateAsBox } from "../Drawing/Boxes/BoxDecorator.js";
 import { PointImpl } from "../Drawing/Figures/PointImpl.js";
 import { TextBox } from "../Drawing/Boxes/TextBox.js";
 /**

@@ -1,6 +1,6 @@
 import { WellKnownSectionType } from "../Song/SongChecker.js";
 import { PointImpl } from "../Drawing/Figures/PointImpl.js";
-import { decorateAsBox } from "../Drawing/Boxes/DynamicSizedBox.js";
+import { decorateAsBox } from "../Drawing/Boxes/BoxDecorator.js";
 import { TextBox } from "../Drawing/Boxes/TextBox.js";
 import { songLineBox } from "./SongLineBox.js";
 /**

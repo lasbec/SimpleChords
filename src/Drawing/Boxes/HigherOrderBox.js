@@ -62,6 +62,11 @@ export class HigherOrderBox extends AbstractBox {
     );
   }
 
+  /** @param {Box[]} children  */
+  static undboundBoxGroup(children) {
+    return new HigherOrderBox(children, BoundsImpl.unbound());
+  }
+
   /** @type {Rectangle} */
   get rectangle() {
     const mbb = minimalBoundingRectangle(this.children.map((c) => c.rectangle));
