@@ -1,4 +1,4 @@
-import { MinBoundBox } from "../Boxes/MinBoundBox.js";
+import { HigherOrderBox } from "../Boxes/HigherOrderBox.js";
 import { Length } from "../../Shared/Length.js";
 
 /**
@@ -29,7 +29,7 @@ function isContentStylePair(x) {
  */
 export function stackBoxes(boxes, defaultStyle, boundsGen) {
   let pageCount = 0;
-  let currPage = MinBoundBox.fromRect(boundsGen.get(pageCount));
+  let currPage = HigherOrderBox.withLowerBounds(boundsGen.get(pageCount));
   pageCount += 1;
 
   /** @type {Box[]} */
@@ -59,7 +59,7 @@ export function stackBoxes(boxes, defaultStyle, boundsGen) {
       .getPoint("left", "bottom")
       .isLowerOrEq(currPage.rectangle.getPoint("left", "bottom"));
     if (sectionExeedsPage) {
-      currPage = MinBoundBox.fromRect(boundsGen.get(pageCount));
+      currPage = HigherOrderBox.withLowerBounds(boundsGen.get(pageCount));
       pageCount += 1;
       result.push(currPage);
       bottomOfLastSection = currPage.rectangle.getBorderHorizontal("top");

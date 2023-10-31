@@ -1,7 +1,7 @@
 import { songSection } from "./SongSectionBox.js";
 import { TextBox } from "../Drawing/Boxes/TextBox.js";
 import { Song } from "../Song/Song.js";
-import { MinBoundBox } from "../Drawing/Boxes/MinBoundBox.js";
+import { HigherOrderBox } from "../Drawing/Boxes/HigherOrderBox.js";
 import { SongLine } from "../Song/SongLine.js";
 import { isInside } from "../Drawing/Figures/FigureUtils.js";
 import { SimpleBoxGen } from "../Drawing/RectangleGens/SimpleBoxGen.js";
@@ -44,7 +44,7 @@ export function songLayout(song, layoutConfig, rect) {
  * @returns {Box[]}
  */
 export function songLayoutSimple(song, layoutConfig, rect) {
-  const fstPage = MinBoundBox.fromRect(rect);
+  const fstPage = HigherOrderBox.withLowerBounds(rect);
   const titleBox = new TextBox(song.heading, layoutConfig.titleTextConfig);
   titleBox.setPosition({
     pointOnRect: { x: "center", y: "top" },

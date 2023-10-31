@@ -1,12 +1,11 @@
-import { PointImpl } from "../Figures/PointImpl.js";
-import { HigherOrderBox } from "./HigherOrderBox.js";
-import { BoundsImpl } from "../Figures/BoundsImpl.js";
+import { PointImpl } from "./Figures/PointImpl.js";
+import { HigherOrderBox } from "./Boxes/HigherOrderBox.js";
 
 /**
- * @typedef {import("../Geometry.js").Rectangle} Rectangle
- * @typedef {import("../Geometry.js").ReferencePoint} BoxPlacement
- * @typedef {import("../Geometry.js").Box} Box
- * @typedef {import("../Geometry.js").RectangleGenerator} BoxGenerator
+ * @typedef {import("./Geometry.js").Rectangle} Rectangle
+ * @typedef {import("./Geometry.js").ReferencePoint} BoxPlacement
+ * @typedef {import("./Geometry.js").Box} Box
+ * @typedef {import("./Geometry.js").RectangleGenerator} BoxGenerator
  */
 
 /**
