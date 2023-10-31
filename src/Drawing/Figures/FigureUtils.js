@@ -161,16 +161,24 @@ export function minimalBoundingRectangleSafe(rect, ...remaining) {
     let rightCan = p.getBorderVertical("right");
     let topCan = p.getBorderHorizontal("top");
     let bottomCan = p.getBorderHorizontal("bottom");
-    if (!left || leftCan?.isRightOrEq(left)) {
+    if (!left || !leftCan) {
+      left = undefined;
+    } else if (leftCan.isLeftOrEq(left)) {
       left = leftCan;
     }
-    if (!right || rightCan?.isLeftOrEq(right)) {
+    if (!right || !rightCan) {
+      right = undefined;
+    } else if (rightCan.isRightOrEq(right)) {
       right = rightCan;
     }
-    if (!top || topCan?.isLowerOrEq(top)) {
+    if (!top || !topCan) {
+      top = undefined;
+    } else if (topCan.isHigherOrEq(top)) {
       top = topCan;
     }
-    if (!bottom || bottomCan?.isHigherOrEq(bottom)) {
+    if (!bottomCan || !bottom) {
+      bottom = undefined;
+    } else if (bottomCan.isLowerOrEq(bottom)) {
       bottom = bottomCan;
     }
   }
@@ -249,5 +257,6 @@ export function fitIntoBounds(rectangle, bounds) {
     rectangle,
     minimalBoundingRectangleSafe(lowerBounds, rectangle)
   );
-  return interSectionSafe(extendedRectangle, upperBounds);
+  const restrictedRect = interSectionSafe(extendedRectangle, upperBounds);
+  return restrictedRect;
 }
