@@ -85,5 +85,27 @@ export type MutRectangle = Rectangle & {
   setPosition(position: ReferencePoint): void;
 };
 
-type BoundMark = "maxWidth" | "maxHeight" | "minWidth" | "minHeight";
-export type Bounds = Partial<Record<BoundMark, Length>>;
+export type IntervalRestrictions = {
+  maxValue?: Length;
+  minValue?: Length;
+  maxUpper?: Length;
+  minUpper?: Length;
+  maxLower?: Length;
+  minLower?: Length;
+};
+
+export type RectangleRestrictions = {
+  maxWidth?: Length;
+  minWidth?: Length;
+  maxRight?: Length;
+  minRight?: Length;
+  maxLeft?: Length;
+  minLeft?: Length;
+
+  maxHeight?: Length;
+  minHeight?: Length;
+  maxTop?: Length;
+  minTop?: Length;
+  maxBottom?: Length;
+  minBottom?: Length;
+};
