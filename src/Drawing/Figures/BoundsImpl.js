@@ -2,6 +2,10 @@ import { Length } from "../../Shared/Length.js";
 import { HLineImpl } from "./HLineImpl.js";
 import { VLineImpl } from "./VLineImpl.js";
 /**
+ */
+
+/**
+ * @typedef {import("../Geometry.js").Rectangle} Rectangle
  * @typedef {import("../Geometry.js").IntervalRestrictions} IntervalRestrictons
  * @typedef {import("../Geometry.js").Bounds} Bounds
  */
@@ -25,7 +29,7 @@ export class BoundsImpl {
   }
 
   /**
-   * @param {import("../Geometry.js").Rectangle} rect
+   * @param {Rectangle} rect
    */
   static exactBoundsFrom(rect) {
     return BoundsImpl.from({
@@ -36,6 +40,30 @@ export class BoundsImpl {
       maxTop: rect.getBorderHorizontal("top"),
       minTop: rect.getBorderHorizontal("top"),
       maxBottom: rect.getBorderHorizontal("bottom"),
+      minBottom: rect.getBorderHorizontal("bottom"),
+    });
+  }
+
+  /**
+   * @param {Rectangle} rect
+   */
+  static minBoundsFrom(rect) {
+    return BoundsImpl.from({
+      minRight: rect.getBorderVertical("right"),
+      minLeft: rect.getBorderVertical("left"),
+      minTop: rect.getBorderHorizontal("top"),
+      minBottom: rect.getBorderHorizontal("bottom"),
+    });
+  }
+
+  /**
+   * @param {Rectangle} rect
+   */
+  static maxBoundsFrom(rect) {
+    return BoundsImpl.from({
+      minRight: rect.getBorderVertical("right"),
+      minLeft: rect.getBorderVertical("left"),
+      minTop: rect.getBorderHorizontal("top"),
       minBottom: rect.getBorderHorizontal("bottom"),
     });
   }
