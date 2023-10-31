@@ -81,14 +81,14 @@ export class AlignMovement {
   }
 
   /**
-   * @param {HLine | Point} line
+   * @param {VLine | Point} line
    */
   static alignHorizontalWith(line) {
     return new AlignMovement({ x: line.x, y: undefined });
   }
 
   /**
-   * @param {VLine | Point} line
+   * @param {HLine | Point} line
    */
   static alignVerticalWith(line) {
     return new AlignMovement({ y: line.y, x: undefined });

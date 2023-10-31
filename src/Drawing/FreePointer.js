@@ -4,6 +4,8 @@ import { RelativeMovement } from "./CoordinateSystemSpecifics/Movement.js";
 import { PointCompare } from "./CoordinateSystemSpecifics/Compare.js";
 /**
  * @typedef {import("./Geometry.js").Point} Point
+ * @typedef {import("./CoordinateSystemSpecifics/Figures.js").VLine} VLine
+ * @typedef {import("./CoordinateSystemSpecifics/Figures.js").HLine} HLine
  */
 
 export class MutableFreePointer {
@@ -101,22 +103,22 @@ export class MutableFreePointer {
     return FreeBox.fromCorners(this.clone(), other.clone());
   }
 
-  /** @param {MutableFreePointer} other  */
+  /** @param {Point | VLine} other  */
   isLeftOrEq(other) {
     return PointCompare.isLeftOrEq(this, other);
   }
 
-  /** @param {MutableFreePointer} other  */
+  /** @param {Point | HLine} other  */
   isLowerOrEq(other) {
     return PointCompare.isLowerOrEq(this, other);
   }
 
-  /** @param {MutableFreePointer} other  */
+  /** @param {Point | VLine} other  */
   isRightOrEq(other) {
     return PointCompare.isRightOrEq(this, other);
   }
 
-  /** @param {MutableFreePointer} other  */
+  /** @param {Point | HLine} other  */
   isHigherOrEq(other) {
     return PointCompare.isHigherOrEq(this, other);
   }

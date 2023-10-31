@@ -6,12 +6,12 @@ export type Point = {
 };
 
 export type VLine = {
-  x: undefined;
-  y: Length;
-};
-export type HLine = {
   x: Length;
   y: undefined;
+};
+export type HLine = {
+  x: undefined;
+  y: Length;
 };
 
 export type Line = VLine | HLine;
