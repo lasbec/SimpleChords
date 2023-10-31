@@ -18,6 +18,7 @@
  */
 import { BoundsIml } from "./BoundsImpl.js";
 import { HLineImpl } from "./HLineImpl.js";
+import { RectangleImpl } from "./RectangleImpl.js";
 import { VLineImpl } from "./VLineImpl.js";
 
 /** @implements {PartialRectangle} */
@@ -69,6 +70,16 @@ export class PartialRectangleImpl {
   get height() {
     if (this.def.bottom) {
       return this.def.top?.distance(this.def.bottom);
+    }
+  }
+
+  /**
+   * @returns {Rectangle | undefined}
+   */
+  toFullRectangle() {
+    const { left, right, top, bottom } = this.def;
+    if (left && right && top && bottom) {
+      return RectangleImpl.fromBorders({ left, right, top, bottom });
     }
   }
 

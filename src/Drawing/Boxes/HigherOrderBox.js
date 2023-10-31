@@ -1,10 +1,14 @@
 import { PointImpl } from "../Figures/PointImpl.js";
-import { minimalBoundingRectangle } from "../Figures/FigureUtils.js";
+import {
+  fitIntoBounds,
+  minimalBoundingRectangle,
+} from "../Figures/FigureUtils.js";
 import { RectangleImpl } from "../Figures/RectangleImpl.js";
 import { AbstractBox } from "./AbstractBox.js";
 import { PDFPage } from "pdf-lib";
 import { BoxOverflows } from "../BoxOverflow.js";
 import { drawDebugBox } from "../BoxDrawingUtils.js";
+import { PartialRectangleImpl } from "../Figures/PartialRectangleImpl.js";
 
 /**
  * @typedef {import("../Geometry.js").Rectangle} Rectangle
@@ -52,29 +56,13 @@ export class HigherOrderBox extends AbstractBox {
   get rectangle() {
     const mbb = minimalBoundingRectangle(this.children.map((c) => c.rectangle));
     if (!mbb) {
+      const minimalBound = PartialRectangleImpl.fromMinBound(
+        this.bounds
+      ).toFullRectangle();
+      if (minimalBound) return minimalBound;
       return RectangleImpl.fromCorners(PointImpl.origin(), PointImpl.origin());
     }
-    // const upperLimits = this.limitRectangle("max");
-    // const lowerLimits = this.limitRectangle("min");
-    // return FreeBox.fromBorders({
-    //   left: Length.safeMin(
-    //     Length.safeMax(mbb.left, lowerLimits.left),
-    //     upperLimits.left
-    //   ),
-    //   right: Length.safeMax(
-    //     Length.safeMin(mbb.right, lowerLimits.right),
-    //     upperLimits.right
-    //   ),
-    //   top: Length.safeMin(
-    //     Length.safeMax(mbb.top, lowerLimits.top),
-    //     upperLimits.top
-    //   ),
-    //   bottom: Length.safeMax(
-    //     Length.safeMin(mbb.bottom, lowerLimits.bottom),
-    //     upperLimits.bottom
-    //   ),
-    // });
-    return mbb; // TODO
+    return fitIntoBounds(mbb, this.bounds);
   }
 
   /** @returns {Box[]} */
