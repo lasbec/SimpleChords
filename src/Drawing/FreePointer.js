@@ -1,19 +1,12 @@
 import { Length } from "../Shared/Length.js";
 import { FreeBox } from "./FreeBox.js";
+import { Movement } from "./CoordinateSystemSpecifics/Movement.js";
+import { PointCompare } from "./CoordinateSystemSpecifics/PointCompare.js";
 /**
  * @typedef {import("./Geometry.js").Point} Point
  */
 
 export class MutableFreePointer {
-  /**
-   * @type {Length}
-   */
-  x;
-  /**
-   * @type {Length}
-   */
-  y;
-
   /**
    *
    * @param {Length} x
@@ -54,30 +47,30 @@ export class MutableFreePointer {
 
   /** @param {Length} offset  */
   moveRight(offset) {
-    this.x = this.x.add(offset);
+    Movement.right(offset).change(this);
     return this;
   }
 
   /** @param {Length} offset  */
   moveLeft(offset) {
-    this.x = this.x.sub(offset);
+    Movement.left(offset).change(this);
     return this;
   }
 
   /** @param {Length} offset  */
   moveUp(offset) {
-    this.y = this.y.add(offset);
+    Movement.up(offset).change(this);
+    return this;
+  }
+
+  /** @param {Length} offset  */
+  moveDown(offset) {
+    Movement.down(offset).change(this);
     return this;
   }
 
   clone() {
     return new MutableFreePointer(this.x, this.y);
-  }
-
-  /** @param {Length} offset  */
-  moveDown(offset) {
-    this.y = this.y.sub(offset);
-    return this;
   }
 
   /** @param {Length} offset  */
@@ -110,74 +103,21 @@ export class MutableFreePointer {
 
   /** @param {MutableFreePointer} other  */
   isLeftOrEq(other) {
-    return this.x.le(other.x);
+    return PointCompare.isLeftOrEq(this, other);
   }
 
   /** @param {MutableFreePointer} other  */
   isLowerOrEq(other) {
-    return this.y.le(other.y);
+    return PointCompare.isLowerOrEq(this, other);
   }
 
   /** @param {MutableFreePointer} other  */
   isRightOrEq(other) {
-    return other.x.le(this.x);
+    return PointCompare.isRightOrEq(this, other);
   }
 
   /** @param {MutableFreePointer} other  */
   isHigherOrEq(other) {
-    return other.y.le(this.y);
-  }
-}
-
-export class Movement {
-  /**
-   * @param {Length} x
-   * @param {Length} y
-   * @private
-   */
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
-  }
-
-  /**
-   * @param {Point} start
-   */
-  static from(start) {
-    return {
-      /** @param {Point} target */
-      to(target) {
-        return new Movement(target.x.sub(start.x), target.y.sub(start.y));
-      },
-    };
-  }
-
-  /** @param {Length} amount  */
-  static right(amount) {
-    return new Movement(amount, Length.zero);
-  }
-
-  /** @param {Length} amount  */
-  static left(amount) {
-    return new Movement(amount.neg(), Length.zero);
-  }
-
-  /** @param {Length} amount  */
-  static up(amount) {
-    return new Movement(Length.zero, amount);
-  }
-
-  /** @param {Length} amount  */
-  static down(amount) {
-    return new Movement(Length.zero, amount.neg());
-  }
-
-  /**
-   * @param {MutableFreePointer} point
-   * @returns {void}
-   */
-  change(point) {
-    point.x = point.x.add(this.x);
-    point.y = point.y.add(this.y);
+    return PointCompare.isHigherOrEq(this, other);
   }
 }

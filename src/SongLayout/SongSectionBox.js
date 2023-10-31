@@ -99,7 +99,7 @@ function drawOnlyChords(section, layoutConfig, pointer) {
     const textBox = new TextBox(text, layoutConfig.chordTextConfig);
     textBox.setPosition({
       pointOnRect: { x: "left", y: "top" },
-      pointOnGrid: MutableFreePointer.fromPoint(pointer),
+      pointOnGrid: pointer.clone(),
     });
     pointer.moveDown(chordLineHeight);
     lines.push(textBox);

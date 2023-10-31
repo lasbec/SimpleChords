@@ -5,7 +5,7 @@ import { FreeBox } from "../FreeBox.js";
 import { MutableFreePointer } from "../FreePointer.js";
 import { AbstractBox } from "./AbstractBox.js";
 import { Length } from "../../Shared/Length.js";
-import { Movement } from "../FreePointer.js";
+import { Movement } from "../CoordinateSystemSpecifics/Movement.js";
 
 /**
  * @typedef {import("../Geometry.js").Rectangle} Rectangle
@@ -104,4 +104,3 @@ export class FixedSizeBox extends AbstractBox {
     }
   }
 }
-
