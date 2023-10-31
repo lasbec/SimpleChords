@@ -1,5 +1,8 @@
 import { Length } from "../Shared/Length.js";
 import { FreeBox } from "./FreeBox.js";
+/**
+ * @typedef {import("./Geometry.js").Point} Point
+ */
 
 export class MutableFreePointer {
   /**
@@ -123,5 +126,39 @@ export class MutableFreePointer {
   /** @param {MutableFreePointer} other  */
   isHigherOrEq(other) {
     return other.y.le(this.y);
+  }
+}
+
+export class Movement {
+  /**
+   *
+   * @param {Length} x
+   * @param {Length} y
+   * @private
+   */
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  /**
+   * @param {Point} start
+   */
+  static from(start) {
+    return {
+      /** @param {Point} target */
+      to(target) {
+        return new Movement(target.x.sub(start.x), target.y.sub(start.y));
+      },
+    };
+  }
+
+  /**
+   * @param {MutableFreePointer} point
+   * @returns {void}
+   */
+  change(point) {
+    point.x = point.x.add(this.x);
+    point.y = point.y.add(this.y);
   }
 }

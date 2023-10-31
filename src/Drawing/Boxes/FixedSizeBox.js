@@ -4,6 +4,8 @@ import { drawDebugBox } from "../BoxDrawingUtils.js";
 import { FreeBox } from "../FreeBox.js";
 import { MutableFreePointer } from "../FreePointer.js";
 import { AbstractBox } from "./AbstractBox.js";
+import { Length } from "../../Shared/Length.js";
+import { Movement } from "../FreePointer.js";
 
 /**
  * @typedef {import("../Geometry.js").Rectangle} Rectangle
@@ -90,13 +92,11 @@ export class FixedSizeBox extends AbstractBox {
     const oldCenter = this.rectangle.getPoint("center", "center");
     this._rectangle.setPosition(position);
     const newCenter = this.rectangle.getPoint("center", "center");
-    const xMove = newCenter.x.sub(oldCenter.x);
-    const yMove = newCenter.y.sub(oldCenter.y);
+    const move = Movement.from(oldCenter).to(newCenter);
 
     for (const child of this.children) {
       const newChildCenter = child.rectangle.getPoint("center", "center");
-      newChildCenter.x = newChildCenter.x.add(xMove);
-      newChildCenter.y = newChildCenter.y.add(yMove);
+      move.change(newChildCenter);
       child.setPosition({
         pointOnRect: { x: "center", y: "center" },
         pointOnGrid: newChildCenter,
@@ -104,3 +104,4 @@ export class FixedSizeBox extends AbstractBox {
     }
   }
 }
+

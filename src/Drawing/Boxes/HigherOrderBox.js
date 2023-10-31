@@ -1,11 +1,11 @@
 import { MutableFreePointer } from "../FreePointer.js";
-import { Length } from "../../Shared/Length.js";
 import { minimalBoundingBox } from "../BoxMeasuringUtils.js";
 import { FreeBox } from "../FreeBox.js";
-import { AbstractBox, Limits } from "./AbstractBox.js";
+import { AbstractBox } from "./AbstractBox.js";
 import { PDFPage } from "pdf-lib";
 import { BoxOverflows } from "../BoxOverflow.js";
 import { drawDebugBox } from "../BoxDrawingUtils.js";
+import { RectangleBounds } from "./Bounds.js";
 
 /**
  * @typedef {import("../Geometry.js").Rectangle} Rectangle
@@ -13,8 +13,8 @@ import { drawDebugBox } from "../BoxDrawingUtils.js";
  * @typedef {import("../Geometry.js").Box} Box
  * @typedef {import("../Geometry.js").RectangleGenerator} BoxGenerator
  * @typedef {import("../Geometry.js").ParentBox} ParentBox
- * @typedef {import("../Geometry.js").Bounds} Bounds
  * @typedef {import("../Geometry.js").ReferencePoint} ReferencePoint
+ * @typedef {import("../Geometry.js").RectangleRestrictions} RectangleRestrictions
  */
 
 /** All bounds possible, Arrangement, HOB, Mutable */
@@ -30,7 +30,7 @@ export class HigherOrderBox extends AbstractBox {
   __discriminator__ = "parent";
   /**
    * @param {Box[]} children
-   * @param {Bounds} bounds
+   * @param {RectangleRestrictions} bounds
    */
   constructor(children, bounds) {
     super(children, null, bounds);
@@ -58,26 +58,27 @@ export class HigherOrderBox extends AbstractBox {
         MutableFreePointer.origin()
       );
     }
-    const upperLimits = this.limitRectangle("max");
-    const lowerLimits = this.limitRectangle("min");
-    return FreeBox.fromBorders({
-      left: Length.safeMin(
-        Length.safeMax(mbb.left, lowerLimits.left),
-        upperLimits.left
-      ),
-      right: Length.safeMax(
-        Length.safeMin(mbb.right, lowerLimits.right),
-        upperLimits.right
-      ),
-      top: Length.safeMin(
-        Length.safeMax(mbb.top, lowerLimits.top),
-        upperLimits.top
-      ),
-      bottom: Length.safeMax(
-        Length.safeMin(mbb.bottom, lowerLimits.bottom),
-        upperLimits.bottom
-      ),
-    });
+    // const upperLimits = this.limitRectangle("max");
+    // const lowerLimits = this.limitRectangle("min");
+    // return FreeBox.fromBorders({
+    //   left: Length.safeMin(
+    //     Length.safeMax(mbb.left, lowerLimits.left),
+    //     upperLimits.left
+    //   ),
+    //   right: Length.safeMax(
+    //     Length.safeMin(mbb.right, lowerLimits.right),
+    //     upperLimits.right
+    //   ),
+    //   top: Length.safeMin(
+    //     Length.safeMax(mbb.top, lowerLimits.top),
+    //     upperLimits.top
+    //   ),
+    //   bottom: Length.safeMax(
+    //     Length.safeMin(mbb.bottom, lowerLimits.bottom),
+    //     upperLimits.bottom
+    //   ),
+    // });
+    return mbb; // TODO
   }
 
   /** @returns {Box[]} */
@@ -119,7 +120,7 @@ export class HigherOrderBox extends AbstractBox {
             .getPoint("left", "bottom")
             .span(this.leftBottom)
             .getPoint("left", "bottom"));
-          
+
     this.children.push(box);
     box.parent = this;
   }

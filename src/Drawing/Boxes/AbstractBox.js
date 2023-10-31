@@ -1,7 +1,8 @@
 import { FreeBox } from "../FreeBox.js";
-import { Length } from "../../Shared/Length.js";
+import { RectangleBounds } from "./Bounds.js";
 
 /**
+ * @typedef {import("../Geometry.js").RectangleRestrictions} RectangleRestrictions
  * @typedef {import("../Geometry.js").Rectangle} Rectangle
  * @typedef {import("../Geometry.js").MutRectangle} MutRectangle
  * @typedef {import("../Geometry.js").BorderPosition} BorderPosition
@@ -11,7 +12,6 @@ import { Length } from "../../Shared/Length.js";
  * @typedef {import("../Geometry.js").Dimensions} Dimensions
  * @typedef {import("../Geometry.js").Box} Box
  * @typedef {import("../Geometry.js").LeaveBox} LeaveBox
- * @typedef {import("../Geometry.js").Bounds} Bounds
  * @typedef {import("../Geometry.js").PartialRectangle} PartialRectangle
  */
 
@@ -23,12 +23,12 @@ export class AbstractBox {
   /**
    * @param {Content} content
    * @param {Style} style
-   * @param {Bounds} bounds
+   * @param {RectangleRestrictions} bounds
    */
   constructor(content, style, bounds) {
     this.content = content;
     this.style = style;
-    this.bounds = bounds;
+    this.bounds = RectangleBounds.from(bounds);
     /** @type {Box | null} */
     this.parent = null;
   }
@@ -64,60 +64,5 @@ export class AbstractBox {
 
   referencePoint() {
     return this.rectangle.referencePoint();
-  }
-
-  /** @param {"min" | "max" } upperLower */
-  limitRectangle(upperLower) {
-    return Limits.fromBounds(this.referencePoint(), this.bounds, upperLower);
-  }
-}
-
-/**
- * @typedef {import("../Geometry.js").ReferencePoint} ReferencePoint
- */
-
-/**
- * @implements {PartialRectangle}
- */
-export class Limits {
-  /**
-   * @param {PartialRectangle} rect
-   */
-  constructor(rect) {
-    this.left = rect.left;
-    this.right = rect.right;
-    this.top = rect.top;
-    this.bottom = rect.bottom;
-    this.width = rect.width;
-    this.height = rect.height;
-  }
-  /**
-   * @param {ReferencePoint} referencePoint
-   * @param {Bounds} bounds
-   * @param {"min" | "max" } upperLower
-   */
-  static fromBounds(referencePoint, bounds, upperLower) {
-    const limitBox = FreeBox.fromPlacement(referencePoint, {
-      width: bounds[`${upperLower}Width`] || Length.zero,
-      height: bounds[`${upperLower}Height`] || Length.zero,
-    });
-    const horizontalLimits = bounds[`${upperLower}Width`]
-      ? {
-          left: limitBox.getBorder("left"),
-          right: limitBox.getBorder("right"),
-        }
-      : {};
-    const verticalLimits = bounds[`${upperLower}Height`]
-      ? {
-          top: limitBox.getBorder("top"),
-          bottom: limitBox.getBorder("bottom"),
-        }
-      : {};
-    return {
-      width: bounds[`${upperLower}Width`],
-      height: bounds[`${upperLower}Height`],
-      ...horizontalLimits,
-      ...verticalLimits,
-    };
   }
 }

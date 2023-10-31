@@ -13,37 +13,60 @@ export class RectangleBounds {
    * @param {{vertical:Restrictions1D, horizontal: Restrictions1D}} args
    * @private
    */
-  constructor(args) {
-    this.verticalBounds = args.vertical;
-    this.horizontalBounds = args.horizontal;
+  constructor({ vertical, horizontal }) {
+    this.verticalBounds = vertical;
+    this.horizontalBounds = horizontal;
+  }
+  /**
+   * @param {RectangleRestrictions} restrictions
+   */
+  static from(restrictions) {
+    return new RectangleBounds({
+      horizontal: new Restrictions1D({
+        maxValue: restrictions.maxWidth,
+        minValue: restrictions.minWidth,
+        maxUpper: restrictions.maxRight,
+        minUpper: restrictions.minRight,
+        maxLower: restrictions.maxLeft,
+        minLower: restrictions.minLeft,
+      }),
+      vertical: new Restrictions1D({
+        maxValue: restrictions.maxHeight,
+        minValue: restrictions.minHeight,
+        maxUpper: restrictions.maxTop,
+        minUpper: restrictions.minTop,
+        maxLower: restrictions.maxBottom,
+        minLower: restrictions.minBottom,
+      }),
+    });
   }
 
   /** @param {*} minMax  */
   top(minMax) {
-    return this.verticalBounds.maxUpper();
+    return this.verticalBounds.upper(minMax);
   }
   /** @param {*} minMax  */
   bottom(minMax) {
-    return this.verticalBounds.maxLower();
+    return this.verticalBounds.lower(minMax);
   }
   /** @param {*} minMax  */
   height(minMax) {
-    return this.verticalBounds.maxValue();
+    return this.verticalBounds.value(minMax);
   }
 
   /** @param {*} minMax  */
   left(minMax) {
-    return this.horizontalBounds.maxLower();
+    return this.horizontalBounds.lower(minMax);
   }
 
   /** @param {*} minMax  */
   right(minMax) {
-    return this.horizontalBounds.maxUpper();
+    return this.horizontalBounds.upper(minMax);
   }
 
   /** @param {*} minMax  */
   width(minMax) {
-    return this.horizontalBounds.maxValue();
+    return this.horizontalBounds.value(minMax);
   }
 }
 
@@ -109,34 +132,39 @@ class Restrictions1D {
     return this[`${minMax}Lower`]();
   }
 
+  /** @private */
   maxValue() {
     if (this._maxValue) return this._maxValue;
     if (this._maxUpper && this._maxLower)
       return this._maxUpper.sub(this._maxLower);
   }
+  /** @private */
   minValue() {
     if (this._minValue) return this._minValue;
     if (this._minUpper && this._minLower)
       return this._minUpper.sub(this._minLower);
   }
-
+  /** @private */
   maxUpper() {
     if (this._maxUpper) return this._maxUpper;
     if (this._maxLower && this._maxValue) {
       return this._maxLower.add(this._maxValue);
     }
   }
+  /** @private */
   minUpper() {
     if (this._minUpper) return this._minUpper;
     if (this._minLower && this._minValue) {
       return this._minLower.add(this._minValue);
     }
   }
+  /** @private */
   maxLower() {
     if (this._maxLower) return this._maxLower;
     if (this._maxUpper && this._maxValue)
       return this._maxUpper.sub(this._maxValue);
   }
+  /** @private */
   minLower() {
     if (this._minLower) return this._minLower;
     if (this._minUpper && this._minValue)
