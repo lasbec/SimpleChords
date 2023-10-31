@@ -47,7 +47,7 @@ export class MutableFreePointer {
    * @param {MutableFreePointer | Length} other
    * @return {this}
    */
-  setHeight(other) {
+  alignVerticalWith(other) {
     this.y = other instanceof Length ? other : other.y;
     return this;
   }

@@ -18,7 +18,7 @@ export class SimpleBoxGen {
    */
   constructor(regular, begin) {
     this.beginLeftTop = begin
-      ? regular.getPoint("left", "top").setHeight(begin)
+      ? regular.getPoint("left", "top").alignVerticalWith(begin)
       : regular.getPoint("left", "top");
     this.regular = regular;
   }

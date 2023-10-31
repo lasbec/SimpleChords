@@ -49,7 +49,7 @@ export function stackBoxes(boxes, defaultStyle, boundsGen) {
       return currPage.rectangle
         .getPoint(alignment, "top")
         .clone()
-        .setHeight(bottomOfLastSection);
+        .alignVerticalWith(bottomOfLastSection);
     }
     box.setPosition({
       pointOnRect: { x: alignment, y: "top" },
