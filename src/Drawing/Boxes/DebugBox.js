@@ -2,6 +2,7 @@ import { LEN } from "../../Shared/Length.js";
 import { rgb } from "pdf-lib";
 import { PointImpl } from "../Figures/PointImpl.js";
 import { PrimitiveBox } from "./PrimitiveBox.js";
+import { BoundsImpl } from "../Figures/BoundsImpl.js";
 /**
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("../Geometry.js").Point} Point
@@ -27,7 +28,7 @@ export class DebugBox extends PrimitiveBox {
    * @param {Point} center
    */
   constructor(center) {
-    super(null, null, {});
+    super(null, null, BoundsImpl.unbound());
     /**
      */
 

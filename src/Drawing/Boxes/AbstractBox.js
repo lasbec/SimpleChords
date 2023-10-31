@@ -1,5 +1,5 @@
 import { RectangleImpl } from "../Figures/RectangleImpl.js";
-import { BoundsIml } from "../Figures/BoundsImpl.js";
+import { BoundsImpl } from "../Figures/BoundsImpl.js";
 
 /**
  * @typedef {import("../Geometry.js").Bounds} RectangleRestrictions
@@ -22,12 +22,12 @@ export class AbstractBox {
   /**
    * @param {Content} content
    * @param {Style} style
-   * @param {RectangleRestrictions} bounds
+   * @param {BoundsImpl} bounds
    */
   constructor(content, style, bounds) {
     this.content = content;
     this.style = style;
-    this.bounds = BoundsIml.from(bounds);
+    this.bounds = bounds;
     /** @type {Box | null} */
     this.parent = null;
   }

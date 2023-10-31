@@ -4,8 +4,8 @@ import { drawDebugBox } from "../BoxDrawingUtils.js";
 import { RectangleImpl } from "../Figures/RectangleImpl.js";
 import { PointImpl } from "../Figures/PointImpl.js";
 import { AbstractBox } from "./AbstractBox.js";
-import { Length } from "../../Shared/Length.js";
 import { RelativeMovement } from "../CoordinateSystemSpecifics/Movement.js";
+import { BoundsImpl } from "../Figures/BoundsImpl.js";
 
 /**
  * @typedef {import("../Geometry.js").Rectangle} Rectangle
@@ -35,12 +35,7 @@ export class FixedSizeBox extends AbstractBox {
   constructor(rectangle) {
     /** @type {Box[]} */
     const children = [];
-    super(children, null, {
-      maxWidth: rectangle.width,
-      minWidth: rectangle.width,
-      maxHeight: rectangle.height,
-      minHeight: rectangle.height,
-    });
+    super(children, null, BoundsImpl.exactBoundsFrom(rectangle));
     this._rectangle = rectangle;
   }
 

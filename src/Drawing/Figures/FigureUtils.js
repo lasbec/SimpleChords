@@ -5,7 +5,7 @@ import { PartialRectangleImpl } from "./PartialRectangleImpl.js";
 import { VLineImpl } from "./VLineImpl.js";
 import { HLineImpl } from "./HLineImpl.js";
 import { PointCompare } from "../CoordinateSystemSpecifics/Compare.js";
-import { BoundsIml } from "./BoundsImpl.js";
+import { BoundsImpl } from "./BoundsImpl.js";
 
 /**
  * @typedef {import("../Geometry.js").ReferencePoint} ReferencePoint
@@ -240,7 +240,7 @@ function finite(finite, partial) {
 
 /**
  * @param {Rectangle} rectangle
- * @param {BoundsIml} bounds
+ * @param {BoundsImpl} bounds
  */
 export function fitIntoBounds(rectangle, bounds) {
   const upperBounds = PartialRectangleImpl.fromMaxBound(bounds);

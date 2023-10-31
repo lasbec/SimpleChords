@@ -9,6 +9,8 @@ import { PDFPage } from "pdf-lib";
 import { BoxOverflows } from "../BoxOverflow.js";
 import { drawDebugBox } from "../BoxDrawingUtils.js";
 import { PartialRectangleImpl } from "../Figures/PartialRectangleImpl.js";
+import { RelativeMovement } from "../CoordinateSystemSpecifics/Movement.js";
+import { BoundsImpl as BoundsImpl } from "../Figures/BoundsImpl.js";
 
 /**
  * @typedef {import("../Geometry.js").Rectangle} Rectangle
@@ -33,23 +35,13 @@ export class HigherOrderBox extends AbstractBox {
   __discriminator__ = "parent";
   /**
    * @param {Box[]} children
-   * @param {RectangleRestrictions} bounds
+   * @param {BoundsImpl} bounds
    */
   constructor(children, bounds) {
     super(children, null, bounds);
-    /** @type {PointImpl} */
-    this.leftBottom = PointImpl.origin();
     for (const child of children) {
       this.appendChild(child);
     }
-  }
-
-  /** @returns {ReferencePoint} */
-  referencePoint() {
-    return {
-      pointOnRect: { x: "left", y: "bottom" },
-      pointOnGrid: this.leftBottom,
-    };
   }
 
   /** @type {Rectangle} */
@@ -78,16 +70,11 @@ export class HigherOrderBox extends AbstractBox {
     const oldCenter = rectangle.getPoint("center", "center");
     rectangle.setPosition(position);
     const newCenter = rectangle.getPoint("center", "center");
-    const xMove = newCenter.x.sub(oldCenter.x);
-    const yMove = newCenter.y.sub(oldCenter.y);
-
-    this.leftBottom.x = this.leftBottom.x.add(xMove);
-    this.leftBottom.y = this.leftBottom.x.add(yMove);
+    const move = RelativeMovement.from(oldCenter).to(newCenter);
 
     for (const child of this.children) {
       const newChildCenter = child.rectangle.getPoint("center", "center");
-      newChildCenter.x = newChildCenter.x.add(xMove);
-      newChildCenter.y = newChildCenter.y.add(yMove);
+      move.change(newChildCenter);
       child.setPosition({
         pointOnRect: { x: "center", y: "center" },
         pointOnGrid: newChildCenter,
@@ -97,14 +84,6 @@ export class HigherOrderBox extends AbstractBox {
 
   /** @param {Box} box */
   appendChild(box) {
-    this.leftBottom =
-      this.children.length <= 0
-        ? box.rectangle.getPoint("left", "bottom")
-        : (this.leftBottom = box.rectangle
-            .getPoint("left", "bottom")
-            .span(this.leftBottom)
-            .getPoint("left", "bottom"));
-
     this.children.push(box);
     box.parent = this;
   }

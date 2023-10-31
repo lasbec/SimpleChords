@@ -1,6 +1,7 @@
 import { PrimitiveBox } from "./PrimitiveBox.js";
 import { PointImpl } from "../Figures/PointImpl.js";
 import { RectangleImpl } from "../Figures/RectangleImpl.js";
+import { BoundsImpl } from "../Figures/BoundsImpl.js";
 /**
  */
 
@@ -27,7 +28,7 @@ export class TextBox extends PrimitiveBox {
    * @param {ReferencePoint=} position
    */
   constructor(text, style, position) {
-    super(text, style, {});
+    super(text, style, BoundsImpl.unbound());
     this.position = position || {
       pointOnRect: { x: "left", y: "bottom" },
       pointOnGrid: PointImpl.origin(),

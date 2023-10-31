@@ -10,7 +10,7 @@ import { VLineImpl } from "./VLineImpl.js";
  * @typedef {"min" | "max"} MinMax
  */
 
-export class BoundsIml {
+export class BoundsImpl {
   /**
    * @param {{vertical:Restrictions1D, horizontal: Restrictions1D}} args
    * @private
@@ -19,11 +19,32 @@ export class BoundsIml {
     this.verticalBounds = vertical;
     this.horizontalBounds = horizontal;
   }
+
+  static unbound() {
+    return BoundsImpl.from({});
+  }
+
+  /**
+   * @param {import("../Geometry.js").Rectangle} rect
+   */
+  static exactBoundsFrom(rect) {
+    return BoundsImpl.from({
+      maxRight: rect.getBorderVertical("right"),
+      minRight: rect.getBorderVertical("right"),
+      maxLeft: rect.getBorderVertical("left"),
+      minLeft: rect.getBorderVertical("left"),
+      maxTop: rect.getBorderHorizontal("top"),
+      minTop: rect.getBorderHorizontal("top"),
+      maxBottom: rect.getBorderHorizontal("bottom"),
+      minBottom: rect.getBorderHorizontal("bottom"),
+    });
+  }
+
   /**
    * @param {Bounds} restrictions
    */
   static from(restrictions) {
-    return new BoundsIml({
+    return new BoundsImpl({
       horizontal: new Restrictions1D({
         maxValue: restrictions.maxWidth,
         minValue: restrictions.minWidth,

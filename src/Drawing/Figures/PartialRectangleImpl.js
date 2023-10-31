@@ -16,7 +16,7 @@
  * @property {HLineImpl | undefined} top
  * @property {HLineImpl | undefined} bottom
  */
-import { BoundsIml } from "./BoundsImpl.js";
+import { BoundsImpl } from "./BoundsImpl.js";
 import { HLineImpl } from "./HLineImpl.js";
 import { RectangleImpl } from "./RectangleImpl.js";
 import { VLineImpl } from "./VLineImpl.js";
@@ -24,7 +24,7 @@ import { VLineImpl } from "./VLineImpl.js";
 /** @implements {PartialRectangle} */
 export class PartialRectangleImpl {
   /**
-   * @param {BoundsIml} bounds
+   * @param {BoundsImpl} bounds
    */
   static fromMaxBound(bounds) {
     return new PartialRectangleImpl({
@@ -36,7 +36,7 @@ export class PartialRectangleImpl {
   }
 
   /**
-   * @param {BoundsIml} bounds
+   * @param {BoundsImpl} bounds
    */
   static fromMinBound(bounds) {
     return new PartialRectangleImpl({
