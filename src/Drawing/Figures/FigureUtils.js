@@ -5,6 +5,7 @@ import { PartialRectangleImpl } from "./PartialRectangleImpl.js";
 import { VLineImpl } from "./VLineImpl.js";
 import { HLineImpl } from "./HLineImpl.js";
 import { PointCompare } from "../CoordinateSystemSpecifics/Compare.js";
+import { BoundsIml } from "./BoundsImpl.js";
 
 /**
  * @typedef {import("../Geometry.js").ReferencePoint} ReferencePoint
@@ -146,23 +147,107 @@ export function minimalBoundingRectangle(boxes) {
  */
 
 /**
- * @param {PartialRectangle[]} boxes
- * @returns {PartialRectangleImpl | undefined}
+ * @param {PartialRectangle} rect
+ * @param {PartialRectangle[]} remaining
+ * @returns {PartialRectangleImpl}
  */
-export function minimalBoundingRectanglePartial(boxes) {
-  if (boxes.length <= 0) return;
+export function minimalBoundingRectangleSafe(rect, ...remaining) {
+  let left = rect.getBorderVertical("left");
+  let right = rect.getBorderVertical("right");
+  let top = rect.getBorderHorizontal("top");
+  let bottom = rect.getBorderHorizontal("bottom");
+  for (const p of remaining) {
+    let leftCan = p.getBorderVertical("left");
+    let rightCan = p.getBorderVertical("right");
+    let topCan = p.getBorderHorizontal("top");
+    let bottomCan = p.getBorderHorizontal("bottom");
+    if (!left || leftCan?.isRightOrEq(left)) {
+      left = leftCan;
+    }
+    if (!right || rightCan?.isLeftOrEq(right)) {
+      right = rightCan;
+    }
+    if (!top || topCan?.isLowerOrEq(top)) {
+      top = topCan;
+    }
+    if (!bottom || bottomCan?.isHigherOrEq(bottom)) {
+      bottom = bottomCan;
+    }
+  }
+
   return PartialRectangleImpl.fromBorders({
-    left: VLineImpl.fromMaybe(
-      PointCompare.leftMost(boxes.map((b) => b.getBorderVertical("left")))
-    ),
-    right: VLineImpl.fromMaybe(
-      PointCompare.rightMost(boxes.map((b) => b.getBorderVertical("right")))
-    ),
-    top: HLineImpl.fromMaybe(
-      PointCompare.topMost(boxes.map((b) => b.getBorderHorizontal("top")))
-    ),
-    bottom: HLineImpl.fromMaybe(
-      PointCompare.bottomMost(boxes.map((b) => b.getBorderHorizontal("bottom")))
-    ),
+    left,
+    right,
+    top,
+    bottom,
   });
+}
+
+/**
+ * @param {Rectangle} rect
+ * @param {PartialRectangle[]} partials
+ * @returns {RectangleImpl}
+ */
+export function interSectionSafe(rect, ...partials) {
+  let left = rect.getBorderVertical("left");
+  let right = rect.getBorderVertical("right");
+  let top = rect.getBorderHorizontal("top");
+  let bottom = rect.getBorderHorizontal("bottom");
+  for (const p of partials) {
+    let leftCan = p.getBorderVertical("left");
+    let rightCan = p.getBorderVertical("right");
+    let topCan = p.getBorderHorizontal("top");
+    let bottomCan = p.getBorderHorizontal("bottom");
+    if (leftCan?.isRightOrEq(left)) {
+      left = leftCan;
+    }
+    if (rightCan?.isLeftOrEq(right)) {
+      right = rightCan;
+    }
+    if (topCan?.isLowerOrEq(top)) {
+      top = topCan;
+    }
+    if (bottomCan?.isHigherOrEq(bottom)) {
+      bottom = bottomCan;
+    }
+  }
+
+  return RectangleImpl.fromBorders({
+    left,
+    right,
+    top,
+    bottom,
+  });
+}
+
+/**
+ *
+ * @param {Rectangle} finite
+ * @param {PartialRectangle} partial
+ */
+function finite(finite, partial) {
+  return RectangleImpl.fromBorders({
+    left: partial.getBorderVertical("left") || finite.getBorderVertical("left"),
+    right:
+      partial.getBorderVertical("right") || finite.getBorderVertical("right"),
+    top:
+      partial.getBorderHorizontal("top") || finite.getBorderHorizontal("top"),
+    bottom:
+      partial.getBorderHorizontal("bottom") ||
+      finite.getBorderHorizontal("bottom"),
+  });
+}
+
+/**
+ * @param {Rectangle} rectangle
+ * @param {BoundsIml} bounds
+ */
+export function fitIntoBounds(rectangle, bounds) {
+  const upperBounds = PartialRectangleImpl.fromMaxBound(bounds);
+  const lowerBounds = PartialRectangleImpl.fromMinBound(bounds);
+  const extendedRectangle = finite(
+    rectangle,
+    minimalBoundingRectangleSafe(lowerBounds, rectangle)
+  );
+  return interSectionSafe(extendedRectangle, upperBounds);
 }

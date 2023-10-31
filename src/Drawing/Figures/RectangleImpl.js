@@ -22,6 +22,10 @@ import { HLineImpl } from "./HLineImpl.js";
 import { PointImpl } from "./PointImpl.js";
 import { VLineImpl } from "./VLineImpl.js";
 
+/**
+ * @typedef {import("../Geometry.js").RectangleBorders} RectangleBorders
+ */
+
 /** @implements {MutRectangle} */
 export class RectangleImpl {
   /**
@@ -34,6 +38,16 @@ export class RectangleImpl {
     const top = c0.isLowerOrEq(c1) ? c1.y : c0.y;
     const bottom = c0.isLowerOrEq(c1) ? c0.y : c1.y;
     return new RectangleImpl({ left, right, top, bottom });
+  }
+
+  /** @param {RectangleBorders} borders */
+  static fromBorders(borders) {
+    return new RectangleImpl({
+      left: borders.left.x,
+      right: borders.right.x,
+      top: borders.top.y,
+      bottom: borders.bottom.y,
+    });
   }
 
   /**

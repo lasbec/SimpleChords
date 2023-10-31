@@ -84,6 +84,13 @@ export type MutRectangle = Rectangle & {
   setPosition(position: ReferencePoint): void;
 };
 
+export type RectangleBorders = {
+  left: VLineImpl;
+  right: VLineImpl;
+  top: HLineImpl;
+  bottom: HLineImpl;
+};
+
 export type IntervalRestrictions = {
   maxValue?: Length;
   minValue?: Length;

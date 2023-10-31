@@ -38,14 +38,14 @@ export class PointCompare {
   }
 
   /**
-   *  @param {(VLine | Point | undefined)[]} arr
-   * @returns {VLine | Point | undefined}
+   * @param {(VLine | undefined)[]} arr
+   * @returns {VLine | undefined}
    */
-  static leftMost(arr) {
-    /** @type {VLine | Point | undefined} */
+  static maybeLeftMostLine(arr) {
+    /** @type {VLine | undefined} */
     let result;
     for (const el of arr) {
-      if (!el) continue;
+      if (!el) return;
       if (!result) {
         result = el;
       } else if (this.isLeftOrEq(el, result)) {
@@ -56,14 +56,14 @@ export class PointCompare {
   }
 
   /**
-   *  @param {(VLine | Point | undefined)[]} arr
-   * @returns {VLine | Point | undefined}
+   *  @param {(VLine | undefined)[]} arr
+   * @returns {VLine | undefined}
    */
-  static rightMost(arr) {
-    /** @type {VLine | Point | undefined} */
+  static maybeRightMostLine(arr) {
+    /** @type {VLine | undefined} */
     let result;
     for (const el of arr) {
-      if (!el) continue;
+      if (!el) return;
       if (!result) {
         result = el;
       } else if (this.isRightOrEq(el, result)) {
@@ -74,14 +74,14 @@ export class PointCompare {
   }
 
   /**
-   *  @param {(HLine | Point | undefined)[]} arr
-   * @returns {HLine | Point | undefined}
+   *  @param {(HLine | undefined)[]} arr
+   * @returns {HLine | undefined}
    */
-  static topMost(arr) {
-    /** @type {HLine | Point | undefined} */
+  static maybeTopMostLine(arr) {
+    /** @type {HLine | undefined} */
     let result;
     for (const el of arr) {
-      if (!el) continue;
+      if (!el) return;
       if (!result) {
         result = el;
       } else if (this.isHigherOrEq(el, result)) {
@@ -92,14 +92,14 @@ export class PointCompare {
   }
 
   /**
-   *  @param {(HLine | Point | undefined)[]} arr
-   * @returns {HLine | Point | undefined}
+   *  @param {(HLine | undefined)[]} arr
+   * @returns {HLine | undefined}
    */
-  static bottomMost(arr) {
-    /** @type {HLine | Point | undefined} */
+  static maybeBottomMostLine(arr) {
+    /** @type {HLine | undefined} */
     let result;
     for (const el of arr) {
-      if (!el) continue;
+      if (!el) return;
       if (!result) {
         result = el;
       } else if (this.isLowerOrEq(el, result)) {
