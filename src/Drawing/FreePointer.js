@@ -1,7 +1,7 @@
 import { Length } from "../Shared/Length.js";
 import { FreeBox } from "./FreeBox.js";
-import { Movement } from "./CoordinateSystemSpecifics/Movement.js";
-import { PointCompare } from "./CoordinateSystemSpecifics/PointCompare.js";
+import { RelativeMovement } from "./CoordinateSystemSpecifics/Movement.js";
+import { PointCompare } from "./CoordinateSystemSpecifics/Compare.js";
 /**
  * @typedef {import("./Geometry.js").Point} Point
  */
@@ -21,7 +21,7 @@ export class MutableFreePointer {
     return new MutableFreePointer(Length.zero, Length.zero);
   }
 
-  /** @param {import("./Geometry.js").Point} point  */
+  /** @param {Point} point  */
   static fromPoint(point) {
     return new MutableFreePointer(point.x, point.y);
   }
@@ -47,25 +47,25 @@ export class MutableFreePointer {
 
   /** @param {Length} offset  */
   moveRight(offset) {
-    Movement.right(offset).change(this);
+    RelativeMovement.right(offset).change(this);
     return this;
   }
 
   /** @param {Length} offset  */
   moveLeft(offset) {
-    Movement.left(offset).change(this);
+    RelativeMovement.left(offset).change(this);
     return this;
   }
 
   /** @param {Length} offset  */
   moveUp(offset) {
-    Movement.up(offset).change(this);
+    RelativeMovement.up(offset).change(this);
     return this;
   }
 
   /** @param {Length} offset  */
   moveDown(offset) {
-    Movement.down(offset).change(this);
+    RelativeMovement.down(offset).change(this);
     return this;
   }
 

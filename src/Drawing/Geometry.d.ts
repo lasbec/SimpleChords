@@ -2,11 +2,12 @@ import { PDFPage } from "pdf-lib";
 import { Length } from "../Shared/Length.js";
 import { MutableFreePointer } from "./FreePointer.js";
 import { FreeBox } from "./FreeBox.js";
+export { Point } from "./CoordinateSystemSpecifics/Figures.d.ts";
 
-export type Point = {
-  x: Length;
-  y: Length;
-};
+
+export type Movement = {
+  change(point:Point) 
+}
 
 export type Dimensions = {
   width: Length;
