@@ -1,5 +1,5 @@
 import { WellKnownSectionType } from "../Song/SongChecker.js";
-import { MutableFreePointer } from "../Drawing/FreePointer.js";
+import { PointImpl } from "../Drawing/Figures/PointImpl.js";
 import { decorateAsBox } from "../Drawing/Boxes/DynamicSizedBox.js";
 import { TextBox } from "../Drawing/Boxes/TextBox.js";
 import { songLineBox } from "./SongLineBox.js";
@@ -26,7 +26,7 @@ import { songLineBox } from "./SongLineBox.js";
 /**
  * @param {SongSection} section
  * @param {LayoutConfig} layoutConfig
- * @param {MutableFreePointer} startPoint
+ * @param {PointImpl} startPoint
  */
 function drawsongSection(section, layoutConfig, startPoint) {
   const sectionType = section.type;
@@ -84,7 +84,7 @@ export function songSection(section, layoutConfig, rect) {
 /**
  * @param {SongSection} section
  * @param {LayoutConfig} layoutConfig
- * @param {MutableFreePointer} pointer
+ * @param {PointImpl} pointer
  * @returns
  */
 function drawOnlyChords(section, layoutConfig, pointer) {

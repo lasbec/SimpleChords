@@ -1,6 +1,6 @@
 import { LEN } from "../../Shared/Length.js";
 import { rgb } from "pdf-lib";
-import { MutableFreePointer } from "../FreePointer.js";
+import { PointImpl } from "../Figures/PointImpl.js";
 import { PrimitiveBox } from "./PrimitiveBox.js";
 /**
  * @typedef {import("pdf-lib").PDFPage} PDFPage
@@ -34,7 +34,7 @@ export class DebugBox extends PrimitiveBox {
     /** @type {ReferencePoint} */
     this.position = {
       pointOnRect: { x: "center", y: "center" },
-      pointOnGrid: MutableFreePointer.fromPoint(center),
+      pointOnGrid: PointImpl.fromPoint(center),
     };
     this.constructCount = DebugBox.constructionCounter;
     DebugBox.constructionCounter += 1;

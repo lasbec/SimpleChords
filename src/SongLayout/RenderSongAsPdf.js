@@ -14,8 +14,8 @@ import { Song } from "../Song/Song.js";
 import { checkSongAst } from "../Song/SongChecker.js";
 import { TextConfig } from "../Drawing/TextConfig.js";
 import { songLayout } from "./songLayout.js";
-import { FreeBox } from "../Drawing/FreeBox.js";
-import { MutableFreePointer } from "../Drawing/FreePointer.js";
+import { RectangleImpl } from "../Drawing/Figures/RectangleImpl.js";
+import { PointImpl } from "../Drawing/Figures/PointImpl.js";
 import { drawToPdfDoc } from "../Drawing/DrawToPdfDoc.js";
 import { DebugMode } from "../Drawing/DebugMode.js";
 import { FixedSizeBox } from "../Drawing/Boxes/FixedSizeBox.js";
@@ -159,10 +159,10 @@ export async function renderSongAsPdf(songs, debug, layoutConfig, pdfDoc) {
     height: layoutConfig.pageHeight,
   };
 
-  const pageArea = FreeBox.fromPlacement(
+  const pageArea = RectangleImpl.fromPlacement(
     {
       pointOnRect: { x: "left", y: "bottom" },
-      pointOnGrid: MutableFreePointer.origin(),
+      pointOnGrid: PointImpl.origin(),
     },
     pageDims
   );

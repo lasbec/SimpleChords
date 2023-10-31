@@ -1,7 +1,7 @@
 import { LEN, Length } from "../Shared/Length.js";
 import { SongLine } from "../Song/SongLine.js";
 import { decorateAsBox } from "../Drawing/Boxes/DynamicSizedBox.js";
-import { MutableFreePointer } from "../Drawing/FreePointer.js";
+import { PointImpl } from "../Drawing/Figures/PointImpl.js";
 import { TextBox } from "../Drawing/Boxes/TextBox.js";
 /**
  * @typedef {import("pdf-lib").PDFPage} PDFPage
@@ -25,7 +25,7 @@ class SongLineBox {
   /**
    * @param {SongLine} line
    * @param {SongLineBoxConfig} args
-   * @param {MutableFreePointer} topLeft
+   * @param {PointImpl} topLeft
    */
   static initChildren(line, args, topLeft) {
     /**@type {Box[]} */

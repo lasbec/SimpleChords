@@ -1,4 +1,4 @@
-import { FreeBox } from "../FreeBox.js";
+import { RectangleImpl } from "../Figures/RectangleImpl.js";
 import { RectangleBounds } from "./Bounds.js";
 
 /**
@@ -59,7 +59,7 @@ export class AbstractBox {
    * @returns {Rectangle}
    */
   get rectangle() {
-    return FreeBox.fromPlacement(this.referencePoint(), this.dims());
+    return RectangleImpl.fromPlacement(this.referencePoint(), this.dims());
   }
 
   referencePoint() {

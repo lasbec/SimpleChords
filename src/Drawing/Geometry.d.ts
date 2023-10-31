@@ -1,13 +1,12 @@
 import { PDFPage } from "pdf-lib";
 import { Length } from "../Shared/Length.js";
-import { MutableFreePointer } from "./FreePointer.js";
-import { FreeBox } from "./FreeBox.js";
+import { PointImpl } from "./Figures/PointImpl.js";
+import { RectangleImpl } from "./Figures/RectangleImpl.js";
 export { Point } from "./CoordinateSystemSpecifics/Figures.d.ts";
 
-
 export type Movement = {
-  change(point:Point) 
-}
+  change(point: Point);
+};
 
 export type Dimensions = {
   width: Length;
@@ -29,7 +28,7 @@ export type PointOnRect = {
 
 export type ReferencePoint = {
   pointOnRect: PointOnRect;
-  pointOnGrid: MutableFreePointer;
+  pointOnGrid: PointImpl;
 };
 
 type BaseBox = {
@@ -55,20 +54,20 @@ export type Box = ParentBox | LeaveBox;
 
 export type RectNoBottom = {
   getBorder(border: Omit<BorderPosition, "bottom">): Length;
-  getPoint(x: XStartPosition, y: "top"): MutableFreePointer;
+  getPoint(x: XStartPosition, y: "top"): PointImpl;
   width: Length;
 };
 
 export type RectNoRight = {
   getBorder(border: Omit<BorderPosition, "right">): Length;
-  getPoint(x: XStartPosition, y: "left"): MutableFreePointer;
+  getPoint(x: XStartPosition, y: "left"): PointImpl;
   width: Length;
 };
 
 export type Rectangle = {
   getBorder(border: BorderPosition): Length;
-  getPoint(x: XStartPosition, y: YStartPosition): MutableFreePointer;
-  getPointAt(point: PointOnRect): MutableFreePointer;
+  getPoint(x: XStartPosition, y: YStartPosition): PointImpl;
+  getPointAt(point: PointOnRect): PointImpl;
   referencePoint(): ReferencePoint;
 
   clone(): MutRectangle;

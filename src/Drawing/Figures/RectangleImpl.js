@@ -1,11 +1,11 @@
 /**
- * @typedef {import("./Geometry.js").XStartPosition} XStartPosition
- * @typedef {import("./Geometry.js").YStartPosition} YStartPosition
- * @typedef {import("./Geometry.js").Point} Point
- * @typedef {import("./Geometry.js").MutRectangle} MutRectangle
- * @typedef {import("./Geometry.js").Rectangle} Rectangle
- * @typedef {import("./Geometry.js").Dimensions} Dimensions
- * @typedef {import("./Geometry.js").ReferencePoint} ReferencePoint
+ * @typedef {import("../Geometry.js").XStartPosition} XStartPosition
+ * @typedef {import("../Geometry.js").YStartPosition} YStartPosition
+ * @typedef {import("../Geometry.js").Point} Point
+ * @typedef {import("../Geometry.js").MutRectangle} MutRectangle
+ * @typedef {import("../Geometry.js").Rectangle} Rectangle
+ * @typedef {import("../Geometry.js").Dimensions} Dimensions
+ * @typedef {import("../Geometry.js").ReferencePoint} ReferencePoint
  */
 
 /**
@@ -16,29 +16,29 @@
  * @property {Length} bottom
  */
 
-import { Length } from "../Shared/Length.js";
-import { getPoint } from "./BoxMeasuringUtils.js";
-import { MutableFreePointer } from "./FreePointer.js";
+import { Length } from "../../Shared/Length.js";
+import { getPoint } from "../BoxMeasuringUtils.js";
+import { PointImpl } from "./PointImpl.js";
 
 /** @implements {MutRectangle} */
-export class FreeBox {
+export class RectangleImpl {
   /**
-   * @param {MutableFreePointer} c0
-   * @param {MutableFreePointer} c1
+   * @param {PointImpl} c0
+   * @param {PointImpl} c1
    */
   static fromCorners(c0, c1) {
     const left = c0.isLeftOrEq(c1) ? c0.x : c1.x;
     const right = c0.isLeftOrEq(c1) ? c1.x : c0.x;
     const top = c0.isLowerOrEq(c1) ? c1.y : c0.y;
     const bottom = c0.isLowerOrEq(c1) ? c0.y : c1.y;
-    return FreeBox.fromBorders({ left, right, top, bottom });
+    return RectangleImpl.fromBorders({ left, right, top, bottom });
   }
 
   /**
    *
    * @param {ReferencePoint} placement
    * @param {Dimensions} dims
-   * @returns {FreeBox}
+   * @returns {RectangleImpl}
    */
   static fromPlacement(placement, dims) {
     const { x: left, y: bottom } = getPoint({
@@ -53,7 +53,7 @@ export class FreeBox {
       corner: placement,
       ...dims,
     });
-    return new FreeBox({
+    return new RectangleImpl({
       left,
       bottom,
       right,
@@ -85,7 +85,7 @@ export class FreeBox {
 
   /** @param {BoxBorders} args */
   static fromBorders({ left, right, top, bottom }) {
-    return new FreeBox({ left, right, top, bottom });
+    return new RectangleImpl({ left, right, top, bottom });
   }
 
   /**
@@ -102,7 +102,7 @@ export class FreeBox {
   }
 
   clone() {
-    return new FreeBox({
+    return new RectangleImpl({
       left: this.left,
       right: this.right,
       top: this.top,
@@ -154,20 +154,20 @@ export class FreeBox {
    * @param {YStartPosition} y
    */
   getPoint(x, y) {
-    return new MutableFreePointer(this.xPositionFor(x), this.yPositionFor(y));
+    return new PointImpl(this.xPositionFor(x), this.yPositionFor(y));
   }
 
   /**
-   * @param {import("./Geometry.js").PointOnRect} point
+   * @param {import("../Geometry.js").PointOnRect} point
    */
   getPointAt(point) {
-    return new MutableFreePointer(
+    return new PointImpl(
       this.xPositionFor(point.x),
       this.yPositionFor(point.y)
     );
   }
 
-  /** @param {import("./Geometry.js").BorderPosition} position  */
+  /** @param {import("../Geometry.js").BorderPosition} position  */
   getBorder(position) {
     if (position === "left" || position === "right") {
       return this.xPositionFor(position);
@@ -175,7 +175,7 @@ export class FreeBox {
     return this.yPositionFor(position);
   }
 
-  /** @returns {import("./Geometry.js").ReferencePoint} */
+  /** @returns {import("../Geometry.js").ReferencePoint} */
   referencePoint() {
     return {
       pointOnRect: { x: "left", y: "top" },

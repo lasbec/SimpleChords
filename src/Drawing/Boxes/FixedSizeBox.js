@@ -1,8 +1,8 @@
 import { PDFPage } from "pdf-lib";
 import { BoxOverflows } from "../BoxOverflow.js";
 import { drawDebugBox } from "../BoxDrawingUtils.js";
-import { FreeBox } from "../FreeBox.js";
-import { MutableFreePointer } from "../FreePointer.js";
+import { RectangleImpl } from "../Figures/RectangleImpl.js";
+import { PointImpl } from "../Figures/PointImpl.js";
 import { AbstractBox } from "./AbstractBox.js";
 import { Length } from "../../Shared/Length.js";
 import { RelativeMovement } from "../CoordinateSystemSpecifics/Movement.js";
@@ -59,10 +59,10 @@ export class FixedSizeBox extends AbstractBox {
    */
   static newPage(dims) {
     return new FixedSizeBox(
-      FreeBox.fromPlacement(
+      RectangleImpl.fromPlacement(
         {
           pointOnRect: { x: "left", y: "bottom" },
-          pointOnGrid: MutableFreePointer.origin(),
+          pointOnGrid: PointImpl.origin(),
         },
         dims
       )

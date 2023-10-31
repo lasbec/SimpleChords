@@ -1,6 +1,6 @@
 import { Length } from "../Shared/Length.js";
-import { FreeBox } from "./FreeBox.js";
-import { MutableFreePointer } from "./FreePointer.js";
+import { RectangleImpl } from "./Figures/RectangleImpl.js";
+import { PointImpl } from "./Figures/PointImpl.js";
 
 /**
  * @typedef {import("./Geometry.js").ReferencePoint} ReferencePoint
@@ -54,7 +54,7 @@ export function getPoint(args) {
 }
 
 /**
- * @type {Record<`${RelX}_to_${RelX}`, (width:Length, pointer: MutableFreePointer)=> void>}
+ * @type {Record<`${RelX}_to_${RelX}`, (width:Length, pointer: PointImpl)=> void>}
  */
 const xMovementMap = {
   // from left
@@ -84,7 +84,7 @@ const xMovementMap = {
 };
 
 /**
- * @type {Record<`${RelY}_to_${RelY}`, (height:Length, pointer: MutableFreePointer)=> void>}
+ * @type {Record<`${RelY}_to_${RelY}`, (height:Length, pointer: PointImpl)=> void>}
  */
 const yMovementMap = {
   // from bottom
@@ -120,7 +120,7 @@ const yMovementMap = {
 
 /**
  * @param {Rectangle[]} boxes
- * @returns {FreeBox | undefined}
+ * @returns {RectangleImpl | undefined}
  */
 export function minimalBoundingBox(boxes) {
   const fst = boxes[0];
@@ -134,5 +134,5 @@ export function minimalBoundingBox(boxes) {
       .span(box.getPoint("right", "bottom"))
       .getPoint("right", "bottom");
   }
-  return FreeBox.fromCorners(leftTop, rightBottom);
+  return RectangleImpl.fromCorners(leftTop, rightBottom);
 }

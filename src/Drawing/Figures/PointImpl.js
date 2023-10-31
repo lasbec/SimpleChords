@@ -1,14 +1,17 @@
-import { Length } from "../Shared/Length.js";
-import { FreeBox } from "./FreeBox.js";
-import { RelativeMovement } from "./CoordinateSystemSpecifics/Movement.js";
-import { PointCompare } from "./CoordinateSystemSpecifics/Compare.js";
+import { Length } from "../../Shared/Length.js";
+import { RectangleImpl } from "./RectangleImpl.js";
+import { RelativeMovement } from "../CoordinateSystemSpecifics/Movement.js";
+import { PointCompare } from "../CoordinateSystemSpecifics/Compare.js";
 /**
- * @typedef {import("./Geometry.js").Point} Point
- * @typedef {import("./CoordinateSystemSpecifics/Figures.js").VLine} VLine
- * @typedef {import("./CoordinateSystemSpecifics/Figures.js").HLine} HLine
+ * @typedef {import("../Geometry.js").Point} Point
+ * @typedef {import("../CoordinateSystemSpecifics/Figures.js").VLine} VLine
+ * @typedef {import("../CoordinateSystemSpecifics/Figures.js").HLine} HLine
  */
 
-export class MutableFreePointer {
+/**
+ * @implements {Point}
+ */
+export class PointImpl {
   /**
    *
    * @param {Length} x
@@ -20,16 +23,16 @@ export class MutableFreePointer {
   }
 
   static origin() {
-    return new MutableFreePointer(Length.zero, Length.zero);
+    return new PointImpl(Length.zero, Length.zero);
   }
 
   /** @param {Point} point  */
   static fromPoint(point) {
-    return new MutableFreePointer(point.x, point.y);
+    return new PointImpl(point.x, point.y);
   }
 
   /**
-   * @param {import("../Shared/Length.js").UnitName} unit
+   * @param {import("../../Shared/Length.js").UnitName} unit
    */
   rawPointIn(unit) {
     return {
@@ -39,7 +42,7 @@ export class MutableFreePointer {
   }
 
   /**
-   * @param {MutableFreePointer | Length} other
+   * @param {PointImpl | Length} other
    * @return {this}
    */
   alignVerticalWith(other) {
@@ -72,7 +75,7 @@ export class MutableFreePointer {
   }
 
   clone() {
-    return new MutableFreePointer(this.x, this.y);
+    return new PointImpl(this.x, this.y);
   }
 
   /** @param {Length} offset  */
@@ -96,11 +99,11 @@ export class MutableFreePointer {
   }
 
   /**
-   * @param {MutableFreePointer} other
-   * @returns {FreeBox}
+   * @param {PointImpl} other
+   * @returns {RectangleImpl}
    */
   span(other) {
-    return FreeBox.fromCorners(this.clone(), other.clone());
+    return RectangleImpl.fromCorners(this.clone(), other.clone());
   }
 
   /** @param {Point | VLine} other  */

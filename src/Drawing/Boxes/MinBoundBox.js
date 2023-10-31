@@ -1,6 +1,6 @@
 import { minimalBoundingBox } from "../BoxMeasuringUtils.js";
-import { FreeBox } from "../FreeBox.js";
-import { MutableFreePointer } from "../FreePointer.js";
+import { RectangleImpl } from "../Figures/RectangleImpl.js";
+import { PointImpl } from "../Figures/PointImpl.js";
 import { FixedSizeBox } from "./FixedSizeBox.js";
 
 /**
@@ -25,10 +25,10 @@ export class MinBoundBox extends FixedSizeBox {
   constructor(dims, position) {
     const pos = position || {
       pointOnRect: { x: "left", y: "bottom" },
-      pointOnGrid: MutableFreePointer.origin(),
+      pointOnGrid: PointImpl.origin(),
     };
-    super(FreeBox.fromPlacement(pos, dims));
-    this.minimalBox = FreeBox.fromPlacement(pos, dims);
+    super(RectangleImpl.fromPlacement(pos, dims));
+    this.minimalBox = RectangleImpl.fromPlacement(pos, dims);
   }
 
   /**
@@ -56,7 +56,7 @@ export class MinBoundBox extends FixedSizeBox {
    * @param {BoxPlacement} position
    */
   setPosition(position) {
-    this.minimalBox = FreeBox.fromPlacement(position, this.minimalBox);
+    this.minimalBox = RectangleImpl.fromPlacement(position, this.minimalBox);
     super.setPosition(position);
   }
 }

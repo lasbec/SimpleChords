@@ -1,4 +1,4 @@
-import { MutableFreePointer } from "../../Drawing/FreePointer.js";
+import { PointImpl } from "../Figures/PointImpl.js";
 /**
  */
 
@@ -13,7 +13,7 @@ import { MutableFreePointer } from "../../Drawing/FreePointer.js";
 export class SimpleBoxGen {
   /**
    *
-   * @param {MutableFreePointer=} begin
+   * @param {PointImpl=} begin
    * @param {Rectangle} regular
    */
   constructor(regular, begin) {

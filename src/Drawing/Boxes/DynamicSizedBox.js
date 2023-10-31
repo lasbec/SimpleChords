@@ -1,8 +1,8 @@
-import { MutableFreePointer } from "../FreePointer.js";
+import { PointImpl } from "../Figures/PointImpl.js";
 import { Length } from "../../Shared/Length.js";
 import { minimalBoundingBox } from "../BoxMeasuringUtils.js";
 import { FixedSizeBox } from "./FixedSizeBox.js";
-import { FreeBox } from "../FreeBox.js";
+import { RectangleImpl } from "../Figures/RectangleImpl.js";
 
 /**
  * @typedef {import("../Geometry.js").Rectangle} Rectangle
@@ -42,18 +42,17 @@ export function decorateAsComponent(drawChildrenFn) {
 /**
  * @template Content
  * @template Config
- * @param {(content:Content, config:Config, drawingStartPoint:MutableFreePointer) => Box[]} drawChildrenFn
+ * @param {(content:Content, config:Config, drawingStartPoint:PointImpl) => Box[]} drawChildrenFn
  */
 export function decorateAsBox(drawChildrenFn) {
   /**
    * @param {Content} content
    * @param {Config} config
-   * @param {MutableFreePointer=} drawingStartPoint
+   * @param {PointImpl=} drawingStartPoint
    * @returns {Box}
    */
   return (content, config, drawingStartPoint) => {
-    drawingStartPoint =
-      drawingStartPoint?.clone() || MutableFreePointer.origin();
+    drawingStartPoint = drawingStartPoint?.clone() || PointImpl.origin();
     return new DynamicSizedBox(
       drawChildrenFn(content, config, drawingStartPoint)
     );
@@ -66,12 +65,7 @@ export class DynamicSizedBox extends FixedSizeBox {
    * @param {Box[]} children
    */
   constructor(children) {
-    super(
-      FreeBox.fromCorners(
-        MutableFreePointer.origin(),
-        MutableFreePointer.origin()
-      )
-    );
+    super(RectangleImpl.fromCorners(PointImpl.origin(), PointImpl.origin()));
     for (const child of children) {
       this.appendChild(child);
     }
@@ -83,11 +77,7 @@ export class DynamicSizedBox extends FixedSizeBox {
     box.parent = this;
     const mbb = minimalBoundingBox(this.children.map((c) => c.rectangle));
     this._rectangle =
-      mbb ||
-      FreeBox.fromCorners(
-        MutableFreePointer.origin(),
-        MutableFreePointer.origin()
-      );
+      mbb || RectangleImpl.fromCorners(PointImpl.origin(), PointImpl.origin());
     this.width = mbb?.width || Length.zero;
     this.height = mbb?.height || Length.zero;
   }

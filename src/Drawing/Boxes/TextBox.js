@@ -1,6 +1,6 @@
 import { PrimitiveBox } from "./PrimitiveBox.js";
-import { MutableFreePointer } from "../FreePointer.js";
-import { FreeBox } from "../FreeBox.js";
+import { PointImpl } from "../Figures/PointImpl.js";
+import { RectangleImpl } from "../Figures/RectangleImpl.js";
 /**
  */
 
@@ -30,7 +30,7 @@ export class TextBox extends PrimitiveBox {
     super(text, style, {});
     this.position = position || {
       pointOnRect: { x: "left", y: "bottom" },
-      pointOnGrid: MutableFreePointer.origin(),
+      pointOnGrid: PointImpl.origin(),
     };
   }
 

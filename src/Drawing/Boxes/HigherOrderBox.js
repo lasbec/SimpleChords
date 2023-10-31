@@ -1,6 +1,6 @@
-import { MutableFreePointer } from "../FreePointer.js";
+import { PointImpl } from "../Figures/PointImpl.js";
 import { minimalBoundingBox } from "../BoxMeasuringUtils.js";
-import { FreeBox } from "../FreeBox.js";
+import { RectangleImpl } from "../Figures/RectangleImpl.js";
 import { AbstractBox } from "./AbstractBox.js";
 import { PDFPage } from "pdf-lib";
 import { BoxOverflows } from "../BoxOverflow.js";
@@ -34,8 +34,8 @@ export class HigherOrderBox extends AbstractBox {
    */
   constructor(children, bounds) {
     super(children, null, bounds);
-    /** @type {MutableFreePointer} */
-    this.leftBottom = MutableFreePointer.origin();
+    /** @type {PointImpl} */
+    this.leftBottom = PointImpl.origin();
     for (const child of children) {
       this.appendChild(child);
     }
@@ -53,10 +53,7 @@ export class HigherOrderBox extends AbstractBox {
   get rectangle() {
     const mbb = minimalBoundingBox(this.children.map((c) => c.rectangle));
     if (!mbb) {
-      return FreeBox.fromCorners(
-        MutableFreePointer.origin(),
-        MutableFreePointer.origin()
-      );
+      return RectangleImpl.fromCorners(PointImpl.origin(), PointImpl.origin());
     }
     // const upperLimits = this.limitRectangle("max");
     // const lowerLimits = this.limitRectangle("min");
