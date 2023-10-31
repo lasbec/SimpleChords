@@ -36,4 +36,76 @@ export class PointCompare {
   static isHigherOrEq(p0, p1) {
     return p1.y.le(p0.y);
   }
+
+  /**
+   *  @param {(VLine | Point | undefined)[]} arr
+   * @returns {VLine | Point | undefined}
+   */
+  static leftMost(arr) {
+    /** @type {VLine | Point | undefined} */
+    let result;
+    for (const el of arr) {
+      if (!el) continue;
+      if (!result) {
+        result = el;
+      } else if (this.isLeftOrEq(el, result)) {
+        result = el;
+      }
+    }
+    return result;
+  }
+
+  /**
+   *  @param {(VLine | Point | undefined)[]} arr
+   * @returns {VLine | Point | undefined}
+   */
+  static rightMost(arr) {
+    /** @type {VLine | Point | undefined} */
+    let result;
+    for (const el of arr) {
+      if (!el) continue;
+      if (!result) {
+        result = el;
+      } else if (this.isRightOrEq(el, result)) {
+        result = el;
+      }
+    }
+    return result;
+  }
+
+  /**
+   *  @param {(HLine | Point | undefined)[]} arr
+   * @returns {HLine | Point | undefined}
+   */
+  static topMost(arr) {
+    /** @type {HLine | Point | undefined} */
+    let result;
+    for (const el of arr) {
+      if (!el) continue;
+      if (!result) {
+        result = el;
+      } else if (this.isHigherOrEq(el, result)) {
+        result = el;
+      }
+    }
+    return result;
+  }
+
+  /**
+   *  @param {(HLine | Point | undefined)[]} arr
+   * @returns {HLine | Point | undefined}
+   */
+  static bottomMost(arr) {
+    /** @type {HLine | Point | undefined} */
+    let result;
+    for (const el of arr) {
+      if (!el) continue;
+      if (!result) {
+        result = el;
+      } else if (this.isLowerOrEq(el, result)) {
+        result = el;
+      }
+    }
+    return result;
+  }
 }

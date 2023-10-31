@@ -1,4 +1,4 @@
-import { minimalBoundingBox } from "../Figures/FigureUtils.js";
+import { minimalBoundingRectangle } from "../Figures/FigureUtils.js";
 import { RectangleImpl } from "../Figures/RectangleImpl.js";
 import { PointImpl } from "../Figures/PointImpl.js";
 import { FixedSizeBox } from "./FixedSizeBox.js";
@@ -46,7 +46,7 @@ export class MinBoundBox extends FixedSizeBox {
     this.children.push(box);
     box.parent = this;
     this._rectangle =
-      minimalBoundingBox([
+      minimalBoundingRectangle([
         ...this.children.map((c) => c.rectangle),
         this.minimalBox,
       ]) || this.minimalBox;

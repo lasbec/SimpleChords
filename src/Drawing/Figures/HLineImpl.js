@@ -24,9 +24,17 @@ export class HLineImpl {
     return new HLineImpl(Length.zero);
   }
 
-  /** @param {Point} point  */
-  static fromPoint(point) {
+  /** @param {Point | HLine} point  */
+  static from(point) {
     return new HLineImpl(point.y);
+  }
+
+  /**
+   * @param {Point | HLine | undefined} arg
+   */
+  static fromMaybe(arg) {
+    if (!arg) return;
+    return HLineImpl.from(arg);
   }
 
   /** @param {Length} offset  */

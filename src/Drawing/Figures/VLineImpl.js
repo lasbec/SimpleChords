@@ -26,9 +26,17 @@ export class VLineImpl {
     return new VLineImpl(Length.zero);
   }
 
-  /** @param {Point} point  */
-  static fromPoint(point) {
+  /** @param {Point | VLine} point  */
+  static from(point) {
     return new VLineImpl(point.x);
+  }
+
+  /**
+   * @param {Point | VLine | undefined} arg
+   */
+  static fromMaybe(arg) {
+    if (!arg) return;
+    return VLineImpl.from(arg);
   }
 
   /** @param {Length} offset  */

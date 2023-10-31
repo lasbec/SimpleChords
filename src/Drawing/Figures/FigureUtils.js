@@ -1,6 +1,10 @@
 import { Length } from "../../Shared/Length.js";
 import { RectangleImpl } from "./RectangleImpl.js";
 import { PointImpl } from "./PointImpl.js";
+import { PartialRectangleImpl } from "./PartialRectangleImpl.js";
+import { VLineImpl } from "./VLineImpl.js";
+import { HLineImpl } from "./HLineImpl.js";
+import { PointCompare } from "../CoordinateSystemSpecifics/Compare.js";
 
 /**
  * @typedef {import("../Geometry.js").ReferencePoint} ReferencePoint
@@ -122,7 +126,7 @@ const yMovementMap = {
  * @param {Rectangle[]} boxes
  * @returns {RectangleImpl | undefined}
  */
-export function minimalBoundingBox(boxes) {
+export function minimalBoundingRectangle(boxes) {
   const fst = boxes[0];
   if (!fst) return;
   let leftTop = fst.getPoint("left", "top");
@@ -135,4 +139,30 @@ export function minimalBoundingBox(boxes) {
       .getPoint("right", "bottom");
   }
   return RectangleImpl.fromCorners(leftTop, rightBottom);
+}
+
+/**
+ * @typedef {import("../Geometry.js").PartialRectangle} PartialRectangle
+ */
+
+/**
+ * @param {PartialRectangle[]} boxes
+ * @returns {PartialRectangleImpl | undefined}
+ */
+export function minimalBoundingRectanglePartial(boxes) {
+  if (boxes.length <= 0) return;
+  return PartialRectangleImpl.fromBorders({
+    left: VLineImpl.fromMaybe(
+      PointCompare.leftMost(boxes.map((b) => b.getBorderVertical("left")))
+    ),
+    right: VLineImpl.fromMaybe(
+      PointCompare.rightMost(boxes.map((b) => b.getBorderVertical("right")))
+    ),
+    top: HLineImpl.fromMaybe(
+      PointCompare.topMost(boxes.map((b) => b.getBorderHorizontal("top")))
+    ),
+    bottom: HLineImpl.fromMaybe(
+      PointCompare.bottomMost(boxes.map((b) => b.getBorderHorizontal("bottom")))
+    ),
+  });
 }

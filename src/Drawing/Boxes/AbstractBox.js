@@ -1,5 +1,5 @@
 import { RectangleImpl } from "../Figures/RectangleImpl.js";
-import { BoundsIml } from "../Figures/Bounds.js";
+import { BoundsIml } from "../Figures/BoundsImpl.js";
 
 /**
  * @typedef {import("../Geometry.js").Bounds} RectangleRestrictions

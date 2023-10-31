@@ -1,6 +1,6 @@
 import { PointImpl } from "../Figures/PointImpl.js";
 import { Length } from "../../Shared/Length.js";
-import { minimalBoundingBox } from "../Figures/FigureUtils.js";
+import { minimalBoundingRectangle } from "../Figures/FigureUtils.js";
 import { FixedSizeBox } from "./FixedSizeBox.js";
 import { RectangleImpl } from "../Figures/RectangleImpl.js";
 
@@ -75,7 +75,7 @@ export class DynamicSizedBox extends FixedSizeBox {
   appendChild(box) {
     this.children.push(box);
     box.parent = this;
-    const mbb = minimalBoundingBox(this.children.map((c) => c.rectangle));
+    const mbb = minimalBoundingRectangle(this.children.map((c) => c.rectangle));
     this._rectangle =
       mbb || RectangleImpl.fromCorners(PointImpl.origin(), PointImpl.origin());
     this.width = mbb?.width || Length.zero;

@@ -1,5 +1,5 @@
 import { PointImpl } from "../Figures/PointImpl.js";
-import { minimalBoundingBox } from "../Figures/FigureUtils.js";
+import { minimalBoundingRectangle } from "../Figures/FigureUtils.js";
 import { RectangleImpl } from "../Figures/RectangleImpl.js";
 import { AbstractBox } from "./AbstractBox.js";
 import { PDFPage } from "pdf-lib";
@@ -50,7 +50,7 @@ export class HigherOrderBox extends AbstractBox {
 
   /** @type {Rectangle} */
   get rectangle() {
-    const mbb = minimalBoundingBox(this.children.map((c) => c.rectangle));
+    const mbb = minimalBoundingRectangle(this.children.map((c) => c.rectangle));
     if (!mbb) {
       return RectangleImpl.fromCorners(PointImpl.origin(), PointImpl.origin());
     }

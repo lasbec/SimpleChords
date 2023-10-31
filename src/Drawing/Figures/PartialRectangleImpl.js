@@ -16,7 +16,7 @@
  * @property {HLineImpl | undefined} top
  * @property {HLineImpl | undefined} bottom
  */
-import { BoundsIml } from "./Bounds.js";
+import { BoundsIml } from "./BoundsImpl.js";
 import { HLineImpl } from "./HLineImpl.js";
 import { VLineImpl } from "./VLineImpl.js";
 
