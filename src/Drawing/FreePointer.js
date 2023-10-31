@@ -131,7 +131,6 @@ export class MutableFreePointer {
 
 export class Movement {
   /**
-   *
    * @param {Length} x
    * @param {Length} y
    * @private
@@ -151,6 +150,26 @@ export class Movement {
         return new Movement(target.x.sub(start.x), target.y.sub(start.y));
       },
     };
+  }
+
+  /** @param {Length} amount  */
+  static right(amount) {
+    return new Movement(amount, Length.zero);
+  }
+
+  /** @param {Length} amount  */
+  static left(amount) {
+    return new Movement(amount.neg(), Length.zero);
+  }
+
+  /** @param {Length} amount  */
+  static up(amount) {
+    return new Movement(Length.zero, amount);
+  }
+
+  /** @param {Length} amount  */
+  static down(amount) {
+    return new Movement(Length.zero, amount.neg());
   }
 
   /**

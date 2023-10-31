@@ -222,6 +222,10 @@ export class Length {
     return new Length(Math.abs(this.value), this.unit);
   }
 
+  neg() {
+    return new Length(-this.value, this.unit);
+  }
+
   isZero() {
     return Math.abs(this.value) - Length.comparisonPercission <= 0;
   }
