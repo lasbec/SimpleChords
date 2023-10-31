@@ -77,18 +77,18 @@ export class BoundsImpl {
       horizontal: new Restrictions1D({
         maxValue: restrictions.maxWidth,
         minValue: restrictions.minWidth,
-        maxUpper: restrictions.maxRight?.y,
-        minUpper: restrictions.minRight?.y,
-        maxLower: restrictions.maxLeft?.y,
-        minLower: restrictions.minLeft?.y,
+        maxUpper: restrictions.maxRight?.x,
+        minUpper: restrictions.minRight?.x,
+        maxLower: restrictions.maxLeft?.x,
+        minLower: restrictions.minLeft?.x,
       }),
       vertical: new Restrictions1D({
         maxValue: restrictions.maxHeight,
         minValue: restrictions.minHeight,
-        maxUpper: restrictions.maxTop?.x,
-        minUpper: restrictions.minTop?.x,
-        maxLower: restrictions.maxBottom?.x,
-        minLower: restrictions.minBottom?.x,
+        maxUpper: restrictions.maxTop?.y,
+        minUpper: restrictions.minTop?.y,
+        maxLower: restrictions.maxBottom?.y,
+        minLower: restrictions.minBottom?.y,
       }),
     });
   }
