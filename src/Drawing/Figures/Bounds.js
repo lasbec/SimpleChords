@@ -1,14 +1,16 @@
 import { Length } from "../../Shared/Length.js";
+import { HLineImpl } from "./HLineImpl.js";
+import { VLineImpl } from "./VLineImpl.js";
 /**
  * @typedef {import("../Geometry.js").IntervalRestrictions} IntervalRestrictons
- * @typedef {import("../Geometry.js").RectangleRestrictions} RectangleRestrictions
+ * @typedef {import("../Geometry.js").Bounds} Bounds
  */
 
 /**
  * @typedef {"min" | "max"} MinMax
  */
 
-export class RectangleBounds {
+export class BoundsIml {
   /**
    * @param {{vertical:Restrictions1D, horizontal: Restrictions1D}} args
    * @private
@@ -18,55 +20,67 @@ export class RectangleBounds {
     this.horizontalBounds = horizontal;
   }
   /**
-   * @param {RectangleRestrictions} restrictions
+   * @param {Bounds} restrictions
    */
   static from(restrictions) {
-    return new RectangleBounds({
+    return new BoundsIml({
       horizontal: new Restrictions1D({
         maxValue: restrictions.maxWidth,
         minValue: restrictions.minWidth,
-        maxUpper: restrictions.maxRight,
-        minUpper: restrictions.minRight,
-        maxLower: restrictions.maxLeft,
-        minLower: restrictions.minLeft,
+        maxUpper: restrictions.maxRight?.y,
+        minUpper: restrictions.minRight?.y,
+        maxLower: restrictions.maxLeft?.y,
+        minLower: restrictions.minLeft?.y,
       }),
       vertical: new Restrictions1D({
         maxValue: restrictions.maxHeight,
         minValue: restrictions.minHeight,
-        maxUpper: restrictions.maxTop,
-        minUpper: restrictions.minTop,
-        maxLower: restrictions.maxBottom,
-        minLower: restrictions.minBottom,
+        maxUpper: restrictions.maxTop?.x,
+        minUpper: restrictions.minTop?.x,
+        maxLower: restrictions.maxBottom?.x,
+        minLower: restrictions.minBottom?.x,
       }),
     });
   }
 
   /** @param {*} minMax  */
   top(minMax) {
-    return this.verticalBounds.upper(minMax);
+    const value = this.verticalBounds.upper(minMax);
+    if (!value) return;
+    return new VLineImpl(value);
   }
   /** @param {*} minMax  */
   bottom(minMax) {
-    return this.verticalBounds.lower(minMax);
+    const value = this.verticalBounds.lower(minMax);
+    if (!value) return;
+    return new VLineImpl(value);
   }
   /** @param {*} minMax  */
   height(minMax) {
-    return this.verticalBounds.value(minMax);
+    const value = this.verticalBounds.value(minMax);
+    if (!value) return;
+    return new VLineImpl(value);
   }
 
   /** @param {*} minMax  */
   left(minMax) {
-    return this.horizontalBounds.lower(minMax);
+    const value = this.horizontalBounds.lower(minMax);
+    if (!value) return;
+    return new HLineImpl(value);
   }
 
   /** @param {*} minMax  */
   right(minMax) {
-    return this.horizontalBounds.upper(minMax);
+    const value = this.horizontalBounds.upper(minMax);
+    if (!value) return;
+    return new HLineImpl(value);
   }
 
   /** @param {*} minMax  */
   width(minMax) {
-    return this.horizontalBounds.value(minMax);
+    const value = this.horizontalBounds.value(minMax);
+    if (!value) return;
+    return new HLineImpl(value);
   }
 }
 

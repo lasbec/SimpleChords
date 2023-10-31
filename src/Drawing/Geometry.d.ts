@@ -99,18 +99,18 @@ export type IntervalRestrictions = {
   minLower?: Length;
 };
 
-export type RectangleRestrictions = {
+export type Bounds = {
   maxWidth?: Length;
   minWidth?: Length;
-  maxRight?: Length;
-  minRight?: Length;
-  maxLeft?: Length;
-  minLeft?: Length;
+  maxRight?: VLineImpl;
+  minRight?: VLineImpl;
+  maxLeft?: VLineImpl;
+  minLeft?: VLineImpl;
 
   maxHeight?: Length;
   minHeight?: Length;
-  maxTop?: Length;
-  minTop?: Length;
-  maxBottom?: Length;
-  minBottom?: Length;
+  maxTop?: HLineImpl;
+  minTop?: HLineImpl;
+  maxBottom?: HLineImpl;
+  minBottom?: HLineImpl;
 };

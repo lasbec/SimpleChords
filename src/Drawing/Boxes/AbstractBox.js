@@ -1,8 +1,8 @@
 import { RectangleImpl } from "../Figures/RectangleImpl.js";
-import { RectangleBounds } from "./Bounds.js";
+import { BoundsIml } from "../Figures/Bounds.js";
 
 /**
- * @typedef {import("../Geometry.js").RectangleRestrictions} RectangleRestrictions
+ * @typedef {import("../Geometry.js").Bounds} RectangleRestrictions
  * @typedef {import("../Geometry.js").Rectangle} Rectangle
  * @typedef {import("../Geometry.js").MutRectangle} MutRectangle
  * @typedef {import("../Geometry.js").BorderPosition} BorderPosition
@@ -28,7 +28,7 @@ export class AbstractBox {
   constructor(content, style, bounds) {
     this.content = content;
     this.style = style;
-    this.bounds = RectangleBounds.from(bounds);
+    this.bounds = BoundsIml.from(bounds);
     /** @type {Box | null} */
     this.parent = null;
   }

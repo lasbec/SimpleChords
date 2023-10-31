@@ -13,7 +13,7 @@ import { drawDebugBox } from "../BoxDrawingUtils.js";
  * @typedef {import("../Geometry.js").RectangleGenerator} BoxGenerator
  * @typedef {import("../Geometry.js").ParentBox} ParentBox
  * @typedef {import("../Geometry.js").ReferencePoint} ReferencePoint
- * @typedef {import("../Geometry.js").RectangleRestrictions} RectangleRestrictions
+ * @typedef {import("../Geometry.js").Bounds} RectangleRestrictions
  */
 
 /** All bounds possible, Arrangement, HOB, Mutable */
