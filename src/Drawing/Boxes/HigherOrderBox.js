@@ -48,13 +48,15 @@ export class HigherOrderBox extends AbstractBox {
   get rectangle() {
     const mbb = minimalBoundingRectangle(this.children.map((c) => c.rectangle));
     if (!mbb) {
-      const minimalBound = PartialRectangleImpl.fromMinBound(
+      const minBoundRectPartial = PartialRectangleImpl.fromMinBound(
         this.bounds
-      ).toFullRectangle();
-      if (minimalBound) return minimalBound;
+      );
+      const minBoundRect = minBoundRectPartial.toFullRectangle();
+      if (minBoundRect) return minBoundRect;
       return RectangleImpl.fromCorners(PointImpl.origin(), PointImpl.origin());
     }
-    return fitIntoBounds(mbb, this.bounds);
+    const result = fitIntoBounds(mbb, this.bounds);
+    return result;
   }
 
   /** @returns {Box[]} */

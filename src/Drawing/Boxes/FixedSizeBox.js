@@ -6,6 +6,7 @@ import { PointImpl } from "../Figures/PointImpl.js";
 import { AbstractBox } from "./AbstractBox.js";
 import { RelativeMovement } from "../CoordinateSystemSpecifics/Movement.js";
 import { BoundsImpl } from "../Figures/BoundsImpl.js";
+import { HigherOrderBox } from "./HigherOrderBox.js";
 
 /**
  * @typedef {import("../Geometry.js").Rectangle} Rectangle
@@ -21,34 +22,14 @@ import { BoundsImpl } from "../Figures/BoundsImpl.js";
 
 /**
  * @implements {ParentBox}
- * @extends {AbstractBox<Box[], null>}
  */
-export class FixedSizeBox extends AbstractBox {
-  /**
-   * @type {"parent"}
-   * @readonly
-   */
-  __discriminator__ = "parent";
+export class FixedSizeBox extends HigherOrderBox {
   /**
    * @param {MutRectangle} rectangle
    */
   constructor(rectangle) {
-    /** @type {Box[]} */
-    const children = [];
-    super(children, null, BoundsImpl.exactBoundsFrom(rectangle));
-    this._rectangle = rectangle;
+    super([], BoundsImpl.exactBoundsFrom(rectangle));
   }
-
-  /** @returns {Rectangle} */
-  get rectangle() {
-    return this._rectangle;
-  }
-
-  /** @returns {Box[]} */
-  get children() {
-    return this.content;
-  }
-
   /**
    * @param {Dimensions} dims
    */
@@ -62,40 +43,5 @@ export class FixedSizeBox extends AbstractBox {
         dims
       )
     );
-  }
-
-  /** @param {Box} box */
-  appendChild(box) {
-    box.parent = this;
-    this.children.push(box);
-  }
-  /**
-   * @param {PDFPage} page
-   */
-  drawToPdfPage(page) {
-    BoxOverflows.doOverflowManagement(page, this);
-    for (const child of this.children) {
-      drawDebugBox(page, child);
-      child.drawToPdfPage(page);
-    }
-  }
-
-  /**
-   * @param {BoxPlacement} position
-   */
-  setPosition(position) {
-    const oldCenter = this.rectangle.getPoint("center", "center");
-    this._rectangle.setPosition(position);
-    const newCenter = this.rectangle.getPoint("center", "center");
-    const move = RelativeMovement.from(oldCenter).to(newCenter);
-
-    for (const child of this.children) {
-      const newChildCenter = child.rectangle.getPoint("center", "center");
-      move.change(newChildCenter);
-      child.setPosition({
-        pointOnRect: { x: "center", y: "center" },
-        pointOnGrid: newChildCenter,
-      });
-    }
   }
 }

@@ -1,7 +1,7 @@
-import { minimalBoundingRectangle } from "../Figures/FigureUtils.js";
 import { RectangleImpl } from "../Figures/RectangleImpl.js";
 import { PointImpl } from "../Figures/PointImpl.js";
-import { FixedSizeBox } from "./FixedSizeBox.js";
+import { HigherOrderBox } from "./HigherOrderBox.js";
+import { BoundsImpl } from "../Figures/BoundsImpl.js";
 
 /**
  * @typedef {import("../Geometry.js").ReferencePoint} BoxPlacement
@@ -17,7 +17,7 @@ import { FixedSizeBox } from "./FixedSizeBox.js";
 /**
  * @implements {ParentBox}
  */
-export class MinBoundBox extends FixedSizeBox {
+export class MinBoundBox extends HigherOrderBox {
   /**
    * @param {Dimensions} dims
    * @param {BoxPlacement=} position
@@ -27,8 +27,7 @@ export class MinBoundBox extends FixedSizeBox {
       pointOnRect: { x: "left", y: "bottom" },
       pointOnGrid: PointImpl.origin(),
     };
-    super(RectangleImpl.fromPlacement(pos, dims));
-    this.minimalBox = RectangleImpl.fromPlacement(pos, dims);
+    super([], BoundsImpl.minBoundsFrom(RectangleImpl.fromPlacement(pos, dims)));
   }
 
   /**
@@ -39,24 +38,5 @@ export class MinBoundBox extends FixedSizeBox {
       pointOnRect: { x: "left", y: "top" },
       pointOnGrid: rect.getPoint("left", "top"),
     });
-  }
-
-  /** @param {Box} box */
-  appendChild(box) {
-    this.children.push(box);
-    box.parent = this;
-    this._rectangle =
-      minimalBoundingRectangle([
-        ...this.children.map((c) => c.rectangle),
-        this.minimalBox,
-      ]) || this.minimalBox;
-  }
-
-  /**
-   * @param {BoxPlacement} position
-   */
-  setPosition(position) {
-    this.minimalBox = RectangleImpl.fromPlacement(position, this.minimalBox);
-    super.setPosition(position);
   }
 }

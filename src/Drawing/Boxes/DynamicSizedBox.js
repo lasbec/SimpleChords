@@ -3,6 +3,8 @@ import { Length } from "../../Shared/Length.js";
 import { minimalBoundingRectangle } from "../Figures/FigureUtils.js";
 import { FixedSizeBox } from "./FixedSizeBox.js";
 import { RectangleImpl } from "../Figures/RectangleImpl.js";
+import { HigherOrderBox } from "./HigherOrderBox.js";
+import { BoundsImpl } from "../Figures/BoundsImpl.js";
 
 /**
  * @typedef {import("../Geometry.js").Rectangle} Rectangle
@@ -60,25 +62,11 @@ export function decorateAsBox(drawChildrenFn) {
 }
 
 /** Unbounded (no startpoint), Arrangement, HOB, Mutable */
-export class DynamicSizedBox extends FixedSizeBox {
+export class DynamicSizedBox extends HigherOrderBox {
   /**
    * @param {Box[]} children
    */
   constructor(children) {
-    super(RectangleImpl.fromCorners(PointImpl.origin(), PointImpl.origin()));
-    for (const child of children) {
-      this.appendChild(child);
-    }
-  }
-
-  /** @param {Box} box */
-  appendChild(box) {
-    this.children.push(box);
-    box.parent = this;
-    const mbb = minimalBoundingRectangle(this.children.map((c) => c.rectangle));
-    this._rectangle =
-      mbb || RectangleImpl.fromCorners(PointImpl.origin(), PointImpl.origin());
-    this.width = mbb?.width || Length.zero;
-    this.height = mbb?.height || Length.zero;
+    super(children, BoundsImpl.unbound());
   }
 }
