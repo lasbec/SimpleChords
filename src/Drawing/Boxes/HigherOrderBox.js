@@ -20,6 +20,7 @@ import { BoundsImpl as BoundsImpl } from "../Figures/BoundsImpl.js";
  * @typedef {import("../Geometry.js").ParentBox} ParentBox
  * @typedef {import("../Geometry.js").ReferencePoint} ReferencePoint
  * @typedef {import("../Geometry.js").Bounds} RectangleRestrictions
+ * @typedef {import("../Geometry.js").Dimensions} Dimensions
  */
 
 /** All bounds possible, Arrangement, HOB, Mutable */
@@ -42,6 +43,23 @@ export class HigherOrderBox extends AbstractBox {
     for (const child of children) {
       this.appendChild(child);
     }
+  }
+  /**
+   * @param {Dimensions} dims
+   */
+  static newPage(dims) {
+    return new HigherOrderBox(
+      [],
+      BoundsImpl.exactBoundsFrom(
+        RectangleImpl.fromPlacement(
+          {
+            pointOnRect: { x: "left", y: "bottom" },
+            pointOnGrid: PointImpl.origin(),
+          },
+          dims
+        )
+      )
+    );
   }
 
   /** @type {Rectangle} */

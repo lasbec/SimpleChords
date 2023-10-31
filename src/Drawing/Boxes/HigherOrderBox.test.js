@@ -7,8 +7,6 @@ import { PointImpl } from "../Figures/PointImpl.js";
 import { LEN } from "../../Shared/Length.js";
 import { expect } from "vitest";
 import { DebugBox } from "./DebugBox.js";
-import { FixedSizeBox } from "./FixedSizeBox.js";
-import exp from "constants";
 
 describe("HigherOrderBox", () => {
   it("Minimal width and hight ", () => {
@@ -49,7 +47,7 @@ describe("HigherOrderBox", () => {
   });
 
   it("Fixed size", () => {
-    const page = FixedSizeBox.newPage({
+    const page = HigherOrderBox.newPage({
       width: LEN(210, "mm"),
       height: LEN(297, "mm"),
     });

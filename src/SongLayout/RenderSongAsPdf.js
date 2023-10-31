@@ -18,7 +18,7 @@ import { RectangleImpl } from "../Drawing/Figures/RectangleImpl.js";
 import { PointImpl } from "../Drawing/Figures/PointImpl.js";
 import { drawToPdfDoc } from "../Drawing/DrawToPdfDoc.js";
 import { DebugMode } from "../Drawing/DebugMode.js";
-import { FixedSizeBox } from "../Drawing/Boxes/FixedSizeBox.js";
+import { HigherOrderBox } from "../Drawing/Boxes/HigherOrderBox.js";
 
 /**
  * @param {string} path
@@ -183,7 +183,7 @@ export async function renderSongAsPdf(songs, debug, layoutConfig, pdfDoc) {
     console.log(`Drawing '${song.heading}'`);
     const boxes = songLayout(song, layoutConfig, writableArea);
     for (const box of boxes) {
-      const currPage = FixedSizeBox.newPage(pageDims);
+      const currPage = HigherOrderBox.newPage(pageDims);
       currPage.appendChild(box);
       pages.push(currPage);
     }
