@@ -2,6 +2,9 @@ import { PDFPage } from "pdf-lib";
 import { Length } from "../Shared/Length.js";
 import { PointImpl } from "./Figures/PointImpl.js";
 import { RectangleImpl } from "./Figures/RectangleImpl.js";
+import { Line } from "./CoordinateSystemSpecifics/Figures.d.ts";
+import { HLineImpl } from "./Figures/HLineImpl.js";
+import { VLineImpl } from "./Figures/VLineImpl.js";
 export { Point } from "./CoordinateSystemSpecifics/Figures.d.ts";
 
 export type Movement = {
@@ -65,7 +68,9 @@ export type RectNoRight = {
 };
 
 export type Rectangle = {
-  getBorder(border: BorderPosition): Length;
+  getBorderHorizontal(border: "top" | "bottom"): HLineImpl;
+  getBorderVertical(border: "left" | "right"): VLineImpl;
+  getBorder(border: BorderPosition): HLineImpl | VLineImpl;
   getPoint(x: XStartPosition, y: YStartPosition): PointImpl;
   getPointAt(point: PointOnRect): PointImpl;
   referencePoint(): ReferencePoint;

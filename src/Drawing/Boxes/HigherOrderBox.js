@@ -5,7 +5,6 @@ import { AbstractBox } from "./AbstractBox.js";
 import { PDFPage } from "pdf-lib";
 import { BoxOverflows } from "../BoxOverflow.js";
 import { drawDebugBox } from "../BoxDrawingUtils.js";
-import { RectangleBounds } from "./Bounds.js";
 
 /**
  * @typedef {import("../Geometry.js").Rectangle} Rectangle

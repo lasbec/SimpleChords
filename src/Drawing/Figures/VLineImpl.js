@@ -12,7 +12,7 @@ import { PointCompare } from "../CoordinateSystemSpecifics/Compare.js";
  * @implements {VLine}
  */
 
-export class VLineFree {
+export class VLineImpl {
   /**
    *
    * @param {Length} x
@@ -24,12 +24,12 @@ export class VLineFree {
   }
 
   static yAxis() {
-    return new VLineFree(Length.zero);
+    return new VLineImpl(Length.zero);
   }
 
   /** @param {Point} point  */
   static fromPoint(point) {
-    return new VLineFree(point.x);
+    return new VLineImpl(point.x);
   }
 
   /** @param {Length} offset  */
@@ -45,7 +45,7 @@ export class VLineFree {
   }
 
   clone() {
-    return new VLineFree(this.x);
+    return new VLineImpl(this.x);
   }
 
   /** @param {Length} offset  */
@@ -57,12 +57,12 @@ export class VLineFree {
   pointerLeft(offset) {
     return this.clone().moveLeft(offset);
   }
-  /** @param {VLineFree | Point} other  */
+  /** @param {VLineImpl | Point} other  */
   isLeftOrEq(other) {
     return PointCompare.isLeftOrEq(this, other);
   }
 
-  /** @param {VLineFree | Point} other  */
+  /** @param {VLineImpl | Point} other  */
   isRightOrEq(other) {
     return PointCompare.isRightOrEq(this, other);
   }

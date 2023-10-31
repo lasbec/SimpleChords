@@ -1,6 +1,9 @@
 import { Length } from "../../Shared/Length.js";
 import { RectangleImpl } from "./RectangleImpl.js";
-import { RelativeMovement } from "../CoordinateSystemSpecifics/Movement.js";
+import {
+  AlignMovement,
+  RelativeMovement,
+} from "../CoordinateSystemSpecifics/Movement.js";
 import { PointCompare } from "../CoordinateSystemSpecifics/Compare.js";
 /**
  * @typedef {import("../Geometry.js").Point} Point
@@ -42,11 +45,20 @@ export class PointImpl {
   }
 
   /**
-   * @param {PointImpl | Length} other
+   * @param {Point | HLine} other
    * @return {this}
    */
   alignVerticalWith(other) {
-    this.y = other instanceof Length ? other : other.y;
+    AlignMovement.alignVerticalWith(other).change(this);
+    return this;
+  }
+
+  /**
+   * @param {Point | VLine} other
+   * @return {this}
+   */
+  alignHorizontalWith(other) {
+    AlignMovement.alignHorizontalWith(other).change(this);
     return this;
   }
 

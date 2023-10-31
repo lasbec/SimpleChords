@@ -35,7 +35,7 @@ export function stackBoxes(boxes, defaultStyle, boundsGen) {
   /** @type {Box[]} */
   const result = [currPage];
 
-  let bottomOfLastSection = currPage.rectangle.getBorder("top");
+  let bottomOfLastSection = currPage.rectangle.getBorderHorizontal("top");
   for (const _box of boxes) {
     const box = isContentStylePair(_box) ? _box.content : _box;
     const alignment = isContentStylePair(_box)
@@ -62,7 +62,7 @@ export function stackBoxes(boxes, defaultStyle, boundsGen) {
       currPage = MinBoundBox.fromRect(boundsGen.get(pageCount));
       pageCount += 1;
       result.push(currPage);
-      bottomOfLastSection = currPage.rectangle.getBorder("top");
+      bottomOfLastSection = currPage.rectangle.getBorderHorizontal("top");
       box.setPosition({
         pointOnRect: { x: defaultStyle.alignment, y: "top" },
         pointOnGrid: refPoint(),
@@ -70,8 +70,8 @@ export function stackBoxes(boxes, defaultStyle, boundsGen) {
     }
     currPage.appendChild(box);
     bottomOfLastSection = box.rectangle
-      .getBorder("bottom")
-      .sub(sectionDistance);
+      .getBorderHorizontal("bottom")
+      .moveDown(sectionDistance);
   }
   return result;
 }

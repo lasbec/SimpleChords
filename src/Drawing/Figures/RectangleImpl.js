@@ -18,7 +18,9 @@
 
 import { Length } from "../../Shared/Length.js";
 import { getPoint } from "../BoxMeasuringUtils.js";
+import { HLineImpl } from "./HLineImpl.js";
 import { PointImpl } from "./PointImpl.js";
+import { VLineImpl } from "./VLineImpl.js";
 
 /** @implements {MutRectangle} */
 export class RectangleImpl {
@@ -170,9 +172,18 @@ export class RectangleImpl {
   /** @param {import("../Geometry.js").BorderPosition} position  */
   getBorder(position) {
     if (position === "left" || position === "right") {
-      return this.xPositionFor(position);
+      return new VLineImpl(this.xPositionFor(position));
     }
-    return this.yPositionFor(position);
+    return new HLineImpl(this.yPositionFor(position));
+  }
+
+  /** @param {"left" | "right"} position  */
+  getBorderVertical(position) {
+    return new VLineImpl(this.xPositionFor(position));
+  }
+  /** @param {"bottom" | "top"} position  */
+  getBorderHorizontal(position) {
+    return new HLineImpl(this.yPositionFor(position));
   }
 
   /** @returns {import("../Geometry.js").ReferencePoint} */

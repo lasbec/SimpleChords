@@ -15,7 +15,7 @@ import { songLineBox } from "./SongLineBox.js";
  * @typedef {import("../Drawing/Geometry.js").Dimensions} Dimensions
  * @typedef {import("../Drawing/Geometry.js").Box} Box
  * @typedef {import("../Drawing/Geometry.js").Rectangle} Rectangle
- * @typedef {import("../Drawing/Geometry.js").RectNoBottom} RectNoBottom */
+ */
 
 /**
  * @typedef {object} SongSectionBoxConfig
@@ -60,7 +60,7 @@ const songSectionInstrumental = decorateAsBox(drawOnlyChords);
 /**
  * @param {SongSection} section
  * @param {LayoutConfig} layoutConfig
- * @param {RectNoBottom=} rect
+ * @param {Rectangle=} rect
  * @returns
  */
 export function songSection(section, layoutConfig, rect) {
