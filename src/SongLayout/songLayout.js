@@ -8,6 +8,7 @@ import { SimpleBoxGen } from "../Drawing/RectangleGens/SimpleBoxGen.js";
 import { stackLayout } from "../Drawing/CollectionComponents/stackLayout.js";
 import { stackBoxes } from "../Drawing/CollectionComponents/stackBoxes.js";
 import { BreakableText } from "../Drawing/BreakableText.js";
+import { SongLineBox } from "./SongLineBox.js";
 
 /**
  * @typedef {import("../Drawing/Geometry.js").Rectangle} Rectangle
@@ -160,12 +161,15 @@ export function songLayoutDense(song, layoutConfig, rect) {
 
 // /**
 //  * @param {{section:SongSection, result:Box}[]} songSections
+//  * @param {import("./SongLineBox.js").SongLineBoxConfig}style
 //  * @returns {void}
 //  */
 // function renderSongSectionsDense(songSections, style) {
 //   const workingLines = songSections.map((s) => {
+//     /** @type {SongLineBox[]} */
+//     const boxes = s.section.lines.map((l) => new SongLineBox(l, style));
 //     return {
-//       rest: BreakableText.fromPrefferdLineUp(SongLine, s.section.lines),
+//       rest: BreakableText.fromPrefferdLineUp(SongLineBox, boxes),
 //       result: s.result,
 //     };
 //   });
@@ -175,11 +179,12 @@ export function songLayoutDense(song, layoutConfig, rect) {
 //   }
 
 //   /**
-//    * @param {{rest:BreakableText<SongLine>; result:Box}} line
+//    * @param {{rest:BreakableText<SongLineBox>; result:Box}} line
 //    * @returns {number}
 //    */
 //   function maxChordsToFit(line) {
-//     const width = line.result.rectangle.width;
-//     line.rest.text.
+//     const maxWidth = line.result.rectangle.width;
+//     const lineWidth = line.rest.text.dims().width;
+//     if()
 //   }
 // }

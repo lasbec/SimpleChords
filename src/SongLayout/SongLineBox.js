@@ -20,6 +20,7 @@ import { BoundsImpl } from "../Drawing/Figures/BoundsImpl.js";
  * @typedef {import("../Drawing/Geometry.js").Box} Box
  * @typedef {import("../Drawing/Geometry.js").Box} PrimitiveBox
  * @typedef {import("../Drawing/Geometry.js").LeaveBox} LeaveBox
+ * @typedef {import("../Drawing/BreakableText.js").StrLikeConstraint} StrLikeConstraint
  *
  */
 
@@ -32,6 +33,7 @@ import { BoundsImpl } from "../Drawing/Figures/BoundsImpl.js";
 /**
  * @extends {AbstractBox<SongLine, SongLineBoxConfig>}
  * @implements {LeaveBox}
+ * @implements {StrLikeConstraint}
  */
 export class SongLineBox extends AbstractBox {
   /** @type {"leave"} */
@@ -48,9 +50,8 @@ export class SongLineBox extends AbstractBox {
    */
   constructor(content, style) {
     super(content, style, BoundsImpl.unbound());
-    this.box = ArragmentBox.undboundBoxGroup(
-      SongLineBox.initChildren(content, style, PointImpl.origin())
-    );
+    this.box = ArragmentBox.undboundBoxGroup([]);
+    this.initChildren();
   }
   /**
    * @param {ReferencePoint} point
@@ -68,6 +69,29 @@ export class SongLineBox extends AbstractBox {
 
   get rectangle() {
     return this.box.rectangle;
+  }
+
+  [Symbol.iterator]() {
+    return this.content[Symbol.iterator]();
+  }
+
+  /**
+   * @returns {number}
+   */
+  get length() {
+    return this.content.length;
+  }
+
+  toString() {
+    return this.content.toString();
+  }
+
+  /**
+   * @param {number} i
+   * @returns {string}
+   */
+  charAt(i) {
+    return this.content.charAt(i);
   }
 
   /**
@@ -91,18 +115,14 @@ export class SongLineBox extends AbstractBox {
     );
   }
 
-  /**
-   * @param {SongLine} line
-   * @param {SongLineBoxConfig} args
-   * @param {PointImpl} topLeft
-   */
-  static initChildren(line, args, topLeft) {
-    /**@type {Box[]} */
-    const children = [];
+  initChildren() {
+    const line = this.content;
+    const args = this.style;
+    const topLeft = PointImpl.origin();
     const pointer = topLeft.clone();
     pointer.moveDown(args.chordsConfig.lineHeight);
 
-    const partialWidths = SongLineBox.partialWidths(line, args.lyricConfig);
+    const partialWidths = this.partialWidths();
     for (const chord of line.chords) {
       const yOffset = partialWidths[chord.startIndex];
       if (!yOffset) continue;
@@ -112,7 +132,7 @@ export class SongLineBox extends AbstractBox {
         pointOnRect: { x: "left", y: "bottom" },
         pointOnGrid: bottomLeftOfChord,
       });
-      children.push(chordBox);
+      this.box.appendChild(chordBox);
     }
     pointer.moveDown(args.lyricConfig.lineHeight);
     const lyricBox = new TextBox(line.lyric, args.lyricConfig);
@@ -120,17 +140,18 @@ export class SongLineBox extends AbstractBox {
       pointOnRect: { x: "left", y: "bottom" },
       pointOnGrid: pointer,
     });
-    children.push(lyricBox);
-    return children;
+    this.box.appendChild(lyricBox);
   }
 
   /**
    * @private
-   * @param {SongLine} line
-   * @param {TextConfig} lyricConfig
-   * @returns {Array<Length>}
+   * @type {Array<Length> | undefined}
    */
-  static partialWidths(line, lyricConfig) {
+  _partialWidths;
+  partialWidths() {
+    if (this._partialWidths) return this._partialWidths;
+    const line = this.content;
+    const lyricConfig = this.style.lyricConfig;
     const result = [];
     let partial = "";
     for (const char of line) {
@@ -141,6 +162,7 @@ export class SongLineBox extends AbstractBox {
       result.push(LEN(widthPt, "pt"));
       partial += char;
     }
+    this._partialWidths = result;
     return result;
   }
 }
