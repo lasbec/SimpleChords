@@ -115,6 +115,7 @@ export class SongLineBox extends AbstractBox {
     );
   }
 
+  /** @private */
   initChildren() {
     const line = this.content;
     const args = this.style;
@@ -141,6 +142,17 @@ export class SongLineBox extends AbstractBox {
       pointOnGrid: pointer,
     });
     this.box.appendChild(lyricBox);
+  }
+
+  /** @param {Length} width  */
+  maxChordsToFitInWidth(width) {
+    let currMax = 0;
+    for (const chord of this.content.chords) {
+      const canWidth = this.partialWidths()[chord.startIndex];
+      if (canWidth.gt(width)) return currMax;
+      currMax += 1;
+    }
+    return currMax;
   }
 
   /**

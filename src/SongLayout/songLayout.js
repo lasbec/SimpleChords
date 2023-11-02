@@ -9,6 +9,7 @@ import { stackLayout } from "../Drawing/CollectionComponents/stackLayout.js";
 import { stackBoxes } from "../Drawing/CollectionComponents/stackBoxes.js";
 import { BreakableText } from "../Drawing/BreakableText.js";
 import { SongLineBox } from "./SongLineBox.js";
+import { BoundsImpl } from "../Drawing/Figures/BoundsImpl.js";
 
 /**
  * @typedef {import("../Drawing/Geometry.js").Rectangle} Rectangle
@@ -133,9 +134,35 @@ export function songLayoutDense(song, layoutConfig, rect) {
   /** @type {BoxGen} */
   const boundsGen = new SimpleBoxGen(rect);
 
-  const sectionBoxes = song.sections.map((section) =>
-    songSection(section, layoutConfig)
-  );
+  const r = song.sections.map((s) => ({
+    section: s,
+    result: new ArragmentBox(
+      [],
+      BoundsImpl.from({
+        minWidth: rect.width,
+        maxWidth: rect.width,
+      })
+    ),
+  }));
+  /** @type {Map<string, {section: SongSection, result: ArragmentBox}[]>} */
+  const sectionsByType = new Map();
+  for (const s of r) {
+    const arr = sectionsByType.get(s.section.type) || [];
+    if (arr.length === 0) {
+      sectionsByType.set(s.section.type, arr);
+    }
+    arr.push(s);
+  }
+
+  const style = {
+    chordsConfig: layoutConfig.chordTextConfig,
+    lyricConfig: layoutConfig.lyricTextConfig,
+  };
+
+  for (const sectionGroup of sectionsByType.values()) {
+    renderSongSectionsDense(sectionGroup, style);
+  }
+  const sectionBoxes = r.map((s) => s.result);
   return stackBoxes(
     [
       {
@@ -159,32 +186,50 @@ export function songLayoutDense(song, layoutConfig, rect) {
  * @typedef {import("./SongSectionBox.js").SongSection} SongSection
  */
 
-// /**
-//  * @param {{section:SongSection, result:Box}[]} songSections
-//  * @param {import("./SongLineBox.js").SongLineBoxConfig}style
-//  * @returns {void}
-//  */
-// function renderSongSectionsDense(songSections, style) {
-//   const workingLines = songSections.map((s) => {
-//     /** @type {SongLineBox[]} */
-//     const boxes = s.section.lines.map((l) => new SongLineBox(l, style));
-//     return {
-//       rest: BreakableText.fromPrefferdLineUp(SongLineBox, boxes),
-//       result: s.result,
-//     };
-//   });
+/**
+ * @param {{section:SongSection, result:ArragmentBox}[]} songSections
+ * @param {import("./SongLineBox.js").SongLineBoxConfig}style
+ * @returns {void}
+ */
+function renderSongSectionsDense(songSections, style) {
+  /** @type {{rest:BreakableText<SongLineBox>; result:ArragmentBox}[]} */
+  const workingLines = songSections.map((s) => {
+    /** @type {SongLineBox[]} */
+    const boxes = s.section.lines.map((l) => new SongLineBox(l, style));
+    return {
+      rest: BreakableText.fromPrefferdLineUp(SongLineBox, boxes),
+      result: s.result,
+    };
+  });
 
-//   while (workingLines.some((l) => l.rest.lenght > 0)) {
-//     const maxChordsToFit = Math.min(workingLines.map(maxChordsToFit));
-//   }
+  while (workingLines.some((l) => l.rest.lenght > 0)) {
+    const max = Math.min(...workingLines.map(maxChordsToFit));
+    for (const line of workingLines) {
+      if (line.rest.lenght === 0) continue;
+      const indexOfLastFittingChord =
+        line.rest.text.content.chords[max - 1]?.startIndex || 0;
+      const indexOfFirstOverflowingChord =
+        line.rest.text.content.chords[max]?.startIndex ||
+        Number.POSITIVE_INFINITY;
+      const [newLine, rest] = line.rest.break({
+        minLineLen: indexOfLastFittingChord + 1,
+        maxLineLen: indexOfFirstOverflowingChord,
+      });
+      newLine.setPosition({
+        pointOnGrid: line.result.rectangle.getPoint("left", "bottom"),
+        pointOnRect: { x: "left", y: "top" },
+      });
+      line.result.appendChild(newLine);
+      line.rest = rest;
+    }
+  }
 
-//   /**
-//    * @param {{rest:BreakableText<SongLineBox>; result:Box}} line
-//    * @returns {number}
-//    */
-//   function maxChordsToFit(line) {
-//     const maxWidth = line.result.rectangle.width;
-//     const lineWidth = line.rest.text.dims().width;
-//     if()
-//   }
-// }
+  /**
+   * @param {{rest:BreakableText<SongLineBox>; result:Box}} line
+   * @returns {number}
+   */
+  function maxChordsToFit(line) {
+    const maxWidth = line.result.rectangle.width;
+    return line.rest.text.maxChordsToFitInWidth(maxWidth);
+  }
+}
