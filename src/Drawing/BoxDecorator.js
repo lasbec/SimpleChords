@@ -1,5 +1,5 @@
 import { PointImpl } from "./Figures/PointImpl.js";
-import { HigherOrderBox } from "./Boxes/HigherOrderBox.js";
+import { ArragmentBox } from "./Boxes/HigherOrderBox.js";
 
 /**
  * @typedef {import("./Geometry.js").Rectangle} Rectangle
@@ -29,7 +29,7 @@ export function decorateAsComponent(drawChildrenFn) {
     while (rest !== undefined) {
       const partialResult = drawChildrenFn(rest, config, boxGen.get(pageCount));
       pageCount += 1;
-      result.push(HigherOrderBox.undboundBoxGroup(partialResult.children));
+      result.push(ArragmentBox.undboundBoxGroup(partialResult.children));
       rest = partialResult.rest;
     }
     return result;
@@ -50,7 +50,7 @@ export function decorateAsBox(drawChildrenFn) {
    */
   return (content, config, drawingStartPoint) => {
     drawingStartPoint = drawingStartPoint?.clone() || PointImpl.origin();
-    return HigherOrderBox.undboundBoxGroup(
+    return ArragmentBox.undboundBoxGroup(
       drawChildrenFn(content, config, drawingStartPoint)
     );
   };

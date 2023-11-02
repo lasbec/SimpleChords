@@ -28,7 +28,7 @@ import { BoundsImpl as BoundsImpl } from "../Figures/BoundsImpl.js";
  * @implements {ParentBox}
  * @extends {AbstractBox<Box[], null>}
  */
-export class HigherOrderBox extends AbstractBox {
+export class ArragmentBox extends AbstractBox {
   /**
    * @type {"parent"}
    * @readonly
@@ -48,7 +48,7 @@ export class HigherOrderBox extends AbstractBox {
    * @param {Dimensions} dims
    */
   static newPage(dims) {
-    return new HigherOrderBox(
+    return new ArragmentBox(
       [],
       BoundsImpl.exactBoundsFrom(
         RectangleImpl.fromPlacement(
@@ -64,14 +64,14 @@ export class HigherOrderBox extends AbstractBox {
 
   /** @param {Box[]} children  */
   static undboundBoxGroup(children) {
-    return new HigherOrderBox(children, BoundsImpl.unbound());
+    return new ArragmentBox(children, BoundsImpl.unbound());
   }
 
   /**
    * @param {Rectangle} rect
    */
   static withLowerBounds(rect) {
-    return new HigherOrderBox([], BoundsImpl.minBoundsFrom(rect));
+    return new ArragmentBox([], BoundsImpl.minBoundsFrom(rect));
   }
 
   /** @type {Rectangle} */

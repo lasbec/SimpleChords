@@ -2,7 +2,8 @@ import { WellKnownSectionType } from "../Song/SongChecker.js";
 import { PointImpl } from "../Drawing/Figures/PointImpl.js";
 import { decorateAsBox } from "../Drawing/BoxDecorator.js";
 import { TextBox } from "../Drawing/Boxes/TextBox.js";
-import { songLineBox } from "./SongLineBox.js";
+import { SongLineBox } from "./SongLineBox.js";
+
 /**
  * @typedef {import("../Drawing/Geometry.js").ReferencePoint} BoxPlacement
  * @typedef {import("./RenderSongAsPdf.js").LayoutConfig} LayoutConfig
@@ -42,7 +43,7 @@ function drawsongSection(section, layoutConfig, startPoint) {
     chordsConfig: chordTextConfig,
     lyricConfig: lyricStyle,
   };
-  const children = section.lines.map((l) => songLineBox(l, config));
+  const children = section.lines.map((l) => new SongLineBox(l, config));
   for (const l of children) {
     l.setPosition({
       pointOnRect: { x: "left", y: "top" },

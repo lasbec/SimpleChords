@@ -1,12 +1,13 @@
 import { songSection } from "./SongSectionBox.js";
 import { TextBox } from "../Drawing/Boxes/TextBox.js";
 import { Song } from "../Song/Song.js";
-import { HigherOrderBox } from "../Drawing/Boxes/HigherOrderBox.js";
+import { ArragmentBox } from "../Drawing/Boxes/HigherOrderBox.js";
 import { SongLine } from "../Song/SongLine.js";
 import { isInside } from "../Drawing/Figures/FigureUtils.js";
 import { SimpleBoxGen } from "../Drawing/RectangleGens/SimpleBoxGen.js";
 import { stackLayout } from "../Drawing/CollectionComponents/stackLayout.js";
 import { stackBoxes } from "../Drawing/CollectionComponents/stackBoxes.js";
+import { BreakableText } from "../Drawing/BreakableText.js";
 
 /**
  * @typedef {import("../Drawing/Geometry.js").Rectangle} Rectangle
@@ -44,7 +45,7 @@ export function songLayout(song, layoutConfig, rect) {
  * @returns {Box[]}
  */
 export function songLayoutSimple(song, layoutConfig, rect) {
-  const fstPage = HigherOrderBox.withLowerBounds(rect);
+  const fstPage = ArragmentBox.withLowerBounds(rect);
   const titleBox = new TextBox(song.heading, layoutConfig.titleTextConfig);
   titleBox.setPosition({
     pointOnRect: { x: "center", y: "top" },
@@ -152,3 +153,33 @@ export function songLayoutDense(song, layoutConfig, rect) {
     boundsGen
   );
 }
+
+/**
+ * @typedef {import("./SongSectionBox.js").SongSection} SongSection
+ */
+
+// /**
+//  * @param {{section:SongSection, result:Box}[]} songSections
+//  * @returns {void}
+//  */
+// function renderSongSectionsDense(songSections, style) {
+//   const workingLines = songSections.map((s) => {
+//     return {
+//       rest: BreakableText.fromPrefferdLineUp(SongLine, s.section.lines),
+//       result: s.result,
+//     };
+//   });
+
+//   while (workingLines.some((l) => l.rest.lenght > 0)) {
+//     const maxChordsToFit = Math.min(workingLines.map(maxChordsToFit));
+//   }
+
+//   /**
+//    * @param {{rest:BreakableText<SongLine>; result:Box}} line
+//    * @returns {number}
+//    */
+//   function maxChordsToFit(line) {
+//     const width = line.result.rectangle.width;
+//     line.rest.text.
+//   }
+// }

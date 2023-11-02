@@ -1,6 +1,6 @@
 import { it } from "vitest";
 import { describe } from "vitest";
-import { HigherOrderBox } from "./HigherOrderBox.js";
+import { ArragmentBox } from "./HigherOrderBox.js";
 import { BoundsImpl } from "../Figures/BoundsImpl.js";
 import { RectangleImpl } from "../Figures/RectangleImpl.js";
 import { PointImpl } from "../Figures/PointImpl.js";
@@ -14,7 +14,7 @@ describe("HigherOrderBox", () => {
       PointImpl.origin(),
       PointImpl.origin().moveUp(LEN(50, "mm")).moveRight(LEN(60, "mm"))
     );
-    const hob = new HigherOrderBox([], BoundsImpl.minBoundsFrom(minRect));
+    const hob = new ArragmentBox([], BoundsImpl.minBoundsFrom(minRect));
     expect([
       hob.rectangle.width.in("mm").toFixed(8),
       hob.rectangle.height.in("mm").toFixed(8),
@@ -25,10 +25,7 @@ describe("HigherOrderBox", () => {
     const rightTop = new DebugBox(
       PointImpl.origin().moveUp(LEN(50, "mm")).moveRight(LEN(60, "mm"))
     );
-    const hob = new HigherOrderBox(
-      [leftBottom, rightTop],
-      BoundsImpl.unbound()
-    );
+    const hob = new ArragmentBox([leftBottom, rightTop], BoundsImpl.unbound());
     expect([
       hob.rectangle.width.in("mm").toFixed(8),
       hob.rectangle.height.in("mm").toFixed(8),
@@ -47,7 +44,7 @@ describe("HigherOrderBox", () => {
   });
 
   it("Fixed size", () => {
-    const page = HigherOrderBox.newPage({
+    const page = ArragmentBox.newPage({
       width: LEN(210, "mm"),
       height: LEN(297, "mm"),
     });

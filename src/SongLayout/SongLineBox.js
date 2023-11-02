@@ -3,16 +3,24 @@ import { SongLine } from "../Song/SongLine.js";
 import { decorateAsBox } from "../Drawing/BoxDecorator.js";
 import { PointImpl } from "../Drawing/Figures/PointImpl.js";
 import { TextBox } from "../Drawing/Boxes/TextBox.js";
+import { ArragmentBox } from "../Drawing/Boxes/HigherOrderBox.js";
+import { AbstractBox } from "../Drawing/Boxes/AbstractBox.js";
+import { BoundsImpl } from "../Drawing/Figures/BoundsImpl.js";
+/**
+ */
+
 /**
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("../Drawing/TextConfig.js").TextConfig} TextConfig
- * @typedef {import("../Drawing/Geometry.js").ReferencePoint} BoxPlacement
+ * @typedef {import("../Drawing/Geometry.js").ReferencePoint} ReferencePoint
  * @typedef {import("../Drawing/Geometry.js").Point} Point
  * @typedef {import("../Drawing/Geometry.js").XStartPosition} XStartPosition
  * @typedef {import("../Drawing/Geometry.js").YStartPosition} YStartPosition
  * @typedef {import("../Drawing/Geometry.js").Dimensions} Dimensions
  * @typedef {import("../Drawing/Geometry.js").Box} Box
  * @typedef {import("../Drawing/Geometry.js").Box} PrimitiveBox
+ * @typedef {import("../Drawing/Geometry.js").LeaveBox} LeaveBox
+ *
  */
 
 /**
@@ -21,7 +29,68 @@ import { TextBox } from "../Drawing/Boxes/TextBox.js";
  * @property {TextConfig} chordsConfig
  */
 
-class SongLineBox {
+/**
+ * @extends {AbstractBox<SongLine, SongLineBoxConfig>}
+ * @implements {LeaveBox}
+ */
+export class SongLineBox extends AbstractBox {
+  /** @type {"leave"} */
+  __discriminator__ = "leave";
+
+  /**
+   * @param {SongLine} content
+   * @param {SongLineBoxConfig} style
+   */
+  /**
+   *
+   * @param {SongLine} content
+   * @param {SongLineBoxConfig} style
+   */
+  constructor(content, style) {
+    super(content, style, BoundsImpl.unbound());
+    this.box = ArragmentBox.undboundBoxGroup(
+      SongLineBox.initChildren(content, style, PointImpl.origin())
+    );
+  }
+  /**
+   * @param {ReferencePoint} point
+   */
+  setPosition(point) {
+    this.box.setPosition(point);
+  }
+
+  /**
+   * @param {PDFPage} page
+   */
+  drawToPdfPage(page) {
+    this.box.drawToPdfPage(page);
+  }
+
+  get rectangle() {
+    return this.box.rectangle;
+  }
+
+  /**
+   * @param {SongLineBox} s
+   * @param {number} start
+   * @param {number=} stop
+   * @returns {SongLineBox}
+   */
+  static slice(s, start, stop) {
+    return new SongLineBox(s.content.slice(start, stop), s.style);
+  }
+
+  /**
+   * @param {SongLineBox[]} s
+   * @returns {SongLineBox}
+   */
+  static concat(s) {
+    return new SongLineBox(
+      SongLine.concat(s.map((l) => l.content)),
+      s[0]?.style
+    );
+  }
+
   /**
    * @param {SongLine} line
    * @param {SongLineBoxConfig} args
@@ -75,5 +144,3 @@ class SongLineBox {
     return result;
   }
 }
-
-export const songLineBox = decorateAsBox(SongLineBox.initChildren);
