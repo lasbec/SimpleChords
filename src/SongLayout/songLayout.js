@@ -131,10 +131,7 @@ export function songLayoutDense(song, layoutConfig, rect) {
     pointOnGrid: rect.getPointAt({ x: "center", y: "top" }),
   });
 
-  /** @type {BoxGen} */
-  const boundsGen = new SimpleBoxGen(rect);
-
-  const r = song.sections.map((s) => {
+  const workload = song.sections.map((s) => {
     const bounds = BoundsImpl.from({
       minWidth: rect.width,
       maxWidth: rect.width,
@@ -147,12 +144,12 @@ export function songLayoutDense(song, layoutConfig, rect) {
   });
   /** @type {Map<string, {section: SongSection, result: ArragmentBox}[]>} */
   const sectionsByType = new Map();
-  for (const s of r) {
-    const arr = sectionsByType.get(s.section.type) || [];
+  for (const pair of workload) {
+    const arr = sectionsByType.get(pair.section.type) || [];
     if (arr.length === 0) {
-      sectionsByType.set(s.section.type, arr);
+      sectionsByType.set(pair.section.type, arr);
     }
-    arr.push(s);
+    arr.push(pair);
   }
 
   const style = {
@@ -163,7 +160,7 @@ export function songLayoutDense(song, layoutConfig, rect) {
   for (const sectionGroup of sectionsByType.values()) {
     renderSongSectionsDense(sectionGroup, style);
   }
-  const sectionBoxes = r.map((s) => s.result);
+  const sectionBoxes = workload.map((pair) => pair.result);
   return stackBoxes(
     [
       {
@@ -179,7 +176,7 @@ export function songLayoutDense(song, layoutConfig, rect) {
       sectionDistance: layoutConfig.sectionDistance,
       alignment: "left",
     },
-    boundsGen
+    new SimpleBoxGen(rect)
   );
 }
 
@@ -230,7 +227,7 @@ function renderSongSectionsDense(songSections, style) {
    * @returns {number}
    */
   function maxChordsToFit(line) {
-    const maxWidth = line.result.dims().width;
+    const maxWidth = line.result.rectangle.width;
     return line.rest.text.maxChordsToFitInWidth(maxWidth);
   }
 }
