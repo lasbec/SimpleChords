@@ -160,6 +160,18 @@ export class SongLineBox extends AbstractBox {
   }
 
   /**
+   * @param {Length} width
+   */
+  maxCharsToFit(width) {
+    let currMax = 0;
+    for (const w of this.partialWidths()) {
+      if (w.gt(width)) return currMax;
+      currMax += 1;
+    }
+    return currMax;
+  }
+
+  /**
    * @private
    * @type {Array<Length> | undefined}
    */

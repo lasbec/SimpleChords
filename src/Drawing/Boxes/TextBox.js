@@ -1,6 +1,5 @@
 import { PrimitiveBox } from "./PrimitiveBox.js";
 import { PointImpl } from "../Figures/PointImpl.js";
-import { RectangleImpl } from "../Figures/RectangleImpl.js";
 import { BoundsImpl } from "../Figures/BoundsImpl.js";
 /**
  */

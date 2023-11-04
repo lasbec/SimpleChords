@@ -30,7 +30,7 @@ function isContentStylePair(x) {
  */
 export function stackBoxes(boxes, defaultStyle, boundsGen) {
   let pageCount = 0;
-  let currPage = ArragmentBox.withLowerBounds(boundsGen.get(pageCount));
+  let currPage = ArragmentBox.fromRect(boundsGen.get(pageCount));
   pageCount += 1;
 
   /** @type {Box[]} */
@@ -60,7 +60,7 @@ export function stackBoxes(boxes, defaultStyle, boundsGen) {
       .getPoint("left", "bottom")
       .isLowerOrEq(currPage.rectangle.getPoint("left", "bottom"));
     if (sectionExeedsPage) {
-      currPage = ArragmentBox.withLowerBounds(boundsGen.get(pageCount));
+      currPage = ArragmentBox.fromRect(boundsGen.get(pageCount)); 
       pageCount += 1;
       result.push(currPage);
       bottomOfLastSection = currPage.rectangle.getBorderHorizontal("top");

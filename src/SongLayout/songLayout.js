@@ -134,8 +134,10 @@ export function songLayoutDense(song, layoutConfig, rect) {
 
   const workload = song.sections.map((s) => {
     const bounds = BoundsImpl.from({
-      minWidth: rect.width,
-      maxWidth: rect.width,
+      maxLeft: rect.getBorderVertical("left"),
+      minLeft: rect.getBorderVertical("left"),
+      maxRight: rect.getBorderVertical("right"),
+      minRight: rect.getBorderVertical("right"),
     });
     const box = new ArragmentBox([], bounds);
     return {
@@ -209,6 +211,7 @@ function renderSongSectionsDense(songSections, style) {
         line.rest.text.content.chords[max - 1]?.startIndex ?? 0;
       const indexOfFirstOverflowingChord =
         line.rest.text.content.chords[max]?.startIndex ??
+        line.rest.text.maxCharsToFit(line.result.rectangle.width) + 1 ??
         Number.POSITIVE_INFINITY;
       const [newLine, rest] = line.rest.break({
         minLineLen: indexOfLastFittingChord + 1,

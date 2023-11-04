@@ -5,15 +5,18 @@
  * @typedef {import("pdf-lib").Color}  Color
  * @typedef {import("./Geometry.js").Box} Box
  */
-import { rgb } from "pdf-lib";
+import { grayscale, rgb } from "pdf-lib";
 import { DebugMode } from "./DebugMode.js";
 
-/** @type {Map<number, Color>} */
+/** @type {Map<number, Color>}
+ * @ts-ignore */
 const debugLevelColorMap = new Map([
-  [0, rgb(0.8, 0.2, 0)],
-  [1, rgb(0.2, 0.9, 0.1)],
-  [2, rgb(0.9, 0.5, 0.1)],
-  [3, rgb(0.5, 0.5, 0.5)],
+  [0, rgb(0.0, 0.9, 0.0)],
+  [1, rgb(0.0, 0.0, 0.7)],
+  [2, rgb(0.8, 0.0, 0.0)],
+  [3, grayscale(0.0)],
+  [4, grayscale(0.66)],
+  [5, grayscale(0.33)],
 ]);
 
 /**
@@ -22,7 +25,8 @@ const debugLevelColorMap = new Map([
  * */
 export function drawDebugBox(pdfPage, box) {
   if (DebugMode.isOn) {
-    const borderColor = debugLevelColorMap.get(box.level()) || rgb(1, 0, 0);
+    const borderColor = debugLevelColorMap.get(box.level());
+    if (!borderColor) throw Error("Boxes too depp");
     const leftBottomCorner = box.rectangle.getPoint("left", "bottom");
     const args = {
       x: leftBottomCorner.x.in("pt"),
