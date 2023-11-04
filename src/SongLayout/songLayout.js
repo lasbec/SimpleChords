@@ -28,16 +28,20 @@ export function songLayout(song, layoutConfig, rect) {
   const simpleResult = songLayoutSimple(song, layoutConfig, rect);
   if (simpleResult.length <= 1) {
     if (simpleResult.every((b) => isInside(b.rectangle, rect))) {
+      console.log("Simples Layout gewählt");
       return simpleResult;
     }
+    console.log("Kompaktes Layout gewählt");
     return songLayoutDense(song, layoutConfig, rect);
   }
   const doubleLineResult = songLayoutDoubleLine(song, layoutConfig, rect);
   if (doubleLineResult.length < simpleResult.length) {
     if (doubleLineResult.every((b) => isInside(b.rectangle, rect))) {
+      console.log("Doppelzeilen Layout gewählt");
       return doubleLineResult;
     }
   }
+  console.log("Kein Passendes layout gefunden");
   return simpleResult;
 }
 /**
@@ -47,7 +51,7 @@ export function songLayout(song, layoutConfig, rect) {
  * @returns {Box[]}
  */
 export function songLayoutSimple(song, layoutConfig, rect) {
-  const fstPage = ArragmentBox.withLowerBounds(rect);
+  const fstPage = ArragmentBox.newPage(rect);
   const titleBox = new TextBox(song.heading, layoutConfig.titleTextConfig);
   titleBox.setPosition({
     pointOnRect: { x: "center", y: "top" },
@@ -60,9 +64,6 @@ export function songLayoutSimple(song, layoutConfig, rect) {
     .moveDown(titleBox.rectangle.height)
     .moveDown(titleBox.rectangle.height);
 
-  /** @type {BoxGen} */
-  const boundsGen = new SimpleBoxGen(rect, begin);
-
   const sectionContainers = stackLayout(
     song.sections,
     {
@@ -70,7 +71,7 @@ export function songLayoutSimple(song, layoutConfig, rect) {
       sectionDistance: layoutConfig.sectionDistance,
       style: layoutConfig,
     },
-    boundsGen
+    new SimpleBoxGen(rect, begin)
   );
   if (sectionContainers[0]) {
     fstPage.appendChild(sectionContainers[0]);
