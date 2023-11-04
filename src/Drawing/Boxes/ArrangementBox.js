@@ -74,6 +74,13 @@ export class ArragmentBox extends AbstractBox {
     return new ArragmentBox([], BoundsImpl.minBoundsFrom(rect));
   }
 
+  /**
+   * @param {Rectangle} rect
+   */
+  static fromRect(rect) {
+    return new ArragmentBox([], BoundsImpl.exactBoundsFrom(rect));
+  }
+
   /** @type {Rectangle} */
   get rectangle() {
     const mbb = minimalBoundingRectangle(this.children.map((c) => c.rectangle));

@@ -10,6 +10,7 @@ import { stackBoxes } from "../Drawing/CollectionComponents/stackBoxes.js";
 import { BreakableText } from "../Drawing/BreakableText.js";
 import { SongLineBox } from "./SongLineBox.js";
 import { BoundsImpl } from "../Drawing/Figures/BoundsImpl.js";
+import { DebugBox } from "../Drawing/Boxes/DebugBox.js";
 
 /**
  * @typedef {import("../Drawing/Geometry.js").Rectangle} Rectangle
@@ -51,7 +52,7 @@ export function songLayout(song, layoutConfig, rect) {
  * @returns {Box[]}
  */
 export function songLayoutSimple(song, layoutConfig, rect) {
-  const fstPage = ArragmentBox.newPage(rect);
+  const fstPage = new ArragmentBox([], BoundsImpl.exactBoundsFrom(rect));
   const titleBox = new TextBox(song.heading, layoutConfig.titleTextConfig);
   titleBox.setPosition({
     pointOnRect: { x: "center", y: "top" },

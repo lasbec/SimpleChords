@@ -33,6 +33,23 @@ describe("ArrangementBox", () => {
       hob.rectangle.height.in("mm").toFixed(8),
     ]).toEqual(["50.00000000", "0.00000000"]);
   });
+  it("Exact width no hight with child", () => {
+    const hob = new ArragmentBox(
+      [],
+      BoundsImpl.from({
+        minWidth: LEN(50, "mm"),
+        maxWidth: LEN(50, "mm"),
+      })
+    );
+    const child = new DebugBox(
+      PointImpl.origin().moveUp(LEN(50, "mm")).moveRight(LEN(60, "mm"))
+    );
+    hob.appendChild(child);
+    expect([
+      hob.rectangle.width.in("mm").toFixed(8),
+      hob.rectangle.height.in("mm").toFixed(8),
+    ]).toEqual(["50.00000000", "3.00000000"]);
+  });
   it("two children; unbound", () => {
     const leftBottom = new DebugBox(PointImpl.origin());
     const rightTop = new DebugBox(

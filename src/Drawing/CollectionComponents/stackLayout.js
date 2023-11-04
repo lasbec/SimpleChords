@@ -1,5 +1,6 @@
 import { ArragmentBox } from "../Boxes/ArrangementBox.js";
 import { Length } from "../../Shared/Length.js";
+import { DebugBox } from "../Boxes/DebugBox.js";
 
 /**
  * @typedef {import("../Geometry.js").Rectangle} Rectangle
@@ -17,7 +18,7 @@ import { Length } from "../../Shared/Length.js";
  */
 export function stackLayout(contents, style, boundsGen) {
   let pageCount = 0;
-  let currPage = ArragmentBox.withLowerBounds(boundsGen.get(pageCount));
+  let currPage = ArragmentBox.fromRect(boundsGen.get(pageCount));
   pageCount += 1;
 
   /** @type {Box[]} */
@@ -34,7 +35,7 @@ export function stackLayout(contents, style, boundsGen) {
       .getPoint("left", "bottom")
       .isLowerOrEq(currPage.rectangle.getPoint("left", "bottom"));
     if (sectionExeedsPage) {
-      currPage = ArragmentBox.withLowerBounds(boundsGen.get(pageCount));
+      currPage = ArragmentBox.fromRect(boundsGen.get(pageCount));
       pageCount += 1;
       result.push(currPage);
       currBox.setPosition({
