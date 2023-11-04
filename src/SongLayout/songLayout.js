@@ -214,7 +214,7 @@ function renderSongSectionsDense(songSections, style) {
       );
       const [newLine, rest] = line.rest.break({
         minLineLen: indexOfLastFittingChord + 1,
-        maxLineLen: maxCharsToFit - 1,
+        maxLineLen: maxCharsToFit,
       });
       newLine.setPosition({
         pointOnGrid: line.result.rectangle.getPoint("left", "bottom"),

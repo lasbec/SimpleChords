@@ -183,8 +183,8 @@ export class SongLineBox extends AbstractBox {
   maxChordsToFitInWidth(width) {
     let currMax = 0;
     for (const chord of this.content.chords) {
-      const partialLine = this.ancestors()[chord.startIndex];
-      const canWidth = partialLine?.rectangle.width;
+      const partialLine = this.ancestors()[chord.startIndex + 1];
+      const canWidth = partialLine.rectangle.width;
       if (canWidth.gt(width)) return currMax;
       currMax += 1;
     }
