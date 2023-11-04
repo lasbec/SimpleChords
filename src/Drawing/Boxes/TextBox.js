@@ -35,6 +35,13 @@ export class TextBox extends PrimitiveBox {
     };
   }
 
+  /**
+   * @returns {false}
+   */
+  hasOverflow() {
+    return false;
+  }
+
   referencePoint() {
     return this.position;
   }

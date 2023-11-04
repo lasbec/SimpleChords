@@ -41,6 +41,13 @@ export class DebugBox extends PrimitiveBox {
     DebugBox.constructionCounter += 1;
   }
 
+  /**
+   * @returns {false}
+   */
+  hasOverflow() {
+    return false;
+  }
+
   dims() {
     return {
       width: LEN(3, "mm"),

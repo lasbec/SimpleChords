@@ -53,6 +53,10 @@ export class SongLineBox extends AbstractBox {
     this.box = ArragmentBox.undboundBoxGroup([]);
     this.initChildren();
   }
+
+  hasOverflow() {
+    return this.box.hasOverflow();
+  }
   /**
    * @param {ReferencePoint} point
    */

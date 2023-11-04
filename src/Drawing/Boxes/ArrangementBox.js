@@ -126,6 +126,17 @@ export class ArragmentBox extends AbstractBox {
     this.children.push(box);
     box.parent = this;
   }
+
+  hasOverflow() {
+    const overflows = BoxOverflows.from({ child: this, parent: this.parent });
+    if (!overflows.isEmpty()) return overflows;
+    for (const child of this.children) {
+      const can = child.hasOverflow();
+      if (can) return can;
+    }
+    return false;
+  }
+
   /**
    * @param {PDFPage} page
    */

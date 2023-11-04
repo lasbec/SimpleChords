@@ -5,6 +5,7 @@ import { RectangleImpl } from "./Figures/RectangleImpl.js";
 import { Line } from "./CoordinateSystemSpecifics/Figures.d.ts";
 import { HLineImpl } from "./Figures/HLineImpl.js";
 import { VLineImpl } from "./Figures/VLineImpl.js";
+import { BoxOverflows } from "./BoxOverflow.js";
 export { Point } from "./CoordinateSystemSpecifics/Figures.d.ts";
 
 export type Movement = {
@@ -39,6 +40,7 @@ type BaseBox = {
   drawToPdfPage(page: PDFPage): void;
   parent: Box | null;
   root: Box;
+  hasOverflow(): BoxOverflows | false;
 
   rectangle: Rectangle;
   setPosition(position: ReferencePoint): void;

@@ -10,7 +10,6 @@ import { stackBoxes } from "../Drawing/CollectionComponents/stackBoxes.js";
 import { BreakableText } from "../Drawing/BreakableText.js";
 import { SongLineBox } from "./SongLineBox.js";
 import { BoundsImpl } from "../Drawing/Figures/BoundsImpl.js";
-import { DebugBox } from "../Drawing/Boxes/DebugBox.js";
 
 /**
  * @typedef {import("../Drawing/Geometry.js").Rectangle} Rectangle
@@ -28,7 +27,7 @@ import { DebugBox } from "../Drawing/Boxes/DebugBox.js";
 export function songLayout(song, layoutConfig, rect) {
   const simpleResult = songLayoutSimple(song, layoutConfig, rect);
   if (simpleResult.length <= 1) {
-    if (simpleResult.every((b) => isInside(b.rectangle, rect))) {
+    if (simpleResult.every((b) => !b.hasOverflow())) {
       console.log("Simples Layout gewählt");
       return simpleResult;
     }
@@ -37,7 +36,7 @@ export function songLayout(song, layoutConfig, rect) {
   }
   const doubleLineResult = songLayoutDoubleLine(song, layoutConfig, rect);
   if (doubleLineResult.length < simpleResult.length) {
-    if (doubleLineResult.every((b) => isInside(b.rectangle, rect))) {
+    if (doubleLineResult.every((b) => !b.hasOverflow())) {
       console.log("Doppelzeilen Layout gewählt");
       return doubleLineResult;
     }
@@ -52,7 +51,7 @@ export function songLayout(song, layoutConfig, rect) {
  * @returns {Box[]}
  */
 export function songLayoutSimple(song, layoutConfig, rect) {
-  const fstPage = new ArragmentBox([], BoundsImpl.exactBoundsFrom(rect));
+  const fstPage = ArragmentBox.fromRect(rect);
   const titleBox = new TextBox(song.heading, layoutConfig.titleTextConfig);
   titleBox.setPosition({
     pointOnRect: { x: "center", y: "top" },
