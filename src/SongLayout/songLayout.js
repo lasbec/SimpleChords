@@ -209,13 +209,12 @@ function renderSongSectionsDense(songSections, style) {
       if (line.rest.lenght === 0) continue;
       const indexOfLastFittingChord =
         line.rest.text.content.chords[max - 1]?.startIndex ?? 0;
-      const indexOfFirstOverflowingChord =
-        line.rest.text.content.chords[max]?.startIndex ??
-        line.rest.text.maxCharsToFit(line.result.rectangle.width) + 1 ??
-        Number.POSITIVE_INFINITY;
+      const maxCharsToFit = line.rest.text.maxCharsToFit(
+        line.result.rectangle.width
+      );
       const [newLine, rest] = line.rest.break({
         minLineLen: indexOfLastFittingChord + 1,
-        maxLineLen: indexOfFirstOverflowingChord,
+        maxLineLen: maxCharsToFit - 1,
       });
       newLine.setPosition({
         pointOnGrid: line.result.rectangle.getPoint("left", "bottom"),

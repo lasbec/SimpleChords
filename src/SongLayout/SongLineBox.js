@@ -54,6 +54,37 @@ export class SongLineBox extends AbstractBox {
     this.initChildren();
   }
 
+  /**
+   * @private
+   * @type {Array<SongLineBox> | null}
+   */
+  _ancestors = null;
+  ancestors() {
+    if (this._ancestors) return this._ancestors;
+    /** @type {Array<SongLineBox>} */
+    const result = [];
+    /** @type {SongLineBox} */
+    let current = this;
+    while (current.length > 0) {
+      current = new SongLineBox(current.content.slice(0, -1), this.style);
+      result.unshift(current);
+    }
+    this._ancestors = result;
+    return result;
+  }
+
+  /**
+   * @private
+   * @type {Array<Length> | undefined}
+   */
+  _partialWidths;
+  partialWidths() {
+    if (this._partialWidths) return this._partialWidths;
+    const result = this.ancestors().map((a) => a.rectangle.width);
+    this._partialWidths = result;
+    return result;
+  }
+
   hasOverflow() {
     return this.box.hasOverflow();
   }
@@ -127,7 +158,7 @@ export class SongLineBox extends AbstractBox {
     const pointer = topLeft.clone();
     pointer.moveDown(args.chordsConfig.lineHeight);
 
-    const partialWidths = this.partialWidths();
+    const partialWidths = this.partialWidthsOfLyricOnly();
     for (const chord of line.chords) {
       const yOffset = partialWidths[chord.startIndex];
       if (!yOffset) continue;
@@ -152,7 +183,8 @@ export class SongLineBox extends AbstractBox {
   maxChordsToFitInWidth(width) {
     let currMax = 0;
     for (const chord of this.content.chords) {
-      const canWidth = this.partialWidths()[chord.startIndex];
+      const partialLine = this.ancestors()[chord.startIndex];
+      const canWidth = partialLine?.rectangle.width;
       if (canWidth.gt(width)) return currMax;
       currMax += 1;
     }
@@ -173,11 +205,8 @@ export class SongLineBox extends AbstractBox {
 
   /**
    * @private
-   * @type {Array<Length> | undefined}
    */
-  _partialWidths;
-  partialWidths() {
-    if (this._partialWidths) return this._partialWidths;
+  partialWidthsOfLyricOnly() {
     const line = this.content;
     const lyricConfig = this.style.lyricConfig;
     const result = [];
@@ -190,7 +219,6 @@ export class SongLineBox extends AbstractBox {
       result.push(LEN(widthPt, "pt"));
       partial += char;
     }
-    this._partialWidths = result;
     return result;
   }
 }
