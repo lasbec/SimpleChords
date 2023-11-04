@@ -18,6 +18,7 @@
  */
 import { BoundsImpl } from "./BoundsImpl.js";
 import { HLineImpl } from "./HLineImpl.js";
+import { PointImpl } from "./PointImpl.js";
 import { RectangleImpl } from "./RectangleImpl.js";
 import { VLineImpl } from "./VLineImpl.js";
 
@@ -25,25 +26,35 @@ import { VLineImpl } from "./VLineImpl.js";
 export class PartialRectangleImpl {
   /**
    * @param {BoundsImpl} bounds
+   * @param {import("./BoundsImpl.js").MinMax} minMax
    */
-  static fromMaxBound(bounds) {
-    return new PartialRectangleImpl({
-      left: bounds.left("max"),
-      right: bounds.right("max"),
-      top: bounds.top("max"),
-      bottom: bounds.bottom("max"),
-    });
-  }
+  static fromBound(bounds, minMax) {
+    const left = bounds.left(minMax);
+    const right = bounds.right(minMax);
+    const top = bounds.top(minMax);
+    const bottom = bounds.bottom(minMax);
+    if (!left && !right && !top && !bottom) {
+      const width = bounds.width("min");
+      const [left, right] = width
+        ? [VLineImpl.yAxis(), VLineImpl.yAxis().moveRight(width)]
+        : [undefined, undefined];
 
-  /**
-   * @param {BoundsImpl} bounds
-   */
-  static fromMinBound(bounds) {
+      const height = bounds.height("min");
+      const [bottom, top] = height
+        ? [HLineImpl.xAxis(), HLineImpl.xAxis().moveUp(height)]
+        : [undefined, undefined];
+      return new PartialRectangleImpl({
+        left,
+        right,
+        top,
+        bottom,
+      });
+    }
     return new PartialRectangleImpl({
-      left: bounds.left("min"),
-      right: bounds.right("min"),
-      top: bounds.top("min"),
-      bottom: bounds.bottom("min"),
+      left,
+      right,
+      top,
+      bottom,
     });
   }
 
@@ -73,14 +84,15 @@ export class PartialRectangleImpl {
     }
   }
 
-  /**
-   * @returns {Rectangle | undefined}
-   */
   toFullRectangle() {
     const { left, right, top, bottom } = this.def;
-    if (left && right && top && bottom) {
-      return RectangleImpl.fromBorders({ left, right, top, bottom });
-    }
+
+    return RectangleImpl.fromBorders({
+      left: left || right || VLineImpl.yAxis(),
+      right: right || left || VLineImpl.yAxis(),
+      top: top || bottom || HLineImpl.xAxis(),
+      bottom: bottom || top || HLineImpl.xAxis(),
+    });
   }
 
   clone() {

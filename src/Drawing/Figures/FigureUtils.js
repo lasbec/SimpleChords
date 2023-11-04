@@ -251,8 +251,8 @@ function finite(finite, partial) {
  * @param {BoundsImpl} bounds
  */
 export function fitIntoBounds(rectangle, bounds) {
-  const upperBounds = PartialRectangleImpl.fromMaxBound(bounds);
-  const lowerBounds = PartialRectangleImpl.fromMinBound(bounds);
+  const upperBounds = PartialRectangleImpl.fromBound(bounds, "max");
+  const lowerBounds = PartialRectangleImpl.fromBound(bounds, "min");
   const extendedRectangle = finite(
     rectangle,
     minimalBoundingRectangleSafe(lowerBounds, rectangle)

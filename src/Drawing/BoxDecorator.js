@@ -1,5 +1,5 @@
 import { PointImpl } from "./Figures/PointImpl.js";
-import { ArragmentBox } from "./Boxes/HigherOrderBox.js";
+import { ArragmentBox } from "./Boxes/ArrangementBox.js";
 
 /**
  * @typedef {import("./Geometry.js").Rectangle} Rectangle

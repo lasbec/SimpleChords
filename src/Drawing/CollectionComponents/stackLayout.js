@@ -1,4 +1,4 @@
-import { ArragmentBox } from "../Boxes/HigherOrderBox.js";
+import { ArragmentBox } from "../Boxes/ArrangementBox.js";
 import { Length } from "../../Shared/Length.js";
 
 /**

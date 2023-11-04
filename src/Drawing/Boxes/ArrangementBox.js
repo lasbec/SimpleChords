@@ -77,13 +77,12 @@ export class ArragmentBox extends AbstractBox {
   /** @type {Rectangle} */
   get rectangle() {
     const mbb = minimalBoundingRectangle(this.children.map((c) => c.rectangle));
+
     if (!mbb) {
-      const minBoundRectPartial = PartialRectangleImpl.fromMinBound(
-        this.bounds
-      );
-      const minBoundRect = minBoundRectPartial.toFullRectangle();
-      if (minBoundRect) return minBoundRect;
-      return RectangleImpl.fromCorners(PointImpl.origin(), PointImpl.origin());
+      return PartialRectangleImpl.fromBound(
+        this.bounds,
+        "min"
+      ).toFullRectangle();
     }
     const result = fitIntoBounds(mbb, this.bounds);
     return result;

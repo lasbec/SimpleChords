@@ -3,7 +3,7 @@ import { SongLine } from "../Song/SongLine.js";
 import { decorateAsBox } from "../Drawing/BoxDecorator.js";
 import { PointImpl } from "../Drawing/Figures/PointImpl.js";
 import { TextBox } from "../Drawing/Boxes/TextBox.js";
-import { ArragmentBox } from "../Drawing/Boxes/HigherOrderBox.js";
+import { ArragmentBox } from "../Drawing/Boxes/ArrangementBox.js";
 import { AbstractBox } from "../Drawing/Boxes/AbstractBox.js";
 import { BoundsImpl } from "../Drawing/Figures/BoundsImpl.js";
 /**

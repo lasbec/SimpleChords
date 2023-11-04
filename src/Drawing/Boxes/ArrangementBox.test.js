@@ -1,6 +1,6 @@
 import { it } from "vitest";
 import { describe } from "vitest";
-import { ArragmentBox } from "./HigherOrderBox.js";
+import { ArragmentBox } from "./ArrangementBox.js";
 import { BoundsImpl } from "../Figures/BoundsImpl.js";
 import { RectangleImpl } from "../Figures/RectangleImpl.js";
 import { PointImpl } from "../Figures/PointImpl.js";
@@ -8,7 +8,7 @@ import { LEN } from "../../Shared/Length.js";
 import { expect } from "vitest";
 import { DebugBox } from "./DebugBox.js";
 
-describe("HigherOrderBox", () => {
+describe("ArrangementBox", () => {
   it("Minimal width and hight ", () => {
     const minRect = RectangleImpl.fromCorners(
       PointImpl.origin(),
@@ -19,6 +19,19 @@ describe("HigherOrderBox", () => {
       hob.rectangle.width.in("mm").toFixed(8),
       hob.rectangle.height.in("mm").toFixed(8),
     ]).toEqual(["60.00000000", "50.00000000"]);
+  });
+  it("Exact width no hight ", () => {
+    const hob = new ArragmentBox(
+      [],
+      BoundsImpl.from({
+        minWidth: LEN(50, "mm"),
+        maxWidth: LEN(50, "mm"),
+      })
+    );
+    expect([
+      hob.rectangle.width.in("mm").toFixed(8),
+      hob.rectangle.height.in("mm").toFixed(8),
+    ]).toEqual(["50.00000000", "0.00000000"]);
   });
   it("two children; unbound", () => {
     const leftBottom = new DebugBox(PointImpl.origin());

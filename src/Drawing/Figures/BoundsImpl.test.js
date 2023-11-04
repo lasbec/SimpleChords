@@ -7,6 +7,29 @@ import { RectangleImpl } from "./RectangleImpl.js";
 import { expect } from "vitest";
 
 describe("BoundsImpl", () => {
+  it("exact width", () => {
+    const bounds = BoundsImpl.from({
+      minWidth: LEN(50, "mm"),
+      maxWidth: LEN(50, "mm"),
+    });
+    expect({
+      maxWidth: bounds.width("max")?.in("mm")?.toFixed(8),
+      minWidth: bounds.width("min")?.in("mm")?.toFixed(8),
+      maxRight: bounds.right("max")?.x.in("mm")?.toFixed(8),
+      minRight: bounds.right("min")?.x.in("mm")?.toFixed(8),
+      maxLeft: bounds.left("max")?.x.in("mm")?.toFixed(8),
+      minLeft: bounds.left("min")?.x.in("mm")?.toFixed(8),
+      maxHeight: bounds.height("max")?.in("mm")?.toFixed(8),
+      minHeight: bounds.height("min")?.in("mm")?.toFixed(8),
+      maxTop: bounds.top("max")?.y.in("mm")?.toFixed(8),
+      minTop: bounds.top("min")?.y.in("mm")?.toFixed(8),
+      maxBottom: bounds.bottom("max")?.y.in("mm")?.toFixed(8),
+      minBottom: bounds.bottom("min")?.y.in("mm")?.toFixed(8),
+    }).toEqual({
+      minWidth: "50.00000000",
+      maxWidth: "50.00000000",
+    });
+  });
   it("minBoundFrom", () => {
     const minRect = RectangleImpl.fromCorners(
       PointImpl.origin(),

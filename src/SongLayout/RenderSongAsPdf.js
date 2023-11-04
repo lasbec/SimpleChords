@@ -18,7 +18,7 @@ import { RectangleImpl } from "../Drawing/Figures/RectangleImpl.js";
 import { PointImpl } from "../Drawing/Figures/PointImpl.js";
 import { drawToPdfDoc } from "../Drawing/DrawToPdfDoc.js";
 import { DebugMode } from "../Drawing/DebugMode.js";
-import { ArragmentBox } from "../Drawing/Boxes/HigherOrderBox.js";
+import { ArragmentBox } from "../Drawing/Boxes/ArrangementBox.js";
 
 /**
  * @param {string} path

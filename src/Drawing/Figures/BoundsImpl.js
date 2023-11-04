@@ -101,38 +101,38 @@ export class BoundsImpl {
     this.horizontalBounds.add(move.y);
   }
 
-  /** @param {*} minMax  */
+  /** @param {MinMax} minMax  */
   top(minMax) {
     const value = this.verticalBounds.upper(minMax);
     if (!value) return;
     return new HLineImpl(value);
   }
-  /** @param {*} minMax  */
+  /** @param {MinMax} minMax  */
   bottom(minMax) {
     const value = this.verticalBounds.lower(minMax);
     if (!value) return;
     return new HLineImpl(value);
   }
-  /** @param {*} minMax  */
+  /** @param {MinMax} minMax  */
   height(minMax) {
     return this.verticalBounds.value(minMax);
   }
 
-  /** @param {*} minMax  */
+  /** @param {MinMax} minMax  */
   left(minMax) {
     const value = this.horizontalBounds.lower(minMax);
     if (!value) return;
     return new VLineImpl(value);
   }
 
-  /** @param {*} minMax  */
+  /** @param {MinMax} minMax  */
   right(minMax) {
     const value = this.horizontalBounds.upper(minMax);
     if (!value) return;
     return new VLineImpl(value);
   }
 
-  /** @param {*} minMax  */
+  /** @param {MinMax} minMax  */
   width(minMax) {
     return this.horizontalBounds.value(minMax);
   }
