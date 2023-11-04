@@ -196,8 +196,9 @@ export class SongLineBox extends AbstractBox {
    */
   maxCharsToFit(width) {
     let currMax = 0;
-    for (const w of this.partialWidths()) {
-      if (w.gt(width)) return currMax;
+    for (const ancestor of this.ancestors()) {
+      const w = ancestor.rectangle.width;
+      if (w.gt(width)) return currMax - 1;
       currMax += 1;
     }
     return currMax;
