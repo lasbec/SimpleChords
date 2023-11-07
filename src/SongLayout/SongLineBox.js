@@ -55,6 +55,7 @@ export class SongLineBox extends AbstractBox {
   }
 
   /**
+   * All the Boxes with just one
    * @private
    * @type {Array<SongLineBox> | null}
    */
@@ -70,18 +71,6 @@ export class SongLineBox extends AbstractBox {
       result.unshift(current);
     }
     this._ancestors = result;
-    return result;
-  }
-
-  /**
-   * @private
-   * @type {Array<Length> | undefined}
-   */
-  _partialWidths;
-  partialWidths() {
-    if (this._partialWidths) return this._partialWidths;
-    const result = this.ancestors().map((a) => a.rectangle.width);
-    this._partialWidths = result;
     return result;
   }
 
@@ -182,8 +171,9 @@ export class SongLineBox extends AbstractBox {
   /** @param {Length} width  */
   maxChordsToFitInWidth(width) {
     let currMax = 0;
+    const partials = [...this.ancestors(), this];
     for (const chord of this.content.chords) {
-      const partialLine = this.ancestors()[chord.startIndex + 1];
+      const partialLine = partials[chord.startIndex + 1];
       const canWidth = partialLine.rectangle.width;
       if (canWidth.gt(width)) return currMax;
       currMax += 1;
