@@ -3,7 +3,6 @@ import { TextBox } from "../Drawing/Boxes/TextBox.js";
 import { Song } from "../Song/Song.js";
 import { ArragmentBox } from "../Drawing/Boxes/ArrangementBox.js";
 import { SongLine } from "../Song/SongLine.js";
-import { isInside } from "../Drawing/Figures/FigureUtils.js";
 import { SimpleBoxGen } from "../Drawing/RectangleGens/SimpleBoxGen.js";
 import { stackLayout } from "../Drawing/CollectionComponents/stackLayout.js";
 import { stackBoxes } from "../Drawing/CollectionComponents/stackBoxes.js";

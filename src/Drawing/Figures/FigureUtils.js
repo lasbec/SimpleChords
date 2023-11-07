@@ -15,24 +15,6 @@ import { BoundsImpl } from "./BoundsImpl.js";
  */
 
 /**
- *
- * @param {Rectangle} inner
- * @param {Rectangle} outer
- */
-export function isInside(inner, outer) {
-  const innerLeftTop = inner.getPoint("left", "top");
-  const innerRightBottom = inner.getPoint("right", "bottom");
-  const outerLeftTop = outer.getPoint("left", "top");
-  const outerRightBottom = outer.getPoint("right", "bottom");
-  return (
-    innerLeftTop.isRightOrEq(outerLeftTop) &&
-    innerLeftTop.isLowerOrEq(outerLeftTop) &&
-    innerRightBottom.isLeftOrEq(outerRightBottom) &&
-    innerRightBottom.isHigherOrEq(outerRightBottom)
-  );
-}
-
-/**
  * @typedef {object} GetPointArgs
  * @property {RelX} targetX
  * @property {RelY} targetY
