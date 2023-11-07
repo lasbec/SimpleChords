@@ -19,11 +19,32 @@ function getCorrespondingOutPutPath(inputPath) {
 
 /**
  * @typedef {object} MainArgs
- * @property {string} inputPath
+ * @property {string | string[]} inputPath
  * @property {string | undefined} outPath
  * @property {boolean} debug
  * @property {LayoutConfig=} style
  */
+
+/**
+ * @param {string | string[]} inp
+ * @return {Promise<string[]>}
+ */
+async function resolvePaths(inp) {
+  const inputArr = Array.isArray(inp) ? inp : [inp];
+
+  const result = [];
+  for (const path of inputArr) {
+    if (path.endsWith(".chords.md")) {
+      result.push(path);
+    } else {
+      const filesInDir = (await fs.readdir(path))
+        .filter((f) => f.endsWith(".chords.md"))
+        .map((f) => Path.join(path, f));
+      result.push(...filesInDir);
+    }
+  }
+  return result;
+}
 
 /**
  * @param {MainArgs} args
@@ -34,18 +55,8 @@ export async function printPdfFiles({
   debug,
   style: theme,
 }) {
-  if (inputPath.endsWith(".chords.md")) {
-    await renderSingleFile(
-      inputPath,
-      outPath || getCorrespondingOutPutPath(inputPath),
-      theme || DefaultLayoutConfigDto,
-      debug
-    );
-    return;
-  }
-  const chordFiles = (await fs.readdir(inputPath))
-    .filter((f) => f.endsWith(".chords.md"))
-    .map((f) => Path.join(inputPath, f));
+  const chordFiles = await resolvePaths(inputPath);
+
   if (outPath) {
     await renderAllInSingleFile(
       chordFiles,

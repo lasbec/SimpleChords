@@ -83,7 +83,7 @@ printPdfFiles({
 })
 ```
 
-The **inputPath** can be a path to a `.chords.md` file or a directory path.
+The **inputPath** can be a path or an array of paths to a `.chords.md` file or a directory path.
 If the path leads to a directory every file in it ending with `.chords.md` will be printed as Pdf.
 
 The **outPath** is set a single pdf file with all songs will be printed.
@@ -149,4 +149,4 @@ The following fonts are built in:
 
 ## CLI
 
-You can run this package from the command line too: `npx simple-chords <input_path> [<output_path>] [--debug]`
+You can run this package from the command line too: `npx simple-chords <input_path> [<...further_inputPaths>[] <output_path>] [--debug]`
