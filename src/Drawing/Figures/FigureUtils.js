@@ -62,7 +62,7 @@ const xMovementMap = {
   },
   // from right
   right_to_left(width, pointer) {
-    pointer.moveRight(width);
+    pointer.moveLeft(width);
   },
   right_to_center(width, pointer) {
     pointer.moveLeft(width.mul(1 / 2));
