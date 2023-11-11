@@ -175,7 +175,7 @@ export async function renderSongAsPdf(songs, debug, layoutConfig, pdfDoc) {
   const writableArea = pageArea
     .getPoint("left", "top")
     .moveDown(layoutConfig.topMargin)
-    .moveRight(layoutConfig.rightMargin)
+    .moveRight(layoutConfig.leftMargin)
     .span(
       pageArea
         .getPoint("right", "bottom")
@@ -190,24 +190,60 @@ export async function renderSongAsPdf(songs, debug, layoutConfig, pdfDoc) {
     const boxes = songLayout(song, layoutConfig, writableArea);
     for (const box of boxes) {
       const currPage = ArragmentBox.newPage(pageDims);
-      currPage.appendChild(box);
+      const inner = pageCount % 2 === 1 ? "right" : "left";
+      const outer = pageCount % 2 === 1 ? "left" : "right";
+      /**
+       * @param {PointImpl} pointer
+       * @param {Length} len
+       */
+      function moveToOutvards(pointer, len) {
+        return pageCount % 2 === 1
+          ? pointer.moveLeft(len)
+          : pointer.moveRight(len);
+      }
 
+      /**
+       * @param {PointImpl} pointer
+       * @param {Length} len
+       */
+      function moveToInvards(pointer, len) {
+        return pageCount % 2 === 1
+          ? pointer.moveRight(len)
+          : pointer.moveLeft(len);
+      }
+      const innerMargin = layoutConfig.rightMargin;
+
+      const innerTop = moveToOutvards(
+        currPage.rectangle
+          .getPoint(inner, "top")
+          .moveDown(layoutConfig.topMargin),
+        innerMargin
+      );
+
+      box.setPosition({
+        pointOnRect: { x: inner, y: "top" },
+        pointOnGrid: innerTop,
+      });
+
+      currPage.appendChild(box);
       if (layoutConfig.printPageNumbers) {
         const pageNumberBox = new TextBox(
           pageCount.toString(),
           layoutConfig.lyricTextConfig
         );
         pageNumberBox.setPosition({
-          pointOnGrid: currPage.rectangle
-            .getPoint("left", "bottom")
-            .pointerUp(LEN(1, "mm"))
-            .pointerRight(LEN(1, "mm")),
-          pointOnRect: { x: "left", y: "bottom" },
+          pointOnGrid: moveToInvards(
+            currPage.rectangle
+              .getPoint(outer, "bottom")
+              .pointerUp(LEN(1, "mm")),
+            LEN(1, "mm")
+          ),
+          pointOnRect: { x: outer, y: "bottom" },
         });
 
         currPage.appendChild(pageNumberBox);
-        pageCount += 1;
       }
+      pageCount += 1;
       pages.push(currPage);
     }
   }

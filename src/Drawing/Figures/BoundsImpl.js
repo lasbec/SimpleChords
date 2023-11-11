@@ -97,8 +97,8 @@ export class BoundsImpl {
    * @param {RelativeMovement} move
    */
   move(move) {
-    this.verticalBounds = this.verticalBounds.add(move.x);
-    this.horizontalBounds = this.horizontalBounds.add(move.y);
+    this.verticalBounds = this.verticalBounds.add(move.y);
+    this.horizontalBounds = this.horizontalBounds.add(move.x);
   }
 
   /** @param {MinMax} minMax  */
