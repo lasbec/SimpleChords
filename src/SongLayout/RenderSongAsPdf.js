@@ -1,8 +1,7 @@
 /**
  * @typedef {import("pdf-lib").PDFPage} PDFPage
- * @typedef {import("../Drawing/Geometry.d.ts").Dimensions} Dimensions
  * @typedef {import("../Song/Song.js").SongSection} SongSection
- * @typedef {import("../Drawing/Geometry.d.ts").Box} Box
+ * @typedef {import("../Drawing/Geometry.js").Box} Box
  */
 import { PDFDocument, StandardFonts } from "pdf-lib";
 import { FontLoader } from "../Drawing/FontLoader.js";
@@ -187,6 +186,7 @@ export async function renderSongAsPdf(songs, debug, layoutConfig, pdfDoc) {
           )
         : writableAreaRightBottom
     );
+
   /** @type {Box[]} */
   const pages = [];
   let pageCount = 1;
