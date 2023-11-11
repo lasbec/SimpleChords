@@ -6,7 +6,7 @@
  */
 import { PDFDocument, StandardFonts } from "pdf-lib";
 import { FontLoader } from "../Drawing/FontLoader.js";
-import { Length } from "../Shared/Length.js";
+import { LEN, Length } from "../Shared/Length.js";
 import { parseSongAst } from "../Parsing/SongParser.js";
 import * as Path from "path";
 import * as fs from "fs/promises";
@@ -19,6 +19,7 @@ import { PointImpl } from "../Drawing/Figures/PointImpl.js";
 import { drawToPdfDoc } from "../Drawing/DrawToPdfDoc.js";
 import { DebugMode } from "../Drawing/DebugMode.js";
 import { ArragmentBox } from "../Drawing/Boxes/ArrangementBox.js";
+import { TextBox } from "../Drawing/Boxes/TextBox.js";
 
 /**
  * @param {string} path
@@ -179,12 +180,27 @@ export async function renderSongAsPdf(songs, debug, layoutConfig, pdfDoc) {
     );
   /** @type {Box[]} */
   const pages = [];
+  let pageCount = 1;
   for (const song of songs) {
     console.log(`Drawing '${song.heading}'`);
     const boxes = songLayout(song, layoutConfig, writableArea);
     for (const box of boxes) {
       const currPage = ArragmentBox.newPage(pageDims);
       currPage.appendChild(box);
+      const pageNumberBox = new TextBox(
+        pageCount.toString(),
+        layoutConfig.lyricTextConfig
+      );
+      pageNumberBox.setPosition({
+        pointOnGrid: currPage.rectangle
+          .getPoint("left", "bottom")
+          .pointerUp(LEN(1, "mm"))
+          .pointerRight(LEN(1, "mm")),
+        pointOnRect: { x: "left", y: "bottom" },
+      });
+
+      currPage.appendChild(pageNumberBox);
+      pageCount += 1;
       pages.push(currPage);
     }
   }
