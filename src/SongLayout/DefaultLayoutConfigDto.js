@@ -10,13 +10,13 @@ export const DefaultLayoutConfigDto = {
   pageWidth: "148.5mm",
   pageHeight: "210mm",
 
-  leftMargin: "5mm",
-  rightMargin: "5mm",
+  outerMargin: "5mm",
+  innerMargin: "20mm",
   topMargin: "5mm",
   bottomMargin: "5mm",
   sectionDistance: "12pt",
 
-  printPageNumbers: false,
+  printPageNumbers: true,
 
   lyricTextConfig: {
     font: StandardFonts.TimesRoman,

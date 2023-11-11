@@ -1,8 +1,8 @@
 /**
  * @typedef {import("pdf-lib").PDFPage} PDFPage
- * @typedef {import("../Drawing/Geometry.js").Dimensions} Dimensions
+ * @typedef {import("../Drawing/Geometry.d.ts").Dimensions} Dimensions
  * @typedef {import("../Song/Song.js").SongSection} SongSection
- * @typedef {import("../Drawing/Geometry.js").Box} Box
+ * @typedef {import("../Drawing/Geometry.d.ts").Box} Box
  */
 import { PDFDocument, StandardFonts } from "pdf-lib";
 import { FontLoader } from "../Drawing/FontLoader.js";
@@ -120,8 +120,8 @@ async function parseASTs(paths, debug) {
  *
  * @property {boolean} printPageNumbers
  *
- * @property {LengthDto} leftMargin
- * @property {LengthDto} rightMargin
+ * @property {LengthDto} outerMargin
+ * @property {LengthDto} innerMargin
  * @property {LengthDto} topMargin
  * @property {LengthDto} bottomMargin
  * @property {LengthDto} pageWidth
@@ -139,8 +139,8 @@ async function parseASTs(paths, debug) {
  *
  * @property {boolean} printPageNumbers
  *
- * @property {Length} leftMargin
- * @property {Length} rightMargin
+ * @property {Length} outerMargin
+ * @property {Length} innerMargin
  * @property {Length} topMargin
  * @property {Length} bottomMargin
  *
@@ -172,15 +172,20 @@ export async function renderSongAsPdf(songs, debug, layoutConfig, pdfDoc) {
     pageDims
   );
 
+  const writableAreaRightBottom = pageArea
+    .getPoint("right", "bottom")
+    .moveUp(layoutConfig.bottomMargin)
+    .moveLeft(layoutConfig.innerMargin);
   const writableArea = pageArea
     .getPoint("left", "top")
     .moveDown(layoutConfig.topMargin)
-    .moveRight(layoutConfig.leftMargin)
+    .moveRight(layoutConfig.outerMargin)
     .span(
-      pageArea
-        .getPoint("right", "bottom")
-        .moveUp(layoutConfig.bottomMargin)
-        .moveLeft(layoutConfig.rightMargin)
+      layoutConfig.printPageNumbers
+        ? writableAreaRightBottom.moveUp(
+            layoutConfig.lyricTextConfig.lineHeight
+          )
+        : writableAreaRightBottom
     );
   /** @type {Box[]} */
   const pages = [];
@@ -211,7 +216,7 @@ export async function renderSongAsPdf(songs, debug, layoutConfig, pdfDoc) {
           ? pointer.moveRight(len)
           : pointer.moveLeft(len);
       }
-      const innerMargin = layoutConfig.rightMargin;
+      const innerMargin = layoutConfig.innerMargin;
 
       const innerTop = moveToOutvards(
         currPage.rectangle
@@ -232,13 +237,8 @@ export async function renderSongAsPdf(songs, debug, layoutConfig, pdfDoc) {
           layoutConfig.lyricTextConfig
         );
         pageNumberBox.setPosition({
-          pointOnGrid: moveToInvards(
-            currPage.rectangle
-              .getPoint(outer, "bottom")
-              .pointerUp(LEN(1, "mm")),
-            LEN(1, "mm")
-          ),
-          pointOnRect: { x: outer, y: "bottom" },
+          pointOnGrid: box.rectangle.getPoint(outer, "bottom"),
+          pointOnRect: { x: outer, y: "top" },
         });
 
         currPage.appendChild(pageNumberBox);
@@ -280,8 +280,8 @@ async function layoutConfigFromDto(configDto, pdfDoc) {
     pageHeight: Length.fromString(configDto.pageHeight),
     pageWidth: Length.fromString(configDto.pageWidth),
 
-    leftMargin: Length.fromString(configDto.leftMargin),
-    rightMargin: Length.fromString(configDto.rightMargin),
+    outerMargin: Length.fromString(configDto.outerMargin),
+    innerMargin: Length.fromString(configDto.innerMargin),
     topMargin: Length.fromString(configDto.topMargin),
     bottomMargin: Length.fromString(configDto.bottomMargin),
     sectionDistance: Length.fromString(configDto.sectionDistance),

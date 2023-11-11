@@ -98,11 +98,13 @@ const dinA5Landscape = {
   pageHeight: "148.5mm",
   pageWidth: "210mm",
 
-  leftMargin: "5mm",
-  rightMargin: "5mm",
+  outerMargin: "5mm",
+  innerMargin: "20mm",
   topMargin: "5mm",
   bottomMargin: "5mm",
   sectionDistance: "12pt",
+
+  printPageNumbers: true,
 
   lyricTextConfig: {
     font: "../fonts/CaterOne/CarterOne-Regular.ttf",
