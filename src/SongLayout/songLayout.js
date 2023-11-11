@@ -160,7 +160,7 @@ export function songLayoutDense(song, layoutConfig, rect) {
   };
 
   for (const sectionGroup of sectionsByType.values()) {
-    renderSongSectionsDense(sectionGroup, style);
+        renderSongSectionsDense(sectionGroup, style);
   }
   const sectionBoxes = workload.map((pair) => pair.result);
   return stackBoxes(
@@ -208,12 +208,17 @@ function renderSongSectionsDense(songSections, style) {
       if (line.rest.lenght === 0) continue;
       const indexOfLastFittingChord =
         line.rest.text.content.chords[max - 1]?.startIndex ?? 0;
+      const indexOfFirstOverflowingChord =
+        line.rest.text.content.chords[max]?.startIndex;
       const maxCharsToFit = line.rest.text.maxCharsToFit(
         line.result.rectangle.width
       );
       const [newLine, rest] = line.rest.break({
         minLineLen: indexOfLastFittingChord + 1,
-        maxLineLen: maxCharsToFit,
+        maxLineLen: Math.min(
+          maxCharsToFit,
+          indexOfFirstOverflowingChord || Number.POSITIVE_INFINITY
+        ),
       });
       newLine.setPosition({
         pointOnGrid: line.result.rectangle.getPoint("left", "bottom"),
