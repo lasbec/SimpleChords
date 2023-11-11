@@ -16,6 +16,8 @@ export const DefaultLayoutConfigDto = {
   bottomMargin: "5mm",
   sectionDistance: "12pt",
 
+  printPageNumbers: false,
+
   lyricTextConfig: {
     font: StandardFonts.TimesRoman,
     fontSize: "11pt",

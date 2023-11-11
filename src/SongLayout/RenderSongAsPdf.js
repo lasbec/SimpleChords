@@ -118,6 +118,8 @@ async function parseASTs(paths, debug) {
  * @property {TextConfigDto} titleTextConfig
  * @property {TextConfigDto} chordTextConfig
  *
+ * @property {boolean} printPageNumbers
+ *
  * @property {LengthDto} leftMargin
  * @property {LengthDto} rightMargin
  * @property {LengthDto} topMargin
@@ -134,6 +136,8 @@ async function parseASTs(paths, debug) {
  * @property {TextConfig} refTextConfig
  * @property {TextConfig} titleTextConfig
  * @property {TextConfig} chordTextConfig
+ *
+ * @property {boolean} printPageNumbers
  *
  * @property {Length} leftMargin
  * @property {Length} rightMargin
@@ -187,20 +191,23 @@ export async function renderSongAsPdf(songs, debug, layoutConfig, pdfDoc) {
     for (const box of boxes) {
       const currPage = ArragmentBox.newPage(pageDims);
       currPage.appendChild(box);
-      const pageNumberBox = new TextBox(
-        pageCount.toString(),
-        layoutConfig.lyricTextConfig
-      );
-      pageNumberBox.setPosition({
-        pointOnGrid: currPage.rectangle
-          .getPoint("left", "bottom")
-          .pointerUp(LEN(1, "mm"))
-          .pointerRight(LEN(1, "mm")),
-        pointOnRect: { x: "left", y: "bottom" },
-      });
 
-      currPage.appendChild(pageNumberBox);
-      pageCount += 1;
+      if (layoutConfig.printPageNumbers) {
+        const pageNumberBox = new TextBox(
+          pageCount.toString(),
+          layoutConfig.lyricTextConfig
+        );
+        pageNumberBox.setPosition({
+          pointOnGrid: currPage.rectangle
+            .getPoint("left", "bottom")
+            .pointerUp(LEN(1, "mm"))
+            .pointerRight(LEN(1, "mm")),
+          pointOnRect: { x: "left", y: "bottom" },
+        });
+
+        currPage.appendChild(pageNumberBox);
+        pageCount += 1;
+      }
       pages.push(currPage);
     }
   }
@@ -242,6 +249,8 @@ async function layoutConfigFromDto(configDto, pdfDoc) {
     topMargin: Length.fromString(configDto.topMargin),
     bottomMargin: Length.fromString(configDto.bottomMargin),
     sectionDistance: Length.fromString(configDto.sectionDistance),
+
+    printPageNumbers: configDto.printPageNumbers,
 
     lyricTextConfig: new TextConfig({
       font: await embedFont(pdfDoc, configDto.lyricTextConfig.font),
