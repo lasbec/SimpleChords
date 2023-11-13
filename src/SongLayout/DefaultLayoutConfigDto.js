@@ -10,7 +10,7 @@ export const DefaultLayoutConfigDto = {
   pageWidth: "148.5mm",
   pageHeight: "210mm",
 
-  outerMargin: "7mm",
+  outerMargin: "5mm",
   innerMargin: "20mm",
   topMargin: "5mm",
   bottomMargin: "5mm",
@@ -32,7 +32,7 @@ export const DefaultLayoutConfigDto = {
   },
   titleTextConfig: {
     fontSize: "13pt",
-    font: StandardFonts.TimesRoman,
+    font: StandardFonts.TimesRomanBoldItalic,
   },
   chordTextConfig: {
     font: StandardFonts.TimesRomanBoldItalic,
