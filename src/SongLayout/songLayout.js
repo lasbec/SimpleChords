@@ -10,6 +10,7 @@ import { BreakableText } from "../Drawing/BreakableText.js";
 import { SongLineBox } from "./SongLineBox.js";
 import { BoundsImpl } from "../Drawing/Figures/BoundsImpl.js";
 import { textConfigForSectionType } from "./TextConfigForSectionType.js";
+import { sum } from "pdf-lib";
 
 /**
  * @typedef {import("../Drawing/Geometry.js").Rectangle} Rectangle
@@ -186,8 +187,18 @@ export function songLayoutDense(song, layoutConfig, rect) {
 }
 
 /**
+ * @typedef {{rest: BreakableText<SongLineBox>;result: ArragmentBox;}} WorkingLine
  * @typedef {import("./SongSectionBox.js").SongSection} SongSection
  */
+
+/**
+ * @param {{rest:BreakableText<SongLineBox>; result:ArragmentBox}} line
+ * @returns {number}
+ */
+function maxChordsToFit(line) {
+  const maxWidth = line.result.rectangle.width;
+  return line.rest.text.maxChordsToFitInWidth(maxWidth);
+}
 
 /**
  * @param {{section:SongSection, result:ArragmentBox}[]} songSections
@@ -195,7 +206,7 @@ export function songLayoutDense(song, layoutConfig, rect) {
  * @returns {void}
  */
 function renderSongSectionsDense(songSections, style) {
-  /** @type {{rest:BreakableText<SongLineBox>; result:ArragmentBox}[]} */
+  /** @type {WorkingLine[]} */
   const workingLines = songSections.map((s) => {
     /** @type {SongLineBox[]} */
     const boxes = s.section.lines.map((l) => new SongLineBox(l, style));
@@ -206,23 +217,52 @@ function renderSongSectionsDense(songSections, style) {
   });
 
   while (workingLines.some((l) => l.rest.lenght > 0)) {
-    const max = Math.min(...workingLines.map(maxChordsToFit));
+    const maxChordsToFit = maxChordsToFitInLine();
     for (const line of workingLines) {
-      reduceLine(line, max);
+      reduceLine(line, maxChordsToFit);
     }
   }
 
   /**
-   * @param {{rest:BreakableText<SongLineBox>; result:ArragmentBox}} line
    * @returns {number}
    */
-  function maxChordsToFit(line) {
-    const maxWidth = line.result.rectangle.width;
-    return line.rest.text.maxChordsToFitInWidth(maxWidth);
+  function maxChordsToFitInLine() {
+    const result1 = Math.min(...workingLines.map(maxChordsToFit)) - 1;
+    const badnessResult1 = Math.max(
+      ...workingLines.map((l) => {
+        if (l.rest.lenght <= 1) return 1;
+        const [_0, _1, badness] = breakLineBetweenChords(
+          l,
+          result1,
+          result1 + 1
+        );
+        return badness;
+      })
+    );
+    if (badnessResult1 < 100) return result1;
+
+    const result2 = result1 - 1;
+
+    const badnessResult2 = Math.max(
+      ...workingLines.map((l) => {
+        if (l.rest.lenght <= 1) return 1;
+        const [_0, _1, badness] = breakLineBetweenChords(
+          l,
+          result2,
+          result2 + 1
+        );
+        return badness;
+      })
+    );
+    if (badnessResult2 < badnessResult1) return result2;
+    return result1;
   }
 
   /**
-   * @param {{rest:BreakableText<SongLineBox>; result:ArragmentBox}} line
+   */
+
+  /**
+   * @param {WorkingLine} line
    * @param {number} maxChords
    */
   function reduceLine(line, maxChords) {
@@ -241,23 +281,10 @@ function renderSongSectionsDense(songSections, style) {
       return;
     }
     const [newLine, rest, badness] = breakLineBetweenChords(
-      maxChords - 1,
-      maxChords
+      line,
+      maxChords,
+      maxChords + 1
     );
-
-    if (badness > 99) {
-      const [newLine, rest, badness] = breakLineBetweenChords(
-        maxChords - 2,
-        maxChords
-      );
-      newLine.setPosition({
-        pointOnGrid: line.result.rectangle.getPoint("left", "bottom"),
-        pointOnRect: { x: "left", y: "top" },
-      });
-      line.result.appendChild(newLine);
-      line.rest = rest.trim();
-      return;
-    }
 
     newLine.setPosition({
       pointOnGrid: line.result.rectangle.getPoint("left", "bottom"),
@@ -265,29 +292,29 @@ function renderSongSectionsDense(songSections, style) {
     });
     line.result.appendChild(newLine);
     line.rest = rest.trim();
+  }
 
-    /**
-     *
-     * @param {number} start include
-     * @param {number} stop exclude
-     * @returns
-     */
-    function breakLineBetweenChords(start, stop) {
-      const indexOfLastFittingChord =
-        line.rest.text.content.chords[start]?.startIndex ?? 0;
-      const indexOfFirstOverflowingChord =
-        line.rest.text.content.chords[stop]?.startIndex;
-      const maxCharsToFit = line.rest.text.maxCharsToFit(
-        line.result.rectangle.width
-      );
-      const maxLineLen = Math.min(
-        maxCharsToFit,
-        indexOfFirstOverflowingChord || Number.POSITIVE_INFINITY
-      );
-      return line.rest.break({
-        minLineLen: indexOfLastFittingChord + 1,
-        maxLineLen: maxLineLen,
-      });
-    }
+  /**
+   *@param {WorkingLine} line
+   * @param {number} start include
+   * @param {number} stop exclude
+   * @returns
+   */
+  function breakLineBetweenChords(line, start, stop) {
+    const indexOfLastFittingChord =
+      line.rest.text.content.chords[start]?.startIndex ?? 0;
+    const indexOfFirstOverflowingChord =
+      line.rest.text.content.chords[stop]?.startIndex;
+    const maxCharsToFit = line.rest.text.maxCharsToFit(
+      line.result.rectangle.width
+    );
+    const maxLineLen = Math.min(
+      maxCharsToFit,
+      indexOfFirstOverflowingChord || Number.POSITIVE_INFINITY
+    );
+    return line.rest.break({
+      minLineLen: indexOfLastFittingChord + 1,
+      maxLineLen: maxLineLen,
+    });
   }
 }
