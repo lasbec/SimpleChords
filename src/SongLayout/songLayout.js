@@ -96,11 +96,11 @@ export function songLayout(song, layoutConfig, rect) {
       return double;
     }
 
-    // const nice = niceBrokenResult.meetsPageLimit(count);
-    // if (nice) {
-    //   console.error("nice layout chosen.");
-    //   return nice;
-    // }
+    const nice = niceBrokenResult.meetsPageLimit(count);
+    if (nice) {
+      console.error("nice layout chosen.");
+      return nice;
+    }
 
     const dense = denseResult.meetsPageLimit(count);
     if (dense) {
@@ -322,20 +322,17 @@ function nicestChordIndexToBreakAfter(workingLines) {
   const maxChords = Math.min(...workingLines.map(maxChordsToFit));
   let currResult = 0;
   let currMinBadness = Number.POSITIVE_INFINITY;
-  for (let i = 0; i < maxChords; i += 1) {
+  for (let i = 1; i <= maxChords; i += 1) {
     const badnessSum = sum(
       workingLines.map((l) => {
         if (l.rest.lenght <= 1) return 1;
-        const [_0, _1, badness] = breakLineBetweenChords(
-          l,
-          maxChords - 1,
-          maxChords
-        );
+        const [_0, _1, badness] = breakLineBetweenChords(l, i - 1, i);
         return badness;
       })
     );
     if (badnessSum <= currMinBadness) {
-      currResult = i + 1;
+      currMinBadness = badnessSum;
+      currResult = i;
     }
   }
   return currResult;
@@ -419,7 +416,7 @@ function breakLineBetweenChords(line, start, stop) {
     maxCharsToFit,
     indexOfFirstOverflowingChord || Number.POSITIVE_INFINITY
   );
-  return line.rest.break({
+    return line.rest.break({
     minLineLen: indexOfLastFittingChord + 1,
     maxLineLen: maxLineLen,
   });
