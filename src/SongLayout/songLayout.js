@@ -254,7 +254,9 @@ function renderSongSectionsDense(songSections, style) {
         return badness;
       })
     );
-    if (badnessResult2 < badnessResult1) return result2;
+    if (badnessResult2 < badnessResult1) {
+      return result2;
+    }
     return result1;
   }
 

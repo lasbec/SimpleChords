@@ -146,7 +146,14 @@ export class BreakableText {
     if (!breakingLen) throw new Error("No breaking length found.");
 
     const topLine = this.strImpl.slice(this.text, 0, breakingLen);
-    return [topLine, this.slice(breakingLen), badness];
+    const rest = this.slice(breakingLen);
+    const finalBadness =
+      breakingLen === this.lenght
+        ? 0
+        : rest.text.toString().includes(" ")
+        ? badness
+        : Math.max(100, badness);
+    return [topLine, rest, finalBadness];
   }
 
   /**
@@ -168,7 +175,7 @@ export class BreakableText {
     if (prio4.length > 0) return { result: prio4, badness: 30 };
 
     const prioLast = this.prioLastLength(args);
-    return { result: prioLast, badness: 100 };
+    return { result: prioLast, badness: 101 };
   }
 
   /**
