@@ -118,6 +118,7 @@ async function parseASTs(paths, debug) {
  * @property {TextConfigDto} chordTextConfig
  *
  * @property {boolean} printPageNumbers
+ * @property {"left" | "right" =} firstPage
  *
  * @property {LengthDto} outerMargin
  * @property {LengthDto} innerMargin
@@ -137,6 +138,7 @@ async function parseASTs(paths, debug) {
  * @property {TextConfig} chordTextConfig
  *
  * @property {boolean} printPageNumbers
+ * @property {"left" | "right"} firstPage
  *
  * @property {Length} outerMargin
  * @property {Length} innerMargin
@@ -263,7 +265,7 @@ async function embedFont(pdfDoc, font) {
  *
  * @param {LayoutConfigDto} configDto
  * @param {PDFDocument} pdfDoc
- * @returns
+ * @returns {LayoutConfig}
  */
 async function layoutConfigFromDto(configDto, pdfDoc) {
   return {
@@ -277,6 +279,8 @@ async function layoutConfigFromDto(configDto, pdfDoc) {
     sectionDistance: Length.fromString(configDto.sectionDistance),
 
     printPageNumbers: configDto.printPageNumbers,
+
+    firstPage: configDto.firstPage || "left",
 
     lyricTextConfig: new TextConfig({
       font: await embedFont(pdfDoc, configDto.lyricTextConfig.font),
