@@ -39,10 +39,13 @@ export function songLayout(song, layoutConfig, rect) {
       console.log("Doppelzeilen Layout gewählt");
       return doubleLineResult;
     }
+    console.log("Kompaktes Layout gewählt");
+    return songLayoutDense(song, layoutConfig, rect);
   }
   console.log("Kein Passendes layout gefunden");
-  return simpleResult;
+  return songLayoutDense(song, layoutConfig, rect);
 }
+
 /**
  * @param {Song} song
  * @param {LayoutConfig} layoutConfig
@@ -160,7 +163,7 @@ export function songLayoutDense(song, layoutConfig, rect) {
   };
 
   for (const sectionGroup of sectionsByType.values()) {
-        renderSongSectionsDense(sectionGroup, style);
+    renderSongSectionsDense(sectionGroup, style);
   }
   const sectionBoxes = workload.map((pair) => pair.result);
   return stackBoxes(

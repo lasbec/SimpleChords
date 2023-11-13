@@ -206,16 +206,6 @@ export async function renderSongAsPdf(songs, debug, layoutConfig, pdfDoc) {
           ? pointer.moveLeft(len)
           : pointer.moveRight(len);
       }
-
-      /**
-       * @param {PointImpl} pointer
-       * @param {Length} len
-       */
-      function moveToInvards(pointer, len) {
-        return pageCount % 2 === 1
-          ? pointer.moveRight(len)
-          : pointer.moveLeft(len);
-      }
       const innerMargin = layoutConfig.innerMargin;
 
       const innerTop = moveToOutvards(
