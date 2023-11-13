@@ -240,26 +240,54 @@ function renderSongSectionsDense(songSections, style) {
       );
       return;
     }
-    const indexOfLastFittingChord =
-      line.rest.text.content.chords[maxChords - 1]?.startIndex ?? 0;
-    const indexOfFirstOverflowingChord =
-      line.rest.text.content.chords[maxChords]?.startIndex;
-    const maxCharsToFit = line.rest.text.maxCharsToFit(
-      line.result.rectangle.width
+    const [newLine, rest, badness] = breakLineBetweenChords(
+      maxChords - 1,
+      maxChords
     );
-    const maxLineLen = Math.min(
-      maxCharsToFit,
-      indexOfFirstOverflowingChord || Number.POSITIVE_INFINITY
-    );
-    const [newLine, rest] = line.rest.break({
-      minLineLen: indexOfLastFittingChord + 1,
-      maxLineLen: maxLineLen,
-    });
+
+    if (badness > 99) {
+      const [newLine, rest, badness] = breakLineBetweenChords(
+        maxChords - 2,
+        maxChords
+      );
+      newLine.setPosition({
+        pointOnGrid: line.result.rectangle.getPoint("left", "bottom"),
+        pointOnRect: { x: "left", y: "top" },
+      });
+      line.result.appendChild(newLine);
+      line.rest = rest.trim();
+      return;
+    }
+
     newLine.setPosition({
       pointOnGrid: line.result.rectangle.getPoint("left", "bottom"),
       pointOnRect: { x: "left", y: "top" },
     });
     line.result.appendChild(newLine);
     line.rest = rest.trim();
+
+    /**
+     *
+     * @param {number} start include
+     * @param {number} stop exclude
+     * @returns
+     */
+    function breakLineBetweenChords(start, stop) {
+      const indexOfLastFittingChord =
+        line.rest.text.content.chords[start]?.startIndex ?? 0;
+      const indexOfFirstOverflowingChord =
+        line.rest.text.content.chords[stop]?.startIndex;
+      const maxCharsToFit = line.rest.text.maxCharsToFit(
+        line.result.rectangle.width
+      );
+      const maxLineLen = Math.min(
+        maxCharsToFit,
+        indexOfFirstOverflowingChord || Number.POSITIVE_INFINITY
+      );
+      return line.rest.break({
+        minLineLen: indexOfLastFittingChord + 1,
+        maxLineLen: maxLineLen,
+      });
+    }
   }
 }

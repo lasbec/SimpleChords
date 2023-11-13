@@ -122,7 +122,7 @@ export class BreakableText {
 
   /**
    * @param {LineBreakingArgs} _args
-   * @returns {[StrLike, BreakableText<StrLike>]}
+   * @returns {[StrLike, BreakableText<StrLike>, number]}
    */
   break(_args) {
     const args = {
@@ -135,7 +135,8 @@ export class BreakableText {
     if (args.maxLineLen < args.minLineLen) {
       throw new Error("MaxLineLen must not be smaller than MinLineLen");
     }
-    const candidateLineLengths = this.getMostPreferrableLineLengths(args);
+    const { result: candidateLineLengths, badness } =
+      this.getMostPreferrableLineLengths(args);
 
     const prefferdTarget =
       this.favor === "middle"
@@ -145,29 +146,29 @@ export class BreakableText {
     if (!breakingLen) throw new Error("No breaking length found.");
 
     const topLine = this.strImpl.slice(this.text, 0, breakingLen);
-    return [topLine, this.slice(breakingLen)];
+    return [topLine, this.slice(breakingLen), badness];
   }
 
   /**
    *
    * @param {LineBreakingArgs} args
-   * @returns
+   * @returns {{result:Array<number>, badness:number}}
    */
   getMostPreferrableLineLengths(args) {
     const prio1 = this.prio1Length(args);
-    if (prio1.length > 0) return prio1;
+    if (prio1.length > 0) return { result: prio1, badness: 0 };
 
     const prio2 = this.prio2Length(args);
-    if (prio2.length > 0) return prio2;
+    if (prio2.length > 0) return { result: prio2, badness: 10 };
 
     const prio3 = this.prio3Length(args);
-    if (prio3.length > 0) return prio3;
+    if (prio3.length > 0) return { result: prio3, badness: 20 };
 
     const prio4 = this.prio4Length(args);
-    if (prio4.length > 0) return prio4;
+    if (prio4.length > 0) return { result: prio4, badness: 30 };
 
     const prioLast = this.prioLastLength(args);
-    return prioLast;
+    return { result: prioLast, badness: 100 };
   }
 
   /**
