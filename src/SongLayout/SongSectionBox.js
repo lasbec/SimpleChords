@@ -3,6 +3,7 @@ import { PointImpl } from "../Drawing/Figures/PointImpl.js";
 import { decorateAsBox } from "../Drawing/BoxDecorator.js";
 import { TextBox } from "../Drawing/Boxes/TextBox.js";
 import { SongLineBox } from "./SongLineBox.js";
+import { textConfigForSectionType } from "./TextConfigForSectionType.js";
 
 /**
  * @typedef {import("../Drawing/Geometry.js").ReferencePoint} BoxPlacement
@@ -31,18 +32,7 @@ import { SongLineBox } from "./SongLineBox.js";
  */
 function drawsongSection(section, layoutConfig, startPoint) {
   const sectionType = section.type;
-  /** @type {TextConfig} */
-  const lyricStyle =
-    sectionType === WellKnownSectionType.Chorus
-      ? layoutConfig.chorusTextConfig
-      : sectionType === WellKnownSectionType.Refrain
-      ? layoutConfig.refTextConfig
-      : layoutConfig.lyricTextConfig;
-  const chordTextConfig = layoutConfig.chordTextConfig;
-  const config = {
-    chordsConfig: chordTextConfig,
-    lyricConfig: lyricStyle,
-  };
+  const config = textConfigForSectionType(sectionType, layoutConfig);
   const children = section.lines.map((l) => new SongLineBox(l, config));
   for (const l of children) {
     l.setPosition({

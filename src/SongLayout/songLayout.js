@@ -9,6 +9,7 @@ import { stackBoxes } from "../Drawing/CollectionComponents/stackBoxes.js";
 import { BreakableText } from "../Drawing/BreakableText.js";
 import { SongLineBox } from "./SongLineBox.js";
 import { BoundsImpl } from "../Drawing/Figures/BoundsImpl.js";
+import { textConfigForSectionType } from "./TextConfigForSectionType.js";
 
 /**
  * @typedef {import("../Drawing/Geometry.js").Rectangle} Rectangle
@@ -157,12 +158,11 @@ export function songLayoutDense(song, layoutConfig, rect) {
     arr.push(pair);
   }
 
-  const style = {
-    chordsConfig: layoutConfig.chordTextConfig,
-    lyricConfig: layoutConfig.lyricTextConfig,
-  };
-
   for (const sectionGroup of sectionsByType.values()) {
+    const style = textConfigForSectionType(
+      sectionGroup[0]?.section.type || "verse",
+      layoutConfig
+    );
     renderSongSectionsDense(sectionGroup, style);
   }
   const sectionBoxes = workload.map((pair) => pair.result);
