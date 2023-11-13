@@ -208,27 +208,7 @@ function renderSongSectionsDense(songSections, style) {
   while (workingLines.some((l) => l.rest.lenght > 0)) {
     const max = Math.min(...workingLines.map(maxChordsToFit));
     for (const line of workingLines) {
-      if (line.rest.lenght === 0) continue;
-      const indexOfLastFittingChord =
-        line.rest.text.content.chords[max - 1]?.startIndex ?? 0;
-      const indexOfFirstOverflowingChord =
-        line.rest.text.content.chords[max]?.startIndex;
-      const maxCharsToFit = line.rest.text.maxCharsToFit(
-        line.result.rectangle.width
-      );
-      const [newLine, rest] = line.rest.break({
-        minLineLen: indexOfLastFittingChord + 1,
-        maxLineLen: Math.min(
-          maxCharsToFit,
-          indexOfFirstOverflowingChord || Number.POSITIVE_INFINITY
-        ),
-      });
-      newLine.setPosition({
-        pointOnGrid: line.result.rectangle.getPoint("left", "bottom"),
-        pointOnRect: { x: "left", y: "top" },
-      });
-      line.result.appendChild(newLine);
-      line.rest = rest;
+      reduceLine(line, max);
     }
   }
 
@@ -239,5 +219,47 @@ function renderSongSectionsDense(songSections, style) {
   function maxChordsToFit(line) {
     const maxWidth = line.result.rectangle.width;
     return line.rest.text.maxChordsToFitInWidth(maxWidth);
+  }
+
+  /**
+   * @param {{rest:BreakableText<SongLineBox>; result:ArragmentBox}} line
+   * @param {number} maxChords
+   */
+  function reduceLine(line, maxChords) {
+    if (line.rest.lenght === 0) return;
+    if (line.rest.lenght === 1) {
+      const newLine = line.rest.text;
+      newLine.setPosition({
+        pointOnGrid: line.result.rectangle.getPoint("left", "bottom"),
+        pointOnRect: { x: "left", y: "top" },
+      });
+      line.result.appendChild(newLine);
+      line.rest = BreakableText.fromString(
+        SongLineBox,
+        SongLineBox.empty(style)
+      );
+      return;
+    }
+    const indexOfLastFittingChord =
+      line.rest.text.content.chords[maxChords - 1]?.startIndex ?? 0;
+    const indexOfFirstOverflowingChord =
+      line.rest.text.content.chords[maxChords]?.startIndex;
+    const maxCharsToFit = line.rest.text.maxCharsToFit(
+      line.result.rectangle.width
+    );
+    const maxLineLen = Math.min(
+      maxCharsToFit,
+      indexOfFirstOverflowingChord || Number.POSITIVE_INFINITY
+    );
+    const [newLine, rest] = line.rest.break({
+      minLineLen: indexOfLastFittingChord + 1,
+      maxLineLen: maxLineLen,
+    });
+    newLine.setPosition({
+      pointOnGrid: line.result.rectangle.getPoint("left", "bottom"),
+      pointOnRect: { x: "left", y: "top" },
+    });
+    line.result.appendChild(newLine);
+    line.rest = rest.trim();
   }
 }

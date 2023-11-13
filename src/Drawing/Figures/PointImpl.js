@@ -86,6 +86,16 @@ export class PointImpl {
     return this;
   }
 
+  /**
+   *
+   * @param {"left" | "right" | "up" | "down"} dir
+   * @param {Length} offset
+   */
+  move(dir, offset) {
+    RelativeMovement[dir](offset).change(this);
+    return this;
+  }
+
   clone() {
     return new PointImpl(this.x, this.y);
   }

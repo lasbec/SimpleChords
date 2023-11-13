@@ -139,6 +139,23 @@ export class SongLineBox extends AbstractBox {
     );
   }
 
+  /**
+   *
+   * @param {SongLineBox} box
+   * @param {number} i
+   */
+  static emptyAt(box, i) {
+    return SongLine.emptyAt(box.content, i);
+  }
+
+  /**
+   * @param {SongLineBoxConfig} style
+   * @returns
+   */
+  static empty(style) {
+    return new SongLineBox(SongLine.empty(), style);
+  }
+
   /** @private */
   initChildren() {
     const line = this.content;

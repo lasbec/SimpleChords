@@ -17,6 +17,16 @@ const StrLikeImplOnString = {
   },
 
   /**
+   *
+   * @param {string} s
+   * @param {number} i
+   * @returns
+   */
+  emptyAt(s, i) {
+    return !s[i]?.trim();
+  },
+
+  /**
    * @param {string[]} strings
    */
   concat(strings) {

@@ -10,7 +10,7 @@ export const DefaultLayoutConfigDto = {
   pageWidth: "148.5mm",
   pageHeight: "210mm",
 
-  outerMargin: "5mm",
+  outerMargin: "7mm",
   innerMargin: "20mm",
   topMargin: "5mm",
   bottomMargin: "5mm",

@@ -1,4 +1,8 @@
 /**
+ * @typedef {import("../Drawing/BreakableText.js").StrLikeConstraint} StrLikeContstraint
+ */
+
+/**
  * @typedef {import("../Parsing/SongParser.js").SongAst} SongAst
  * @typedef {import("../Parsing/SongParser.js").ChordsLineElement} ChordsLineElement
  * @typedef {import("../Parsing/SongParser.js").SongLineNode}  SongLineNode
@@ -10,7 +14,10 @@
  * @property {string | null} chord
  */
 
-export class SongLine {
+/**
+ * @implements {StrLikeContstraint}
+ */
+export class  SongLine {
   /**
    * @readonly
    * @type {ReadonlyArray<LyricChar>}
@@ -38,6 +45,16 @@ export class SongLine {
 
   toString() {
     return `<SongLine ${this.lyric}>`;
+  }
+
+  /**
+   * @param {SongLine} line
+   * @param {number} i
+   */
+  static emptyAt(line, i) {
+    const char = line.chars[i];
+    if (!char) return;
+    return !char.char.trim() && !char.chord?.trim();
   }
 
   /**
@@ -148,12 +165,14 @@ export class SongLine {
     const firstNotEmptyIndex = this.chars.findIndex(
       (c) => c.char !== " " || !!c.chord
     );
-    let lastNotEmptyIndex = 0;
+    let lastNotEmptyIndex = -1;
     this.chars.forEach((c, i) => {
       if (c.char !== " " || !!c.chord) {
         lastNotEmptyIndex = i;
       }
     });
+    if (firstNotEmptyIndex === -1 || lastNotEmptyIndex === -1)
+      return SongLine.empty();
     return this.slice(firstNotEmptyIndex, lastNotEmptyIndex + 1);
   }
 

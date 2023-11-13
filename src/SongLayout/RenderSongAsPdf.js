@@ -192,33 +192,28 @@ export async function renderSongAsPdf(songs, debug, layoutConfig, pdfDoc) {
   /** @type {Box[]} */
   const pages = [];
   let pageCount = 1;
+  const firstPageOrientation = layoutConfig.firstPage;
+  const secondPageOrientation =
+    layoutConfig.firstPage === "left" ? "right" : "left";
   for (const song of songs) {
     console.log(`Drawing '${song.heading}'`);
     const boxes = songLayout(song, layoutConfig, writableArea);
     for (const box of boxes) {
       const currPage = ArragmentBox.newPage(pageDims);
-      const inner = pageCount % 2 === 1 ? "right" : "left";
-      const outer = pageCount % 2 === 1 ? "left" : "right";
-      /**
-       * @param {PointImpl} pointer
-       * @param {Length} len
-       */
-      function moveToOutvards(pointer, len) {
-        return pageCount % 2 === 1
-          ? pointer.moveLeft(len)
-          : pointer.moveRight(len);
-      }
+      const innerSide =
+        pageCount % 2 === 1 ? secondPageOrientation : firstPageOrientation;
+      const outerSide =
+        pageCount % 2 === 1 ? firstPageOrientation : secondPageOrientation;
+
       const innerMargin = layoutConfig.innerMargin;
 
-      const innerTop = moveToOutvards(
-        currPage.rectangle
-          .getPoint(inner, "top")
-          .moveDown(layoutConfig.topMargin),
-        innerMargin
-      );
+      const innerTop = currPage.rectangle
+        .getPoint(innerSide, "top")
+        .moveDown(layoutConfig.topMargin)
+        .move(outerSide, innerMargin);
 
       box.setPosition({
-        pointOnRect: { x: inner, y: "top" },
+        pointOnRect: { x: innerSide, y: "top" },
         pointOnGrid: innerTop,
       });
 
@@ -229,8 +224,8 @@ export async function renderSongAsPdf(songs, debug, layoutConfig, pdfDoc) {
           layoutConfig.lyricTextConfig
         );
         pageNumberBox.setPosition({
-          pointOnGrid: box.rectangle.getPoint(outer, "bottom"),
-          pointOnRect: { x: outer, y: "top" },
+          pointOnGrid: box.rectangle.getPoint(outerSide, "bottom"),
+          pointOnRect: { x: outerSide, y: "top" },
         });
 
         currPage.appendChild(pageNumberBox);
@@ -265,7 +260,7 @@ async function embedFont(pdfDoc, font) {
  *
  * @param {LayoutConfigDto} configDto
  * @param {PDFDocument} pdfDoc
- * @returns {LayoutConfig}
+ * @returns {Promise<LayoutConfig>}
  */
 async function layoutConfigFromDto(configDto, pdfDoc) {
   return {

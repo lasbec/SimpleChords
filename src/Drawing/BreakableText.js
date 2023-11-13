@@ -1,10 +1,10 @@
 import { range } from "../Shared/ArrayUtils.js";
 /**
  * @template StrLike
- * @typedef {{slice(s:StrLike, start:number, stop?:number):StrLike, concat(s:StrLike[]):StrLike}} StrLikeImpl
+ * @typedef {{slice(s:StrLike, start:number, stop?:number):StrLike, concat(s:StrLike[]):StrLike,  emptyAt(s: StrLike, index:number):boolean | undefined}} StrLikeImpl
  */
 /**
- * @typedef {Iterable<string> & {length:number; charAt(index:number):string; toString():string}} StrLikeConstraint
+ * @typedef {Iterable<string> & {length:number; charAt(index:number):string; toString():string;}} StrLikeConstraint
  */
 
 /**
@@ -84,14 +84,50 @@ export class BreakableText {
   }
 
   /**
+   * @param {number} start
+   * @param {number=} stop
+   */
+  slice(start, stop) {
+    return new BreakableText(
+      this.strImpl,
+      this.strImpl.slice(this.text, start, stop),
+      this.favoriteBreakingIndices
+        .filter((i) => start <= i && (!stop || i < stop))
+        .map((i) => i - start),
+      this.favor
+    );
+  }
+
+  firstNotEmptyCharIndex() {
+    for (let i = 0; i < this.text.length; i += 1) {
+      if (!this.strImpl.emptyAt(this.text, i)) return i;
+    }
+    return;
+  }
+
+  lastNotEmptyCharIndex() {
+    for (let i = this.text.length - 1; i >= 0; i -= 1) {
+      if (!this.strImpl.emptyAt(this.text, i)) return i;
+    }
+    return;
+  }
+
+  trim() {
+    const firstNotEmptyIndex = this.firstNotEmptyCharIndex();
+    const lastNotEmptyIndex = this.lastNotEmptyCharIndex();
+    if (firstNotEmptyIndex === undefined || lastNotEmptyIndex === undefined)
+      return this.slice(0, 0);
+    return this.slice(firstNotEmptyIndex, lastNotEmptyIndex + 1);
+  }
+
+  /**
    * @param {LineBreakingArgs} _args
    * @returns {[StrLike, BreakableText<StrLike>]}
    */
   break(_args) {
-    // Allow only true linebreaks such that the results get shorter
     const args = {
       minLineLen: Math.min(Math.max(1, _args.minLineLen), this.text.length - 1),
-      maxLineLen: Math.max(Math.min(this.text.length - 1, _args.maxLineLen), 1),
+      maxLineLen: Math.max(Math.min(this.text.length, _args.maxLineLen), 1),
     };
     if (this.text.length <= 1) {
       throw new Error("Not allowed to break empty or one character line.");
@@ -109,18 +145,7 @@ export class BreakableText {
     if (!breakingLen) throw new Error("No breaking length found.");
 
     const topLine = this.strImpl.slice(this.text, 0, breakingLen);
-    const restLine = this.strImpl.slice(this.text, breakingLen);
-    return [
-      topLine,
-      new BreakableText(
-        this.strImpl,
-        restLine,
-        this.favoriteBreakingIndices
-          .map((i) => i - breakingLen)
-          .filter((i) => 0 < i),
-        this.favor
-      ),
-    ];
+    return [topLine, this.slice(breakingLen)];
   }
 
   /**
@@ -141,7 +166,8 @@ export class BreakableText {
     const prio4 = this.prio4Length(args);
     if (prio4.length > 0) return prio4;
 
-    return this.prioLastLength(args);
+    const prioLast = this.prioLastLength(args);
+    return prioLast;
   }
 
   /**
@@ -253,20 +279,6 @@ export class BreakableText {
  * @property {StrLikeConstraint} findIn
  * @property {string[]} searchFor
  */
-
-/**
- * @param {FindIndicesOfArgs} args
- */
-function findIndicesOf(args) {
-  /** @type {number[]} */
-  const result = [];
-  [...args.findIn].forEach((el, i) => {
-    if (args.searchFor.includes(el)) {
-      result.push(i);
-    }
-  });
-  return result;
-}
 
 /**
  *  @param {number[]} arr
