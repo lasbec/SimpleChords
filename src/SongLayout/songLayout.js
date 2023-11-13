@@ -19,6 +19,45 @@ import { sum } from "pdf-lib";
  * @typedef {import("../Drawing/Geometry.js").RectangleGenerator} BoxGen
  */
 
+class LazyBoxes {
+  /**
+   * @param {()=> Box[]} valueFn
+   */
+  constructor(valueFn) {
+    this.valueFn = valueFn;
+    /** @type {Box[]} */
+    this._value;
+    /** @type {boolean} */
+    this._isOverflowing;
+  }
+
+  value() {
+    if (!this._value) {
+      this._value = this.valueFn();
+    }
+    return this._value;
+  }
+
+  overflowing() {
+    if (this._isOverflowing === undefined) {
+      this._isOverflowing = this.value().some((b) => b.hasOverflow());
+    }
+    return this._isOverflowing;
+  }
+
+  /**
+   * @param {number} limit
+   * @returns {false | Box[]}
+   */
+  meetsPageLimit(limit) {
+    if (this.overflowing()) return false;
+    if (this.value().length > limit) {
+      return false;
+    }
+    return this.value();
+  }
+}
+
 /**
  * @param {Song} song
  * @param {LayoutConfig} layoutConfig
@@ -26,26 +65,51 @@ import { sum } from "pdf-lib";
  * @returns {Box[]}
  */
 export function songLayout(song, layoutConfig, rect) {
-  const simpleResult = songLayoutSimple(song, layoutConfig, rect);
-  if (simpleResult.length <= 1) {
-    if (simpleResult.every((b) => !b.hasOverflow())) {
-      console.log("Simples Layout gewählt");
-      return simpleResult;
+  const simpleResult = new LazyBoxes(() =>
+    songLayoutSimple(song, layoutConfig, rect)
+  );
+
+  const doubleLineResult = new LazyBoxes(() =>
+    songLayoutDoubleLine(song, layoutConfig, rect)
+  );
+
+  const niceBrokenResult = new LazyBoxes(() =>
+    songLayoutAdjustable(song, layoutConfig, rect, renderSongSectionBreakNicely)
+  );
+
+  const denseResult = new LazyBoxes(() =>
+    songLayoutAdjustable(song, layoutConfig, rect, renderSongSectionsDense)
+  );
+
+  let count = 0;
+  while (count <= 3) {
+    count += 1;
+    const simple = simpleResult.meetsPageLimit(count);
+    if (simple) {
+      console.error("simple layout chosen.");
+      return simple;
     }
-    console.log("Kompaktes Layout gewählt");
-    return songLayoutDense(song, layoutConfig, rect);
-  }
-  const doubleLineResult = songLayoutDoubleLine(song, layoutConfig, rect);
-  if (doubleLineResult.length < simpleResult.length) {
-    if (doubleLineResult.every((b) => !b.hasOverflow())) {
-      console.log("Doppelzeilen Layout gewählt");
-      return doubleLineResult;
+
+    const double = doubleLineResult.meetsPageLimit(count);
+    if (double) {
+      console.error("double layout chosen.");
+      return double;
     }
-    console.log("Kompaktes Layout gewählt");
-    return songLayoutDense(song, layoutConfig, rect);
+
+    // const nice = niceBrokenResult.meetsPageLimit(count);
+    // if (nice) {
+    //   console.error("nice layout chosen.");
+    //   return nice;
+    // }
+
+    const dense = denseResult.meetsPageLimit(count);
+    if (dense) {
+      console.error("dense layout chosen.");
+      return dense;
+    }
   }
-  console.log("Kein Passendes layout gefunden");
-  return songLayoutDense(song, layoutConfig, rect);
+  console.error("give up: nice layout chosen.");
+  return niceBrokenResult.value();
 }
 
 /**
@@ -127,9 +191,10 @@ function doubleSongLines(lines) {
  * @param {Song} song
  * @param {LayoutConfig} layoutConfig
  * @param {Rectangle} rect
+ * @param {( songSections:{section:SongSection, result:ArragmentBox}[], style :SongLineBoxConfig) => void} fn
  * @returns {Box[]}
  */
-export function songLayoutDense(song, layoutConfig, rect) {
+export function songLayoutAdjustable(song, layoutConfig, rect, fn) {
   const titleBox = new TextBox(song.heading, layoutConfig.titleTextConfig);
   titleBox.setPosition({
     pointOnRect: { x: "center", y: "top" },
@@ -164,7 +229,7 @@ export function songLayoutDense(song, layoutConfig, rect) {
       sectionGroup[0]?.section.type || "verse",
       layoutConfig
     );
-    renderSongSectionsDense(sectionGroup, style);
+    fn(sectionGroup, style);
   }
   const sectionBoxes = workload.map((pair) => pair.result);
   return stackBoxes(
@@ -189,6 +254,7 @@ export function songLayoutDense(song, layoutConfig, rect) {
 /**
  * @typedef {{rest: BreakableText<SongLineBox>;result: ArragmentBox;}} WorkingLine
  * @typedef {import("./SongSectionBox.js").SongSection} SongSection
+ * @typedef {import("./SongLineBox.js").SongLineBoxConfig} SongLineBoxConfig
  */
 
 /**
@@ -202,7 +268,7 @@ function maxChordsToFit(line) {
 
 /**
  * @param {{section:SongSection, result:ArragmentBox}[]} songSections
- * @param {import("./SongLineBox.js").SongLineBoxConfig}style
+ * @param {SongLineBoxConfig}style
  * @returns {void}
  */
 function renderSongSectionsDense(songSections, style) {
@@ -217,106 +283,144 @@ function renderSongSectionsDense(songSections, style) {
   });
 
   while (workingLines.some((l) => l.rest.lenght > 0)) {
-    const maxChordsToFit = maxChordsToFitInLine();
+    const maxChordsToFit = maxChordsToFitInLine(workingLines);
     for (const line of workingLines) {
       reduceLine(line, maxChordsToFit);
     }
   }
+}
 
-  /**
-   * @returns {number}
-   */
-  function maxChordsToFitInLine() {
-    const result1 = Math.min(...workingLines.map(maxChordsToFit)) - 1;
-    const badnessResult1 = Math.max(
-      ...workingLines.map((l) => {
-        if (l.rest.lenght <= 1) return 1;
-        const [_0, _1, badness] = breakLineBetweenChords(
-          l,
-          result1,
-          result1 + 1
-        );
-        return badness;
-      })
-    );
-    if (badnessResult1 < 100) return result1;
+/**
+ * @param {{section:SongSection, result:ArragmentBox}[]} songSections
+ * @param {SongLineBoxConfig}style
+ * @returns {void}
+ */
+function renderSongSectionBreakNicely(songSections, style) {
+  /** @type {WorkingLine[]} */
+  const workingLines = songSections.map((s) => {
+    /** @type {SongLineBox[]} */
+    const boxes = s.section.lines.map((l) => new SongLineBox(l, style));
+    return {
+      rest: BreakableText.fromPrefferdLineUp(SongLineBox, boxes),
+      result: s.result,
+    };
+  });
 
-    const result2 = result1 - 1;
-
-    const badnessResult2 = Math.max(
-      ...workingLines.map((l) => {
-        if (l.rest.lenght <= 1) return 1;
-        const [_0, _1, badness] = breakLineBetweenChords(
-          l,
-          result2,
-          result2 + 1
-        );
-        return badness;
-      })
-    );
-    if (badnessResult2 < badnessResult1) {
-      return result2;
+  while (workingLines.some((l) => l.rest.lenght > 0)) {
+    const maxChordsToFit = nicestChordIndexToBreakAfter(workingLines);
+    for (const line of workingLines) {
+      reduceLine(line, maxChordsToFit);
     }
-    return result1;
   }
+}
 
-  /**
-   */
-
-  /**
-   * @param {WorkingLine} line
-   * @param {number} maxChords
-   */
-  function reduceLine(line, maxChords) {
-    if (line.rest.lenght === 0) return;
-    if (line.rest.lenght === 1) {
-      const newLine = line.rest.text;
-      newLine.setPosition({
-        pointOnGrid: line.result.rectangle.getPoint("left", "bottom"),
-        pointOnRect: { x: "left", y: "top" },
-      });
-      line.result.appendChild(newLine);
-      line.rest = BreakableText.fromString(
-        SongLineBox,
-        SongLineBox.empty(style)
-      );
-      return;
-    }
-    const [newLine, rest, badness] = breakLineBetweenChords(
-      line,
-      maxChords,
-      maxChords + 1
+/**
+ * @param {WorkingLine[]} workingLines
+ * @returns {number}
+ */
+function nicestChordIndexToBreakAfter(workingLines) {
+  const maxChords = Math.min(...workingLines.map(maxChordsToFit));
+  let currResult = 0;
+  let currMinBadness = Number.POSITIVE_INFINITY;
+  for (let i = 0; i < maxChords; i += 1) {
+    const badnessSum = sum(
+      workingLines.map((l) => {
+        if (l.rest.lenght <= 1) return 1;
+        const [_0, _1, badness] = breakLineBetweenChords(
+          l,
+          maxChords - 1,
+          maxChords
+        );
+        return badness;
+      })
     );
+    if (badnessSum <= currMinBadness) {
+      currResult = i + 1;
+    }
+  }
+  return currResult;
+}
 
+/**
+ * @param {WorkingLine[]} workingLines
+ * @returns {number}
+ */
+function maxChordsToFitInLine(workingLines) {
+  const result1 = Math.min(...workingLines.map(maxChordsToFit));
+  const badnessResult1 = Math.max(
+    ...workingLines.map((l) => {
+      if (l.rest.lenght <= 1) return 1;
+      const [_0, _1, badness] = breakLineBetweenChords(l, result1 - 1, result1);
+      return badness;
+    })
+  );
+  if (badnessResult1 < 100) return result1;
+
+  const result2 = result1 - 1;
+
+  const badnessResult2 = Math.max(
+    ...workingLines.map((l) => {
+      if (l.rest.lenght <= 1) return 1;
+      const [_0, _1, badness] = breakLineBetweenChords(l, result2 - 1, result2);
+      return badness;
+    })
+  );
+  if (badnessResult2 < badnessResult1) {
+    return result2;
+  }
+  return result1;
+}
+
+/**
+ * @param {WorkingLine} line
+ * @param {number} maxChords
+ */
+function reduceLine(line, maxChords) {
+  if (line.rest.lenght === 0) return;
+  if (line.rest.lenght === 1) {
+    const newLine = line.rest.text;
     newLine.setPosition({
       pointOnGrid: line.result.rectangle.getPoint("left", "bottom"),
       pointOnRect: { x: "left", y: "top" },
     });
     line.result.appendChild(newLine);
-    line.rest = rest.trim();
+    line.rest = line.rest.slice(0, 0);
+    return;
   }
+  const [newLine, rest, badness] = breakLineBetweenChords(
+    line,
+    maxChords - 1,
+    maxChords
+  );
 
-  /**
-   *@param {WorkingLine} line
-   * @param {number} start include
-   * @param {number} stop exclude
-   * @returns
-   */
-  function breakLineBetweenChords(line, start, stop) {
-    const indexOfLastFittingChord =
-      line.rest.text.content.chords[start]?.startIndex ?? 0;
-    const indexOfFirstOverflowingChord =
-      line.rest.text.content.chords[stop]?.startIndex;
-    const maxCharsToFit = line.rest.text.maxCharsToFit(
-      line.result.rectangle.width
-    );
-    const maxLineLen = Math.min(
-      maxCharsToFit,
-      indexOfFirstOverflowingChord || Number.POSITIVE_INFINITY
-    );
-    return line.rest.break({
-      minLineLen: indexOfLastFittingChord + 1,
-      maxLineLen: maxLineLen,
-    });
-  }
+  newLine.setPosition({
+    pointOnGrid: line.result.rectangle.getPoint("left", "bottom"),
+    pointOnRect: { x: "left", y: "top" },
+  });
+  line.result.appendChild(newLine);
+  line.rest = rest.trim();
+}
+
+/**
+ *@param {WorkingLine} line
+ * @param {number} start include
+ * @param {number} stop exclude
+ * @returns
+ */
+function breakLineBetweenChords(line, start, stop) {
+  const indexOfLastFittingChord =
+    line.rest.text.content.chords[start]?.startIndex ?? 0;
+  const indexOfFirstOverflowingChord =
+    line.rest.text.content.chords[stop]?.startIndex;
+  const maxCharsToFit = line.rest.text.maxCharsToFit(
+    line.result.rectangle.width
+  );
+  const maxLineLen = Math.min(
+    maxCharsToFit,
+    indexOfFirstOverflowingChord || Number.POSITIVE_INFINITY
+  );
+  return line.rest.break({
+    minLineLen: indexOfLastFittingChord + 1,
+    maxLineLen: maxLineLen,
+  });
 }
