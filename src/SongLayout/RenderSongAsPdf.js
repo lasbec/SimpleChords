@@ -250,10 +250,7 @@ async function embedFont(pdfDoc, font) {
     return await pdfDoc.embedFont(font);
   }
   const fontLoader = new FontLoader("./fonts");
-  return await fontLoader.loadFontIntoDoc(
-    pdfDoc,
-    "CarterOne/CarterOne-Regular.ttf"
-  );
+  return await fontLoader.loadFontIntoDoc(pdfDoc, font);
 }
 
 /**
