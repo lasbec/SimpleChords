@@ -17,12 +17,19 @@ export class SimpleBoxGen {
    * @param {Rectangle} regular
    */
   constructor(regular, begin) {
+    this.begin = begin;
     this.beginLeftTop = begin
       ? regular.getPoint("left", "top").alignVerticalWith(begin)
       : regular.getPoint("left", "top");
     this.regular = regular;
     /** @private */
     this.count = 0;
+  }
+
+  clone(){
+    const result = new SimpleBoxGen(this.regular, this.begin)
+    result.count = this.count;
+    return result;
   }
 
   /**

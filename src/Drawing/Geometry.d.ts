@@ -20,6 +20,7 @@ export type Dimensions = {
 export type RectangleGenerator = {
   get(index: number): Rectangle;
   next(): Rectangle;
+  clone(): RectangleGenerator;
   readonly lenght: number;
 };
 

@@ -20,9 +20,11 @@ import { sum } from "pdf-lib";
 
 class LazyBoxes {
   /**
-   * @param {()=> Box[]} valueFn
+   * @param {(gen:RectangleGenerator)=> Box[]} valueFn
+   * @param {RectangleGenerator} geneartorState
    */
-  constructor(valueFn) {
+  constructor(valueFn, geneartorState) {
+    this.generatorState = geneartorState;
     this.valueFn = valueFn;
     /** @type {Box[]} */
     this._value;
@@ -32,25 +34,25 @@ class LazyBoxes {
 
   value() {
     if (!this._value) {
-            this._value = this.valueFn();
-          }
-    return this._value;
+      this._value = this.valueFn(this.generatorState);
+    }
+    return { boxes: this._value, generatorState: this.generatorState };
   }
 
   overflowing() {
     if (this._isOverflowing === undefined) {
-      this._isOverflowing = this.value().some((b) => b.hasOverflow());
+      this._isOverflowing = this.value().boxes.some((b) => b.hasOverflow());
     }
-        return this._isOverflowing;
+    return this._isOverflowing;
   }
 
   /**
    * @param {number} limit
-   * @returns {false | Box[]}
+   * @returns {false | {boxes:Box[]; generatorState: RectangleGenerator}}
    */
   meetsPageLimit(limit) {
-        if (this.overflowing()) return false;
-    if (this.value().length > limit) {
+    if (this.overflowing()) return false;
+    if (this.value().boxes.length > limit) {
       return false;
     }
     return this.value();
@@ -64,36 +66,42 @@ class LazyBoxes {
 /**
  * @param {Song} song
  * @param {LayoutConfig} layoutConfig
- * @param {()=>RectangleGenerator} rectGen
- * @returns {Box[]}
+ * @param {RectangleGenerator} rectGen
+ * @returns {{boxes:Box[]; generatorState:RectangleGenerator}}
  */
 export function songLayout(song, layoutConfig, rectGen) {
-  const simpleResult = new LazyBoxes(() =>
-    songLayoutSimple(song, layoutConfig, rectGen())
+  const simpleResult = new LazyBoxes(
+    (gen) => songLayoutSimple(song, layoutConfig, gen),
+    rectGen.clone()
   );
 
-  const doubleLineResult = new LazyBoxes(() =>
-    songLayoutDoubleLine(song, layoutConfig, rectGen())
+  const doubleLineResult = new LazyBoxes(
+    (gen) => songLayoutDoubleLine(song, layoutConfig, gen),
+    rectGen.clone()
   );
 
-  const niceBrokenResult = new LazyBoxes(() =>
-    songLayoutAdjustable(
-      song,
-      layoutConfig,
-      rectGen(),
-      renderSongSectionBreakNicely
-    )
+  const niceBrokenResult = new LazyBoxes(
+    (gen) =>
+      songLayoutAdjustable(
+        song,
+        layoutConfig,
+        gen,
+        renderSongSectionBreakNicely
+      ),
+    rectGen.clone()
   );
 
-  const denseResult = new LazyBoxes(() =>
-    songLayoutAdjustable(song, layoutConfig, rectGen(), renderSongSectionsDense)
+  const denseResult = new LazyBoxes(
+    (gen) =>
+      songLayoutAdjustable(song, layoutConfig, gen, renderSongSectionsDense),
+    rectGen.clone()
   );
 
   let count = 0;
   while (count <= 3) {
-        count += 1;
+    count += 1;
     const simple = simpleResult.meetsPageLimit(count);
-        if (simple) {
+    if (simple) {
       console.error("simple layout chosen.");
       return simple;
     }
@@ -147,7 +155,6 @@ export function songLayoutSimple(song, layoutConfig, rectGen) {
     sectionDistance: layoutConfig.sectionDistance,
     style: layoutConfig,
   };
-  const _boundsGen = new SimpleBoxGen(rect, begin);
 
   let _currPage = fstPage;
 
@@ -156,12 +163,12 @@ export function songLayoutSimple(song, layoutConfig, rectGen) {
 
   let _leftBottomOfLastSection = begin;
   for (const cnt of sections) {
-        const _bounds = _leftBottomOfLastSection.span(
+    const _bounds = _leftBottomOfLastSection.span(
       _currPage.rectangle.getPoint("right", "bottom")
     );
     const _currBox = _style.layout(cnt, _style.style, _bounds);
 
-        const _sectionExeedsPage = _currBox.rectangle
+    const _sectionExeedsPage = _currBox.rectangle
       .getPoint("left", "bottom")
       .isLowerOrEq(_currPage.rectangle.getPoint("left", "bottom"));
     if (_sectionExeedsPage) {
@@ -175,9 +182,9 @@ export function songLayoutSimple(song, layoutConfig, rectGen) {
     _currPage.appendChild(_currBox);
     _leftBottomOfLastSection = _currBox.rectangle
       .getPoint("left", "bottom")
-      .moveDown(_style.sectionDistance);;
+      .moveDown(_style.sectionDistance);
   }
-  
+
   return [fstPage, ...sectionContainers.slice(1)];
 }
 

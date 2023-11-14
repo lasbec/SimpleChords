@@ -196,13 +196,12 @@ export async function renderSongAsPdf(songs, debug, layoutConfig, pdfDoc) {
   const firstPageOrientation = layoutConfig.firstPage;
   const secondPageOrientation =
     layoutConfig.firstPage === "left" ? "right" : "left";
+  /** @type {import("../Drawing/Geometry.js").RectangleGenerator} */
+  let gen = new SimpleBoxGen(writableArea);
   for (const song of songs) {
     console.log(`Drawing '${song.heading}'`);
-    const boxes = songLayout(
-      song,
-      layoutConfig,
-      () => new SimpleBoxGen(writableArea)
-    );
+    const { boxes, generatorState } = songLayout(song, layoutConfig, gen);
+    gen = generatorState;
     for (const box of boxes) {
       const currPage = ArragmentBox.newPage(pageDims);
       const innerSide =
