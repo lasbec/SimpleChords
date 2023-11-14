@@ -20,6 +20,7 @@ import { DebugMode } from "../Drawing/DebugMode.js";
 import { ArragmentBox } from "../Drawing/Boxes/ArrangementBox.js";
 import { TextBox } from "../Drawing/Boxes/TextBox.js";
 import { SimpleBoxGen } from "../Drawing/RectangleGens/SimpleBoxGen.js";
+import { DebugBox } from "../Drawing/Boxes/DebugBox.js";
 
 /**
  * @param {string} path
@@ -228,6 +229,10 @@ class BookPageGenerator {
     return this.count;
   }
 
+  current() {
+    return this.get(this.count - 1);
+  }
+
   next() {
     this.count += 1;
     return this.get(this.count - 1);
@@ -248,25 +253,37 @@ export async function renderSongAsPdf(songs, debug, layoutConfig, pdfDoc) {
     height: layoutConfig.pageHeight,
   };
 
-  const pageArea = RectangleImpl.fromPlacement(
-    {
-      pointOnRect: { x: "left", y: "bottom" },
-      pointOnGrid: PointImpl.origin(),
-    },
-    pageDims
-  );
-
   /** @type {Box[]} */
   const pages = [];
+  let originalGen = new BookPageGenerator({
+    ...layoutConfig,
+    bottomMargin: layoutConfig.printPageNumbers
+      ? layoutConfig.bottomMargin.add(layoutConfig.lyricTextConfig.lineHeight)
+      : layoutConfig.bottomMargin,
+  });
   /** @type {import("../Drawing/Geometry.js").RectangleGenerator} */
-  let gen = new BookPageGenerator(layoutConfig);
+  let gen = originalGen;
   for (const song of songs) {
     console.log(`Drawing '${song.heading}'`);
     const { boxes, generatorState } = songLayout(song, layoutConfig, gen);
     gen = generatorState;
-    for (const box of boxes) {
+    let pageNumber = 0;
+    for (const songBox of boxes) {
+      pageNumber += 1;
       const currPage = ArragmentBox.newPage(pageDims);
-      currPage.appendChild(box);
+      currPage.appendChild(songBox);
+      if (layoutConfig.printPageNumbers) {
+        const outerSide = originalGen.outerSide(pageNumber);
+        const pageNumberBox = new TextBox(
+          `${pageNumber}`,
+          layoutConfig.lyricTextConfig
+        );
+        pageNumberBox.setPosition({
+          pointOnGrid: songBox.rectangle.getPoint(outerSide, "bottom"),
+          pointOnRect: { x: outerSide, y: "top" },
+        });
+        currPage.appendChild(pageNumberBox);
+      }
       pages.push(currPage);
     }
   }
