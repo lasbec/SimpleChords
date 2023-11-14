@@ -106,6 +106,11 @@ async function parseASTs(paths, debug) {
 }
 
 /**
+ */
+
+/**
+ * @typedef {import("../Drawing/Geometry.js").RectangleGenerator} RectangleGenerator
+ * @typedef {import("../Drawing/Geometry.js").Dimensions} Dims
  * @typedef {import("../Shared/Length.js").LengthDto} LengthDto
  * @typedef {import("../Drawing/TextConfig.js").TextConfigDto} TextConfigDto
  */
@@ -151,6 +156,83 @@ async function parseASTs(paths, debug) {
  *
  * @property {Length} sectionDistance
  */
+
+/**
+ * @implements {RectangleGenerator}
+ */
+class BookPageGenerator {
+  /**
+   * @param {LayoutConfig} config
+   */
+  constructor(config) {
+    this.config = config;
+    this.count = 0;
+    /** @type {"left" | "right"} */
+    this.firstPageOrientation = config.firstPage;
+    /** @type {"left" | "right"} */
+    this.secondPageOrientation = config.firstPage === "left" ? "right" : "left";
+  }
+
+  clone() {
+    const result = new BookPageGenerator(this.config);
+    result.count = this.count;
+    return result;
+  }
+
+  /**
+   * @param {number} pageNumber
+   * @returns {"left" | "right"}
+   */
+  innerSide(pageNumber) {
+    return pageNumber % 2 === 1
+      ? this.secondPageOrientation
+      : this.firstPageOrientation;
+  }
+
+  /**
+   * @param {number} pageNumber
+   * @returns {"left" | "right"}
+   */
+  outerSide(pageNumber) {
+    return pageNumber % 2 === 1
+      ? this.firstPageOrientation
+      : this.secondPageOrientation;
+  }
+
+  /**
+   * @param {number} i
+   */
+  get(i) {
+    const page = RectangleImpl.fromPlacement(
+      {
+        pointOnGrid: PointImpl.origin(),
+        pointOnRect: { x: "left", y: "bottom" },
+      },
+      { height: this.config.pageHeight, width: this.config.pageWidth }
+    );
+    const innerSide = this.innerSide(i + 1);
+    const outerSide = this.outerSide(i + 1);
+    return RectangleImpl.fromCorners(
+      page
+        .getPoint(innerSide, "bottom")
+        .moveUp(this.config.bottomMargin)
+        .move(outerSide, this.config.innerMargin),
+      page
+        .getPoint(outerSide, "top")
+        .moveDown(this.config.topMargin)
+        .move(innerSide, this.config.outerMargin)
+    );
+  }
+
+  get lenght() {
+    return this.count;
+  }
+
+  next() {
+    this.count += 1;
+    return this.get(this.count - 1);
+  }
+}
 
 /**
  * @param {Song[]} songs
