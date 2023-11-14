@@ -263,12 +263,22 @@ export async function renderSongAsPdf(songs, debug, layoutConfig, pdfDoc) {
   });
   /** @type {import("../Drawing/Geometry.js").RectangleGenerator} */
   let gen = originalGen;
+  /** @type {Box[]} */
+  const songBoxes = []
+  /** @type {{song:Song, pageNumber:number}[]} */
+  const numberedSongs = []
+  let pageNumber = 1;
   for (const song of songs) {
     console.log(`Drawing '${song.heading}'`);
     const { boxes, generatorState } = songLayout(song, layoutConfig, gen);
     gen = generatorState;
-    let pageNumber = 0;
-    for (const songBox of boxes) {
+    songBoxes.push(...boxes);
+    numberedSongs.push({song, pageNumber});
+    pageNumber += boxes.length;
+  }
+  
+  pageNumber = 0;
+  for(const songBox of songBoxes){
       pageNumber += 1;
       const currPage = ArragmentBox.newPage(pageDims);
       currPage.appendChild(songBox);
@@ -285,7 +295,6 @@ export async function renderSongAsPdf(songs, debug, layoutConfig, pdfDoc) {
         currPage.appendChild(pageNumberBox);
       }
       pages.push(currPage);
-    }
   }
   drawToPdfDoc(pdfDoc, pages);
 
