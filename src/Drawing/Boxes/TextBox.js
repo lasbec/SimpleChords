@@ -53,7 +53,10 @@ export class TextBox extends PrimitiveBox {
 
   /** @param {ReferencePoint} position*/
   setPosition(position) {
-    this.position = position;
+    this.position = {
+      ...position,
+      pointOnGrid: position.pointOnGrid.clone(),
+    };
   }
 
   /**

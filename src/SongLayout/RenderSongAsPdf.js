@@ -19,8 +19,6 @@ import { drawToPdfDoc } from "../Drawing/DrawToPdfDoc.js";
 import { DebugMode } from "../Drawing/DebugMode.js";
 import { ArragmentBox } from "../Drawing/Boxes/ArrangementBox.js";
 import { TextBox } from "../Drawing/Boxes/TextBox.js";
-import { SimpleBoxGen } from "../Drawing/RectangleGens/SimpleBoxGen.js";
-import { DebugBox } from "../Drawing/Boxes/DebugBox.js";
 
 /**
  * @param {string} path
@@ -126,6 +124,7 @@ async function parseASTs(paths, debug) {
  *
  * @property {boolean} printPageNumbers
  * @property {"left" | "right" =} firstPage
+ * @property {string =} tableOfContents
  *
  * @property {LengthDto} outerMargin
  * @property {LengthDto} innerMargin
@@ -146,6 +145,7 @@ async function parseASTs(paths, debug) {
  *
  * @property {boolean} printPageNumbers
  * @property {"left" | "right"} firstPage
+ * @property {string} tableOfContents
  *
  * @property {Length} outerMargin
  * @property {Length} innerMargin
@@ -253,8 +253,6 @@ export async function renderSongAsPdf(songs, debug, layoutConfig, pdfDoc) {
     height: layoutConfig.pageHeight,
   };
 
-  /** @type {Box[]} */
-  const pages = [];
   let originalGen = new BookPageGenerator({
     ...layoutConfig,
     bottomMargin: layoutConfig.printPageNumbers
@@ -264,37 +262,48 @@ export async function renderSongAsPdf(songs, debug, layoutConfig, pdfDoc) {
   /** @type {import("../Drawing/Geometry.js").RectangleGenerator} */
   let gen = originalGen;
   /** @type {Box[]} */
-  const songBoxes = []
+  const boxes = [];
   /** @type {{song:Song, pageNumber:number}[]} */
-  const numberedSongs = []
+  const numberedSongs = [];
   let pageNumber = 1;
   for (const song of songs) {
     console.log(`Drawing '${song.heading}'`);
-    const { boxes, generatorState } = songLayout(song, layoutConfig, gen);
+    const { boxes: songBoxes, generatorState } = songLayout(
+      song,
+      layoutConfig,
+      gen
+    );
     gen = generatorState;
-    songBoxes.push(...boxes);
-    numberedSongs.push({song, pageNumber});
-    pageNumber += boxes.length;
+    boxes.push(...songBoxes);
+    numberedSongs.push({ song, pageNumber });
+    pageNumber += songBoxes.length;
   }
-  
+
+  if (layoutConfig.tableOfContents) {
+    const tocBoxes = tableOfContents(gen, layoutConfig, numberedSongs);
+    boxes.push(...tocBoxes);
+  }
+
+  /** @type {Box[]} */
+  const pages = [];
   pageNumber = 0;
-  for(const songBox of songBoxes){
-      pageNumber += 1;
-      const currPage = ArragmentBox.newPage(pageDims);
-      currPage.appendChild(songBox);
-      if (layoutConfig.printPageNumbers) {
-        const outerSide = originalGen.outerSide(pageNumber);
-        const pageNumberBox = new TextBox(
-          `${pageNumber}`,
-          layoutConfig.lyricTextConfig
-        );
-        pageNumberBox.setPosition({
-          pointOnGrid: songBox.rectangle.getPoint(outerSide, "bottom"),
-          pointOnRect: { x: outerSide, y: "top" },
-        });
-        currPage.appendChild(pageNumberBox);
-      }
-      pages.push(currPage);
+  for (const box of boxes) {
+    pageNumber += 1;
+    const currPage = ArragmentBox.newPage(pageDims);
+    currPage.appendChild(box);
+    if (layoutConfig.printPageNumbers) {
+      const outerSide = originalGen.outerSide(pageNumber);
+      const pageNumberBox = new TextBox(
+        `${pageNumber}`,
+        layoutConfig.lyricTextConfig
+      );
+      pageNumberBox.setPosition({
+        pointOnGrid: box.rectangle.getPoint(outerSide, "bottom"),
+        pointOnRect: { x: outerSide, y: "top" },
+      });
+      currPage.appendChild(pageNumberBox);
+    }
+    pages.push(currPage);
   }
   drawToPdfDoc(pdfDoc, pages);
 
@@ -303,6 +312,140 @@ export async function renderSongAsPdf(songs, debug, layoutConfig, pdfDoc) {
 
 /** @type {Array<string>} */
 const StdFontNames = Object.values(StandardFonts);
+
+const articles = ["der", "die", "das", "ein", "einer", "eine", "a", "the"].map(
+  (s) => s.toLowerCase()
+);
+/**
+ * @param {string} str
+ */
+function removeArticle(str) {
+  const s = str.split(" ");
+  if (articles.includes(s[0])) {
+    s.splice(0, 1);
+  }
+  return s.join(" ");
+}
+
+/**
+ *
+ * @param {Song} song
+ */
+function firstWords(song) {
+  const fstSection = song.sections[0];
+  if (!fstSection) return "";
+  for (const line of fstSection.lines) {
+    const lyric = line.lyric.trim();
+    if (lyric) {
+      return lyric.split(" ").slice(0, 5).join(" ");
+    }
+  }
+  return "";
+}
+
+/**
+ *
+ * @param {RectangleGenerator} gen
+ * @param {LayoutConfig} layoutConfig
+ * @param {{song:Song, pageNumber:number}[]} _numberedSongs
+ * @returns {Box[]}
+ */
+function tableOfContents(gen, layoutConfig, _numberedSongs) {
+  /** @type {Box[]} */
+  const result = [];
+
+  const numberedSongs = _numberedSongs.flatMap((s) => {
+    const heading = {
+      type: "heading",
+      title: s.song.heading,
+      pageNumber: s.pageNumber,
+    };
+    const beginning = {
+      type: "beginning",
+      title: firstWords(s.song),
+      pageNumber: s.pageNumber,
+    };
+    const beginningWithoutArticle = {
+      type: "beginning",
+      title: removeArticle(firstWords(s.song)),
+      pageNumber: s.pageNumber,
+    };
+    const result = [heading];
+    if (
+      beginning.title.length >= 1 &&
+      !heading.title.startsWith(beginning.title) &&
+      !beginning.title.startsWith(heading.title)
+    ) {
+      result.push(beginning);
+    }
+    if (
+      beginningWithoutArticle.title.length >= 1 &&
+      beginning.title !== beginningWithoutArticle.title
+    ) {
+      result.push(beginningWithoutArticle);
+    }
+    return result;
+  });
+  numberedSongs.sort((a, b) => a.title.localeCompare(b.title));
+
+  let currBox = ArragmentBox.fromRect(gen.next());
+  result.push(currBox);
+  let leftTop = currBox.rectangle.getPoint("left", "top");
+  let rightTop = currBox.rectangle.getPoint("right", "top");
+
+  const tocTitle = new TextBox(
+    layoutConfig.tableOfContents,
+    layoutConfig.titleTextConfig
+  );
+  tocTitle.setPosition({
+    pointOnRect: { x: "center", y: "top" },
+    pointOnGrid: currBox.rectangle.getPoint("center", "top"),
+  });
+  currBox.appendChild(tocTitle);
+
+  leftTop.moveDown(tocTitle.rectangle.height);
+  rightTop.moveDown(tocTitle.rectangle.height);
+
+  for (const { type, title, pageNumber } of numberedSongs) {
+    const titleBox = new TextBox(
+      title,
+      type === "heading"
+        ? layoutConfig.lyricTextConfig
+        : layoutConfig.chorusTextConfig
+    );
+    const pageNumberBox = new TextBox(
+      `${pageNumber}`,
+      layoutConfig.lyricTextConfig
+    );
+
+    if (
+      leftTop
+        .pointerDown(titleBox.rectangle.height)
+        .isLowerOrEq(currBox.rectangle.getBorderHorizontal("bottom"))
+    ) {
+      currBox = ArragmentBox.fromRect(gen.next());
+      result.push(currBox);
+      leftTop = currBox.rectangle.getPoint("left", "top");
+      rightTop = currBox.rectangle.getPoint("right", "top");
+    }
+
+    titleBox.setPosition({
+      pointOnGrid: leftTop,
+      pointOnRect: { x: "left", y: "top" },
+    });
+    leftTop.moveDown(titleBox.rectangle.height);
+    currBox.appendChild(titleBox);
+
+    pageNumberBox.setPosition({
+      pointOnGrid: rightTop,
+      pointOnRect: { x: "right", y: "top" },
+    });
+    rightTop.moveDown(pageNumberBox.rectangle.height);
+    currBox.appendChild(pageNumberBox);
+  }
+  return result;
+}
+
 /**
  * @param {PDFDocument} pdfDoc
  * @param {string} font
@@ -333,8 +476,8 @@ async function layoutConfigFromDto(configDto, pdfDoc) {
     sectionDistance: Length.fromString(configDto.sectionDistance),
 
     printPageNumbers: configDto.printPageNumbers,
-
     firstPage: configDto.firstPage || "left",
+    tableOfContents: configDto.tableOfContents || "",
 
     lyricTextConfig: new TextConfig({
       font: await embedFont(pdfDoc, configDto.lyricTextConfig.font),

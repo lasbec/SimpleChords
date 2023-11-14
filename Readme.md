@@ -104,7 +104,10 @@ const dinA5Landscape = {
   bottomMargin: "5mm",
   sectionDistance: "12pt",
 
-  printPageNumbers: true,
+  printPageNumbers: true, 
+
+  tableOfContents: "Glossary", // optional 
+  firstPage: "left" // optional
 
   lyricTextConfig: {
     font: "../fonts/CaterOne/CarterOne-Regular.ttf",
