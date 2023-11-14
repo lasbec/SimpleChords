@@ -256,67 +256,17 @@ export async function renderSongAsPdf(songs, debug, layoutConfig, pdfDoc) {
     pageDims
   );
 
-  const writableAreaRightBottom = pageArea
-    .getPoint("right", "bottom")
-    .moveUp(layoutConfig.bottomMargin)
-    .moveLeft(layoutConfig.innerMargin);
-  const writableArea = pageArea
-    .getPoint("left", "top")
-    .moveDown(layoutConfig.topMargin)
-    .moveRight(layoutConfig.outerMargin)
-    .span(
-      layoutConfig.printPageNumbers
-        ? writableAreaRightBottom.moveUp(
-            layoutConfig.lyricTextConfig.lineHeight
-          )
-        : writableAreaRightBottom
-    );
-
   /** @type {Box[]} */
   const pages = [];
-  let pageCount = 1;
-  const firstPageOrientation = layoutConfig.firstPage;
-  const secondPageOrientation =
-    layoutConfig.firstPage === "left" ? "right" : "left";
   /** @type {import("../Drawing/Geometry.js").RectangleGenerator} */
-  let gen = new SimpleBoxGen(writableArea);
+  let gen = new BookPageGenerator(layoutConfig);
   for (const song of songs) {
     console.log(`Drawing '${song.heading}'`);
     const { boxes, generatorState } = songLayout(song, layoutConfig, gen);
     gen = generatorState;
     for (const box of boxes) {
       const currPage = ArragmentBox.newPage(pageDims);
-      const innerSide =
-        pageCount % 2 === 1 ? secondPageOrientation : firstPageOrientation;
-      const outerSide =
-        pageCount % 2 === 1 ? firstPageOrientation : secondPageOrientation;
-
-      const innerMargin = layoutConfig.innerMargin;
-
-      const innerTop = currPage.rectangle
-        .getPoint(innerSide, "top")
-        .moveDown(layoutConfig.topMargin)
-        .move(outerSide, innerMargin);
-
-      box.setPosition({
-        pointOnRect: { x: innerSide, y: "top" },
-        pointOnGrid: innerTop,
-      });
-
       currPage.appendChild(box);
-      if (layoutConfig.printPageNumbers) {
-        const pageNumberBox = new TextBox(
-          pageCount.toString(),
-          layoutConfig.lyricTextConfig
-        );
-        pageNumberBox.setPosition({
-          pointOnGrid: box.rectangle.getPoint(outerSide, "bottom"),
-          pointOnRect: { x: outerSide, y: "top" },
-        });
-
-        currPage.appendChild(pageNumberBox);
-      }
-      pageCount += 1;
       pages.push(currPage);
     }
   }
