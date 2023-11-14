@@ -21,6 +21,8 @@ export class SimpleBoxGen {
       ? regular.getPoint("left", "top").alignVerticalWith(begin)
       : regular.getPoint("left", "top");
     this.regular = regular;
+    /** @private */
+    this.count = 0;
   }
 
   /**
@@ -32,5 +34,15 @@ export class SimpleBoxGen {
       return this.beginLeftTop.span(this.regular.getPoint("right", "bottom"));
     }
     return this.regular;
+  }
+
+  get lenght() {
+    return this.count;
+  }
+
+  next() {
+    const result = this.get(this.count);
+    this.count += 1;
+    return result;
   }
 }

@@ -19,6 +19,7 @@ import { drawToPdfDoc } from "../Drawing/DrawToPdfDoc.js";
 import { DebugMode } from "../Drawing/DebugMode.js";
 import { ArragmentBox } from "../Drawing/Boxes/ArrangementBox.js";
 import { TextBox } from "../Drawing/Boxes/TextBox.js";
+import { SimpleBoxGen } from "../Drawing/RectangleGens/SimpleBoxGen.js";
 
 /**
  * @param {string} path
@@ -197,7 +198,11 @@ export async function renderSongAsPdf(songs, debug, layoutConfig, pdfDoc) {
     layoutConfig.firstPage === "left" ? "right" : "left";
   for (const song of songs) {
     console.log(`Drawing '${song.heading}'`);
-    const boxes = songLayout(song, layoutConfig, writableArea);
+    const boxes = songLayout(
+      song,
+      layoutConfig,
+      () => new SimpleBoxGen(writableArea)
+    );
     for (const box of boxes) {
       const currPage = ArragmentBox.newPage(pageDims);
       const innerSide =

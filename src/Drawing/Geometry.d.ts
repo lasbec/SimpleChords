@@ -19,6 +19,8 @@ export type Dimensions = {
 
 export type RectangleGenerator = {
   get(index: number): Rectangle;
+  next(): Rectangle;
+  readonly lenght: number;
 };
 
 export type XStartPosition = "left" | "center" | "right";

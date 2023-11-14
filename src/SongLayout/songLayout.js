@@ -4,7 +4,6 @@ import { Song } from "../Song/Song.js";
 import { ArragmentBox } from "../Drawing/Boxes/ArrangementBox.js";
 import { SongLine } from "../Song/SongLine.js";
 import { SimpleBoxGen } from "../Drawing/RectangleGens/SimpleBoxGen.js";
-import { stackLayout } from "../Drawing/CollectionComponents/stackLayout.js";
 import { stackBoxes } from "../Drawing/CollectionComponents/stackBoxes.js";
 import { BreakableText } from "../Drawing/BreakableText.js";
 import { SongLineBox } from "./SongLineBox.js";
@@ -59,26 +58,35 @@ class LazyBoxes {
 }
 
 /**
+ * @typedef {import("../Drawing/Geometry.js").RectangleGenerator} RectangleGenerator
+ */
+
+/**
  * @param {Song} song
  * @param {LayoutConfig} layoutConfig
- * @param {Rectangle} rect
+ * @param {()=>RectangleGenerator} rectGen
  * @returns {Box[]}
  */
-export function songLayout(song, layoutConfig, rect) {
+export function songLayout(song, layoutConfig, rectGen) {
   const simpleResult = new LazyBoxes(() =>
-    songLayoutSimple(song, layoutConfig, rect)
+    songLayoutSimple(song, layoutConfig, rectGen())
   );
 
   const doubleLineResult = new LazyBoxes(() =>
-    songLayoutDoubleLine(song, layoutConfig, rect)
+    songLayoutDoubleLine(song, layoutConfig, rectGen())
   );
 
   const niceBrokenResult = new LazyBoxes(() =>
-    songLayoutAdjustable(song, layoutConfig, rect, renderSongSectionBreakNicely)
+    songLayoutAdjustable(
+      song,
+      layoutConfig,
+      rectGen(),
+      renderSongSectionBreakNicely
+    )
   );
 
   const denseResult = new LazyBoxes(() =>
-    songLayoutAdjustable(song, layoutConfig, rect, renderSongSectionsDense)
+    songLayoutAdjustable(song, layoutConfig, rectGen(), renderSongSectionsDense)
   );
 
   let count = 0;
@@ -115,10 +123,11 @@ export function songLayout(song, layoutConfig, rect) {
 /**
  * @param {Song} song
  * @param {LayoutConfig} layoutConfig
- * @param {Rectangle} rect
+ * @param {RectangleGenerator} rectGen
  * @returns {Box[]}
  */
-export function songLayoutSimple(song, layoutConfig, rect) {
+export function songLayoutSimple(song, layoutConfig, rectGen) {
+  const rect = rectGen.next();
   const fstPage = ArragmentBox.fromRect(rect);
   const titleBox = new TextBox(song.heading, layoutConfig.titleTextConfig);
   titleBox.setPosition({
@@ -132,15 +141,44 @@ export function songLayoutSimple(song, layoutConfig, rect) {
     .moveDown(titleBox.rectangle.height)
     .moveDown(titleBox.rectangle.height);
 
-  const sectionContainers = stackLayout(
-    song.sections,
-    {
-      layout: songSection,
-      sectionDistance: layoutConfig.sectionDistance,
-      style: layoutConfig,
-    },
-    new SimpleBoxGen(rect, begin)
-  );
+  const sections = song.sections;
+  const _style = {
+    layout: songSection,
+    sectionDistance: layoutConfig.sectionDistance,
+    style: layoutConfig,
+  };
+  const _boundsGen = new SimpleBoxGen(rect, begin);
+  let _pageCount = 0;
+  let _currPage = ArragmentBox.fromRect(_boundsGen.get(_pageCount));
+  _pageCount += 1;
+
+  /** @type {Box[]} */
+  const sectionContainers = [_currPage];
+
+  let _leftBottomOfLastSection = _currPage.rectangle.getPoint("left", "top");
+  for (const cnt of sections) {
+    const _bounds = _leftBottomOfLastSection.span(
+      _currPage.rectangle.getPoint("right", "bottom")
+    );
+    const _currBox = _style.layout(cnt, _style.style, _bounds);
+
+    const _sectionExeedsPage = _currBox.rectangle
+      .getPoint("left", "bottom")
+      .isLowerOrEq(_currPage.rectangle.getPoint("left", "bottom"));
+    if (_sectionExeedsPage) {
+      _currPage = ArragmentBox.fromRect(_boundsGen.get(_pageCount));
+      _pageCount += 1;
+      sectionContainers.push(_currPage);
+      _currBox.setPosition({
+        pointOnRect: { x: "left", y: "top" },
+        pointOnGrid: _currPage.rectangle.getPoint("left", "top"),
+      });
+    }
+    _currPage.appendChild(_currBox);
+    _leftBottomOfLastSection = _currBox.rectangle
+      .getPoint("left", "bottom")
+      .moveDown(_style.sectionDistance);
+  }
   if (sectionContainers[0]) {
     fstPage.appendChild(sectionContainers[0]);
   }
@@ -151,7 +189,7 @@ export function songLayoutSimple(song, layoutConfig, rect) {
 /**
  * @param {Song} song
  * @param {LayoutConfig} layoutConfig
- * @param {Rectangle} rect
+ * @param {RectangleGenerator} rect
  * @returns {Box[]}
  */
 export function songLayoutDoubleLine(song, layoutConfig, rect) {
@@ -190,11 +228,12 @@ function doubleSongLines(lines) {
 /**
  * @param {Song} song
  * @param {LayoutConfig} layoutConfig
- * @param {Rectangle} rect
+ * @param {RectangleGenerator} rectGen
  * @param {( songSections:{section:SongSection, result:ArragmentBox}[], style :SongLineBoxConfig) => void} fn
  * @returns {Box[]}
  */
-export function songLayoutAdjustable(song, layoutConfig, rect, fn) {
+export function songLayoutAdjustable(song, layoutConfig, rectGen, fn) {
+  const rect = rectGen.next();
   const titleBox = new TextBox(song.heading, layoutConfig.titleTextConfig);
   titleBox.setPosition({
     pointOnRect: { x: "center", y: "top" },
@@ -416,7 +455,7 @@ function breakLineBetweenChords(line, start, stop) {
     maxCharsToFit,
     indexOfFirstOverflowingChord || Number.POSITIVE_INFINITY
   );
-    return line.rest.break({
+  return line.rest.break({
     minLineLen: indexOfLastFittingChord + 1,
     maxLineLen: maxLineLen,
   });
