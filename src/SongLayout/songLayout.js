@@ -32,8 +32,8 @@ class LazyBoxes {
 
   value() {
     if (!this._value) {
-      this._value = this.valueFn();
-    }
+            this._value = this.valueFn();
+          }
     return this._value;
   }
 
@@ -41,7 +41,7 @@ class LazyBoxes {
     if (this._isOverflowing === undefined) {
       this._isOverflowing = this.value().some((b) => b.hasOverflow());
     }
-    return this._isOverflowing;
+        return this._isOverflowing;
   }
 
   /**
@@ -49,7 +49,7 @@ class LazyBoxes {
    * @returns {false | Box[]}
    */
   meetsPageLimit(limit) {
-    if (this.overflowing()) return false;
+        if (this.overflowing()) return false;
     if (this.value().length > limit) {
       return false;
     }
@@ -91,9 +91,9 @@ export function songLayout(song, layoutConfig, rectGen) {
 
   let count = 0;
   while (count <= 3) {
-    count += 1;
+        count += 1;
     const simple = simpleResult.meetsPageLimit(count);
-    if (simple) {
+        if (simple) {
       console.error("simple layout chosen.");
       return simple;
     }
@@ -148,26 +148,24 @@ export function songLayoutSimple(song, layoutConfig, rectGen) {
     style: layoutConfig,
   };
   const _boundsGen = new SimpleBoxGen(rect, begin);
-  let _pageCount = 0;
-  let _currPage = ArragmentBox.fromRect(_boundsGen.get(_pageCount));
-  _pageCount += 1;
+
+  let _currPage = fstPage;
 
   /** @type {Box[]} */
   const sectionContainers = [_currPage];
 
-  let _leftBottomOfLastSection = _currPage.rectangle.getPoint("left", "top");
+  let _leftBottomOfLastSection = begin;
   for (const cnt of sections) {
-    const _bounds = _leftBottomOfLastSection.span(
+        const _bounds = _leftBottomOfLastSection.span(
       _currPage.rectangle.getPoint("right", "bottom")
     );
     const _currBox = _style.layout(cnt, _style.style, _bounds);
 
-    const _sectionExeedsPage = _currBox.rectangle
+        const _sectionExeedsPage = _currBox.rectangle
       .getPoint("left", "bottom")
       .isLowerOrEq(_currPage.rectangle.getPoint("left", "bottom"));
     if (_sectionExeedsPage) {
-      _currPage = ArragmentBox.fromRect(_boundsGen.get(_pageCount));
-      _pageCount += 1;
+      _currPage = ArragmentBox.fromRect(rectGen.next());
       sectionContainers.push(_currPage);
       _currBox.setPosition({
         pointOnRect: { x: "left", y: "top" },
@@ -177,12 +175,9 @@ export function songLayoutSimple(song, layoutConfig, rectGen) {
     _currPage.appendChild(_currBox);
     _leftBottomOfLastSection = _currBox.rectangle
       .getPoint("left", "bottom")
-      .moveDown(_style.sectionDistance);
+      .moveDown(_style.sectionDistance);;
   }
-  if (sectionContainers[0]) {
-    fstPage.appendChild(sectionContainers[0]);
-  }
-
+  
   return [fstPage, ...sectionContainers.slice(1)];
 }
 
