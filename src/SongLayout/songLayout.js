@@ -4,7 +4,7 @@ import { Song } from "../Song/Song.js";
 import { ArragmentBox } from "../Drawing/Boxes/ArrangementBox.js";
 import { SongLine } from "../Song/SongLine.js";
 import { SimpleBoxGen } from "../Drawing/RectangleGens/SimpleBoxGen.js";
-import { stackBoxes } from "../Drawing/CollectionComponents/stackBoxes.js";
+import { stack } from "../Drawing/CollectionComponents/stackBoxes.js";
 import { BreakableText } from "../Drawing/BreakableText.js";
 import { SongLineBox } from "./SongLineBox.js";
 import { BoundsImpl } from "../Drawing/Figures/BoundsImpl.js";
@@ -235,7 +235,7 @@ function doubleSongLines(lines) {
  * @returns {Box[]}
  */
 export function songLayoutAdjustable(song, layoutConfig, rectGen, fn) {
-  const rect = rectGen.next();
+  const rect = rectGen.clone().next();
   const titleBox = new TextBox(song.heading, layoutConfig.titleTextConfig);
   titleBox.setPosition({
     pointOnRect: { x: "center", y: "top" },
@@ -273,7 +273,7 @@ export function songLayoutAdjustable(song, layoutConfig, rectGen, fn) {
     fn(sectionGroup, style);
   }
   const sectionBoxes = workload.map((pair) => pair.result);
-  return stackBoxes(
+  return stack(
     [
       {
         content: titleBox,
@@ -288,7 +288,7 @@ export function songLayoutAdjustable(song, layoutConfig, rectGen, fn) {
       sectionDistance: layoutConfig.sectionDistance,
       alignment: "left",
     },
-    new SimpleBoxGen(rect)
+    rectGen
   );
 }
 
