@@ -1,13 +1,10 @@
 import { LEN, Length } from "../Shared/Length.js";
 import { SongLine } from "../Song/SongLine.js";
-import { decorateAsBox } from "../Drawing/BoxDecorator.js";
 import { PointImpl } from "../Drawing/Figures/PointImpl.js";
 import { TextBox } from "../Drawing/Boxes/TextBox.js";
 import { ArragmentBox } from "../Drawing/Boxes/ArrangementBox.js";
 import { AbstractBox } from "../Drawing/Boxes/AbstractBox.js";
 import { BoundsImpl } from "../Drawing/Figures/BoundsImpl.js";
-/**
- */
 
 /**
  * @typedef {import("pdf-lib").PDFPage} PDFPage
@@ -164,9 +161,8 @@ export class SongLineBox extends AbstractBox {
     const pointer = topLeft.clone();
     pointer.moveDown(args.chordsConfig.lineHeight);
 
-    const partialWidths = this.partialWidthsOfLyricOnly();
     for (const chord of line.chords) {
-      const yOffset = partialWidths[chord.startIndex];
+      const yOffset = this.partialWidthsOfLyricOnly(chord.startIndex);
       if (!yOffset) continue;
       const bottomLeftOfChord = pointer.pointerRight(yOffset);
       const chordBox = new TextBox(chord.chord, args.chordsConfig);
@@ -213,20 +209,10 @@ export class SongLineBox extends AbstractBox {
 
   /**
    * @private
+   * @param {number} index
    */
-  partialWidthsOfLyricOnly() {
-    const line = this.content;
-    const lyricConfig = this.style.lyricConfig;
-    const result = [];
-    let partial = "";
-    for (const char of line) {
-      const widthPt = lyricConfig.font.widthOfTextAtSize(
-        partial,
-        lyricConfig.fontSize.in("pt")
-      );
-      result.push(LEN(widthPt, "pt"));
-      partial += char;
-    }
-    return result;
+  partialWidthsOfLyricOnly(index) {
+    const partial = this.content.lyric.slice(0, index);
+    return this.style.lyricConfig.widthOfText(partial);
   }
 }
