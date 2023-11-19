@@ -12,7 +12,7 @@ import * as fs from "fs/promises";
 import { Song } from "../Song/Song.js";
 import { checkSongAst } from "../Song/SongChecker.js";
 import { TextConfig } from "../Drawing/TextConfig.js";
-import { songLayout } from "./songLayout.js";
+import { songLayout } from "./SongLayout.js";
 import { RectangleImpl } from "../Drawing/Figures/RectangleImpl.js";
 import { PointImpl } from "../Drawing/Figures/PointImpl.js";
 import { drawToPdfDoc } from "../Drawing/DrawToPdfDoc.js";
