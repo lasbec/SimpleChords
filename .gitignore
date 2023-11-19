@@ -1,5 +1,6 @@
 /node_modules
 /type-builds
+/src/DebugTools
 
 simple-chords-?.?.?.tgz
 TODOs.md
