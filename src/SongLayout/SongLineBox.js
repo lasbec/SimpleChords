@@ -161,16 +161,27 @@ export class SongLineBox extends AbstractBox {
     const pointer = topLeft.clone();
     pointer.moveDown(args.chordsConfig.lineHeight);
 
+    /** @type {TextBox | undefined} */
+    let prevChordBox;
     for (const chord of line.chords) {
       const yOffset = this.partialWidthsOfLyricOnly(chord.startIndex);
       if (!yOffset) continue;
       const bottomLeftOfChord = pointer.pointerRight(yOffset);
+      const prevRightBottom = prevChordBox?.rectangle.getPoint(
+        "right",
+        "bottom"
+      );
+      if (prevRightBottom && bottomLeftOfChord.isLeftOrEq(prevRightBottom)) {
+        bottomLeftOfChord.alignHorizontalWith(prevRightBottom);
+        bottomLeftOfChord.moveRight(LEN(2, "mm"));
+      }
       const chordBox = new TextBox(chord.chord, args.chordsConfig);
       chordBox.setPosition({
         pointOnRect: { x: "left", y: "bottom" },
         pointOnGrid: bottomLeftOfChord,
       });
       this.box.appendChild(chordBox);
+      prevChordBox = chordBox;
     }
     pointer.moveDown(args.lyricConfig.lineHeight);
     const lyricBox = new TextBox(line.lyric, args.lyricConfig);
