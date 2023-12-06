@@ -105,10 +105,8 @@ async function parseASTs(paths, debug) {
 }
 
 /**
- */
-
-/**
  * @typedef {import("../Drawing/Geometry.js").RectangleGenerator} RectangleGenerator
+ * @typedef {import("./ChordBox.js").ChordConfig} ChordConfig
  * @typedef {import("../Drawing/Geometry.js").Dimensions} Dims
  * @typedef {import("../Shared/Length.js").LengthDto} LengthDto
  * @typedef {import("../Drawing/TextConfig.js").TextConfigDto} TextConfigDto
@@ -121,6 +119,7 @@ async function parseASTs(paths, debug) {
  * @property {TextConfigDto} refTextConfig
  * @property {TextConfigDto} titleTextConfig
  * @property {TextConfigDto} chordTextConfig
+ * @property {boolean=} unifyChords
  *
  * @property {boolean} printPageNumbers
  * @property {"left" | "right" =} firstPage
@@ -142,6 +141,7 @@ async function parseASTs(paths, debug) {
  * @property {TextConfig} refTextConfig
  * @property {TextConfig} titleTextConfig
  * @property {TextConfig} chordTextConfig
+ * @property {boolean} unifyChords
  *
  * @property {boolean} printPageNumbers
  * @property {"left" | "right"} firstPage
@@ -495,6 +495,7 @@ async function layoutConfigFromDto(configDto, pdfDoc) {
       font: await embedFont(pdfDoc, configDto.titleTextConfig.font),
       fontSize: Length.fromString(configDto.titleTextConfig.fontSize),
     }),
+    unifyChords: configDto.unifyChords === true,
     chordTextConfig: new TextConfig({
       font: await embedFont(pdfDoc, configDto.chordTextConfig.font),
       fontSize: Length.fromString(configDto.chordTextConfig.fontSize),

@@ -18,7 +18,10 @@ export function textConfigForSectionType(sectionType, layoutConfig) {
       : layoutConfig.lyricTextConfig;
   const chordTextConfig = layoutConfig.chordTextConfig;
   const config = {
-    chordsConfig: chordTextConfig,
+    chordsConfig: {
+      text: chordTextConfig,
+      unify: layoutConfig.unifyChords,
+    },
     lyricConfig: lyricStyle,
   };
   return config;

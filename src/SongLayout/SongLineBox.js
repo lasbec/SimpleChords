@@ -6,9 +6,9 @@ import { ArragmentBox } from "../Drawing/Boxes/ArrangementBox.js";
 import { AbstractBox } from "../Drawing/Boxes/AbstractBox.js";
 import { BoundsImpl } from "../Drawing/Figures/BoundsImpl.js";
 import { chordBox } from "./ChordBox.js";
-import { chordToString } from "../Music/ChordFormatter.js";
 
 /**
+ * @typedef {import("./ChordBox.js").ChordConfig} ChordConfig
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("../Drawing/TextConfig.js").TextConfig} TextConfig
  * @typedef {import("../Drawing/Geometry.js").ReferencePoint} ReferencePoint
@@ -26,7 +26,7 @@ import { chordToString } from "../Music/ChordFormatter.js";
 /**
  * @typedef {object} SongLineBoxConfig
  * @property {TextConfig} lyricConfig
- * @property {TextConfig} chordsConfig
+ * @property {ChordConfig} chordsConfig
  */
 
 /**
@@ -161,7 +161,7 @@ export class SongLineBox extends AbstractBox {
     const args = this.style;
     const topLeft = PointImpl.origin();
     const pointer = topLeft.clone();
-    pointer.moveDown(args.chordsConfig.lineHeight);
+    pointer.moveDown(args.chordsConfig.text.lineHeight);
 
     /** @type {TextBox | undefined} */
     let prevChordBox;

@@ -104,9 +104,9 @@ const dinA5Landscape = {
   bottomMargin: "5mm",
   sectionDistance: "12pt",
 
-  printPageNumbers: true, 
+  printPageNumbers: true,
 
-  tableOfContents: "Glossary", // optional 
+  tableOfContents: "Glossary", // optional
   firstPage: "left" // optional
 
   lyricTextConfig: {
@@ -129,6 +129,10 @@ const dinA5Landscape = {
     font: "Times-BoldItalic",
     fontSize: "9pt",
   },
+
+  // Due to ambigouties I descided for now to print Cb and A# and never any kind of B.
+  // In future versions this will be configurable too.
+  unifyChords: true, // optional will default to false.
 };
 ```
 

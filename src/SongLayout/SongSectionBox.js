@@ -94,7 +94,10 @@ function drawOnlyChords(section, layoutConfig, pointer) {
       pointOnGrid: pointer.clone(),
     });
     const chordBoxes = line.chords.map((c) =>
-      chordBox(c, layoutConfig.chordTextConfig)
+      chordBox(c, {
+        text: layoutConfig.chordTextConfig,
+        unify: layoutConfig.unifyChords,
+      })
     );
     let chordPointerLeftBottom = pointer
       .clone()
