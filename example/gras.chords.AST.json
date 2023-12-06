@@ -1,0 +1,753 @@
+{
+  "heading": "Gras",
+  "sections": [
+    {
+      "type": "verse",
+      "lines": [
+        {
+          "chords": [
+            {
+              "chord": "Bm",
+              "startIndex": 0
+            },
+            {
+              "chord": "Em",
+              "startIndex": 23
+            },
+            {
+              "chord": "D",
+              "startIndex": 40
+            },
+            {
+              "chord": "F#m",
+              "startIndex": 51
+            }
+          ],
+          "lyric": "Als wir endlich groß genug waren nahm'n wir unsere Schuh'."
+        },
+        {
+          "chords": [
+            {
+              "chord": "Bm",
+              "startIndex": 0
+            },
+            {
+              "chord": "Em",
+              "startIndex": 19
+            },
+            {
+              "chord": "D",
+              "startIndex": 35
+            },
+            {
+              "chord": "F#m",
+              "startIndex": 46
+            }
+          ],
+          "lyric": "Die bemalte Kinderzimmertür fiel hinter uns zu."
+        },
+        {
+          "chords": [
+            {
+              "chord": "Bm",
+              "startIndex": 0
+            },
+            {
+              "chord": "Em",
+              "startIndex": 21
+            },
+            {
+              "chord": "D",
+              "startIndex": 32
+            },
+            {
+              "chord": "F#m",
+              "startIndex": 46
+            }
+          ],
+          "lyric": "Vater gab uns seinen Mantel und seinen blauen Hut."
+        },
+        {
+          "chords": [
+            {
+              "chord": "Bm",
+              "startIndex": 0
+            },
+            {
+              "chord": "Em",
+              "startIndex": 20
+            },
+            {
+              "chord": "D",
+              "startIndex": 31
+            },
+            {
+              "chord": "F#m",
+              "startIndex": 42
+            }
+          ],
+          "lyric": "Mutter gab uns ihre Tränen und machte uns ein"
+        },
+        {
+          "chords": [
+            {
+              "chord": "Bm",
+              "startIndex": 6
+            },
+            {
+              "chord": "Em",
+              "startIndex": 14
+            },
+            {
+              "chord": "Bm",
+              "startIndex": 23
+            },
+            {
+              "chord": "Bm",
+              "startIndex": 33
+            }
+          ],
+          "lyric": "Zuckerbrot."
+        }
+      ]
+    },
+    {
+      "type": "chorus",
+      "lines": [
+        {
+          "chords": [
+            {
+              "chord": "G",
+              "startIndex": 0
+            },
+            {
+              "chord": "G",
+              "startIndex": 13
+            },
+            {
+              "chord": "Bm",
+              "startIndex": 25
+            },
+            {
+              "chord": "Bm",
+              "startIndex": 38
+            }
+          ],
+          "lyric": "Immer wieder wächst das Gras"
+        },
+        {
+          "chords": [
+            {
+              "chord": "A",
+              "startIndex": 0
+            },
+            {
+              "chord": "A",
+              "startIndex": 9
+            },
+            {
+              "chord": "G",
+              "startIndex": 20
+            },
+            {
+              "chord": "G",
+              "startIndex": 31
+            }
+          ],
+          "lyric": "wild und hoch und grün."
+        },
+        {
+          "chords": [
+            {
+              "chord": "G",
+              "startIndex": 0
+            },
+            {
+              "chord": "G",
+              "startIndex": 8
+            },
+            {
+              "chord": "Bm",
+              "startIndex": 21
+            },
+            {
+              "chord": "Bm",
+              "startIndex": 35
+            }
+          ],
+          "lyric": "Bis die Sensen ohne Hass"
+        },
+        {
+          "chords": [
+            {
+              "chord": "C",
+              "startIndex": 0
+            },
+            {
+              "chord": "C",
+              "startIndex": 8
+            },
+            {
+              "chord": "G",
+              "startIndex": 15
+            },
+            {
+              "chord": "G",
+              "startIndex": 24
+            }
+          ],
+          "lyric": "   ihre Kreise ziehn'."
+        },
+        {
+          "chords": [
+            {
+              "chord": "G",
+              "startIndex": 0
+            },
+            {
+              "chord": "G",
+              "startIndex": 13
+            },
+            {
+              "chord": "Bm",
+              "startIndex": 25
+            },
+            {
+              "chord": "Bm",
+              "startIndex": 38
+            }
+          ],
+          "lyric": "Immer wieder wächst das Gras"
+        },
+        {
+          "chords": [
+            {
+              "chord": "A",
+              "startIndex": 0
+            },
+            {
+              "chord": "A",
+              "startIndex": 17
+            },
+            {
+              "chord": "G",
+              "startIndex": 25
+            },
+            {
+              "chord": "G",
+              "startIndex": 36
+            }
+          ],
+          "lyric": "klammert all die Wunden zu."
+        },
+        {
+          "chords": [
+            {
+              "chord": "G",
+              "startIndex": 9
+            },
+            {
+              "chord": "G",
+              "startIndex": 19
+            },
+            {
+              "chord": "Bm",
+              "startIndex": 28
+            },
+            {
+              "chord": "Bm",
+              "startIndex": 42
+            }
+          ],
+          "lyric": "Manchmal stark und manchmal blass"
+        },
+        {
+          "chords": [
+            {
+              "chord": "C",
+              "startIndex": 0
+            },
+            {
+              "chord": "C",
+              "startIndex": 9
+            },
+            {
+              "chord": "G",
+              "startIndex": 17
+            },
+            {
+              "chord": "G",
+              "startIndex": 26
+            }
+          ],
+          "lyric": "  so wie ich und du."
+        }
+      ]
+    },
+    {
+      "type": "verse",
+      "lines": [
+        {
+          "chords": [
+            {
+              "chord": "Bm",
+              "startIndex": 0
+            },
+            {
+              "chord": "Em",
+              "startIndex": 23
+            },
+            {
+              "chord": "D",
+              "startIndex": 42
+            },
+            {
+              "chord": "F#m",
+              "startIndex": 57
+            }
+          ],
+          "lyric": "Als wir endlich alt genug war'n stopften wir sie in den Schrank."
+        },
+        {
+          "chords": [
+            {
+              "chord": "Bm",
+              "startIndex": 0
+            },
+            {
+              "chord": "Em",
+              "startIndex": 26
+            },
+            {
+              "chord": "D",
+              "startIndex": 47
+            },
+            {
+              "chord": "F#m",
+              "startIndex": 58
+            }
+          ],
+          "lyric": "Die allzu oft geflickten Flügel und Gott sagte Gott sei dank."
+        },
+        {
+          "chords": [
+            {
+              "chord": "Bm",
+              "startIndex": 0
+            },
+            {
+              "chord": "Em",
+              "startIndex": 21
+            },
+            {
+              "chord": "D",
+              "startIndex": 32
+            },
+            {
+              "chord": "F#m",
+              "startIndex": 46
+            }
+          ],
+          "lyric": "Nachts macht diese Stadt über uns die Luken dicht."
+        },
+        {
+          "chords": [
+            {
+              "chord": "Bm",
+              "startIndex": 0
+            },
+            {
+              "chord": "Em",
+              "startIndex": 20
+            },
+            {
+              "chord": "D",
+              "startIndex": 36
+            },
+            {
+              "chord": "F#m",
+              "startIndex": 47
+            }
+          ],
+          "lyric": "Wer den Kopf zu weit oben hat der findet seine Ruhe"
+        },
+        {
+          "chords": [
+            {
+              "chord": "Bm",
+              "startIndex": 6
+            },
+            {
+              "chord": "Em",
+              "startIndex": 14
+            },
+            {
+              "chord": "Bm",
+              "startIndex": 23
+            },
+            {
+              "chord": "Bm",
+              "startIndex": 33
+            }
+          ],
+          "lyric": "nicht."
+        }
+      ]
+    },
+    {
+      "type": "chorus",
+      "lines": [
+        {
+          "chords": [
+            {
+              "chord": "G",
+              "startIndex": 0
+            },
+            {
+              "chord": "G",
+              "startIndex": 13
+            },
+            {
+              "chord": "Bm",
+              "startIndex": 25
+            },
+            {
+              "chord": "Bm",
+              "startIndex": 38
+            }
+          ],
+          "lyric": "Immer wieder wächst das Gras"
+        },
+        {
+          "chords": [
+            {
+              "chord": "A",
+              "startIndex": 0
+            },
+            {
+              "chord": "A",
+              "startIndex": 9
+            },
+            {
+              "chord": "G",
+              "startIndex": 20
+            },
+            {
+              "chord": "G",
+              "startIndex": 31
+            }
+          ],
+          "lyric": "wild und hoch und grün."
+        },
+        {
+          "chords": [
+            {
+              "chord": "G",
+              "startIndex": 0
+            },
+            {
+              "chord": "G",
+              "startIndex": 8
+            },
+            {
+              "chord": "Bm",
+              "startIndex": 21
+            },
+            {
+              "chord": "Bm",
+              "startIndex": 35
+            }
+          ],
+          "lyric": "Bis die Sensen ohne Hass"
+        },
+        {
+          "chords": [
+            {
+              "chord": "C",
+              "startIndex": 0
+            },
+            {
+              "chord": "C",
+              "startIndex": 8
+            },
+            {
+              "chord": "G",
+              "startIndex": 15
+            },
+            {
+              "chord": "G",
+              "startIndex": 24
+            }
+          ],
+          "lyric": "   ihre Kreise ziehn'."
+        },
+        {
+          "chords": [
+            {
+              "chord": "G",
+              "startIndex": 0
+            },
+            {
+              "chord": "G",
+              "startIndex": 13
+            },
+            {
+              "chord": "Bm",
+              "startIndex": 25
+            },
+            {
+              "chord": "Bm",
+              "startIndex": 38
+            }
+          ],
+          "lyric": "Immer wieder wächst das Gras"
+        },
+        {
+          "chords": [
+            {
+              "chord": "A",
+              "startIndex": 0
+            },
+            {
+              "chord": "A",
+              "startIndex": 17
+            },
+            {
+              "chord": "G",
+              "startIndex": 25
+            },
+            {
+              "chord": "G",
+              "startIndex": 36
+            }
+          ],
+          "lyric": "klammert all die Wunden zu."
+        },
+        {
+          "chords": [
+            {
+              "chord": "G",
+              "startIndex": 9
+            },
+            {
+              "chord": "G",
+              "startIndex": 19
+            },
+            {
+              "chord": "Bm",
+              "startIndex": 28
+            },
+            {
+              "chord": "Bm",
+              "startIndex": 42
+            }
+          ],
+          "lyric": "Manchmal stark und manchmal blass"
+        },
+        {
+          "chords": [
+            {
+              "chord": "C",
+              "startIndex": 0
+            },
+            {
+              "chord": "C",
+              "startIndex": 9
+            },
+            {
+              "chord": "G",
+              "startIndex": 17
+            },
+            {
+              "chord": "G",
+              "startIndex": 26
+            }
+          ],
+          "lyric": "  so wie ich und du."
+        },
+        {
+          "chords": [
+            {
+              "chord": "G",
+              "startIndex": 0
+            },
+            {
+              "chord": "G",
+              "startIndex": 13
+            },
+            {
+              "chord": "Bm",
+              "startIndex": 25
+            },
+            {
+              "chord": "Bm",
+              "startIndex": 38
+            }
+          ],
+          "lyric": "Immer wieder wächst das Gras"
+        },
+        {
+          "chords": [
+            {
+              "chord": "A",
+              "startIndex": 0
+            },
+            {
+              "chord": "A",
+              "startIndex": 9
+            },
+            {
+              "chord": "G",
+              "startIndex": 20
+            },
+            {
+              "chord": "G",
+              "startIndex": 31
+            }
+          ],
+          "lyric": "wild und hoch und grün."
+        },
+        {
+          "chords": [
+            {
+              "chord": "G",
+              "startIndex": 0
+            },
+            {
+              "chord": "G",
+              "startIndex": 8
+            },
+            {
+              "chord": "Bm",
+              "startIndex": 21
+            },
+            {
+              "chord": "Bm",
+              "startIndex": 35
+            }
+          ],
+          "lyric": "Bis die Sensen ohne Hass"
+        },
+        {
+          "chords": [
+            {
+              "chord": "C",
+              "startIndex": 0
+            },
+            {
+              "chord": "C",
+              "startIndex": 8
+            },
+            {
+              "chord": "G",
+              "startIndex": 15
+            },
+            {
+              "chord": "G",
+              "startIndex": 24
+            }
+          ],
+          "lyric": "   ihre Kreise ziehn'."
+        },
+        {
+          "chords": [
+            {
+              "chord": "G",
+              "startIndex": 0
+            },
+            {
+              "chord": "G",
+              "startIndex": 13
+            },
+            {
+              "chord": "Bm",
+              "startIndex": 25
+            },
+            {
+              "chord": "Bm",
+              "startIndex": 38
+            }
+          ],
+          "lyric": "Immer wieder wächst das Gras"
+        },
+        {
+          "chords": [
+            {
+              "chord": "A",
+              "startIndex": 0
+            },
+            {
+              "chord": "A",
+              "startIndex": 17
+            },
+            {
+              "chord": "G",
+              "startIndex": 25
+            },
+            {
+              "chord": "G",
+              "startIndex": 36
+            }
+          ],
+          "lyric": "klammert all die Wunden zu."
+        },
+        {
+          "chords": [
+            {
+              "chord": "G",
+              "startIndex": 9
+            },
+            {
+              "chord": "G",
+              "startIndex": 19
+            },
+            {
+              "chord": "Bm",
+              "startIndex": 28
+            },
+            {
+              "chord": "Bm",
+              "startIndex": 42
+            }
+          ],
+          "lyric": "Manchmal stark und manchmal blass"
+        },
+        {
+          "chords": [
+            {
+              "chord": "C",
+              "startIndex": 0
+            },
+            {
+              "chord": "C",
+              "startIndex": 9
+            },
+            {
+              "chord": "G",
+              "startIndex": 17
+            },
+            {
+              "chord": "G",
+              "startIndex": 26
+            }
+          ],
+          "lyric": "  so wie ich und du."
+        }
+      ]
+    },
+    {
+      "type": "outro",
+      "lines": [
+        {
+          "chords": [
+            {
+              "chord": "Bm",
+              "startIndex": 0
+            }
+          ],
+          "lyric": "-"
+        }
+      ]
+    }
+  ]
+}
