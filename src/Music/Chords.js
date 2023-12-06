@@ -2,47 +2,65 @@
  * @typedef {import("./Notes.js").Note} Note
  */
 
-import { NoteDist } from "./NoteDistances.js";
+import { absoluteNoteEq, noteEq } from "./Notes.js";
 
-/** @typedef {Uint8Array} Chord */
+/** @typedef {{ baseNote: Note; chordType: ChordType }} Chord */
 
-/** @param {Note} baseNote */
-function minor(baseNote) {
-  return Uint8Array.from([baseNote, NoteDist.KleineTerz, NoteDist.ReineQuinte]);
+const ChordTypes = /** @type {const} */ {
+  Major: [4, 7],
+  minor: [3, 7],
+  diminished: [3, 6],
+  // prettier-ignore
+  "5": [4, 8],
+  sus4: [5, 7],
+  sus2: [2, 7],
+  // prettier-ignore
+  "7": [4, 7, 10],
+  Major7: [4, 7, 11],
+  minor7: [3, 7, 10],
+  diminished7: [3, 6, 9],
+  // prettier-ignore
+  "6": [4, 7, 9],
+  minor6: [3, 7, 9],
+  "Major7/b5": [3, 6, 10],
+  "7sus4": [5, 7, 10],
+  Major9: [4, 7, 10, 14],
+  "minor7/9": [3, 7, 10, 14],
+  // prettier-ignore
+  "11": [4, 7, 10, 14, 17],
+  // prettier-ignore
+  "13": [4, 7, 10, 14, 17, 21],
+  add9: [3, 7, 14],
+};
+/** @typedef {keyof typeof ChordTypes} ChordType */
+export const ChordNames = /** @type {ReadonlyArray<ChordType>} */ [
+  ...Object.keys(ChordTypes),
+];
+
+/**
+ * @param {string} str
+ * @returns {str is ChordType}
+ */
+export function isChordName(str) {
+  return ChordNames.includes(str);
 }
-/** @param {Note} baseNote */
-function minor7(baseNote) {
-  return Uint8Array.from([
+
+/**
+ *
+ * @param {Note} baseNote
+ * @param {ChordType} chordType
+ */
+export function chord(baseNote, chordType) {
+  return {
     baseNote,
-    NoteDist.KleineTerz,
-    NoteDist.ReineQuinte,
-    NoteDist.KleineSeptime,
-  ]);
+    chordType,
+  };
 }
-/** @param {Note} baseNote */
-function minorMajor7(baseNote) {
-  return Uint8Array.from([
-    baseNote,
-    NoteDist.KleineTerz,
-    NoteDist.ReineQuinte,
-    NoteDist.GrosseSeptime,
-  ]);
-}
-/** @param {Note} baseNote */
-function minor6(baseNote) {
-  return Uint8Array.from([
-    baseNote,
-    NoteDist.KleineTerz,
-    NoteDist.ReineQuinte,
-    NoteDist.GrosseSexte,
-  ]);
-}
-/** @param {Note} baseNote */
-function minorAdd9(baseNote) {
-  return Uint8Array.from([
-    baseNote,
-    NoteDist.KleineTerz,
-    NoteDist.ReineQuinte,
-    NoteDist.GrosseNone,
-  ]);
+
+/**
+ * @param {Chord} c0
+ * @param {Chord} c1
+ */
+export function chordEq(c0, c1) {
+  return noteEq(c0.baseNote, c1.baseNote) && c0.chordType == c1.chordType;
 }

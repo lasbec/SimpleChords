@@ -5,6 +5,8 @@ import { TextBox } from "../Drawing/Boxes/TextBox.js";
 import { ArragmentBox } from "../Drawing/Boxes/ArrangementBox.js";
 import { AbstractBox } from "../Drawing/Boxes/AbstractBox.js";
 import { BoundsImpl } from "../Drawing/Figures/BoundsImpl.js";
+import { chordBox } from "./ChordBox.js";
+import { chordToString } from "../Music/ChordFormatter.js";
 
 /**
  * @typedef {import("pdf-lib").PDFPage} PDFPage
@@ -175,13 +177,13 @@ export class SongLineBox extends AbstractBox {
         bottomLeftOfChord.alignHorizontalWith(prevRightBottom);
         bottomLeftOfChord.moveRight(LEN(2, "mm"));
       }
-      const chordBox = new TextBox(chord.chord, args.chordsConfig);
-      chordBox.setPosition({
+      const cBox = chordBox(chord, args.chordsConfig);
+      cBox.setPosition({
         pointOnRect: { x: "left", y: "bottom" },
         pointOnGrid: bottomLeftOfChord,
       });
-      this.box.appendChild(chordBox);
-      prevChordBox = chordBox;
+      this.box.appendChild(cBox);
+      prevChordBox = cBox;
     }
     pointer.moveDown(args.lyricConfig.lineHeight);
     const lyricBox = new TextBox(line.lyric, args.lyricConfig);

@@ -4,6 +4,8 @@ import { decorateAsBox } from "../Drawing/BoxDecorator.js";
 import { TextBox } from "../Drawing/Boxes/TextBox.js";
 import { SongLineBox } from "./SongLineBox.js";
 import { textConfigForSectionType } from "./TextConfigForSectionType.js";
+import { LEN } from "../Shared/Length.js";
+import { chordBox } from "./ChordBox.js";
 
 /**
  * @typedef {import("../Drawing/Geometry.js").ReferencePoint} BoxPlacement
@@ -84,16 +86,30 @@ function drawOnlyChords(section, layoutConfig, pointer) {
   const chordTextConfig = layoutConfig.chordTextConfig;
   const chordLineHeight = chordTextConfig.lineHeight;
 
-  const lines = [];
+  const result = [];
   for (const line of songLines) {
-    const text = title + line.chords.map((c) => c.chord).join(" ");
-    const textBox = new TextBox(text, layoutConfig.chordTextConfig);
-    textBox.setPosition({
+    const titleBox = new TextBox(title, layoutConfig.chordTextConfig);
+    titleBox.setPosition({
       pointOnRect: { x: "left", y: "top" },
       pointOnGrid: pointer.clone(),
     });
+    const chordBoxes = line.chords.map((c) =>
+      chordBox(c, layoutConfig.chordTextConfig)
+    );
+    let chordPointerLeftBottom = pointer
+      .clone()
+      .moveRight(titleBox.rectangle.width.add(LEN(1, "mm")));
+    for (const cBox of chordBoxes) {
+      cBox.setPosition({
+        pointOnRect: { x: "left", y: "top" },
+        pointOnGrid: chordPointerLeftBottom,
+      });
+      chordPointerLeftBottom = chordPointerLeftBottom.moveRight(
+        cBox.rectangle.width.add(LEN(1, "mm"))
+      );
+    }
     pointer.moveDown(chordLineHeight);
-    lines.push(textBox);
+    result.push(titleBox, ...chordBoxes);
   }
-  return lines;
+  return result;
 }

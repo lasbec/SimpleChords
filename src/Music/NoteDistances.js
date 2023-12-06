@@ -25,3 +25,5 @@ export const NoteDist = /** @type {const} */ {
   KleineNone: 13,
   GrosseNone: 14,
 };
+
+

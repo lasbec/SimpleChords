@@ -11,13 +11,13 @@
 /**
  * @typedef {object} LyricChar
  * @property {string} char
- * @property {string | null} chord
+ * @property {ChordsLineElement | null} chord
  */
 
 /**
  * @implements {StrLikeContstraint}
  */
-export class  SongLine {
+export class SongLine {
   /**
    * @readonly
    * @type {ReadonlyArray<LyricChar>}
@@ -54,7 +54,7 @@ export class  SongLine {
   static emptyAt(line, i) {
     const char = line.chars[i];
     if (!char) return;
-    return !char.char.trim() && !char.chord?.trim();
+    return !char.char.trim() && !char.chord?.chord?.trim();
   }
 
   /**
@@ -73,7 +73,7 @@ export class  SongLine {
     for (const char of this.chars) {
       if (char.chord) {
         result.push({
-          chord: char.chord,
+          ...char.chord,
           startIndex: index,
         });
       }
@@ -106,7 +106,7 @@ export class  SongLine {
       .map((c, i) => ({ char: c, chord: null }));
     for (const chord of node.chords) {
       const lyricChar = result[chord.startIndex];
-      lyricChar.chord = chord.chord;
+      lyricChar.chord = chord;
     }
     return new SongLine(result);
   }

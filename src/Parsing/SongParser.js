@@ -1,3 +1,4 @@
+import { chordFromString } from "../Music/ChordParser.js";
 import { WellKnownSectionType } from "../Song/SongChecker.js";
 import { ParsingError } from "./ParsingError.js";
 
@@ -221,8 +222,14 @@ class SongParser {
     while (this.currentChar() !== "\n") {
       const startIndex = this.charIndex;
       const chord = this.chord();
+      const conditional = chord.startsWith("(") && chord.endsWith(")");
+      const parsedChord = chordFromString(
+        conditional ? chord.slice(1, -1) : chord
+      );
       result.push({
         chord,
+        conditional,
+        parsedChord,
         startIndex,
       });
       this.readWhiteSpaceExceptLineBreak();
@@ -354,7 +361,13 @@ class SongParser {
  */
 
 /**
+ * @typedef {import("../Music/Chords.js").Chord} Chord
+ */
+
+/**
  * @typedef {object} ChordsLineElement
  * @property {number} startIndex
  * @property {string} chord
+ * @property {Chord=} parsedChord
+ * @property {boolean} conditional
  */
