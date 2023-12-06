@@ -20,4 +20,10 @@ describe("ChordParser", () => {
       chordType: "diminished7",
     });
   });
+  it("f#_dim", () => {
+    expect(chordFromString("f#_dim")).toEqual({
+      baseNote: 9,
+      chordType: "diminished",
+    });
+  });
 });

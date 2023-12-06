@@ -10,6 +10,7 @@ const ChordTypes = /** @type {const} */ {
   Major: [4, 7],
   minor: [3, 7],
   diminished: [3, 6],
+  diminished7: [3, 6, 9],
   // prettier-ignore
   "5": [4, 8],
   sus4: [5, 7],
@@ -18,7 +19,6 @@ const ChordTypes = /** @type {const} */ {
   "7": [4, 7, 10],
   Major7: [4, 7, 11],
   minor7: [3, 7, 10],
-  diminished7: [3, 6, 9],
   // prettier-ignore
   "6": [4, 7, 9],
   minor6: [3, 7, 9],

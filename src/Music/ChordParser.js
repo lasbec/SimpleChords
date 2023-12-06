@@ -50,10 +50,7 @@ function parseChordType(str) {
     minorAddition = "minor";
   }
 
-  const rawChordType = minorAddition + str.toLowerCase();
-  if (rawChordType.length === 0) return "Major";
-
-  const result = rawChordType
+  const rawChordType = (minorAddition + str.toLowerCase())
     .replace(/\_/g, "")
     .replace(/\^/g, "")
     .replace("maj", "Major")
@@ -61,6 +58,14 @@ function parseChordType(str) {
     .replace("+", "5")
     .replace("power", "5")
     .replace("pow", "5");
+  if (rawChordType.length === 0) return "Major";
+  /** @type {string} */
+  let result;
+  if (rawChordType.includes("dim")) {
+    result = rawChordType.replace("minor", "");
+  } else {
+    result = rawChordType;
+  }
   if (isChordName(result)) return result;
   return;
 }
