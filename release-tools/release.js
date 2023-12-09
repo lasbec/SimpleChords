@@ -12,8 +12,9 @@ import { execShellCmd, execShellCmdRequireSuccess } from "./exec-shell.js";
 async function main() {
   const { releaseType } = collectArguments();
   await assertRepositoryIsReleaseReady();
-  await execShellCmdRequireSuccess("npm run type-check");
+  await execShellCmdRequireSuccess("npm run check");
   await execShellCmdRequireSuccess("npm run test");
+  await execShellCmdRequireSuccess("npm run build");
 
   await execShellCmdRequireSuccess(
     `npm version ${releaseType} -m "release ${releaseType} %s"`

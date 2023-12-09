@@ -1,0 +1,42 @@
+export class RectangleImpl implements MutRectangle {
+    static fromCorners(c0: PointImpl, c1: PointImpl): RectangleImpl;
+    static fromBorders(borders: RectangleBorders): RectangleImpl;
+    static fromPlacement(placement: ReferencePoint, dims: Dimensions): RectangleImpl;
+    private constructor();
+    setPosition(placement: ReferencePoint): void;
+    left: Length;
+    right: Length;
+    bottom: Length;
+    top: Length;
+    width: Length;
+    height: Length;
+    clone(): RectangleImpl;
+    xCenter(): Length;
+    yCenter(): Length;
+    xPositionFor(x: XStartPosition): Length;
+    yPositionFor(y: YStartPosition): Length;
+    getPoint(x: XStartPosition, y: YStartPosition): PointImpl;
+    getPointAt(point: import("../Geometry.js").PointOnRect): PointImpl;
+    getBorder(position: import("../Geometry.js").BorderPosition): HLineImpl | VLineImpl;
+    getBorderVertical(position: "left" | "right"): VLineImpl;
+    getBorderHorizontal(position: "bottom" | "top"): HLineImpl;
+    referencePoint(): import("../Geometry.js").ReferencePoint;
+}
+export type XStartPosition = import("../Geometry.js").XStartPosition;
+export type YStartPosition = import("../Geometry.js").YStartPosition;
+export type Point = import("../Geometry.js").Point;
+export type MutRectangle = import("../Geometry.js").MutRectangle;
+export type Rectangle = import("../Geometry.js").Rectangle;
+export type Dimensions = import("../Geometry.js").Dimensions;
+export type ReferencePoint = import("../Geometry.js").ReferencePoint;
+export type BoxBorders = {
+    left: Length;
+    right: Length;
+    top: Length;
+    bottom: Length;
+};
+export type RectangleBorders = import("../Geometry.js").RectangleBorders;
+import { Length } from "../../Shared/Length.js";
+import { PointImpl } from "./PointImpl.js";
+import { HLineImpl } from "./HLineImpl.js";
+import { VLineImpl } from "./VLineImpl.js";

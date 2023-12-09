@@ -1,0 +1,24 @@
+export function getPoint(args: GetPointArgs): PointImpl;
+export function minimalBoundingRectangle(boxes: Rectangle[]): RectangleImpl | undefined;
+export function minimalBoundingRectangleSafe(rect: PartialRectangle, ...remaining: PartialRectangle[]): PartialRectangleImpl;
+export function interSectionSafe(rect: Rectangle, ...partials: PartialRectangle[]): RectangleImpl;
+export function fitIntoBounds(rectangle: Rectangle, bounds: BoundsImpl): RectangleImpl;
+export type ReferencePoint = import("../Geometry.js").ReferencePoint;
+export type RelX = import("../Geometry.js").XStartPosition;
+export type RelY = import("../Geometry.js").YStartPosition;
+export type Rectangle = import("../Geometry.js").Rectangle;
+export type GetPointArgs = {
+    targetX: RelX;
+    targetY: RelY;
+    corner: ReferencePoint;
+    width: Length;
+    height: Length;
+};
+export type Dimensions = import("../Geometry.js").Dimensions;
+export type Box = import("../Geometry.js").Box;
+export type PartialRectangle = import("../Geometry.js").PartialRectangle;
+import { PointImpl } from "./PointImpl.js";
+import { RectangleImpl } from "./RectangleImpl.js";
+import { PartialRectangleImpl } from "./PartialRectangleImpl.js";
+import { BoundsImpl } from "./BoundsImpl.js";
+import { Length } from "../../Shared/Length.js";

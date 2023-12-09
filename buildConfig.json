@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "lib": [
+      "es2020"
+    ],
+    "strict": true,
+    "noImplicitAny": true,
+    "target": "ES2015",
+    "moduleResolution": "nodenext",
+    "module": "NodeNext",
+    "baseUrl": "./node_modules",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "moduleDetection": "force",
+    "emitDeclarationOnly": true,
+    "isolatedModules": true,
+    "declaration": true,
+    "removeComments": true,
+    "outDir": "./type-dist",
+    "rootDir": "./src"
+  },
+  "include": [
+    "./src/**/*"
+  ],
+  "exclude": [
+    "**/*.test.js"
+  ]
+}

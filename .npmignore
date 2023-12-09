@@ -1,8 +1,11 @@
-/type-builds
 /fonts
 /example
 /release-tools
+
+.gitignore
 .prettierrc
 
 simple-chords-?.?.?.tgz
 *test.js
+Sandbox.*
+TODOs.md

@@ -1,0 +1,25 @@
+export function absoluteNoteEq(n0: Note, n1: Note): boolean;
+export function noteEq(n0: Note, n1: Note): boolean;
+export type Note = (typeof Note)[keyof typeof Note];
+export const Note: {
+    A: number;
+    "A#": number;
+    Bb: number;
+    B: number;
+    Cb: number;
+    C: number;
+    "C#": number;
+    Db: number;
+    D: number;
+    "D#": number;
+    Eb: number;
+    E: number;
+    F: number;
+    "F#": number;
+    Gb: number;
+    G: number;
+    "G#": number;
+    Ab: number;
+};
+export const NoteNames: number[];
+export type NoteName = keyof typeof Note;

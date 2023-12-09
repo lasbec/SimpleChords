@@ -1,0 +1,31 @@
+export function LEN(value: number, unit: UnitName): Length;
+export class Length {
+    static safeMax(arg0: Length, ...args: (Length | undefined)[]): Length;
+    static max(args: Array<Length>): Length | undefined;
+    static safeMin(arg0: Length, ...args: (Length | undefined)[]): Length;
+    static min(args: Array<Length>): Length | undefined;
+    static fromString(str: string): Length;
+    static readonly comparisonPercission: 0.000001;
+    static zero: Length;
+    constructor(value: number, unit: UnitName);
+    private readonly value;
+    private readonly unit;
+    toString(unit?: UnitName | undefined): LengthDto;
+    in(unit: UnitName): number;
+    sub(other: Length): Length;
+    add(other: Length): Length;
+    mul(scalar: number): Length;
+    lt(other: Length): boolean;
+    gt(other: Length): boolean;
+    le(other: Length): boolean;
+    ge(other: Length): boolean;
+    gtz(): boolean;
+    ltz(): boolean;
+    abs(): Length;
+    neg(): Length;
+    isZero(): boolean;
+    atLeastZero(): Length;
+    maximumZero(): Length;
+}
+export type UnitName = "mm" | "pt";
+export type LengthDto = `${number}${UnitName}`;
