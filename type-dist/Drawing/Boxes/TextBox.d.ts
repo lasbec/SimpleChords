@@ -4,7 +4,7 @@ export class TextBox extends PrimitiveBox<string, import("../TextConfig.js").Tex
     hasOverflow(): false;
     setPosition(position: ReferencePoint): void;
     drawToPdfPage(pdfPage: PDFPage): void;
-    partialWidths(): import("../../Shared/Length.js").Length[];
+    partialWidths(): import("../../Index.js").Length[];
 }
 export type ReferencePoint = import("../Geometry.js").ReferencePoint;
 export type TextConfig = import("../TextConfig.js").TextConfig;

@@ -4,10 +4,16 @@ import {
   renderAllInSingleFile,
   renderSingleFile,
 } from "./SongLayout/RenderSongAsPdf.js";
-import { DefaultLayoutConfigDto } from "./SongLayout/DefaultLayoutConfigDto.js";
+import { DefaultLayoutConfigDto } from "./SongLayout/LayoutConfig.js";
 /**
- * @typedef {import("./SongLayout/RenderSongAsPdf.js").LayoutConfigDto} LayoutConfig
+ * @typedef {import("./SongLayout/RenderSongAsPdf.js").LayoutConfigDto} LayoutConfigDto
+ * @typedef {import("./SongLayout/RenderSongAsPdf.js").LayoutConfig} LayoutConfig
+ * @typedef {import("./Drawing/TextConfig.js").TextConfigArgs} TextConfigArgs
+ * @typedef {import("./Drawing/TextConfig.js").TextConfigDto} TextConfigDto
  */
+
+export { DefaultLayoutConfigDto } from "./SongLayout/LayoutConfig.js";
+export * from "./Shared/Length.js";
 
 /** @param {string} inputPath */
 function getCorrespondingOutPutPath(inputPath) {
@@ -22,7 +28,7 @@ function getCorrespondingOutPutPath(inputPath) {
  * @property {string | string[]} inputPath
  * @property {string | undefined} outPath
  * @property {boolean} debug
- * @property {LayoutConfig=} style
+ * @property {LayoutConfigDto=} style
  */
 
 /**

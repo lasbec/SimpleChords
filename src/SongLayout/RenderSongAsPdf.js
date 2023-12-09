@@ -2,6 +2,13 @@
  * @typedef {import("pdf-lib").PDFPage} PDFPage
  * @typedef {import("../Song/Song.js").SongSection} SongSection
  * @typedef {import("../Drawing/Geometry.js").Box} Box
+ * @typedef {import("./LayoutConfig.js").LayoutConfig} LayoutConfig
+ * @typedef {import("./LayoutConfig.js").LayoutConfigDto} LayoutConfigDto
+ * @typedef {import("../Drawing/Geometry.js").RectangleGenerator} RectangleGenerator
+ * @typedef {import("./ChordBox.js").ChordConfig} ChordConfig
+ * @typedef {import("../Drawing/Geometry.js").Dimensions} Dims
+ * @typedef {import("../Shared/Length.js").LengthDto} LengthDto
+ * @typedef {import("../Drawing/TextConfig.js").TextConfigDto} TextConfigDto
  */
 import { PDFDocument, StandardFonts } from "pdf-lib";
 import { FontLoader } from "../Drawing/FontLoader.js";
@@ -103,60 +110,6 @@ async function parseASTs(paths, debug) {
   }
   return asts;
 }
-
-/**
- * @typedef {import("../Drawing/Geometry.js").RectangleGenerator} RectangleGenerator
- * @typedef {import("./ChordBox.js").ChordConfig} ChordConfig
- * @typedef {import("../Drawing/Geometry.js").Dimensions} Dims
- * @typedef {import("../Shared/Length.js").LengthDto} LengthDto
- * @typedef {import("../Drawing/TextConfig.js").TextConfigDto} TextConfigDto
- */
-
-/**
- * @typedef {object} LayoutConfigDto
- * @property {TextConfigDto} lyricTextConfig
- * @property {TextConfigDto} chorusTextConfig
- * @property {TextConfigDto} refTextConfig
- * @property {TextConfigDto} titleTextConfig
- * @property {TextConfigDto} chordTextConfig
- * @property {boolean=} unifyChords
- *
- * @property {boolean} printPageNumbers
- * @property {"left" | "right" =} firstPage
- * @property {string =} tableOfContents
- *
- * @property {LengthDto} outerMargin
- * @property {LengthDto} innerMargin
- * @property {LengthDto} topMargin
- * @property {LengthDto} bottomMargin
- * @property {LengthDto} pageWidth
- * @property {LengthDto} pageHeight
- * @property {LengthDto} sectionDistance
- */
-
-/**
- * @typedef {object} LayoutConfig
- * @property {TextConfig} lyricTextConfig
- * @property {TextConfig} chorusTextConfig
- * @property {TextConfig} refTextConfig
- * @property {TextConfig} titleTextConfig
- * @property {TextConfig} chordTextConfig
- * @property {boolean} unifyChords
- *
- * @property {boolean} printPageNumbers
- * @property {"left" | "right"} firstPage
- * @property {string} tableOfContents
- *
- * @property {Length} outerMargin
- * @property {Length} innerMargin
- * @property {Length} topMargin
- * @property {Length} bottomMargin
- *
- * @property {Length} pageWidth
- * @property {Length} pageHeight
- *
- * @property {Length} sectionDistance
- */
 
 /**
  * @implements {RectangleGenerator}

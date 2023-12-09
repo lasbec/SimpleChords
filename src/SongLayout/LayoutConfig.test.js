@@ -1,10 +1,10 @@
 import { expect } from "vitest";
 import { it } from "vitest";
 import { describe } from "vitest";
-import { DefaultLayoutConfigDto } from "./DefaultLayoutConfigDto.js";
+import { DefaultLayoutConfigDto } from "./LayoutConfig.js";
 import { StandardFonts } from "pdf-lib";
 
-describe("DefaultLayoutConfigDto", () => {
+describe("LayoutConfig", () => {
   it("ensure stable interface", () => {
     expect(DefaultLayoutConfigDto).toEqual({
       pageWidth: "148.5mm",

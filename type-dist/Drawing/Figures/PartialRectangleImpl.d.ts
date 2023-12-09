@@ -3,8 +3,8 @@ export class PartialRectangleImpl implements PartialRectangle {
     static fromBorders({ left, right, top, bottom }: BorderArgs): PartialRectangleImpl;
     private constructor();
     private def;
-    get width(): import("../../Shared/Length.js").Length | undefined;
-    get height(): import("../../Shared/Length.js").Length | undefined;
+    get width(): import("../../Index.js").Length | undefined;
+    get height(): import("../../Index.js").Length | undefined;
     toFullRectangle(): RectangleImpl;
     clone(): PartialRectangleImpl;
     getBorder(position: import("../Geometry.js").BorderPosition): HLineImpl | VLineImpl | undefined;
