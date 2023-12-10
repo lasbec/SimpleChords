@@ -9,7 +9,7 @@
 	"type": "module",
 	"scripts": {
 		"example": "node ./src/Index.js ./example/Alles.chords.md --log-ast",
-		"build": "rm -rf ./type-dist && tsc --project buildConfig.json",
+		"build": "rm -rf ./type-dist && tsc --project jsconfig.json",
 		"check": "tsc --project typeCheckConfig.json",
 		"type:watch": "tsc --watch --project typeCheckConfig.json",
 		"test": "vitest run",

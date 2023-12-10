@@ -16,6 +16,7 @@
     "resolveJsonModule": true,
     "moduleDetection": "force",
     "emitDeclarationOnly": true,
+    "noEmit": false,
     "isolatedModules": true,
     "declaration": true,
     "removeComments": true,
