@@ -1,11 +1,11 @@
 import { WellKnownSectionType } from "../Song/SongChecker.js";
 import { PointImpl } from "../Drawing/Figures/PointImpl.js";
-import { decorateAsBox } from "../Drawing/BoxDecorator.js";
 import { TextBox } from "../Drawing/Boxes/TextBox.js";
 import { SongLineBox } from "./SongLineBox.js";
 import { textConfigForSectionType } from "./TextConfigForSectionType.js";
 import { LEN } from "../Shared/Length.js";
 import { chordBox } from "./ChordBox.js";
+import { ArragmentBox } from "../Drawing/Boxes/ArrangementBox.js";
 
 /**
  * @typedef {import("../Drawing/Geometry.js").ReferencePoint} BoxPlacement
@@ -46,10 +46,6 @@ function drawsongSection(section, layoutConfig, startPoint) {
   return children;
 }
 
-const songSectionWithLyric = decorateAsBox(drawsongSection);
-
-const songSectionInstrumental = decorateAsBox(drawOnlyChords);
-
 /**
  * @param {SongSection} section
  * @param {LayoutConfig} layoutConfig
@@ -62,9 +58,11 @@ export function songSection(section, layoutConfig, rect) {
     WellKnownSectionType.Outro,
     WellKnownSectionType.Interlude,
   ];
-  const sectionBox = onlyChordsSections.includes(section.type)
-    ? songSectionInstrumental(section, layoutConfig)
-    : songSectionWithLyric(section, layoutConfig);
+  const children = onlyChordsSections.includes(section.type)
+    ? drawOnlyChords(section, layoutConfig, PointImpl.origin())
+    : drawsongSection(section, layoutConfig, PointImpl.origin());
+
+  const sectionBox = ArragmentBox.undboundBoxGroup(children);
   if (rect) {
     sectionBox.setPosition({
       pointOnRect: { x: "left", y: "top" },

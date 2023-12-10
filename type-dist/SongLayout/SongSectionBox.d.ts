@@ -1,4 +1,4 @@
-export function songSection(section: SongSection, layoutConfig: LayoutConfig, rect?: Rectangle | undefined): import("../Drawing/Geometry.js").Box;
+export function songSection(section: SongSection, layoutConfig: LayoutConfig, rect?: Rectangle | undefined): ArragmentBox;
 export type BoxPlacement = import("../Drawing/Geometry.js").ReferencePoint;
 export type LayoutConfig = import("./RenderSongAsPdf.js").LayoutConfig;
 export type TextConfig = import("../Drawing/TextConfig.js").TextConfig;
@@ -14,3 +14,4 @@ export type SongSectionBoxConfig = {
     chordsConfig: TextConfig;
     lyricConfig: TextConfig;
 };
+import { ArragmentBox } from "../Drawing/Boxes/ArrangementBox.js";
