@@ -1,3 +1,4 @@
+export function parseLayoutConfigDto(str: string): LayoutConfigDto;
 export const DefaultLayoutConfigDto: LayoutConfigDto;
 export type LengthDto = import("../Shared/Length.js").LengthDto;
 export type TextConfigDto = import("../Drawing/TextConfig.js").TextConfigDto;

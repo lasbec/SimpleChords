@@ -1,5 +1,5 @@
+export function printPdfFilesFromPaths(args: MainPathArgs): Promise<void>;
 export function printPdfFiles({ inputPath, outPath, debug, style: theme, }: MainArgs): Promise<void>;
-export { DefaultLayoutConfigDto } from "./SongLayout/LayoutConfig.js";
 export * from "./Shared/Length.js";
 export type MainArgs = {
     inputPath: string | string[];
@@ -7,7 +7,14 @@ export type MainArgs = {
     debug: boolean;
     style?: LayoutConfigDto | undefined;
 };
-export type LayoutConfigDto = import("./SongLayout/RenderSongAsPdf.js").LayoutConfigDto;
-export type LayoutConfig = import("./SongLayout/RenderSongAsPdf.js").LayoutConfig;
+export type MainPathArgs = {
+    inputPath: string | string[];
+    outPath: string | undefined;
+    debug: boolean;
+    stylePath?: string | undefined;
+};
+export type LayoutConfigDto = import("./SongLayout/LayoutConfig.js").LayoutConfigDto;
+export type LayoutConfig = import("./SongLayout/LayoutConfig.js").LayoutConfig;
 export type TextConfigArgs = import("./Drawing/TextConfig.js").TextConfigArgs;
 export type TextConfigDto = import("./Drawing/TextConfig.js").TextConfigDto;
+export { DefaultLayoutConfigDto, parseLayoutConfigDto } from "./SongLayout/LayoutConfig.js";
