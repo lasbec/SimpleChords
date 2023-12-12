@@ -93,7 +93,6 @@ export const DefaultLayoutConfigDto = {
   },
 };
 
-
 /**
  * @param {string} str
  * @returns {LayoutConfigDto}
@@ -104,56 +103,140 @@ export function parseLayoutConfigDto(str) {
   assertRecord(rawStyle);
 
   return {
-    lyricTextConfig: tryReadTextConfigDto(rawStyle, "lyricTextConfig"),
-    chorusTextConfig: tryReadTextConfigDto(rawStyle, "chorusTextConfig"),
-    refTextConfig: tryReadTextConfigDto(rawStyle, "refTextConfig"),
-    titleTextConfig: tryReadTextConfigDto(rawStyle, "titleTextConfig"),
-    chordTextConfig: tryReadTextConfigDto(rawStyle, "chordTextConfig"),
-    unifyChords: tryReadBool(rawStyle, "unifyChords"),
+    lyricTextConfig: tryReadTextConfigDto(
+      rawStyle,
+      "lyricTextConfig",
+      DefaultLayoutConfigDto.lyricTextConfig
+    ),
+    chorusTextConfig: tryReadTextConfigDto(
+      rawStyle,
+      "chorusTextConfig",
+      DefaultLayoutConfigDto.chorusTextConfig
+    ),
+    refTextConfig: tryReadTextConfigDto(
+      rawStyle,
+      "refTextConfig",
+      DefaultLayoutConfigDto.refTextConfig
+    ),
+    titleTextConfig: tryReadTextConfigDto(
+      rawStyle,
+      "titleTextConfig",
+      DefaultLayoutConfigDto.titleTextConfig
+    ),
+    chordTextConfig: tryReadTextConfigDto(
+      rawStyle,
+      "chordTextConfig",
+      DefaultLayoutConfigDto.chordTextConfig
+    ),
+    unifyChords: tryReadOptBool(
+      rawStyle,
+      "unifyChords",
+      DefaultLayoutConfigDto.unifyChords
+    ),
 
-    printPageNumbers: tryReadBool(rawStyle, "printPageNumbers"),
-    firstPage: tryReadLeftOrRight(rawStyle, "firstPage"),
-    tableOfContents: tryReadString(rawStyle, "tableOfContents"),
+    printPageNumbers: tryReadBool(
+      rawStyle,
+      "printPageNumbers",
+      DefaultLayoutConfigDto.printPageNumbers
+    ),
+    firstPage: tryReadOptLeftOrRight(
+      rawStyle,
+      "firstPage",
+      DefaultLayoutConfigDto.firstPage
+    ),
+    tableOfContents: tryReadOptString(
+      rawStyle,
+      "tableOfContents",
+      DefaultLayoutConfigDto.tableOfContents
+    ),
 
-    innerMargin: tryReadLengthDto(rawStyle, "innerMargin"),
-    outerMargin: tryReadLengthDto(rawStyle, "outerMargin"),
-    topMargin: tryReadLengthDto(rawStyle, "topMargin"),
-    bottomMargin: tryReadLengthDto(rawStyle, "bottomMargin"),
-    pageWidth: tryReadLengthDto(rawStyle, "pageWidth"),
-    pageHeight: tryReadLengthDto(rawStyle, "pageHeight"),
-    sectionDistance: tryReadLengthDto(rawStyle, "sectionDistance"),
+    innerMargin: tryReadLengthDto(
+      rawStyle,
+      "innerMargin",
+      DefaultLayoutConfigDto.innerMargin
+    ),
+    outerMargin: tryReadLengthDto(
+      rawStyle,
+      "outerMargin",
+      DefaultLayoutConfigDto.outerMargin
+    ),
+    topMargin: tryReadLengthDto(
+      rawStyle,
+      "topMargin",
+      DefaultLayoutConfigDto.topMargin
+    ),
+    bottomMargin: tryReadLengthDto(
+      rawStyle,
+      "bottomMargin",
+      DefaultLayoutConfigDto.bottomMargin
+    ),
+    pageWidth: tryReadLengthDto(
+      rawStyle,
+      "pageWidth",
+      DefaultLayoutConfigDto.pageWidth
+    ),
+    pageHeight: tryReadLengthDto(
+      rawStyle,
+      "pageHeight",
+      DefaultLayoutConfigDto.pageHeight
+    ),
+    sectionDistance: tryReadLengthDto(
+      rawStyle,
+      "sectionDistance",
+      DefaultLayoutConfigDto.sectionDistance
+    ),
   };
 }
 /**
  *
  * @param {Record<string, unknown>} obj
  * @param {string} attr
+ * @param {LengthDto} defaultVal
  * @returns {LengthDto}
  */
 
-function tryReadLengthDto(obj, attr) {
-  const result = tryReadString(obj, attr);
+function tryReadLengthDto(obj, attr, defaultVal) {
+  const result = tryReadString(obj, attr, defaultVal);
   return Length.fromString(result).toString();
 }
+
 /**
  * @param {Record<string, unknown>} obj
  * @param {string} attr
+ * @param {string} defaultVal
  * @returns {string}
  */
-
-function tryReadString(obj, attr) {
+function tryReadString(obj, attr, defaultVal) {
   const result = obj[attr];
+  if (result === undefined) return defaultVal;
   if (typeof result !== "string")
     throw Error(`Unexpected type '${typeof result}' of '${attr}'`);
   return result;
 }
+
 /**
  * @param {Record<string, unknown>} obj
  * @param {string} attr
+ * @param {string | undefined} defaultVal
+ * @returns {string | undefined}
+ */
+function tryReadOptString(obj, attr, defaultVal) {
+  const result = obj[attr];
+  if (result === undefined) return defaultVal;
+  if (typeof result !== "string")
+    throw Error(`Unexpected type '${typeof result}' of '${attr}'`);
+  return result;
+}
+
+/**
+ * @param {Record<string, unknown>} obj
+ * @param {string} attr
+ * @param {boolean} defaultVal
  * @returns {boolean}
  */
-function tryReadBool(obj, attr) {
+function tryReadBool(obj, attr, defaultVal) {
   const result = obj[attr];
+  if (result === undefined) return defaultVal;
   if (typeof result !== "boolean")
     throw Error(`Unexpected type '${typeof result}' of '${attr}'`);
   return result;
@@ -162,11 +245,27 @@ function tryReadBool(obj, attr) {
 /**
  * @param {Record<string, unknown>} obj
  * @param {string} attr
+ * @param {boolean | undefined} defaultVal
+ * @returns {boolean | undefined}
+ */
+function tryReadOptBool(obj, attr, defaultVal) {
+  const result = obj[attr];
+  if (result === undefined) return defaultVal;
+  if (typeof result !== "boolean")
+    throw Error(`Unexpected type '${typeof result}' of '${attr}'`);
+  return result;
+}
+
+/**
+ * @param {Record<string, unknown>} obj
+ * @param {string} attr
+ * @param {"left" | "right" | undefined} defaultVal
  * @returns {"left" | "right" | undefined}
  */
 
-function tryReadLeftOrRight(obj, attr) {
+function tryReadOptLeftOrRight(obj, attr, defaultVal) {
   const result = obj[attr];
+  if (result === undefined) return defaultVal;
   if (result !== "left" && result !== "right" && result !== undefined)
     throw Error(`Unexpected '${typeof result}' of '${attr}'`);
   return result;
@@ -175,15 +274,16 @@ function tryReadLeftOrRight(obj, attr) {
  *
  * @param {Record<string, unknown>} obj
  * @param {string} attr
+ * @param {TextConfigDto} defaultVal
  * @returns {TextConfigDto}
  */
-
-function tryReadTextConfigDto(obj, attr) {
+function tryReadTextConfigDto(obj, attr, defaultVal) {
   const result = obj[attr];
+  if (!result) return defaultVal;
   assertRecord(result);
   return {
-    font: tryReadString(result, "font"),
-    fontSize: tryReadLengthDto(result, "fontSize"),
+    font: tryReadString(result, "font", defaultVal.font),
+    fontSize: tryReadLengthDto(result, "fontSize", defaultVal.fontSize),
   };
 }
 /**

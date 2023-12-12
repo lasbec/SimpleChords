@@ -72,7 +72,16 @@ fat an de Klink!
 
 ## As module
 
-The `printPdfFiles` is the main exported function. It takes like the CLI Tool a parameterobject with three arguments:
+The functions `printPdfFiles` and `printPdfFilesFromPaths` are the main exported functions. The `printPdfFilesFromPaths` functions takes instead of an LayoutConfigDto object, a path to a json file, where the theme is saved. They takes like the CLI Tool a parameterobject with three arguments:
+
+```
+printPdfFilesFromPaths({
+  inputPath: "~/my_songs/",
+  outPath: "./Songs_for_the_bonfire.pdf",
+  debug: false,
+  stylePath: "./style.json"
+})
+```
 
 ```
 printPdfFiles({
