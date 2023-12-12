@@ -158,4 +158,4 @@ The following fonts are built in:
 
 ## CLI
 
-You can run this package from the command line too: `npx simple-chords <input_path> [<...further_inputPaths>[] <output_path>] [--debug]`
+You can run this package from the command line too: `npx simple-chords <input_path> [<...further_inputPaths>[] <output_path>] [--theme <path_to_json>] [--debug]`

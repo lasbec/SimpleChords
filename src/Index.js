@@ -4,15 +4,21 @@ import {
   renderAllInSingleFile,
   renderSingleFile,
 } from "./SongLayout/RenderSongAsPdf.js";
-import { DefaultLayoutConfigDto } from "./SongLayout/LayoutConfig.js";
+import {
+  DefaultLayoutConfigDto,
+  parseLayoutConfigDto,
+} from "./SongLayout/LayoutConfig.js";
 /**
- * @typedef {import("./SongLayout/RenderSongAsPdf.js").LayoutConfigDto} LayoutConfigDto
- * @typedef {import("./SongLayout/RenderSongAsPdf.js").LayoutConfig} LayoutConfig
+ * @typedef {import("./SongLayout/LayoutConfig.js").LayoutConfigDto} LayoutConfigDto
+ * @typedef {import("./SongLayout/LayoutConfig.js").LayoutConfig} LayoutConfig
  * @typedef {import("./Drawing/TextConfig.js").TextConfigArgs} TextConfigArgs
  * @typedef {import("./Drawing/TextConfig.js").TextConfigDto} TextConfigDto
  */
 
-export { DefaultLayoutConfigDto } from "./SongLayout/LayoutConfig.js";
+export {
+  DefaultLayoutConfigDto,
+  parseLayoutConfigDto,
+} from "./SongLayout/LayoutConfig.js";
 export * from "./Shared/Length.js";
 
 /** @param {string} inputPath */
@@ -29,6 +35,14 @@ function getCorrespondingOutPutPath(inputPath) {
  * @property {string | undefined} outPath
  * @property {boolean} debug
  * @property {LayoutConfigDto=} style
+ */
+
+/**
+ * @typedef {object} MainPathArgs
+ * @property {string | string[]} inputPath
+ * @property {string | undefined} outPath
+ * @property {boolean} debug
+ * @property {string=} stylePath
  */
 
 /**
@@ -50,6 +64,17 @@ async function resolvePaths(inp) {
     }
   }
   return result;
+}
+
+/**
+ * @param {MainPathArgs} args
+ */
+export async function printPdfFilesFromPaths(args) {
+  const stylePath = args.stylePath;
+  if (!stylePath) return printPdfFiles(args);
+  const content = await fs.readFile(stylePath, "utf-8");
+  const style = parseLayoutConfigDto(content);
+  return printPdfFiles({ ...args, style });
 }
 
 /**

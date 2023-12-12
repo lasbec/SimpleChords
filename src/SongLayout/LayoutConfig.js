@@ -92,3 +92,106 @@ export const DefaultLayoutConfigDto = {
     fontSize: "9pt",
   },
 };
+
+
+/**
+ * @param {string} str
+ * @returns {LayoutConfigDto}
+ */
+export function parseLayoutConfigDto(str) {
+  /** @type {unknown} */
+  const rawStyle = JSON.parse(str);
+  assertRecord(rawStyle);
+
+  return {
+    lyricTextConfig: tryReadTextConfigDto(rawStyle, "lyricTextConfig"),
+    chorusTextConfig: tryReadTextConfigDto(rawStyle, "chorusTextConfig"),
+    refTextConfig: tryReadTextConfigDto(rawStyle, "refTextConfig"),
+    titleTextConfig: tryReadTextConfigDto(rawStyle, "titleTextConfig"),
+    chordTextConfig: tryReadTextConfigDto(rawStyle, "chordTextConfig"),
+    unifyChords: tryReadBool(rawStyle, "unifyChords"),
+
+    printPageNumbers: tryReadBool(rawStyle, "printPageNumbers"),
+    firstPage: tryReadLeftOrRight(rawStyle, "firstPage"),
+    tableOfContents: tryReadString(rawStyle, "tableOfContents"),
+
+    innerMargin: tryReadLengthDto(rawStyle, "innerMargin"),
+    outerMargin: tryReadLengthDto(rawStyle, "outerMargin"),
+    topMargin: tryReadLengthDto(rawStyle, "topMargin"),
+    bottomMargin: tryReadLengthDto(rawStyle, "bottomMargin"),
+    pageWidth: tryReadLengthDto(rawStyle, "pageWidth"),
+    pageHeight: tryReadLengthDto(rawStyle, "pageHeight"),
+    sectionDistance: tryReadLengthDto(rawStyle, "sectionDistance"),
+  };
+}
+/**
+ *
+ * @param {Record<string, unknown>} obj
+ * @param {string} attr
+ * @returns {LengthDto}
+ */
+
+function tryReadLengthDto(obj, attr) {
+  const result = tryReadString(obj, attr);
+  return Length.fromString(result).toString();
+}
+/**
+ * @param {Record<string, unknown>} obj
+ * @param {string} attr
+ * @returns {string}
+ */
+
+function tryReadString(obj, attr) {
+  const result = obj[attr];
+  if (typeof result !== "string")
+    throw Error(`Unexpected type '${typeof result}' of '${attr}'`);
+  return result;
+}
+/**
+ * @param {Record<string, unknown>} obj
+ * @param {string} attr
+ * @returns {boolean}
+ */
+function tryReadBool(obj, attr) {
+  const result = obj[attr];
+  if (typeof result !== "boolean")
+    throw Error(`Unexpected type '${typeof result}' of '${attr}'`);
+  return result;
+}
+
+/**
+ * @param {Record<string, unknown>} obj
+ * @param {string} attr
+ * @returns {"left" | "right" | undefined}
+ */
+
+function tryReadLeftOrRight(obj, attr) {
+  const result = obj[attr];
+  if (result !== "left" && result !== "right" && result !== undefined)
+    throw Error(`Unexpected '${typeof result}' of '${attr}'`);
+  return result;
+}
+/**
+ *
+ * @param {Record<string, unknown>} obj
+ * @param {string} attr
+ * @returns {TextConfigDto}
+ */
+
+function tryReadTextConfigDto(obj, attr) {
+  const result = obj[attr];
+  assertRecord(result);
+  return {
+    font: tryReadString(result, "font"),
+    fontSize: tryReadLengthDto(result, "fontSize"),
+  };
+}
+/**
+ * @param {unknown} obj
+ * @returns {asserts obj is Record<string, unknown>}
+ */
+function assertRecord(obj) {
+  if (typeof obj !== "object")
+    throw Error(`Expected a record but got ${typeof obj}.`);
+  if (obj === null) throw Error(`Expected a record but got null.`);
+}
