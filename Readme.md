@@ -74,7 +74,7 @@ fat an de Klink!
 
 The functions `printPdfFiles` and `printPdfFilesFromPaths` are the main exported functions. The `printPdfFilesFromPaths` functions takes instead of an LayoutConfigDto object, a path to a json file, where the theme is saved. They takes like the CLI Tool a parameterobject with three arguments:
 
-```
+```typescript
 printPdfFilesFromPaths({
   inputPath: "~/my_songs/",
   outPath: "./Songs_for_the_bonfire.pdf",
@@ -83,7 +83,7 @@ printPdfFilesFromPaths({
 })
 ```
 
-```
+```typescript
 printPdfFiles({
   inputPath: "~/my_songs/",
   outPath: "./Songs_for_the_bonfire.pdf",
